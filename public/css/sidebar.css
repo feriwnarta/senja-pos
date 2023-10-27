@@ -1,0 +1,43 @@
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    border-right: 1px solid #E0E0E0;
+    background-color: #FFFFFF;
+    color: black;
+    transition: all 0.3s;
+    padding: 1rem 2rem 1rem 3rem;
+}
+
+
+.logo-sidebar {
+    max-width: 7.3rem;
+}
+
+.button-menu {
+    margin-top: 48px;
+}
+
+
+.inner-menu-active {
+    background-color: #FFF7F2;
+}
+
+.active {
+    color: #F16622;
+}
+
+
+.accordion-body {
+    padding: 0px;
+}
+
+.accordion-item {
+    border: none;
+}
+
+.accordion-header {
+    padding: 0.625rem 0rem;
+}

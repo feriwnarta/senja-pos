@@ -1,0 +1,143 @@
+/* ---------------------------------------------------
+    INPUT FIELD NAME
+    STATUS DEFAULT
+----------------------------------------------------- */
+
+.form-control {
+    box-shadow: none !important;
+}
+
+.form-label {
+    margin-bottom: 4px !important;
+}
+
+.form-control::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+    /* identical to box height, or 143% */
+
+
+    /* Neutral/ 70 */
+
+    color: #757575;
+}
+
+.input-from-left {
+    text-align: right;
+}
+
+.dropdown-menu {
+    width: 100%;
+}
+
+.input-from-right {
+    text-align: right;
+}
+
+.input-default {
+    border: 1px solid #C2C2C2;
+    /* background: url(../img/cahaya_senja_logo.png) no-repeat scroll 14px 11px; */
+    /* Shadow 3 */
+
+    box-shadow: inset 1px 2px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+
+    padding: 6px, 12px, 6px, 12px;
+
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+}
+
+.input-default:hover {
+    background: #FFFFFF;
+    /* Primary/Main */
+
+    border: 1px solid #F16622;
+    /* Shadow 3 */
+
+    box-shadow: inset 1px 2px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+
+.input-default:focus {
+    background: #FFFFFF;
+    /* Primary/Main */
+
+    border: 1px solid #F16622;
+    /* Shadow 3 */
+
+    outline: 3px solid rgba(241, 102, 34, 0.2) !important;
+
+    border-radius: 6px;
+}
+
+.input-default:disabled {
+
+    background: #EDEDED;
+
+    border: 1px solid #C2C2C2;
+    border-radius: 6px;
+    /* Body Text/Regular */
+
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+    /* identical to box height, or 143% */
+
+
+    /* Neutral/ 60 */
+
+    color: #9E9E9E;
+}
+
+
+.input-label {
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+    /* identical to box height, or 143% */
+
+
+    /* Neutral/90 */
+
+    color: #404040;
+}
+
+.input-error {
+    margin-top: 4px;
+    font-family: 'Poppins Regular';
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    color: #CB3A31;
+}
+
+
+
+/* ---------------------------------------------------
+    TEXT AREA
+----------------------------------------------------- */
+.textarea {
+    border: 1px solid #C2C2C2;
+    box-shadow: inset 1px 2px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+.textarea:hover {
+    background: #FFFFFF;
+    border: 1px solid #F16622;
+    box-shadow: inset 1px 2px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+.textarea:focus {
+    background: #FFFFFF;
+    border: 1px solid #F16622;
+    outline: 3px solid rgba(241, 102, 34, 0.2) !important;
+    border-radius: 6px;
+
+}

@@ -1,0 +1,162 @@
+/* ---------------------------------------------------
+    ICON SIDE BAR
+----------------------------------------------------- */
+
+.dashboard-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/dashboard-icon.png);
+    vertical-align: middle;
+
+}
+
+
+
+.pos-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/pos-icon.png);
+    vertical-align: middle;
+}
+
+.ingredients-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/ingredients.png);
+    vertical-align: middle;
+}
+
+.inventory-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/inventory.png);
+    vertical-align: middle;
+}
+
+.central-kitchen-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/central-kitchen-icon.png);
+    vertical-align: middle;
+}
+
+.purchasing-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/purchasing-icon.png);
+    vertical-align: middle;
+}
+
+.accounting-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/accounting-icon.png);
+    vertical-align: middle;
+}
+
+.finance-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/finance-icon.png);
+    vertical-align: middle;
+}
+
+.report-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-right: 0.5em;
+    background-image: url(../img/icons/report-icon.png);
+    vertical-align: middle;
+}
+
+
+
+/* ---------------------------------------------------
+    ICON NAVBAR
+----------------------------------------------------- */
+
+.calendar-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../img/icons/calendar-icon.png);
+    vertical-align: middle;
+}
+
+.plus-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../img/icons/icon-plus.png);
+    vertical-align: middle;
+}
+
+/* ---------------------------------------------------
+    ICON PAGE CREATE MENU
+----------------------------------------------------- */
+
+
+/* ---------------------------------------------------
+    ICON PAGE PURCHASE ORDER
+----------------------------------------------------- */
+.plus-circle-icon-bg {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../img/icons/plus-circle.png);
+    vertical-align: middle;
+}
+
+/* ---------------------------------------------------
+    ICON PAGE CREATE RECIPES
+----------------------------------------------------- */
+.x-icon{
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../img/icons/x.png);
+    vertical-align: middle;
+}

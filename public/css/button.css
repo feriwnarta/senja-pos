@@ -1,0 +1,352 @@
+.btn:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+
+/*.btn:focus{*/
+/*    box-shadow: 0 0 0 .25rem rgba(241, 102, 34, 0.2); !*menambahkan shadow baru pada focus*!*/
+/*}*/
+
+/* ---------------------------------------------------
+    Button Icon Text SideBar
+----------------------------------------------------- */
+
+.button-icon-text {
+    border-radius: 0.37rem;
+    text-align: left;
+    min-width: 100%;
+    max-width: 100%;
+    padding: .62rem .75rem;
+    gap: 8px;
+    margin-top: .5rem;
+}
+
+.button-icon-text:hover {
+    color: #F16622;
+}
+
+.button-sidebar-text-only-text {
+    margin-top: .5rem;
+    border-radius: 6px;
+    color: #F16622;
+    text-align: left;
+    padding: 0.625rem 0.5rem 0.625rem 2rem;
+    min-width: 100%;
+    max-width: 100%;
+    gap: 10px;
+}
+
+.button-sidebar-text-only-text:focus {
+    color: #F16622;
+}
+
+
+
+/* ---------------------------------------------------
+    Button Icon Text
+    Variant = Outlined, Primary
+----------------------------------------------------- */
+.btn-icon-text-primary {
+    padding: .375rem 1rem;
+    /* Primary/Main */
+
+    background: #F16622;
+    /* Shadow 1 */
+
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+
+    color: white;
+
+    font-family: 'Poppins Medium';
+    font-style: normal;
+    font-size: .87rem;
+    line-height: 1.25rem;
+
+}
+
+.btn-icon-text-primary:hover {
+    background: #B24109;
+    /* Shadow 1 */
+
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    color: white;
+}
+
+.btn-icon-text-outlined {
+    font-family: 'Poppins Medium';
+    font-size: .87rem;
+    line-height: 1.25rem;
+    color: #F16622;
+    background: #FFFFFF;
+    /* Primary/Main */
+
+    padding: .375rem 1rem;
+    gap: 4px;
+
+    border: 1px solid #F16622;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: .375rem;
+}
+
+.btn-icon-text-outlined:hover {
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    color: #B24109;
+}
+
+
+/* ---------------------------------------------------
+    Button Dropdown No Icon
+    Variant = Outlined, Primary
+----------------------------------------------------- */
+
+.btn-dropdown-no-icon {
+    background: #FFFFFF;
+    padding: .375rem 1rem;
+    /* Primary/Main */
+
+    border: 1px solid #F16622;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    color: #F16622;
+
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+}
+
+.btn-dropdown-no-icon:hover {
+    color: #B24109;
+}
+
+
+/* ---------------------------------------------------
+    Button Only text
+    Variant = Primary
+----------------------------------------------------- */
+
+.btn-text-only-primary {
+
+    /* Primary/Main */
+
+    background: #F16622;
+    /* Shadow 1 */
+
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+
+    padding: .375rem 1rem;
+
+    color: white;
+
+    font-family: 'Poppins Medium';
+    font-style: normal;
+    font-size: .87rem;
+    line-height: 1.25rem;
+}
+
+.btn-text-only-primary:hover {
+    background: #B24109;
+    /* Shadow 1 */
+
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    color: white;
+}
+
+
+.btn-text-only-primary:focus {}
+
+
+.btn-text-only-secondary {
+    /* Primary/Surface */
+
+    background: #FFF7F2;
+    /* Shadow 1 */
+
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+
+    align-items: center;
+    padding: .375rem 1rem;
+    gap: 4px;
+    height: 2rem;
+
+    color: #F16622;
+    font-family: 'Poppins Medium';
+    font-size: .875rem;
+    line-height: 1.25rem;
+}
+
+.btn-text-only-secondary:hover {
+    color: #B24109;
+}
+
+
+/* ---------------------------------------------------
+    Button Only text
+    Variant = text
+----------------------------------------------------- */
+.text-only-text {
+    align-items: center;
+    padding: 0px !important;
+}
+
+.text-only-text:hover {
+    color: #B24109;
+}
+
+
+/* ---------------------------------------------------
+    Button icon text
+    Variant = text
+----------------------------------------------------- */
+.icon-text {
+    color: var(--primary-main, #F16622);
+    font-family: 'Poppins Regular';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    /* 142.857% */
+}
+
+
+/* ---------------------------------------------------
+    Button Only text
+    Variant = Outlined
+----------------------------------------------------- */
+
+.text-only-outlined {
+    background: #FFFFFF;
+    /* Primary/Main */
+
+    border: 1px solid #F16622;
+    border-radius: 6px;
+    color: #F16622;
+    font-family: 'Poppins Medium';
+    font-size: .875rem;
+    line-height: 1.25rem;
+}
+
+.text-only-outlined:hover {
+    background: #F5F5F5;
+
+    border: 1px solid #F16622;
+
+
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+/* ---------------------------------------------------
+    DROPDOWN
+    STATUS DEFAULT
+----------------------------------------------------- */
+
+.dropdown-default {
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #C2C2C2;
+    /* box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12); */
+    border-radius: 6px;
+    padding: .375rem 1rem;
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+    color: #757575;
+    text-align: start;
+
+}
+
+.dropdown-default:focus {
+    border: 1px solid #F16622;
+    outline: 3px solid rgba(241, 102, 34, 0.2) !important;
+    border-radius: 6px;
+}
+
+.dropdown-default:hover {
+    background: #F5F5F5;
+    border: 1px solid #E0E0E0;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+
+}
+
+.dropdown-default:disabled {
+    background: #EDEDED;
+    border: 1px solid #C2C2C2;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+.dropdown-menu {
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+}
+
+/* ---------------------------------------------------
+    SELECT BUTTON
+----------------------------------------------------- */
+
+.select-button {
+    width: 100%;
+
+    border: 1px solid #C2C2C2;
+    /* box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12); */
+    border-radius: 6px;
+    padding: .375rem 1rem;
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+    color: #757575;
+    text-align: start;
+}
+
+.select-button:hover {
+    border: 1px solid #E0E0E0;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+}
+
+.select-button:focus {
+    border: 1px solid #F16622;
+    outline: 3px solid rgba(241, 102, 34, 0.2) !important;
+    border-radius: 6px;
+}
+
+
+
+/* ---------------------------------------------------
+    ACCORDION BUTTON
+----------------------------------------------------- */
+
+
+.accordion-button {
+    box-shadow: none !important;
+    padding: 0px;
+}
+.accordion-button:not(.collapsed)::after {
+
+
+}
+
+.accordion-button::after {
+    background-image: url("../img/icons/cheveron-down.png");
+}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: url("../img/icons/cheveron-down.png");
+}
+
+.accordion-button[aria-expanded=true] {
+    background: none;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--primary-main, #F16622);
+}

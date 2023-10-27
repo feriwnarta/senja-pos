@@ -1,0 +1,67 @@
+/* ---------------------------------------------------
+    FONT STYLE DESIGN SYSTEM
+----------------------------------------------------- */
+
+/* ---------------------------------------------------
+    DESCRIPTION
+----------------------------------------------------- */
+.description-1-medium {
+    font-family: 'Poppins Regular';
+    font-size: 0.87rem;
+    line-height: 20px;
+}
+
+.subtitle-1-bold {
+    font-family: 'Poppins Bold';
+    font-size: 24px;
+    line-height: 32px;
+}
+
+.subtitle-2-medium {
+    font-family: 'Poppins Medium';
+    font-size: 1.35rem;
+    line-height: 1.75rem;
+    color: #0A0A0A;
+}
+
+.subtitle-3-medium {
+    font-family: 'Poppins Medium';
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #404040;
+}
+
+.subtitle-3-regular {
+    font-family: 'Poppins Regular';
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #404040;
+}
+
+.subtitle-3-bold {
+    font-family: 'Poppins Bold';
+    font-size: 1rem;
+    line-height: 1.5rem;
+    color: #404040;
+}
+
+.body-text-regular {
+    font-family: 'Poppins Regular';
+    font-size: .875rem;
+    line-height: 1.25rem;
+    color: #404040;
+}
+
+.body-text-bold {
+    font-family: 'Poppins Medium';
+    font-size: .875rem;
+    line-height: 1.25rem;
+    color: #404040;
+}
+
+.caption-medium {
+    font-family: 'Poppins Medium';
+    font-size: .75rem;
+    line-height: 1rem;
+    color: #404040;
+}
