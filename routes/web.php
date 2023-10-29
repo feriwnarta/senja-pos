@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('point-of-sales/menu', PosMenu::class);
 Route::get('point-of-sales/category', PosCategory::class);
+
+// Warehouse
+Route::get("warehouse/list-warehouse", \App\Livewire\Warehouse\ListWarehouse::class);

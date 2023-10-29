@@ -29,12 +29,16 @@
 .button-sidebar-text-only-text {
     margin-top: .5rem;
     border-radius: 6px;
-    color: #F16622;
+    color: black;
     text-align: left;
     padding: 0.625rem 0.5rem 0.625rem 2rem;
     min-width: 100%;
     max-width: 100%;
     gap: 10px;
+}
+
+.button-sidebar-text-only-text:hover {
+    color: #F16622;
 }
 
 .button-sidebar-text-only-text:focus {
