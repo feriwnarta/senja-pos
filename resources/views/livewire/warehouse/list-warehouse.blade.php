@@ -34,7 +34,9 @@
                     </div>
 
 
-                    <button type="btn" class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
+                    <a href="/warehouse/list-warehouse/add-warehouse" wire:navigate>
+                        <button type="btn" class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
+                    </a>
 
 
                 </div>

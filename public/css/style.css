@@ -176,6 +176,31 @@ input[type="search"]::-webkit-search-results-decoration {
     TABLE  STYLE
 ----------------------------------------------------- */
 
+
+
+.table-component > thead {
+    background-color: #FFF7F2;
+
+    color: var(--neutral-100, #0A0A0A);
+
+    /* Body Text/Regular */
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+
+    vertical-align: middle !important;
+}
+
+.table-component thead tr th{
+    padding-left: 20px;
+}
+
+
+
+
+
 /*#tableMenu th {*/
 /*    border-top: 1px solid white;*/
 /*    border-bottom: 1px solid white !important;*/
@@ -276,17 +301,17 @@ input[type="search"]::-webkit-search-results-decoration {
     border-right: 1px solid white;
 }
 
-tr {
-    border-left: 1px solid white;
-}
+/*tr {*/
+/*    border-left: 1px solid white;*/
+/*}*/
 
-tr>td:last-child {
-    border: 1px solid white;
-}
+/*tr>td:last-child {*/
+/*    border: 1px solid white;*/
+/*}*/
 
-tr td:nth-child(6) {
-    border-right: none;
-}
+/*tr td:nth-child(6) {*/
+/*    border-right: none;*/
+/*}*/
 
 
 .table-create-recipes td, .table-create-recipes th {
