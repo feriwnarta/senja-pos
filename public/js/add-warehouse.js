@@ -1,4 +1,4 @@
-const areaHtml = `     <tr>
+let areaHtml = `     <tr>
                             <td>
                                 <input type="text" class="input-no-border make-input areaInput caption-medium"
                                        placeholder="Area A" style="width: 100%">
@@ -9,13 +9,16 @@ const areaHtml = `     <tr>
                             <td><input type="text" class="input-no-border make-input catInvInput caption-medium"
                                        placeholder="Bahan mentah" style="width: 100%"></td>
                             <td>
-                                <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#modalItem" onclick="dynamicTitleModalAddWarehouse(this)">
+                                <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal" data-bs-toggle="modal" data-bs-target="#modalItem" onclick="dynamicTitleModalAddWarehouse(this)" @click="$dispatch('load-item')">
                                     + Item
                                 </button>
                             </td>
+                            <td class="delete-item">
+                                <i class="x-icon"></i>
+                            </td>
                         </tr>`;
 
-const rackHtml = ` <tr>
+let rackHtml = ` <tr>
                             <td>
 
                             </td>
@@ -34,6 +37,8 @@ const rackHtml = ` <tr>
 
 let initTitle = '';
 let area = '';
+let modalItemHtml = '';
+
 $(function () {
     // sembunyikan button tambah rak
     hideBtnAddRack();
@@ -46,8 +51,56 @@ $(function () {
 
     // simpan title modal awal
     initTitle = $('.modal-title').html();
-
 });
+
+
+let nextPageUrl = null;
+let isLoading = false; // Tambahkan variabel untuk melacak status loading
+
+function getListItem() {
+    if (isLoading) return; // Hentikan permintaan jika masih dalam proses loading
+    isLoading = true;
+
+    $.ajax({
+        url: (nextPageUrl == null) ? "/warehouse/list-item" : nextPageUrl,
+        method: "GET",
+        success: function (response) {
+            // set data ke body modal
+
+            response.data.forEach(function (item) {
+                modalItemHtml += `<h1>${item.name}</h1>`
+            });
+
+            nextPageUrl = response.next_page_url;
+
+            if (nextPageUrl == null) {
+                return;
+            }
+
+            $('.modal-body').html(modalItemHtml);
+
+            isLoading = false; // Setelah data dimuat, atur isLoading menjadi false
+            infiniteLoadingPagination();
+        },
+    })
+}
+
+function infiniteLoadingPagination() {
+    $("#modalItem").on("shown.bs.modal", function () {
+        $(this)
+            .find(".modal-body")
+            .off("scroll") // Matikan event scroll sebelum menghubungkan lagi
+            .scroll(function () {
+                var scrollTop = $(this).scrollTop();
+                var scrollHeight = $(this).prop("scrollHeight");
+                var clientHeight = $(this).prop("clientHeight");
+
+                if (scrollTop + clientHeight + 1 >= scrollHeight) {
+                    getListItem();
+                }
+            });
+    });
+}
 
 function dynamicTitleModalAddWarehouse(obj) {
 
@@ -55,6 +108,9 @@ function dynamicTitleModalAddWarehouse(obj) {
     const areaInput = getValueInputClosest('.areaInput', obj, 'tr');
     const rackInput = getValueInputClosest('.rackInput', obj, 'tr');
     const categoryInvInput = getValueInputClosest('.catInvInput', obj, 'tr');
+
+    // dapatkan list item
+    getListItem();
 
     if (areaInput !== undefined) {
         area = areaInput;
@@ -66,6 +122,7 @@ function dynamicTitleModalAddWarehouse(obj) {
     }
 
     $('.modal-title').html(`${initTitle}\t${area}/${rackInput}/${categoryInvInput}`);
+
 
 }
 
@@ -105,6 +162,7 @@ function addArea() {
 
         // tambahkan data input ke table
         addBeforeWarehouseAction(areaHtml);
+
 
     });
 }

@@ -15,9 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('point-of-sales/menu', PosMenu::class);
 Route::get('point-of-sales/category', PosCategory::class);
 
 // Warehouse
-Route::get("warehouse/list-warehouse", \App\Livewire\Warehouse\ListWarehouse::class);
-Route::get("warehouse/list-warehouse/add-warehouse", \App\Livewire\Warehouse\AddWarehouse::class);
+
+Route::controller(\App\Http\Controllers\Warehouse\WarehouseController::class)->group(function () {
+    Route::get('warehouse/list-item', 'getItem');
+    Route::get("warehouse/list-warehouse", \App\Livewire\Warehouse\ListWarehouse::class);
+    Route::get("warehouse/list-warehouse/add-warehouse", \App\Livewire\Warehouse\AddWarehouse::class);
+});
+

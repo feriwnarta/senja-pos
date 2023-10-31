@@ -1,9 +1,9 @@
 <x-page-layout>
 
     <x-slot name="sidebar">
-
-        <livewire:components.sidebar.sidebar/>
-
+        <div wire:ignore>
+            <livewire:components.sidebar.sidebar/>
+        </div>
     </x-slot>
 
     <x-slot name="appBar">
@@ -28,7 +28,7 @@
         </div>
     </x-slot>
 
-    <div id="content-loaded">
+    <div id="content-loaded" wire:ignore>
         <div class="row">
             <div class="col-sm-6 offset-1">
                 <div class="container-input-default">
@@ -69,6 +69,7 @@
                     <label for="warehouseInput"
                            class="form-label input-label">{{ __('app_locale.text.areaGudang') }}</label>
 
+
                     <table id="areaGudangTable" class="table-component table table-hover">
                         <thead>
                         <tr>
@@ -76,6 +77,7 @@
                             <th>{{ __('app_locale.text.rak') }}</th>
                             <th>{{ __('app_locale.text.kategoriInventory') }}</th>
                             <th>{{ __('app_locale.text.item') }}</th>
+                            <th></th>
                         </tr>
                         </thead>
 
@@ -120,6 +122,7 @@
                 </div>
                 <div class="modal-body">
 
+
                 </div>
                 <div class="modal-footer">
                 </div>
@@ -127,9 +130,11 @@
         </div>
     </div>
 
-
-    @section('footer-script')
-        <script src="{{ asset("js/add-warehouse.js") }}"></script>
-    @endsection
-
 </x-page-layout>
+
+@section('footer-script')
+    <script src="{{ asset("js/add-warehouse.js") }}"></script>
+@endsection
+
+
+

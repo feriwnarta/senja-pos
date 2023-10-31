@@ -18,7 +18,8 @@
 
 
                     <form class="d-flex">
-                        <input class="form-control search-bar clear" type="search" placeholder="{{ __('app_locale.input.cari') }}"
+                        <input class="form-control search-bar clear" type="search"
+                               placeholder="{{ __('app_locale.input.cari') }}"
                                aria-label="Search">
                     </form>
 
@@ -34,8 +35,9 @@
                     </div>
 
 
-                    <a href="/warehouse/list-warehouse/add-warehouse" wire:navigate>
-                        <button type="btn" class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
+                    <a href="/warehouse/list-warehouse/add-warehouse">
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
                     </a>
 
 
@@ -48,7 +50,7 @@
 
     <div id="content-loaded">
 
-    {{-- Table daftar gudang --}}
+        {{-- Table daftar gudang --}}
         <table id="tableMenu" class="table table-hover">
             <thead class="text-center">
             <tr>
@@ -74,7 +76,6 @@
         </table>
 
     </div>
-
 
 
     <script>
