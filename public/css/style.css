@@ -19,7 +19,6 @@ option {
 }
 
 
-
 /* .collapsing {
     -webkit-transition: none;
     transition: none;
@@ -176,8 +175,6 @@ input[type="search"]::-webkit-search-results-decoration {
     TABLE  STYLE
 ----------------------------------------------------- */
 
-
-
 .table-component > thead {
     background-color: #FFF7F2;
 
@@ -193,27 +190,26 @@ input[type="search"]::-webkit-search-results-decoration {
     vertical-align: middle !important;
 }
 
-.table-component thead tr th{
-    padding-left: 20px;
+
+.table-component thead th {
+    padding: 14px 28px;
+    border-bottom: none;
 }
 
-
-
-
+.table-component tbody td {
+    padding: 14px 16px;
+}
 
 /*#tableMenu th {*/
 /*    border-top: 1px solid white;*/
 /*    border-bottom: 1px solid white !important;*/
 /*}*/
-
 /*#tableMenu td {*/
 /*    padding: 2.5rem 0px !important;*/
 /*}*/
-
 /*#variantForm {*/
 /*    margin-bottom: 2rem;*/
 /*}*/
-
 /*.table-input {*/
 /*    border-style: solid;*/
 /*    border-left: none;*/
@@ -222,27 +218,22 @@ input[type="search"]::-webkit-search-results-decoration {
 /*    border-width: 1px;*/
 /*    border-radius: 0px;*/
 /*}*/
-
 /*.table-input::placeholder {*/
 /*    font-family: "Poppins Regular";*/
 /*    font-size: 0.75rem;*/
 /*    line-height: 1rem;*/
 /*    color: #9e9e9e;*/
 /*}*/
-
 /*.table-input:focus {*/
 /*    border-color: #e0e0e0;*/
 /*}*/
-
 /*.table-input:hover {*/
 /*    border-color: #e0e0e0;*/
 /*}*/
-
 /*table.borderless td,*/
 /*table.borderless th {*/
 /*    border: none !important;*/
 /*}*/
-
 /*.table-head-color {*/
 /*    font-family: "Poppins Regular";*/
 /*    font-size: 0.875rem;*/
@@ -250,14 +241,12 @@ input[type="search"]::-webkit-search-results-decoration {
 /*    color: #404040;*/
 /*    background-color: #fff7f2;*/
 /*}*/
-
 /*.items-table-head-color {*/
 /*    font-family: "Poppins Regular";*/
 /*    font-size: 0.875rem;*/
 /*    line-height: 1.25rem;*/
 /*    color: #404040;*/
 /*}*/
-
 /*.table-head-color-modal {*/
 /*    font-family: "Poppins Medium";*/
 /*    font-size: 0.75rem;*/
@@ -265,32 +254,24 @@ input[type="search"]::-webkit-search-results-decoration {
 /*    color: #404040;*/
 /*    background-color: #fff7f2;*/
 /*}*/
-
 /*.table-modal {*/
 /*    font-family: "Poppins Medium";*/
 /*    font-size: 0.75rem;*/
 /*    line-height: 1rem;*/
 /*    !* identical to box height, or 133% *!*/
-
 /*    !* Neutral/90 *!*/
-
 /*    color: #404040;*/
 /*}*/
-
 /*table.borderless .checkbox {*/
 /*    width: 1rem;*/
 /*    height: 1rem;*/
 /*}*/
-
 /*table.borderless th {*/
 /*    padding: 1rem;*/
 /*}*/
-
 /*table.borderless td {*/
 /*    padding: 1rem;*/
 /*}*/
-
-
 /* Table in recipes -> create recipes */
 .only-underline {
     border-top: 1px solid white;
@@ -320,7 +301,6 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 
-
 /* DATA TABLE */
 
 .dataTable thead {
@@ -334,7 +314,23 @@ input[type="search"]::-webkit-search-results-decoration {
     line-height: 1.25rem; /* 142.857% */
 }
 
+.dataTable th {
+    padding: 14px 16px;
+    border-bottom: none;
+}
 
+.dataTable tbody td {
+    padding: 14px 16px;
+
+    color: var(--neutral-90, #404040);
+
+    /* Body Text/Regular */
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px; /* 142.857% */
+}
 
 .dataTable tbody {
     border-bottom: 1px solid white;
@@ -344,7 +340,6 @@ input[type="search"]::-webkit-search-results-decoration {
 .odd {
     border-bottom: 0px white;
     padding: 0px !important;
-
 }
 
 .dropdown-only-text {
@@ -435,7 +430,6 @@ input[type="number"]:not([step="any"])::-webkit-outer-spin-button {
     border: 1px solid white !important;
     box-shadow: none;
 }
-
 
 
 /* ---------------------------------------------------

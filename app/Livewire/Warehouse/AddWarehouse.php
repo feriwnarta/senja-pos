@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Warehouse;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class AddWarehouse extends Component
@@ -10,4 +11,11 @@ class AddWarehouse extends Component
     {
         return view('livewire.warehouse.add-warehouse');
     }
+
+    #[On('load-menu')]
+    public function loadMenu()
+    {
+        
+    }
+
 }

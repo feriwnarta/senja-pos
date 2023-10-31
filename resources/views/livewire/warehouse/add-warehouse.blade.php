@@ -1,7 +1,9 @@
 <x-page-layout>
 
     <x-slot name="sidebar">
+
         <livewire:components.sidebar.sidebar/>
+
     </x-slot>
 
     <x-slot name="appBar">
@@ -16,11 +18,8 @@
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
-
-
-                    <button type="btn" class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.simpan') }}</button>
-
-
+                    <button type="btn"
+                            class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.simpan') }}</button>
 
                 </div>
             </div>
@@ -34,11 +33,12 @@
             <div class="col-sm-6 offset-1">
                 <div class="container-input-default">
 
-                    <label for="warehouseInput" class="form-label input-label">Kode gudang</label>
+                    <label for="warehouseInput"
+                           class="form-label input-label">{{ __('app_locale.text.kodeGudang') }}</label>
 
 
                     <input type="name" class="form-control input-default"
-                           id="warehouseInput" placeholder="BMDGUI01">
+                           id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plKodeGudang') }}">
 
                     {{-- <div class="invalid-feedback">
                         Invalid Feedback: Nama harus diisi.
@@ -50,11 +50,12 @@
 
                 <div class="container-input-default margin-top-24">
 
-                    <label for="warehouseInput" class="form-label input-label">Nama Gudang</label>
+                    <label for="warehouseInput"
+                           class="form-label input-label">{{ __('app_locale.text.namaGudang') }}</label>
 
 
                     <input type="name" class="form-control input-default"
-                           id="warehouseInput" placeholder="Gudang pusat">
+                           id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plNamaGudang') }}">
 
                     {{-- <div class="invalid-feedback">
                         Invalid Feedback: Nama harus diisi.
@@ -63,58 +64,72 @@
                     {{-- <div id="{{ $id }}" class="{{ $class }}-error input-error">--}}
                 </div>
 
-
                 <div class="container-input-default margin-top-24">
 
-                    <label for="warehouseInput" class="form-label input-label">Area gudang</label>
+                    <label for="warehouseInput"
+                           class="form-label input-label">{{ __('app_locale.text.areaGudang') }}</label>
 
                     <table id="areaGudangTable" class="table-component table table-hover">
                         <thead>
-                            <tr>
-                                <th>Area</th>
-                                <th>Rak</th>
-                                <th>Kategori Inventory</th>
-                                <th>Item</th>
-                            </tr>
+                        <tr>
+                            <th>{{ __('app_locale.text.area') }}</th>
+                            <th>{{ __('app_locale.text.rak') }}</th>
+                            <th>{{ __('app_locale.text.kategoriInventory') }}</th>
+                            <th>{{ __('app_locale.text.item') }}</th>
+                        </tr>
                         </thead>
 
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input type="text" class="input-no-border make-input caption-medium" placeholder="Area A" style="width: 100%">
-                                </td>
-                                <td><input type="text" class="input-no-border make-input caption-medium" placeholder="A1" style="width: 100%"></td>
-                                <td><input type="text" class="input-no-border make-input caption-medium" placeholder="Bahan mentah" style="width: 100%"></td>
-                                <td>
-                                    <button class="btn icon-text" type="button" id="addIngredients" style="width: 100%">
-                                        +Item
-                                    </button>
-                                </td>
-                            </tr>
+                        <tbody id="warehouseData">
 
-                            <tr>
-                                <td>
-                                    <button class="btn icon-text caption-medium" type="button" id="addIngredients">
-                                        + Area
-                                    </button>
-                                </td>
-                                <td>
-                                    <button class="btn icon-text caption-medium" type="button" id="addIngredients">
-                                        + Rak
-                                    </button>
-                                </td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+
+                        <tr id="addWarehouseAction">
+                            <td>
+                                <button class="btn icon-text caption-medium" type="button" id="addArea"
+                                >
+                                    + Area
+                                </button>
+                            </td>
+                            <td>
+
+                                <button class="btn icon-text caption-medium" type="button" id="addRack"
+                                >
+                                    + Rak
+                                </button>
+
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         </tbody>
                     </table>
 
                 </div>
 
             </div>
-            </div>
-
         </div>
     </div>
+
+
+    {{-- Modal Item --}}
+    <div class="modal-input modal fade" id="modalItem" tabindex="-1" aria-labelledby="modalItem" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
+                    <h1 class="modal-title modal-input-title" id="exampleModalLabel">
+                        {{ __('app_locale.modal.modalTambahGudang') }}</h1>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @section('footer-script')
+        <script src="{{ asset("js/add-warehouse.js") }}"></script>
+    @endsection
 
 </x-page-layout>
