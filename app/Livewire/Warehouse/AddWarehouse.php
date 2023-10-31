@@ -134,6 +134,7 @@ class AddWarehouse extends Component
     public function loadItem($area)
     {
         $this->area = $area;
+        $this->rack = '';
         Log::info('area' . $this->area);
         $this->openModal();
 
