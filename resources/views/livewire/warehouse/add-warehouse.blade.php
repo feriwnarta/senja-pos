@@ -132,9 +132,6 @@
 
 </x-page-layout>
 
-@section('footer-script')
-    <script src="{{ asset("js/add-warehouse.js") }}"></script>
-@endsection
 
 
 

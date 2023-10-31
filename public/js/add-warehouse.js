@@ -40,6 +40,10 @@ let area = '';
 let modalItemHtml = '';
 
 $(function () {
+
+});
+
+document.addEventListener('load-add-warehouse-script', function () {
     // sembunyikan button tambah rak
     hideBtnAddRack();
 
@@ -109,6 +113,10 @@ function dynamicTitleModalAddWarehouse(obj) {
     const rackInput = getValueInputClosest('.rackInput', obj, 'tr');
     const categoryInvInput = getValueInputClosest('.catInvInput', obj, 'tr');
 
+    nextPageUrl = null;
+    modalItemHtml = '';
+    $('.modal-body').empty();
+
     // dapatkan list item
     getListItem();
 
@@ -122,6 +130,7 @@ function dynamicTitleModalAddWarehouse(obj) {
     }
 
     $('.modal-title').html(`${initTitle}\t${area}/${rackInput}/${categoryInvInput}`);
+
 
 
 }
