@@ -76,7 +76,6 @@
                             <tbody id="warehouseData">
 
                             @foreach($areas as $key => $area )
-                                
                                 <tr>
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
@@ -92,14 +91,14 @@
                                     <td>
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-toggle="modal" data-bs-target="#modalItem"
-                                                @click="$dispatch('load-modal', {})"
+                                                @click="$dispatch('load-modal', {area: {{ $key }} })"
 
                                         >
                                             + Item
                                         </button>
                                     </td>
                                     <td class=" delete-item
-                                        " wire:click.prevent="remove({{ $key }})">
+                                        " wire:click.prevent="remove( {{ $key }})">
                                         <i class="x-icon"></i>
                                     </td>
                                 </tr>
@@ -116,11 +115,11 @@
                                                        class="input-no-border make-input rackInput caption-medium"
                                                        placeholder="A1"
                                                        style="width: 100%"
-                                                       wire:model="areas.rack.{{ $subKey }}.0"></td>
+                                                       wire:model="areas.{{ $key }}.rack.{{ $subKey }}.0"></td>
                                             <td><input type="text"
                                                        class="input-no-border make-input catInvInput caption-medium"
                                                        placeholder="Bahan mentah" style="width: 100%"
-                                                       wire:model="areas.rack.{{ $subKey }}.1"></td>
+                                                       wire:model="areas.{{$key}}.rack.{{ $subKey }}.1"></td>
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalItem"
@@ -150,7 +149,7 @@
 
                                     <button class="btn icon-text caption-medium" type="button" id="addRack"
                                             wire:click="addRack"
-                                            style="display: {{ ($isAddedArea) ? 'block' : 'none' }}">
+                                            style="display: {{ ($isAddedArea) ? 'block' : 'block' }}">
                                         + Rak
                                     </button>
                                 </td>

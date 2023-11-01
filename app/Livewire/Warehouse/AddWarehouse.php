@@ -25,19 +25,13 @@ class AddWarehouse extends Component
     public bool $isAddedArea = false;
     public string $nextCursorId;
 
+    public string $area;
+
     public function addArea()
     {
-        $this->isAddedArea = true;
 
         $this->areas[] = ['area' => ['', '', '', '']];
     }
-
-    #[On('dismiss-modal')]
-    public function dismissModal()
-    {
-        $this->isShow = false;
-    }
-
 
     public function addRack()
     {
@@ -49,23 +43,40 @@ class AddWarehouse extends Component
         unset($this->areas[$key]);
     }
 
+    public function test()
+    {
+        dd($this->areas);
+    }
+
     public function removeRack($key, $subkey)
     {
         unset($this->areas[$key]['rack'][$subkey]);
     }
 
     #[On('load-modal')]
-    public function loadItem()
+    public function loadItem($area)
     {
+
+        $this->area = $area;
+
+        Log::info($this->area);
 
         $this->isShow = !$this->isShow;
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
         $this->items['data'] = $item['data'];
         $this->nextCursorId = $item['next_cursor'];
-
-        Log::info($this->items);
+//
+//        Log::info($this->items);
 
     }
+
+
+    #[On('dismiss-modal')]
+    public function dismissModal()
+    {
+        $this->isShow = false;
+    }
+
 
     #[On('load-more')]
     public function handleScroll()
