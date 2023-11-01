@@ -4,7 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertNotNull;
 
 class TestItemModel extends TestCase
 {
@@ -17,6 +19,15 @@ class TestItemModel extends TestCase
 
         self::assertNotNull($items);
 
+    }
+
+    public function testSelect()
+    {
+        $item = Item::first();
+
+        Log::info($item);
+
+        assertNotNull($item);
     }
 
     protected function setUp(): void

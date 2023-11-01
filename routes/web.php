@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+Route::get('/', \App\Livewire\Form::class);
 Route::get('point-of-sales/menu', PosMenu::class);
 Route::get('point-of-sales/category', PosCategory::class);
 
