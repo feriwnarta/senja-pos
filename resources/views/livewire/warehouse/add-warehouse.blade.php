@@ -77,7 +77,6 @@
 
                             @foreach($areas as $key => $area )
 
-                                {{ \Illuminate\Support\Facades\Log::info($area) }}
                                 <tr>
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
@@ -117,7 +116,7 @@
                                 @if(isset($area['rack']))
 
                                     @foreach($area['rack'] as $subKey => $value)
-
+                                        {{ \Illuminate\Support\Facades\Log::info($value) }}
                                         <tr>
                                             <td>
 
@@ -136,9 +135,16 @@
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalItem"
                                                         @click="$dispatch('load-modal-rack', {area: {{ $key  }}, rack: {{ $subKey }} })"
+                                                        style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                                 >
 
-                                                    + Item
+                                                    @if(empty($value['item']))
+                                                        + Item
+                                                    @else
+                                                        @foreach($value['item'] as $text )
+                                                            {{ $text['name'] }},
+                                                        @endforeach
+                                                    @endif
                                                 </button>
                                             </td>
                                             <td class="delete-item"
