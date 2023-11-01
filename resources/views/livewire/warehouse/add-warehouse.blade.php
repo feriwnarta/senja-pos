@@ -54,7 +54,7 @@
                         @error('nameWarehouse') <span class="error">{{ $message }}</span> @enderror
 
                     </div>
-                   
+
 
                     <div class="container-input-default margin-top-24">
 
@@ -90,11 +90,11 @@
                                     <td><input type="text" class="input-no-border make-input catInvInput caption-medium"
                                                placeholder="Bahan mentah" style="width: 100%"
                                                wire:model="areas.{{$key}}.area.category_inventory"></td>
-                                    <td style="width: 120px;">
+                                    <td>
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-target="#modalItem"
                                                 @click="$dispatch('load-modal', {area: {{ $key }} })"
-                                                style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                                style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                         >
                                             @if(empty($area['area']['item']))
                                                 + Item

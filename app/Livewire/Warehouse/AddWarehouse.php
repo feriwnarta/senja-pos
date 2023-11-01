@@ -93,7 +93,7 @@ class AddWarehouse extends Component
     #[On('dismiss-modal')]
     public function dismissModal()
     {
-        $this->items = [];
+        
         $this->isShow = false;
     }
 
