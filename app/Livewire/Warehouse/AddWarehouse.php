@@ -30,12 +30,13 @@ class AddWarehouse extends Component
     public function addArea()
     {
 
-        $this->areas[] = ['area' => ['', '', '', '']];
+        $this->areas[] = ['area' => ['area' => '', 'rack' => '', 'category_inventory' =>
+            '', 'item' => '']];
     }
 
     public function addRack()
     {
-        $this->areas[count($this->areas) - 1]['rack'][] = ['', '', ''];
+        $this->areas[count($this->areas) - 1]['rack'][] = ['rack' => '', 'category_inventory' => '', 'item' => ''];
     }
 
     public function remove($key)
@@ -95,9 +96,14 @@ class AddWarehouse extends Component
 
     }
 
-    public function addCheckbox($item)
+    public function addItem($item)
     {
-        $this->js("console.log('$item')");
+        // tambahkan item ke area yang sudah dipilih
+        $this->areas[$this->area]['item'][] = $item;
+
+        Log::info($this->areas);
+
+
     }
 
     public function mount()

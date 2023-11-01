@@ -80,14 +80,14 @@
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
                                                placeholder="Area A" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.0">
+                                               wire:model="areas.{{$key}}.area.area">
                                     </td>
                                     <td><input type="text" class="input-no-border make-input rackInput caption-medium"
                                                placeholder="A1"
-                                               style="width: 100%" wire:model="areas.{{$key}}.area.1"></td>
+                                               style="width: 100%" wire:model="areas.{{$key}}.area.rack"></td>
                                     <td><input type="text" class="input-no-border make-input catInvInput caption-medium"
                                                placeholder="Bahan mentah" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.2"></td>
+                                               wire:model="areas.{{$key}}.area.category_inventory"></td>
                                     <td>
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-toggle="modal" data-bs-target="#modalItem"
@@ -115,11 +115,12 @@
                                                        class="input-no-border make-input rackInput caption-medium"
                                                        placeholder="A1"
                                                        style="width: 100%"
-                                                       wire:model="areas.{{ $key }}.rack.{{ $subKey }}.0"></td>
+                                                       wire:model="areas.{{ $key }}.rack.{{ $subKey }}.rack"></td>
                                             <td><input type="text"
                                                        class="input-no-border make-input catInvInput caption-medium"
                                                        placeholder="Bahan mentah" style="width: 100%"
-                                                       wire:model="areas.{{$key}}.rack.{{ $subKey }}.1"></td>
+                                                       wire:model="areas.{{$key}}.rack.{{ $subKey }}.category_inventory">
+                                            </td>
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalItem"
@@ -210,7 +211,7 @@
 
 
                                     <input id="${item.id}" class="red-input checkbox" type="checkbox"
-                                           wire:click="addCheckbox('{{ $data['name'] }}')"/>
+                                           wire:click="addItem('{{ $data['name'] }}')"/>
 
 
                                 </div>
