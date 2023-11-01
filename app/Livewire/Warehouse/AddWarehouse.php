@@ -26,6 +26,7 @@ class AddWarehouse extends Component
     public string $nextCursorId;
 
     public string $area;
+    public string $rack = '';
 
     public function addArea()
     {
@@ -36,7 +37,7 @@ class AddWarehouse extends Component
 
     public function addRack()
     {
-        $this->areas[count($this->areas) - 1]['rack'][] = ['rack' => '', 'category_inventory' => '', 'item' => ''];
+        $this->areas[count($this->areas) - 1]['rack'][] = ['rack' => '', 'category_inventory' => '', 'item' => []];
     }
 
     public function remove($key)
@@ -57,10 +58,14 @@ class AddWarehouse extends Component
     #[On('load-modal')]
     public function loadItem($area)
     {
-
         $this->area = $area;
-
         Log::info($this->area);
+        $this->openModal();
+
+    }
+
+    private function openModal()
+    {
 
         $this->isShow = !$this->isShow;
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
@@ -68,13 +73,27 @@ class AddWarehouse extends Component
         $this->nextCursorId = $item['next_cursor'];
 //
 //        Log::info($this->items);
-
     }
 
+    #[On('load-modal-rack')]
+    public function loadRack($area, $rack)
+    {
+        $this->area = $area;
+        $this->rack = $rack;
+
+        Log::info($this->area);
+
+        // buka modal
+        $this->openModal();
+
+        // proses rack
+
+    }
 
     #[On('dismiss-modal')]
     public function dismissModal()
     {
+        $this->items = [];
         $this->isShow = false;
     }
 
@@ -82,7 +101,6 @@ class AddWarehouse extends Component
     #[On('load-more')]
     public function handleScroll()
     {
-
 
         if ($this->nextCursorId != null) {
             $nextItems = Item::orderBy('id')->cursorPaginate(20, ['*'], 'cursor', $this->nextCursorId)->toArray();
@@ -98,17 +116,23 @@ class AddWarehouse extends Component
 
     public function addItem($id, $name)
     {
-   
 
-        // tambahkan item ke area yang sudah dipilih
-        $this->areas[$this->area]['area']['item'][] = [
+        if ($this->rack == '') {
+            // tambahkan item ke area yang sudah dipilih
+            $this->areas[$this->area]['area']['item'][] = [
+                'id' => $id,
+                'name' => $name,
+            ];
+
+            Log::info($this->areas);
+            return;
+        }
+
+        $this->areas[$this->area]['rack'][$this->rack]['item'][] = [
             'id' => $id,
             'name' => $name,
         ];
-
         Log::info($this->areas);
-
-
     }
 
     public function mount()
