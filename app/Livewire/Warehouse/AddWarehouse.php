@@ -71,9 +71,9 @@ class AddWarehouse extends Component
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
         $this->items['data'] = $item['data'];
         $this->nextCursorId = $item['next_cursor'];
-//
-//        Log::info($this->items);
+        
     }
+
 
     #[On('load-modal-rack')]
     public function loadRack($area, $rack)
@@ -93,7 +93,7 @@ class AddWarehouse extends Component
     #[On('dismiss-modal')]
     public function dismissModal()
     {
-        
+
         $this->isShow = false;
     }
 

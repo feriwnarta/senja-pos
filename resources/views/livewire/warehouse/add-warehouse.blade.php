@@ -229,7 +229,7 @@
                                     </div>
 
 
-                                    <input id="${item.id}" class="red-input checkbox" type="checkbox"
+                                    <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
                                            wire:click="addItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
 
 
@@ -277,12 +277,22 @@
                     @this.dispatch('load-more');
                     }
                 });
+
+
+                $(function () {
+                    // deteksi checkbox yang sudah diklik
+
+                });
+
+
             });
 
 
             $("#modalItem").on("hidden.bs.modal", function () {
             @this.dispatch('dismiss-modal');
             });
+
+
         });
 
     </script>
