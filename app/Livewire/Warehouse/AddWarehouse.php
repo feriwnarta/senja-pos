@@ -31,7 +31,7 @@ class AddWarehouse extends Component
     {
 
         $this->areas[] = ['area' => ['area' => '', 'rack' => '', 'category_inventory' =>
-            '', 'item' => '']];
+            '', 'item' => []]];
     }
 
     public function addRack()
@@ -96,10 +96,15 @@ class AddWarehouse extends Component
 
     }
 
-    public function addItem($item)
+    public function addItem($id, $name)
     {
+   
+
         // tambahkan item ke area yang sudah dipilih
-        $this->areas[$this->area]['item'][] = $item;
+        $this->areas[$this->area]['area']['item'][] = [
+            'id' => $id,
+            'name' => $name,
+        ];
 
         Log::info($this->areas);
 

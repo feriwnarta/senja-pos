@@ -124,7 +124,7 @@
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalItem"
-                                                        onclick="dynamicTitleModalAddWarehouse(this)">
+                                                >
                                                     + Item
                                                 </button>
                                             </td>
@@ -211,7 +211,7 @@
 
 
                                     <input id="${item.id}" class="red-input checkbox" type="checkbox"
-                                           wire:click="addItem('{{ $data['name'] }}')"/>
+                                           wire:click="addItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
 
 
                                 </div>
