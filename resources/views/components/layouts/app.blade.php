@@ -33,7 +33,7 @@
 @livewireScripts
 <script src="{{ asset('js/script.js') }}"></script>
 <script src="{{ asset('bootstrap-5.0.2/js/bootstrap.js') }}"></script>
-{{--<script src="{{ asset("js/add-warehouse.js") }}"></script>--}}
+
 
 @yield('footer-script')
 </body>

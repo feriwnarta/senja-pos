@@ -54,7 +54,7 @@
                         @error('nameWarehouse') <span class="error">{{ $message }}</span> @enderror
 
                     </div>
-
+                   
 
                     <div class="container-input-default margin-top-24">
 
@@ -76,6 +76,8 @@
                             <tbody id="warehouseData">
 
                             @foreach($areas as $key => $area )
+
+                                {{ \Illuminate\Support\Facades\Log::info($area) }}
                                 <tr>
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
@@ -88,15 +90,23 @@
                                     <td><input type="text" class="input-no-border make-input catInvInput caption-medium"
                                                placeholder="Bahan mentah" style="width: 100%"
                                                wire:model="areas.{{$key}}.area.category_inventory"></td>
-                                    <td>
+                                    <td style="width: 120px;">
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
-                                                data-bs-toggle="modal" data-bs-target="#modalItem"
+                                                data-bs-target="#modalItem"
                                                 @click="$dispatch('load-modal', {area: {{ $key }} })"
-
+                                                style="width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                         >
-                                            + Item
+                                            @if(empty($area['area']['item']))
+                                                + Item
+                                            @else
+                                                @foreach($area['area']['item'] as $text )
+                                                    {{ $text['name'] }},
+                                                @endforeach
+                                            @endif
                                         </button>
                                     </td>
+
+
                                     <td class=" delete-item
                                         " wire:click.prevent="remove( {{ $key }})">
                                         <i class="x-icon"></i>
@@ -107,6 +117,7 @@
                                 @if(isset($area['rack']))
 
                                     @foreach($area['rack'] as $subKey => $value)
+
                                         <tr>
                                             <td>
 
@@ -126,6 +137,7 @@
                                                         data-bs-toggle="modal" data-bs-target="#modalItem"
                                                         @click="$dispatch('load-modal-rack', {area: {{ $key  }}, rack: {{ $subKey }} })"
                                                 >
+
                                                     + Item
                                                 </button>
                                             </td>
@@ -151,7 +163,7 @@
 
                                     <button class="btn icon-text caption-medium" type="button" id="addRack"
                                             wire:click="addRack"
-                                            style="display: {{ ($isAddedArea) ? 'block' : 'block' }}">
+                                            style="display: {{ ($isAddedArea) ? 'block' : 'none' }}">
                                         + Rak
                                     </button>
                                 </td>

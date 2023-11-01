@@ -30,7 +30,7 @@ class AddWarehouse extends Component
 
     public function addArea()
     {
-
+        $this->isAddedArea = true;
         $this->areas[] = ['area' => ['area' => '', 'rack' => '', 'category_inventory' =>
             '', 'item' => []]];
     }
