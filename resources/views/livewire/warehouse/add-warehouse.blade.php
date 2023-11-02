@@ -284,7 +284,8 @@
     </div>
 
 
-    <div class="modal modal-input" id="modalNewItem" tabindex="-1" role="dialog"
+    {{-- Modal new Item--}}
+    <div class="modal modal-input" data-bs-backdrop="static" id="modalNewItem" tabindex="-1" role="dialog"
          style="display: {{ ($isShowModalNewItem) ? 'block' : 'none'  }}">
         <!-- Konten modal -->
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -387,7 +388,8 @@
                     <div class=" d-flex flex-row justify-content-end">
 
                         <div>
-                            <button class="btn text-only-outlined cancel-btn" wire:click="closeModalNewItem">Batal
+                            <button class="btn text-only-outlined cancel-btn" data-bs-dismiss="modal"
+                                    wire:click="closeModalNewItem">Batal
                             </button>
                             <button class="btn btn-text-only-primary margin-left-10" data-bs-toggle="modal"
                                     data-bs-target="modalNewItem">Simpan
