@@ -128,7 +128,6 @@
 
                                 @if(isset($area['rack']))
                                     @foreach($area['rack'] as $subKey => $value)
-                                        {{ \Illuminate\Support\Facades\Log::info($value) }}
                                         <tr>
                                             <td></td>
                                             <td>
@@ -146,6 +145,10 @@
                                                        class="input-no-border make-input catInvInput caption-medium"
                                                        placeholder="Bahan mentah" style="width: 100%"
                                                        wire:model="areas.{{$key}}.rack.{{ $subKey }}.category_inventory">
+                                                @if ($errors->has("areas.$key.rack.$subKey.category_inventory"))
+                                                    <span
+                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.category_inventory") }}</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
