@@ -31,8 +31,11 @@ class AddWarehouse extends Component
     public string $area;
     public string $rack = '';
 
+    #[Rule('required|min:3')]
     public string $codeItem;
+    #[Rule('required|min:3|unique:items,name')]
     public string $nameItem;
+
     public string $category;
     public string $descriptiom;
 

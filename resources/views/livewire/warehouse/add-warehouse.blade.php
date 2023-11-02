@@ -29,6 +29,7 @@
         </div>
     </x-slot>
 
+
     <div id="content-loaded">
         <div class="row">
             <form x-data="{open: false}">
@@ -270,7 +271,8 @@
                         <div>
                             <button class="btn text-only-outlined cancel-btn">Batal</button>
                             <button class="btn btn-text-only-primary margin-left-10" data-bs-toggle="modal"
-                                    data-bs-target="modalNewItem" wire:click="openModalNewItem">Buat item baru
+                                    data-bs-target="#modalNewItem" wire:click="openModalNewItem">Buat
+                                item baru
                             </button>
                         </div>
                     </div>
@@ -282,7 +284,7 @@
     </div>
 
 
-    <div class="modal modal-input" id="modalNewItem" data-bs-backdrop="static" tabindex="-1" role="dialog"
+    <div class="modal modal-input" id="modalNewItem" tabindex="-1" role="dialog"
          style="display: {{ ($isShowModalNewItem) ? 'block' : 'none'  }}">
         <!-- Konten modal -->
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -292,6 +294,8 @@
                         Buat item baru</h1>
                 </div>
                 <div class="modal-body" id="modalBodyNewItem">
+
+
                     <div wire:loading>
                         <div class="position-absolute start-50 translate-middle">
                             <div class="spinner-border" role="status">
@@ -333,8 +337,9 @@
                                class="form-label input-label">Kode item</label>
 
                         <input type="name" class="form-control input-default"
-                               id="codeItem" placeholder="BMDGSP01"
+                               id="codeItem" placeholder="BMDGSP01" wire:model.blur="codeItem"
                         >
+                        @error('codeItem') <span class="error">{{ $message }}</span> @enderror
 
                     </div>
 
@@ -354,13 +359,20 @@
 
 
                     <div class="margin-top-20">
+                        <label for="dropdownCategory" class="form-label input-label">Kategori</label>
+                        <div class="dropdown" id="dropdownCategory">
+                            <button class="btn dropdown-toggle dropdown-default" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Kategori
+                            </button>
 
-                        <label for="form-select" class="form-label input-label">Kategori</label>
-
-                        <select class="form-select select-button">
-                            <option value="">Daging</option>
-                        </select>
+                            <ul class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
+                                <input type="text" placeholder="Cari kategori" style="margin: 6px; width: 95%;">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                            </ul>
+                        </div>
                     </div>
+
 
                     <div id="divider" class="margin-top-20"></div>
 
