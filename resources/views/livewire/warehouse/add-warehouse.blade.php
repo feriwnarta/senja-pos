@@ -270,7 +270,7 @@
                         <div>
                             <button class="btn text-only-outlined cancel-btn">Batal</button>
                             <button class="btn btn-text-only-primary margin-left-10" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">Buat item baru
+                                    data-bs-target="modalNewItem" wire:click="openModalNewItem">Buat item baru
                             </button>
                         </div>
                     </div>
@@ -282,25 +282,33 @@
     </div>
 
 
-    <div class="modal fade modal-input" data-bs-backdrop="static" id="exampleModal" tabindex="-1"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+    <div class="modal modal-input" id="modalNewItem" data-bs-backdrop="static" tabindex="-1" role="dialog"
+         style="display: {{ ($isShowModalNewItem) ? 'block' : 'none'  }}">
+        <!-- Konten modal -->
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
                     <h1 class="modal-title modal-input-title" id="exampleModalLabel">
                         Buat item baru</h1>
                 </div>
-                <div class="modal-body d-flex flex-column" id="modalBodyNewItem">
-
+                <div class="modal-body" id="modalBodyNewItem">
+                    <div wire:loading>
+                        <div class="position-absolute start-50 translate-middle">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
                     {{-- Item Image --}}
                     <div class="d-flex flex-column align-self-center align-items-center">
-                        <img
-                            src="https://s3-alpha-sig.figma.com/img/473a/648b/8c5e12d4ea9042ba824140de2d5e468c?Expires=1699833600&Signature=EclP9HAIqnSZLSrsPTG0K-lULYxs1PeeTyg3ONhqnWBzRDFM7m6u~1NhNd7iBIcvn5p2rRl-0NjYrMRJ0m6CZYfhNGmRGy764Zp06aJORkBjk5ZU47eXuL664~KaS~mMLLbhvPQK9d9SNr47-eG9gP0xPa25lp2ZxY5z9Om0UR8IOgYqTW1lR-36rj-vxgTpURMtXug4fjqinvjTQPHhpMqwrgYQe2QtbR53jcXJvNspvraRVcXgQThVasNXhn4rahm~GkRIj35FaQwJyhVF2wTvN~wlVjXh0toIMNYNJZg0vGOqmrP-r3I5H8ZPtxOs5cK43wH7e5d7jpLZocDydg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
-                            alt="" srcset="" width="140">
+
 
                         @if ($photoNewItem)
-                            <img src="{{ $photoNewItem->temporaryUrl() }}">
+                            <img src="{{ $photoNewItem->temporaryUrl() }}" width="140">
+                        @else
+                            <img
+                                src="https://s3-alpha-sig.figma.com/img/473a/648b/8c5e12d4ea9042ba824140de2d5e468c?Expires=1699833600&Signature=EclP9HAIqnSZLSrsPTG0K-lULYxs1PeeTyg3ONhqnWBzRDFM7m6u~1NhNd7iBIcvn5p2rRl-0NjYrMRJ0m6CZYfhNGmRGy764Zp06aJORkBjk5ZU47eXuL664~KaS~mMLLbhvPQK9d9SNr47-eG9gP0xPa25lp2ZxY5z9Om0UR8IOgYqTW1lR-36rj-vxgTpURMtXug4fjqinvjTQPHhpMqwrgYQe2QtbR53jcXJvNspvraRVcXgQThVasNXhn4rahm~GkRIj35FaQwJyhVF2wTvN~wlVjXh0toIMNYNJZg0vGOqmrP-r3I5H8ZPtxOs5cK43wH7e5d7jpLZocDydg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                                alt="" srcset="" width="140">
                         @endif
 
                         <div>
@@ -360,13 +368,24 @@
                     </div>
 
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                <div class="modal-footer row">
+                    <div class=" d-flex flex-row justify-content-end">
+
+
+                        <div>
+                            <button class="btn text-only-outlined cancel-btn" wire:click="closeModalNewItem">Batal
+                            </button>
+                            <button class="btn btn-text-only-primary margin-left-10" data-bs-toggle="modal"
+                                    data-bs-target="modalNewItem">Simpan
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
 
 </x-page-layout>
 

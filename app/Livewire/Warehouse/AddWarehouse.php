@@ -23,6 +23,8 @@ class AddWarehouse extends Component
 
     public array $items;
     public bool $isShow = false;
+    public bool $isShowModalNewItem = false;
+
     public bool $isAddedArea = false;
     public string $nextCursorId;
 
@@ -53,6 +55,7 @@ class AddWarehouse extends Component
         'areas.*.rack.*.category_inventory.required' => 'The Category Inventory field is required.',
         'areas.*.rack.*.category_inventory.min' => 'The Category Inventory field should be at least 3 characters.',
     ];
+
 
     /**
      * fungsi ini digunakan untuk menambahkan input area baru
@@ -277,6 +280,16 @@ class AddWarehouse extends Component
     public function render()
     {
         return view('livewire.warehouse.add-warehouse');
+    }
+
+    public function openModalNewItem()
+    {
+        $this->isShowModalNewItem = true;
+    }
+
+    public function closeModalNewItem()
+    {
+        $this->isShowModalNewItem = false;
     }
 
     /**
