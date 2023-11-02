@@ -279,11 +279,9 @@
                 });
 
 
-                $(function () {
-                    // deteksi checkbox yang sudah diklik
-
+                $('.modal-body').find('.items-modal').each(function () {
+                    console.log('ada');
                 });
-
 
             });
 
@@ -291,6 +289,11 @@
             $("#modalItem").on("hidden.bs.modal", function () {
             @this.dispatch('dismiss-modal');
             });
+
+
+        @this.on('test', (event) => {
+            
+        });
 
 
         });

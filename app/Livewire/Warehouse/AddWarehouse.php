@@ -71,7 +71,8 @@ class AddWarehouse extends Component
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
         $this->items['data'] = $item['data'];
         $this->nextCursorId = $item['next_cursor'];
-        
+
+
     }
 
 
@@ -81,19 +82,17 @@ class AddWarehouse extends Component
         $this->area = $area;
         $this->rack = $rack;
 
-        Log::info($this->area);
+//        Log::info($this->area);
 
         // buka modal
         $this->openModal();
-
-        // proses rack
 
     }
 
     #[On('dismiss-modal')]
     public function dismissModal()
     {
-
+        $this->items = [];
         $this->isShow = false;
     }
 
@@ -117,22 +116,56 @@ class AddWarehouse extends Component
     public function addItem($id, $name)
     {
 
+        // cek apakah data sudah ditambahkan diarea
+        foreach ($this->areas as $dataArea) {
+//            Log::info(json_encode($dataArea));
+
+            $this->checkExistItem($dataArea['area']['item'], $name);
+
+
+            // cek data di dalam area rack
+            if (isset($dataArea['rack'])) {
+                foreach ($dataArea['rack'] as $subRack) {
+                    $this->checkExistItem($subRack['item'], $name);
+                }
+            }
+
+
+        }
+
+
         if ($this->rack == '') {
+
             // tambahkan item ke area yang sudah dipilih
             $this->areas[$this->area]['area']['item'][] = [
                 'id' => $id,
                 'name' => $name,
             ];
 
-            Log::info($this->areas);
+//            Log::info($this->areas);
             return;
         }
+
 
         $this->areas[$this->area]['rack'][$this->rack]['item'][] = [
             'id' => $id,
             'name' => $name,
         ];
-        Log::info($this->areas);
+//        Log::info($this->areas);
+    }
+
+    /**
+     * fungsi ini digunakan untuk mengecek apakah item sudah pernah ditambahkan
+     * @return void
+     */
+    private function checkExistItem(array $areas, string $name): void
+    {
+        foreach ($areas as $dataItem) {
+            if ($dataItem['name'] == $name) {
+                $this->js("console.log('tolak')");
+                return;
+            }
+        }
     }
 
     public function mount()
