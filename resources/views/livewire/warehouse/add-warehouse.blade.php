@@ -19,7 +19,8 @@
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
                     <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.simpan') }}</button>
+                            class="btn btn-text-only-primary btn-nav margin-left-10"
+                            wire:click.prevent="saveWarehouse">{{ __('app_locale.button.simpan') }}</button>
 
                 </div>
             </div>
@@ -192,26 +193,12 @@
                         </table>
 
 
-                        <button class="btn btn-secondary" wire:click.prevent="submits">click</button>
-
                     </div>
 
                 </div>
             </form>
         </div>
     </div>
-
-    @if ($errors->has('areas.*.item'))
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->get('areas.*.item') as $error)
-                    @foreach ($error as $message)
-                        <li>{{ $message }}</li>
-                    @endforeach
-                @endforeach
-            </ul>
-        </div>
-    @endif
     <div class="modal modal-input" id="modalItem" tabindex="-1" role="dialog"
          style="display: {{ ($isShow) ? 'block' : 'none'  }}">
         <!-- Konten modal -->
@@ -274,12 +261,45 @@
 
 
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer row">
+
+                    <div class=" d-flex flex-row justify-content-end">
+
+
+                        <div>
+                            <button class="btn text-only-outlined cancel-btn">Batal</button>
+                            <button class="btn btn-text-only-primary margin-left-10" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">Buat item baru
+                            </button>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
     </div>
-    {{-- Modal Item --}}
+
+
+    <div class="modal fade modal-input" data-bs-backdrop="static" id="exampleModal" tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg  modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
+                    <h1 class="modal-title modal-input-title" id="exampleModalLabel">
+                        Buat item baru</h1>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </x-page-layout>
 

@@ -201,7 +201,7 @@ class AddWarehouse extends Component
      * fungsi ini digunakan untuk melakukan penyimpanan gudang baru
      * @return void
      */
-    public function submits()
+    public function saveWarehouse()
     {
         // lakukan validasi
         $this->validate();
@@ -244,7 +244,7 @@ class AddWarehouse extends Component
             }
 
         }
-        
+
         if ($this->rack == '') {
 
             // tambahkan item ke area yang sudah dipilih

@@ -12,8 +12,12 @@ return new class extends Migration {
     {
         Schema::create('items', function (Blueprint $table) {
             $table->uuid('id')->nullable(false)->unique();
+            $table->uuid('racks_id')->nullable(true);
             $table->string('name', 150)->nullable(false)->unique();
+            $table->foreign('racks_id')->references('id')->on('racks');
             $table->text('description')->nullable();
+
+
             $table->timestamps();
         });
     }

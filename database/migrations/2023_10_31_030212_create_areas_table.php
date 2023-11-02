@@ -12,9 +12,9 @@ return new class extends Migration {
     {
         Schema::create('areas', function (Blueprint $table) {
             $table->uuid('id')->nullable(false)->primary();
-            $table->uuid('warehouse_id')->nullable(false);
+            $table->uuid('warehouses_id')->nullable(false);
             $table->string('name', 100)->nullable(false);
-            $table->foreign('warehouse_id')->references('id')->on('warehouses');
+            $table->foreign('warehouses_id')->references('id')->on('warehouses');
             $table->timestamps();
         });
     }
