@@ -31,6 +31,11 @@ class AddWarehouse extends Component
     public string $area;
     public string $rack = '';
 
+    public string $codeItem;
+    public string $nameItem;
+    public string $category;
+    public string $descriptiom;
+
     #[Rule('image|max:1024')] // 1MB Max
     public $photoNewItem;
 
@@ -42,7 +47,6 @@ class AddWarehouse extends Component
         'areas.*.rack.*.category_inventory' => 'required|min:3',
 
     ];
-
     protected $messages = [
         'areas.*.area.area.required' => 'The Area A field is required.',
         'areas.*.area.area.min' => 'The Area A field should be at least 3 characters.',
@@ -56,6 +60,18 @@ class AddWarehouse extends Component
         'areas.*.rack.*.category_inventory.min' => 'The Category Inventory field should be at least 3 characters.',
     ];
 
+    public function upload()
+    {
+        $this->validate([
+            'photo' => [
+                'image',
+                Rule::dimensions()->maxWidth(1024)->maxHeight(1024),
+                Rule::size(1024 * 1024)->message('Harap unggah berkas yang lebih kecil dari 1MB.'), // Custom message
+            ],
+        ]);
+
+        // Perform file storage or any other action as needed.
+    }
 
     /**
      * fungsi ini digunakan untuk menambahkan input area baru
