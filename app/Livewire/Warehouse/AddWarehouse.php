@@ -31,15 +31,16 @@ class AddWarehouse extends Component
     public string $area;
     public string $rack = '';
 
-    #[Rule('required|min:3')]
+
     public string $codeItem;
-    #[Rule('required|min:3|unique:items,name')]
+
     public string $nameItem;
 
     public string $category;
     public string $descriptiom;
 
-    #[Rule('image|max:1024')] // 1MB Max
+
+    #[Rule('sometimes|image|max:1024')] // 1MB Max
     public $photoNewItem;
 
     protected $rules = [
@@ -62,19 +63,6 @@ class AddWarehouse extends Component
         'areas.*.rack.*.category_inventory.required' => 'The Category Inventory field is required.',
         'areas.*.rack.*.category_inventory.min' => 'The Category Inventory field should be at least 3 characters.',
     ];
-
-    public function upload()
-    {
-        $this->validate([
-            'photo' => [
-                'image',
-                Rule::dimensions()->maxWidth(1024)->maxHeight(1024),
-                Rule::size(1024 * 1024)->message('Harap unggah berkas yang lebih kecil dari 1MB.'), // Custom message
-            ],
-        ]);
-
-        // Perform file storage or any other action as needed.
-    }
 
     /**
      * fungsi ini digunakan untuk menambahkan input area baru
@@ -232,13 +220,25 @@ class AddWarehouse extends Component
 
 
     /**
-     * fungsi ini digunakan untuk melakukan penyimpanan gudang baru
+     * fungsi ini digunakan untuk melakukan validasi data sebelum
+     * menambah warehouse
      * @return void
      */
-    public function saveWarehouse()
+    public function validateInput()
     {
-        // lakukan validasi
-        $this->validate();
+        // lakukan validasi hanya data yang diperlukan
+        $this->validate([
+            'areas.*.area.area' => 'required|min:3',
+            'areas.*.area.rack' => 'required|min:3',
+            'areas.*.area.category_inventory' => 'required|min:3',
+            'areas.*.rack.*.rack' => 'required|min:3',
+            'areas.*.rack.*.category_inventory' => 'required|min:3',
+            'codeWarehouse' => 'required|min:5',
+            'nameWarehouse' => 'required|min:5',
+        ]);
+
+        // tampilkan data yang dibutuhkan
+        //:TODO simpan data warehouse ke database dengan membuat fungsi baru
     }
 
 

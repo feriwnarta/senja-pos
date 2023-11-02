@@ -20,7 +20,7 @@
 
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
-                            wire:click.prevent="saveWarehouse">{{ __('app_locale.button.simpan') }}</button>
+                            wire:click.prevent="validateInput">{{ __('app_locale.button.simpan') }}</button>
 
                 </div>
             </div>
