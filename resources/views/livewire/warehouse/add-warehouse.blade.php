@@ -278,11 +278,6 @@
                     }
                 });
 
-
-                $('.modal-body').find('.items-modal').each(function () {
-                    console.log('ada');
-                });
-
             });
 
 
@@ -291,8 +286,8 @@
             });
 
 
-        @this.on('test', (event) => {
-            
+        @this.on('reject-checkbox', (event) => {
+            alert('hanya diperbolehkan satu item di satu area / rack, item ini tidak akan ditambahkan');
         });
 
 

@@ -82,8 +82,6 @@ class AddWarehouse extends Component
         $this->area = $area;
         $this->rack = $rack;
 
-//        Log::info($this->area);
-
         // buka modal
         $this->openModal();
 
@@ -116,23 +114,29 @@ class AddWarehouse extends Component
     public function addItem($id, $name)
     {
 
+        $isExist = false;
+
         // cek apakah data sudah ditambahkan diarea
         foreach ($this->areas as $dataArea) {
-//            Log::info(json_encode($dataArea));
+            Log::info(json_encode($dataArea));
 
-            $this->checkExistItem($dataArea['area']['item'], $name);
+            $isExist = $this->checkExistItem($dataArea['area']['item'], $name);
 
+            if ($isExist) {
+                return;
+            }
 
             // cek data di dalam area rack
             if (isset($dataArea['rack'])) {
                 foreach ($dataArea['rack'] as $subRack) {
-                    $this->checkExistItem($subRack['item'], $name);
+                    $isExist = $this->checkExistItem($subRack['item'], $name);
+                    if ($isExist) {
+                        return;
+                    }
                 }
             }
 
-
         }
-
 
         if ($this->rack == '') {
 
@@ -142,7 +146,7 @@ class AddWarehouse extends Component
                 'name' => $name,
             ];
 
-//            Log::info($this->areas);
+            Log::info($this->areas);
             return;
         }
 
@@ -151,21 +155,23 @@ class AddWarehouse extends Component
             'id' => $id,
             'name' => $name,
         ];
-//        Log::info($this->areas);
+
     }
 
     /**
      * fungsi ini digunakan untuk mengecek apakah item sudah pernah ditambahkan
      * @return void
      */
-    private function checkExistItem(array $areas, string $name): void
+    private function checkExistItem(array $areas, string $name): bool
     {
         foreach ($areas as $dataItem) {
             if ($dataItem['name'] == $name) {
-                $this->js("console.log('tolak')");
-                return;
+                $this->dispatch('reject-checkbox');
+                return true;
             }
         }
+
+        return false;
     }
 
     public function mount()
