@@ -7,11 +7,12 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class AddWarehouse extends Component
 {
-    use WithPagination;
+    use WithPagination, WithFileUploads;
 
     #[Rule('required|min:5')]
     public string $codeWarehouse;
@@ -27,6 +28,9 @@ class AddWarehouse extends Component
 
     public string $area;
     public string $rack = '';
+
+    #[Rule('image|max:1024')] // 1MB Max
+    public $photoNewItem;
 
     protected $rules = [
         'areas.*.area.area' => 'required|min:3',
@@ -220,30 +224,30 @@ class AddWarehouse extends Component
         $isExist = false;
 
         // cek apakah data sudah ditambahkan diarea
-        foreach ($this->areas as $dataArea) {
-            Log::info(json_encode($dataArea));
-
-            // cek apakah item berada didalam area
-            $isExist = $this->checkExistItem($dataArea['area']['item'], $name);
-
-            // jika item sudah ditambahkan maka hentikan looping
-            if ($isExist) {
-                return;
-            }
-
-            // cek data di dalam area rack
-            if (isset($dataArea['rack'])) {
-                foreach ($dataArea['rack'] as $subRack) {
-                    $isExist = $this->checkExistItem($subRack['item'], $name);
-
-                    // jika item sudah ditambahkan didalam rack area maka hentikan looping
-                    if ($isExist) {
-                        return;
-                    }
-                }
-            }
-
-        }
+//        foreach ($this->areas as $dataArea) {
+//            Log::info(json_encode($dataArea));
+//
+//            // cek apakah item berada didalam area
+//            $isExist = $this->checkExistItem($dataArea['area']['item'], $name);
+//
+//            // jika item sudah ditambahkan maka hentikan looping
+//            if ($isExist) {
+//                return;
+//            }
+//
+//            // cek data di dalam area rack
+//            if (isset($dataArea['rack'])) {
+//                foreach ($dataArea['rack'] as $subRack) {
+//                    $isExist = $this->checkExistItem($subRack['item'], $name);
+//
+//                    // jika item sudah ditambahkan didalam rack area maka hentikan looping
+//                    if ($isExist) {
+//                        return;
+//                    }
+//                }
+//            }
+//
+//        }
 
         if ($this->rack == '') {
 
@@ -265,6 +269,16 @@ class AddWarehouse extends Component
 
     }
 
+    public function mount()
+    {
+        $this->dispatch('load-add-warehouse-script');
+    }
+
+    public function render()
+    {
+        return view('livewire.warehouse.add-warehouse');
+    }
+
     /**
      * fungsi ini digunakan untuk mengecek apakah item sudah pernah ditambahkan
      * @return void
@@ -279,16 +293,6 @@ class AddWarehouse extends Component
         }
 
         return false;
-    }
-
-    public function mount()
-    {
-        $this->dispatch('load-add-warehouse-script');
-    }
-
-    public function render()
-    {
-        return view('livewire.warehouse.add-warehouse');
     }
 
 

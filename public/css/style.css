@@ -615,6 +615,11 @@ input[type="checkbox"]:checked {
     max-height: 3.5rem;
 }
 
+#modalBodyNewItem {
+    padding: 1.5rem !important;
+    
+}
+
 /* ---------------------------------------------------
     DETAIL PO PAGE STYLE
 ----------------------------------------------------- */

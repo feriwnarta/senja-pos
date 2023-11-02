@@ -129,6 +129,7 @@
                                     @foreach($area['rack'] as $subKey => $value)
                                         {{ \Illuminate\Support\Facades\Log::info($value) }}
                                         <tr>
+                                            <td></td>
                                             <td>
                                                 <input type="text"
                                                        class="input-no-border make-input rackInput caption-medium"
@@ -290,7 +291,73 @@
                     <h1 class="modal-title modal-input-title" id="exampleModalLabel">
                         Buat item baru</h1>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body d-flex flex-column" id="modalBodyNewItem">
+
+                    {{-- Item Image --}}
+                    <div class="d-flex flex-column align-self-center align-items-center">
+                        <img
+                            src="https://s3-alpha-sig.figma.com/img/473a/648b/8c5e12d4ea9042ba824140de2d5e468c?Expires=1699833600&Signature=EclP9HAIqnSZLSrsPTG0K-lULYxs1PeeTyg3ONhqnWBzRDFM7m6u~1NhNd7iBIcvn5p2rRl-0NjYrMRJ0m6CZYfhNGmRGy764Zp06aJORkBjk5ZU47eXuL664~KaS~mMLLbhvPQK9d9SNr47-eG9gP0xPa25lp2ZxY5z9Om0UR8IOgYqTW1lR-36rj-vxgTpURMtXug4fjqinvjTQPHhpMqwrgYQe2QtbR53jcXJvNspvraRVcXgQThVasNXhn4rahm~GkRIj35FaQwJyhVF2wTvN~wlVjXh0toIMNYNJZg0vGOqmrP-r3I5H8ZPtxOs5cK43wH7e5d7jpLZocDydg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                            alt="" srcset="" width="140">
+
+                        @if ($photoNewItem)
+                            <img src="{{ $photoNewItem->temporaryUrl() }}">
+                        @endif
+
+                        <div>
+                            <button type="button" class="btn btn-icon-text-outlined margin-top-16"
+                                    onclick="document.getElementById('file-input').click();">
+                                <i class="pencil-icon"></i>
+                                Pilih foto
+                            </button>
+                            <input type="file" id="file-input" wire:model="photoNewItem" style="display: none;"
+                                   accept="image/*">
+                        </div>
+
+                    </div>
+
+
+                    {{--Kode Item  --}}
+                    <div class=" container-input-default margin-top-24">
+                        <label for="codeItem"
+                               class="form-label input-label">Kode item</label>
+
+                        <input type="name" class="form-control input-default"
+                               id="codeItem" placeholder="BMDGSP01"
+                        >
+
+                    </div>
+
+                    <div id="divider" class="margin-top-20"></div>
+
+                    {{-- Nama  --}}
+                    <div class="container-input-default margin-top-20">
+                        <label for="nameItem"
+                               class="form-label input-label">Nama</label>
+
+                        <input type="name" class="form-control input-default"
+                               id="nameItem" placeholder="Daging sapi"
+                        >
+                    </div>
+
+                    <div id="divider" class="margin-top-20"></div>
+
+
+                    <div class="margin-top-20">
+
+                        <label for="form-select" class="form-label input-label">Kategori</label>
+
+                        <select class="form-select select-button">
+                            <option value="">Daging</option>
+                        </select>
+                    </div>
+
+                    <div id="divider" class="margin-top-20"></div>
+
+                    <div class="margin-top-20">
+                        <label for="description" class="form-label">Deskripsi item</label>
+                        <textarea class="form-control textarea" id="description" rows="5"
+                                  placeholder="Daging sapi ayam segar"></textarea>
+                    </div>
 
                 </div>
                 <div class="modal-footer">

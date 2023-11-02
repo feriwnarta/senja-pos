@@ -15,7 +15,6 @@
 }
 
 
-
 .pos-icon {
     display: inline-block;
     width: 1rem;
@@ -105,7 +104,6 @@
 }
 
 
-
 /* ---------------------------------------------------
     ICON NAVBAR
 ----------------------------------------------------- */
@@ -151,7 +149,7 @@
 /* ---------------------------------------------------
     ICON PAGE CREATE RECIPES
 ----------------------------------------------------- */
-.x-icon{
+.x-icon {
     display: inline-block;
     width: 1.25rem;
     height: 1.25rem;
@@ -160,3 +158,18 @@
     background-image: url(../img/icons/x.png);
     vertical-align: middle;
 }
+
+
+/* ---------------------------------------------------
+    ICON PAGE CREATE WAREHOUSE
+----------------------------------------------------- */
+.pencil-icon {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../img/icons/pencil.svg);
+    vertical-align: middle;
+}
+
