@@ -437,6 +437,13 @@
             });
 
 
+            // deteksi modal item baru ditutup
+            $("#modalNewItem").on("hidden.bs.modal", function () {
+                // kirim event ke livewire untuk menutup modal
+            @this.dispatch('dismiss-modal-new-item');
+            });
+
+
         @this.on('reject-checkbox', (event) => {
             // tampilkan pesan tidak boleh tambahkan item lebih dari satu area atau rak
             alert('hanya diperbolehkan satu item di satu area / rack, item ini tidak akan ditambahkan');

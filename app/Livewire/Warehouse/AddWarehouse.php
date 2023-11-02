@@ -199,6 +199,14 @@ class AddWarehouse extends Component
         $this->isShow = false;
     }
 
+
+    #[On('dismiss-modal-new-item')]
+    public function dismissModalNewItem()
+    {
+
+        $this->isShowModalNewItem = false;
+    }
+
     /**
      * listener ini digunakan untuk mendapatkan data item lebih dari data sebelumnya (infinite loading)
      * menggunakan cursor dengan cursor id
