@@ -43,11 +43,15 @@ class AddWarehouse extends Component
     public function remove($key)
     {
         unset($this->areas[$key]);
+
+        if ($this->checkNotEmptyAreas()) {
+            $this->isAddedArea = false;
+        }
     }
 
-    public function test()
+    private function checkNotEmptyAreas(): bool
     {
-        dd($this->areas);
+        return empty($this->areas);
     }
 
     public function removeRack($key, $subkey)
@@ -75,7 +79,6 @@ class AddWarehouse extends Component
 
     }
 
-
     #[On('load-modal-rack')]
     public function loadRack($area, $rack)
     {
@@ -93,7 +96,6 @@ class AddWarehouse extends Component
         $this->items = [];
         $this->isShow = false;
     }
-
 
     #[On('load-more')]
     public function handleScroll()
@@ -166,7 +168,7 @@ class AddWarehouse extends Component
     {
         foreach ($areas as $dataItem) {
             if ($dataItem['name'] == $name) {
-                $this->dispatch('reject-checkbox');
+                $this->dispatch('reject-checkbox', $name);
                 return true;
             }
         }

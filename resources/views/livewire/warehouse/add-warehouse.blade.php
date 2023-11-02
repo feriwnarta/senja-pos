@@ -215,7 +215,7 @@
                     @if(isset($items) && !empty($items))
                         @foreach($items['data'] as $data)
                             <div class="items-modal">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-center data-modal">
 
                                     <div class="item-modal d-flex flex-row align-items-center">
                                         <div>
@@ -224,7 +224,7 @@
                                                  alt="">
                                         </div>
                                         <div
-                                            class="body-text-regular name-item-ingredient">{{ $data['name'] }}</div>
+                                            class="body-text-regular name-item-modal">{{ $data['name'] }}</div>
 
                                     </div>
 
@@ -267,13 +267,17 @@
 
                 modalBody.off("scroll"); // Matikan event scroll sebelum menghubungkan lagi
 
+                // infinity loading
                 modalBody.on("scroll", function () {
                     var scrollTop = modalBody.scrollTop();
                     var scrollHeight = modalBody.prop("scrollHeight");
                     var clientHeight = modalBody.prop("clientHeight");
 
+                    // deteksi scroll layar dipaling bawah
                     if (scrollTop + clientHeight + 1 >= scrollHeight && !isRequesting) {
                         isRequesting = true;
+
+                        // trigger event untuk meload data lebih banyak
                     @this.dispatch('load-more');
                     }
                 });
@@ -281,13 +285,22 @@
             });
 
 
+            // deteksi modal ditutup
             $("#modalItem").on("hidden.bs.modal", function () {
+                // kirim event ke livewire untuk menutup modal
             @this.dispatch('dismiss-modal');
             });
 
 
         @this.on('reject-checkbox', (event) => {
+            // tampilkan pesan tidak boleh tambahkan item lebih dari satu area atau rak
             alert('hanya diperbolehkan satu item di satu area / rack, item ini tidak akan ditambahkan');
+
+            // batalkan item yang dicheck
+            $('.item-modal .name-item-modal:contains(' + event + ')').each(function () {
+                // Melakukan sesuatu dengan elemen yang ditemukan, misalnya, mencetak teksnya
+                $(this).closest('.data-modal').find('#itemCheckBox').prop('checked', false);
+            });
         });
 
 
