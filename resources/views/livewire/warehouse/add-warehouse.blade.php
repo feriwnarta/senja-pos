@@ -75,20 +75,35 @@
 
                             <tbody id="warehouseData">
 
-                            @foreach($areas as $key => $area )
-
+                            @foreach($areas as $key => $area)
                                 <tr>
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
                                                placeholder="Area A" style="width: 100%"
                                                wire:model="areas.{{$key}}.area.area">
+                                        @if ($errors->has("areas.$key.area.area"))
+                                            <span
+                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.area.area") }}</span>
+                                        @endif
                                     </td>
-                                    <td><input type="text" class="input-no-border make-input rackInput caption-medium"
-                                               placeholder="A1"
-                                               style="width: 100%" wire:model="areas.{{$key}}.area.rack"></td>
-                                    <td><input type="text" class="input-no-border make-input catInvInput caption-medium"
+                                    <td>
+                                        <input type="text" class="input-no-border make-input rackInput caption-medium"
+                                               placeholder="A1" style="width: 100%"
+                                               wire:model="areas.{{$key}}.area.rack">
+                                        @if ($errors->has("areas.$key.area.rack"))
+                                            <span
+                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.area.rack") }}</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <input type="text" class="input-no-border make-input catInvInput caption-medium"
                                                placeholder="Bahan mentah" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.category_inventory"></td>
+                                               wire:model="areas.{{$key}}.area.category_inventory">
+                                        @if ($errors->has("areas.$key.area.category_inventory"))
+                                            <span
+                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.area.category_inventory") }}</span>
+                                        @endif
+                                    </td>
                                     <td>
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-target="#modalItem"
@@ -104,29 +119,27 @@
                                             @endif
                                         </button>
                                     </td>
-
-
-                                    <td class=" delete-item
-                                        " wire:click.prevent="remove( {{ $key }})">
+                                    <td class="delete-item" wire:click.prevent="remove( {{ $key }})">
                                         <i class="x-icon"></i>
                                     </td>
                                 </tr>
 
-
                                 @if(isset($area['rack']))
-
                                     @foreach($area['rack'] as $subKey => $value)
                                         {{ \Illuminate\Support\Facades\Log::info($value) }}
                                         <tr>
                                             <td>
-
-                                            </td>
-                                            <td><input type="text"
+                                                <input type="text"
                                                        class="input-no-border make-input rackInput caption-medium"
-                                                       placeholder="A1"
-                                                       style="width: 100%"
-                                                       wire:model="areas.{{ $key }}.rack.{{ $subKey }}.rack"></td>
-                                            <td><input type="text"
+                                                       placeholder="A1" style="width: 100%"
+                                                       wire:model="areas.{{ $key }}.rack.{{ $subKey }}.rack">
+                                                @if ($errors->has("areas.$key.rack.$subKey.rack"))
+                                                    <span
+                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <input type="text"
                                                        class="input-no-border make-input catInvInput caption-medium"
                                                        placeholder="Bahan mentah" style="width: 100%"
                                                        wire:model="areas.{{$key}}.rack.{{ $subKey }}.category_inventory">
@@ -137,7 +150,6 @@
                                                         @click="$dispatch('load-modal-rack', {area: {{ $key  }}, rack: {{ $subKey }} })"
                                                         style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                                 >
-
                                                     @if(empty($value['item']))
                                                         + Item
                                                     @else
@@ -152,11 +164,10 @@
                                                 <i class="x-icon"></i>
                                             </td>
                                         </tr>
-
                                     @endforeach
                                 @endif
-
                             @endforeach
+
 
                             <tr id="addWarehouseAction">
                                 <td>
@@ -180,6 +191,9 @@
                             </tbody>
                         </table>
 
+
+                        <button class="btn btn-secondary" wire:click.prevent="submits">click</button>
+
                     </div>
 
                 </div>
@@ -187,6 +201,17 @@
         </div>
     </div>
 
+    @if ($errors->has('areas.*.item'))
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->get('areas.*.item') as $error)
+                    @foreach ($error as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="modal modal-input" id="modalItem" tabindex="-1" role="dialog"
          style="display: {{ ($isShow) ? 'block' : 'none'  }}">
         <!-- Konten modal -->
