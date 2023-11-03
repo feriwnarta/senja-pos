@@ -134,7 +134,7 @@ class AddWarehouse extends Component
     public function loadItem($area)
     {
         $this->area = $area;
-        Log::info($this->area);
+        Log::info('area' . $this->area);
         $this->openModal();
 
     }
@@ -151,8 +151,7 @@ class AddWarehouse extends Component
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
 
 
-        $sample = [];
-
+        $this->items = [];
 
         // cek apakah data sudah ditambahkan item dan rak
         foreach ($item['data'] as $data) {
@@ -166,7 +165,7 @@ class AddWarehouse extends Component
                     $areaItemId = $areaItem['id'];
 
                     if ($itemId == $areaItemId) {
-                        $sample['data'][] = [
+                        $this->items['data'][] = [
                             'id' => $data['id'],
                             'name' => $data['name'],
                             'checked' => true,
@@ -185,7 +184,7 @@ class AddWarehouse extends Component
                         foreach ($rack['item'] as $rackItem) {
 
                             if ($itemId == $rackItem['id']) {
-                                $sample['data'][] = [
+                                $this->items['data'][] = [
                                     'id' => $data['id'],
                                     'name' => $data['name'],
                                     'checked' => true,
@@ -205,7 +204,7 @@ class AddWarehouse extends Component
                     continue;
                 }
 
-                $sample['data'][] = [
+                $this->items['data'][] = [
                     'id' => $data['id'],
                     'name' => $data['name'],
                     'checked' => false,
@@ -215,11 +214,7 @@ class AddWarehouse extends Component
             }
 
         }
-        Log::info($sample);
 
-
-        // simpan data cursor ke global $items
-        $this->items['data'] = $item['data'];
         // simpan id next cursor ke global next cusor id
         // cursor id ini digunakan untuk mendapatkan data selanjutnya menggunakan id
         $this->nextCursorId = $item['next_cursor'];
@@ -391,6 +386,17 @@ class AddWarehouse extends Component
     public function closeModalNewItem()
     {
         $this->isShowModalNewItem = false;
+    }
+
+    public function removeCheckboxArea($id, $index)
+    {
+
+    }
+
+
+    public function removeCheckboxRack($id, $index, $indexArea)
+    {
+
     }
 
     /**

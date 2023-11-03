@@ -256,8 +256,29 @@
                                     </div>
 
 
-                                    <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
-                                           wire:click="addItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
+                                    @if($data['checked'])
+
+                                        {{-- Pengecekan untuk checbox yang diklik oleh item yang sama, jika sama maka ada kemungkinan untuk menghapus item yang ditambahkan --}}
+                                        {{-- Pengecekan jika dibuka oleh area  --}}
+                                        @if(isset($data['from']) && $this->rack != ''  && $data['from'] == 'area' && $data['indexArea'] == $this->area)
+                                            {{-- Pengecekan untuk checbox yang diklik oleh area yang sama --}}
+                                            <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
+                                                   checked
+                                                   wire:click="removeCheckboxArea('{{ $data['id'] }}', '{{ $data['indexArea'] }}')"/>
+                                        @elseif(isset($data['from'])  && $data['from'] == 'rack' && $data['indexarea']  && $data['indexRack'] == $this->rack)
+                                            {{-- Pengecekan untuk checbox yang diklik oleh rack yang sama --}}
+                                            <h1>asama</h1>
+                                        @else
+                                            {{ $this->rack }}
+                                            {{-- Pengecekan untuk checbox yang diklik oleh area yang sama --}}
+                                            <input id="itemCheckBox" class="red-input checkbox" type="checkbox" checked
+                                                   disabled/>
+                                        @endif
+
+                                    @else
+                                        <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
+                                               wire:click="addItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
+                                    @endif
 
 
                                 </div>
