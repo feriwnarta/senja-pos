@@ -18,6 +18,8 @@ class AddWarehouse extends Component
     public string $codeWarehouse;
     #[Rule('required|min:5')]
     public string $nameWarehouse;
+    #[Rule('required|min:5')]
+    public string $addressWarehouse;
 
     public array $areas = [];
 
@@ -147,6 +149,75 @@ class AddWarehouse extends Component
 
         // lakuakn cursor paginate data item sebanyak 20
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
+
+
+        $sample = [];
+
+
+        // cek apakah data sudah ditambahkan item dan rak
+        foreach ($item['data'] as $data) {
+            $isSkip = false;
+            $itemId = $data['id'];
+
+            // cek apakah data sudah ditambahkan kedalam area dan rak
+            foreach ($this->areas as $key => $area) {
+                // cek kedalam item area
+                foreach ($area['area']['item'] as $areaItem) {
+                    $areaItemId = $areaItem['id'];
+
+                    if ($itemId == $areaItemId) {
+                        $sample['data'][] = [
+                            'id' => $data['id'],
+                            'name' => $data['name'],
+                            'checked' => true,
+                            'from' => 'area',
+                            'indexArea' => $key,
+                        ];
+                        $isSkip = true;
+                    }
+                }
+
+                // cek kedalam item area rak tambahan
+                if (isset($area['rack'])) {
+
+                    foreach ($area['rack'] as $keyRack => $rack) {
+
+                        foreach ($rack['item'] as $rackItem) {
+
+                            if ($itemId == $rackItem['id']) {
+                                $sample['data'][] = [
+                                    'id' => $data['id'],
+                                    'name' => $data['name'],
+                                    'checked' => true,
+                                    'from' => 'rack',
+                                    'indexArea' => $key,
+                                    'indexRack' => $keyRack,
+                                ];
+                                $isSkip = true;
+                            }
+
+                        }
+                    }
+
+                }
+
+                if ($isSkip) {
+                    continue;
+                }
+
+                $sample['data'][] = [
+                    'id' => $data['id'],
+                    'name' => $data['name'],
+                    'checked' => false,
+                ];
+
+
+            }
+
+        }
+        Log::info($sample);
+
+
         // simpan data cursor ke global $items
         $this->items['data'] = $item['data'];
         // simpan id next cursor ke global next cusor id
@@ -235,10 +306,13 @@ class AddWarehouse extends Component
             'areas.*.rack.*.category_inventory' => 'required|min:3',
             'codeWarehouse' => 'required|min:5',
             'nameWarehouse' => 'required|min:5',
+            'addressWarehouse' => 'min:5',
         ]);
 
         // tampilkan data yang dibutuhkan
         //:TODO simpan data warehouse ke database dengan membuat fungsi baru
+        Log::info(json_encode($this->areas, JSON_PRETTY_PRINT));
+
     }
 
 

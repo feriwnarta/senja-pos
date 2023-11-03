@@ -22,6 +22,7 @@
                             class="btn btn-text-only-primary btn-nav margin-left-10"
                             wire:click.prevent="validateInput">{{ __('app_locale.button.simpan') }}</button>
 
+
                 </div>
             </div>
             <div id="title-divider"></div>
@@ -196,6 +197,15 @@
                             </tr>
                             </tbody>
                         </table>
+
+
+                        <div class="margin-top-24">
+                            <label for="addressWarehouse" class="form-label">Alamat</label>
+                            <textarea class="form-control textarea" id="addressWarehouse" rows="5"
+                                      placeholder="Jln. Ki Hajar Dewantoro"
+                                      wire:model.blur="addressWarehouse"></textarea>
+                            @error('addressWarehouse') <span class="error">{{ $message }}</span> @enderror
+                        </div>
 
 
                     </div>
