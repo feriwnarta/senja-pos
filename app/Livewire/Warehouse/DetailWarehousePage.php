@@ -115,6 +115,30 @@ class DetailWarehousePage extends Component
 
     }
 
+    #[On('update-item-rack')]
+    public function updateItemRack($rackId, $item)
+    {
+        Log::info('update item');
+
+        foreach ($item as $singleItem) {
+            $items[] = [
+                'name' => $singleItem
+            ];
+        }
+
+        Log::debug($items);
+        
+        foreach ($this->areas as $areaKey => $dataArea) {
+            foreach ($dataArea as $area) {
+                foreach ($area['racks'] as $rackKey => $rack) {
+                    if ($rack['id'] == $rackId) {
+                        $this->areas[$areaKey]['area']['racks'][$rackKey]['item'] = $items;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * listener dapatkan isi item rack berdasarkan id
      * fungsi ini akan memanggil fungsi warehouse service getItemRackByIdWithCursor

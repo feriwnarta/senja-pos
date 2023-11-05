@@ -14,7 +14,6 @@ class TestItemModel extends TestCase
     public function testCursorPaginate()
     {
 
-
         $items = Item::orderBy('id')->cursorPaginate(10);
 
 

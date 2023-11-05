@@ -27,8 +27,24 @@ document.addEventListener("after-load-modal-edit-item", (event) => {
                 Livewire.dispatch('item-added', {rackId: rackId, id: id, value: 'false'});
             }
 
+            let modalItems = $('.item-modal');
 
+            if (modalItems.length > 0) {
+                let checkedCheckboxes = modalItems.find('input[type="checkbox"]:checked');
+
+                // Membuat array untuk menyimpan nilai atribut data-meta yang mengandung nama item checkbox yang tercentang
+                let item = checkedCheckboxes.map(function() {
+                    return $(this).data('meta');
+                }).get();
+
+                Livewire.dispatch('update-item-rack', {rackId: rackId, item: item});
+
+            } else {
+                console.log('Elemen dengan kelas item-modal tidak ditemukan.');
+            }
         });
+
+
 
 
     });

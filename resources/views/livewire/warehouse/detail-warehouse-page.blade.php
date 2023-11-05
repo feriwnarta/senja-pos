@@ -213,7 +213,7 @@
                                                wire:model="areas.{{ $key }}.area.racks.0.category_inventory">
                                     </td>
                                     <td>
-                                        <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
+                                        <button class="btn icon-text hoy" type="button" id="{{ $area['area']['racks'][0]['id'] }}" data-bs-toggle="modal"
                                                 data-bs-target="#modalEditItem"
                                                 @click="$dispatch('detail-item-rack-edit', {id: '{{ $area['area']['racks'][0]['id'] }}' })"
                                                 style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
@@ -380,11 +380,11 @@
                                 </div>
 
                                 @if($item['checked'] == 'true')
-                                    <input id="{{ $item['id'] }}" class="red-input checkbox" type="checkbox" checked/>
+                                    <input id="{{ $item['id'] }}" data-meta="{{ $item['name'] }}" class="red-input checkbox" type="checkbox" checked/>
                                 @else
 
                                     {{-- JIKA ITEM TIDAK CHECKED --}}
-                                    <input id="{{ $item['id'] }}" class="red-input checkbox"
+                                    <input id="{{ $item['id'] }}" data-meta="{{ $item['name'] }}" class="red-input checkbox"
                                            type="checkbox"/>
                                 @endif
                             </div>
