@@ -33,7 +33,6 @@ class AddWarehouse extends Component
     public string $area;
     public string $rack = '';
 
-
     public string $codeItem;
 
     public string $nameItem;
@@ -136,6 +135,8 @@ class AddWarehouse extends Component
         $this->area = $area;
         $this->rack = '';
         Log::info('area' . $this->area);
+        $this->items = [];
+
         $this->openModal();
 
     }
@@ -152,67 +153,9 @@ class AddWarehouse extends Component
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
 
 
-        $this->items = [];
-
         // cek apakah data sudah ditambahkan item dan rak
         foreach ($item['data'] as $data) {
-            $isSkip = false;
-            $itemId = $data['id'];
-
-            // cek apakah data sudah ditambahkan kedalam area dan rak
-            foreach ($this->areas as $key => $area) {
-                // cek kedalam item area
-                foreach ($area['area']['item'] as $areaItem) {
-                    $areaItemId = $areaItem['id'];
-
-                    if ($itemId == $areaItemId) {
-                        $this->items['data'][] = [
-                            'id' => $data['id'],
-                            'name' => $data['name'],
-                            'checked' => true,
-                            'from' => 'area',
-                            'indexArea' => $key,
-                        ];
-                        $isSkip = true;
-                    }
-                }
-
-                // cek kedalam item area rak tambahan
-                if (isset($area['rack'])) {
-
-                    foreach ($area['rack'] as $keyRack => $rack) {
-
-                        foreach ($rack['item'] as $rackItem) {
-
-                            if ($itemId == $rackItem['id']) {
-                                $this->items['data'][] = [
-                                    'id' => $data['id'],
-                                    'name' => $data['name'],
-                                    'checked' => true,
-                                    'from' => 'rack',
-                                    'indexArea' => $key,
-                                    'indexRack' => $keyRack,
-                                ];
-                                $isSkip = true;
-                            }
-
-                        }
-                    }
-
-                }
-
-                if ($isSkip) {
-                    continue;
-                }
-
-                $this->items['data'][] = [
-                    'id' => $data['id'],
-                    'name' => $data['name'],
-                    'checked' => false,
-                ];
-
-
-            }
+            $this->validateAddedItem($data);
 
         }
 
@@ -276,8 +219,9 @@ class AddWarehouse extends Component
             $nextItems = Item::orderBy('id')->cursorPaginate(20, ['*'], 'cursor', $this->nextCursorId)->toArray();
 
             // tambahkan data baru ke variabel $items
-            foreach ($nextItems['data'] as $nextItem) {
-                $this->items['data'][] = $nextItem;
+            foreach ($nextItems['data'] as $data) {
+
+                $this->validateAddedItem($data);
             }
 
             // simpan next cursor id dari cursor ini
@@ -322,7 +266,38 @@ class AddWarehouse extends Component
     {
 
         // hapus jika item sudah ada di area atau rack
+        // cek apakah data sudah ditambahkan diarea
+        foreach ($this->areas as $key => $dataArea) {
+            Log::info(json_encode($dataArea));
 
+            // cek apakah item berada didalam area
+            $isExist = $this->checkExistItem($dataArea['area']['item'], $id);
+
+            // jika item sudah ditambahkan maka hentikan looping
+            if ($isExist) {
+                $areaCollection = collect($this->areas[$key]['area']['item']);
+                $areaCollection = $this->rejectCollectionAreaItem($areaCollection, $id);
+                $this->areas[$key]['area']['item'] = $areaCollection;
+                return;
+            }
+
+            // cek data di dalam area rack
+            if (isset($dataArea['rack'])) {
+                foreach ($dataArea['rack'] as $subKey => $subRack) {
+                    $isExist = $this->checkExistItem($subRack['item'], $id);
+
+                    $rackCollection = collect($this->areas[$key]['rack'][$subKey]['item']);
+                    $rackCollection = $this->rejectCollectionAreaItem($rackCollection, $id);
+                    $this->areas[$key]['rack'][$subKey]['item'] = $rackCollection;
+
+                    // jika item sudah ditambahkan didalam rack area maka hentikan looping
+                    if ($isExist) {
+                        return;
+                    }
+                }
+            }
+
+        }
 
 
         // tambahkan item ke area atau rack
@@ -330,6 +305,7 @@ class AddWarehouse extends Component
     }
 
     private function addItem($id, $name) {
+
         if ($this->rack == '') {
 
             // tambahkan item ke area yang sudah dipilih
@@ -381,14 +357,17 @@ class AddWarehouse extends Component
         if($index !== null && $id !== null) {
             $areaCollection = collect($this->areas[$index][ 'area']['item']);
 
-            $areaCollection = $areaCollection->reject(function($item) use ($id) {
-                return $item['id'] == $id;
-            })->values()->all();
-
+            $areaCollection = $this->rejectCollectionAreaItem($areaCollection, $id);
 
             $this->areas[$index]['area']['item'] = $areaCollection;
 
         }
+    }
+
+    private function rejectCollectionAreaItem($collection, $id) {
+        return $collection->reject(function($item) use ($id) {
+            return $item['id'] == $id;
+        })->values()->all();
     }
 
 
@@ -417,16 +396,80 @@ class AddWarehouse extends Component
      * fungsi ini digunakan untuk mengecek apakah item sudah pernah ditambahkan
      * @return void
      */
-    private function checkExistItem(array $areas, string $name): bool
+    private function checkExistItem(array $areas, string $id): bool
     {
         foreach ($areas as $dataItem) {
-            if ($dataItem['name'] == $name) {
-                $this->dispatch('reject-checkbox', $name);
+            if ($dataItem['id'] == $id) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * @param mixed $data
+     * @return void
+     */
+    public function validateAddedItem(mixed $data): void
+    {
+        $isSkip = false;
+        $itemId = $data['id'];
+
+        // cek apakah data sudah ditambahkan kedalam area dan rak
+        foreach ($this->areas as $key => $area) {
+            // cek kedalam item area
+            foreach ($area['area']['item'] as $areaItem) {
+                $areaItemId = $areaItem['id'];
+
+                if ($itemId == $areaItemId) {
+                    $this->items['data'][] = [
+                        'id' => $data['id'],
+                        'name' => $data['name'],
+                        'checked' => true,
+                        'from' => 'area',
+                        'indexArea' => $key,
+                    ];
+                    $isSkip = true;
+                }
+            }
+
+            // cek kedalam item area rak tambahan
+            if (isset($area['rack'])) {
+
+                foreach ($area['rack'] as $keyRack => $rack) {
+
+                    foreach ($rack['item'] as $rackItem) {
+
+                        if ($itemId == $rackItem['id']) {
+                            $this->items['data'][] = [
+                                'id' => $data['id'],
+                                'name' => $data['name'],
+                                'checked' => true,
+                                'from' => 'rack',
+                                'indexArea' => $key,
+                                'indexRack' => $keyRack,
+                            ];
+                            $isSkip = true;
+                        }
+
+                    }
+                }
+
+            }
+
+            if ($isSkip) {
+                continue;
+            }
+
+            $this->items['data'][] = [
+                'id' => $data['id'],
+                'name' => $data['name'],
+                'checked' => false,
+            ];
+
+
+        }
     }
 
 

@@ -257,7 +257,7 @@
 
 
 
-                                    @if($data['checked'])
+                                    @if(isset($data['checked'])&& $data['checked'])
                                         {{-- Pengecekan untuk checbox yang diklik oleh item yang sama, jika sama maka ada kemungkinan untuk menghapus item yang ditambahkan --}}
                                         {{-- Pengecekan jika dibuka oleh area  --}}
 
