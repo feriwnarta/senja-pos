@@ -4,6 +4,7 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\Item;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -23,7 +24,7 @@ class AddWarehouse extends Component
 
     public array $areas = [];
 
-    public array $items;
+    public array $items = [];
     public bool $isShow = false;
     public bool $isShowModalNewItem = false;
 
@@ -135,7 +136,6 @@ class AddWarehouse extends Component
         $this->area = $area;
         $this->rack = '';
         Log::info('area' . $this->area);
-        $this->items = [];
 
         $this->openModal();
 
@@ -149,6 +149,8 @@ class AddWarehouse extends Component
     {
         $this->isShow = !$this->isShow;
 
+        $this->items = [];
+
         // lakuakn cursor paginate data item sebanyak 20
         $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
 
@@ -156,13 +158,12 @@ class AddWarehouse extends Component
         // cek apakah data sudah ditambahkan item dan rak
         foreach ($item['data'] as $data) {
             $this->validateAddedItem($data);
-
         }
+
 
         // simpan id next cursor ke global next cusor id
         // cursor id ini digunakan untuk mendapatkan data selanjutnya menggunakan id
         $this->nextCursorId = $item['next_cursor'];
-
 
     }
 
@@ -418,6 +419,8 @@ class AddWarehouse extends Component
 
         // cek apakah data sudah ditambahkan kedalam area dan rak
         foreach ($this->areas as $key => $area) {
+            $isItemAdded = false; // Tambahkan variabel ini
+
             // cek kedalam item area
             foreach ($area['area']['item'] as $areaItem) {
                 $areaItemId = $areaItem['id'];
@@ -430,17 +433,15 @@ class AddWarehouse extends Component
                         'from' => 'area',
                         'indexArea' => $key,
                     ];
+                    $isItemAdded = true;
                     $isSkip = true;
                 }
             }
 
             // cek kedalam item area rak tambahan
             if (isset($area['rack'])) {
-
                 foreach ($area['rack'] as $keyRack => $rack) {
-
                     foreach ($rack['item'] as $rackItem) {
-
                         if ($itemId == $rackItem['id']) {
                             $this->items['data'][] = [
                                 'id' => $data['id'],
@@ -450,27 +451,27 @@ class AddWarehouse extends Component
                                 'indexArea' => $key,
                                 'indexRack' => $keyRack,
                             ];
+                            $isItemAdded = true;
                             $isSkip = true;
                         }
-
                     }
                 }
-
             }
 
-            if ($isSkip) {
-                continue;
+            if ($isItemAdded) {
+                break; // Hentikan iterasi jika item sudah ditambahkan
             }
+        }
 
+        if (!$isSkip) {
             $this->items['data'][] = [
                 'id' => $data['id'],
                 'name' => $data['name'],
                 'checked' => false,
             ];
-
-
         }
     }
+
 
 
 }
