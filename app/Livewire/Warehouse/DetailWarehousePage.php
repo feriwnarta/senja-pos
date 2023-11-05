@@ -127,7 +127,7 @@ class DetailWarehousePage extends Component
         }
 
         Log::debug($items);
-        
+
         foreach ($this->areas as $areaKey => $dataArea) {
             foreach ($dataArea as $area) {
                 foreach ($area['racks'] as $rackKey => $rack) {
@@ -204,8 +204,9 @@ class DetailWarehousePage extends Component
                 }
             }
 
-
         }
+
+        Log::debug($this->itemEditData);
 
 
         $this->dispatch('after-load-modal-edit-item', rackId: $id);
