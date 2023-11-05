@@ -281,7 +281,7 @@
 
                                     @else
                                         <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
-                                               wire:click="addItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
+                                               wire:click="selectItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
                                     @endif
 
 

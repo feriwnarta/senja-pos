@@ -318,37 +318,18 @@ class AddWarehouse extends Component
      * @param $name
      * @return void
      */
-    public function addItem($id, $name)
+    public function selectItem($id, $name)
     {
 
-        $isExist = false;
+        // hapus jika item sudah ada di area atau rack
 
-        // cek apakah data sudah ditambahkan diarea
-//        foreach ($this->areas as $dataArea) {
-//            Log::info(json_encode($dataArea));
-//
-//            // cek apakah item berada didalam area
-//            $isExist = $this->checkExistItem($dataArea['area']['item'], $name);
-//
-//            // jika item sudah ditambahkan maka hentikan looping
-//            if ($isExist) {
-//                return;
-//            }
-//
-//            // cek data di dalam area rack
-//            if (isset($dataArea['rack'])) {
-//                foreach ($dataArea['rack'] as $subRack) {
-//                    $isExist = $this->checkExistItem($subRack['item'], $name);
-//
-//                    // jika item sudah ditambahkan didalam rack area maka hentikan looping
-//                    if ($isExist) {
-//                        return;
-//                    }
-//                }
-//            }
-//
-//        }
 
+
+        // tambahkan item ke area atau rack
+        $this->addItem($id, $name);
+    }
+
+    private function addItem($id, $name) {
         if ($this->rack == '') {
 
             // tambahkan item ke area yang sudah dipilih
@@ -366,7 +347,6 @@ class AddWarehouse extends Component
             'id' => $id,
             'name' => $name,
         ];
-
     }
 
     public function mount()
@@ -389,15 +369,48 @@ class AddWarehouse extends Component
         $this->isShowModalNewItem = false;
     }
 
+    /**
+     * fungsi ini digunakan untuk menghapus area yang ditambahkan
+     * @param $id
+     * @param $index
+     * @return void
+     */
     public function removeCheckboxArea($id, $index)
     {
+        // lakukan penghapus item dengan area berdasarkan index
+        if($index !== null && $id !== null) {
+            $areaCollection = collect($this->areas[$index][ 'area']['item']);
 
+            $areaCollection = $areaCollection->reject(function($item) use ($id) {
+                return $item['id'] == $id;
+            })->values()->all();
+
+
+            $this->areas[$index]['area']['item'] = $areaCollection;
+
+        }
     }
 
 
-    public function removeCheckboxRack($id, $index, $indexArea)
+    /**
+     * fungsi ini digunakan untuk menghapus rack yang sudah ditambahkan
+     * @param $id
+     * @param $indexArea
+     * @param $indexRack
+     * @return void
+     */
+    public function removeCheckboxRack($id, $indexArea, $indexRack)
     {
+        if($id !== null && $indexArea !== null && $indexRack !== null) {
+            $rackCollection = collect($this->areas[$indexArea]['rack'][$indexRack]['item']);
 
+            $rackCollection = $rackCollection->reject(function($item) use ($id) {
+                return $item['id'] == $id;
+            })->values()->all();
+
+
+            $this->areas[$indexArea]['rack'][$indexRack]['item'] = $rackCollection;
+        }
     }
 
     /**
