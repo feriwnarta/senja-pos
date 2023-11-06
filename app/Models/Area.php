@@ -20,11 +20,11 @@ class Area extends Model
 
     public function warehouse(): BelongsTo
     {
-        return $this->belongsTo(Warehouse::class);
+        return $this->belongsTo(Warehouse::class,);
     }
 
     public function racks(): HasMany
     {
-        return $this->hasMany(Rack::class);
+        return $this->hasMany(Rack::class, 'areas_id');
     }
 }

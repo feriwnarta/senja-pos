@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Area;
 use App\Models\Warehouse;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TestAreaModel extends TestCase
@@ -16,12 +17,37 @@ class TestAreaModel extends TestCase
     {
 
         $area = Area::create([
-            'warehouse_id' => $this->warehouse->id,
+            'warehouses_id' => $this->warehouse->id,
             'name' => 'Area A',
         ]);
 
         self::assertNotNull($area);
         self::assertSame('Area A', $area->name);
+    }
+
+
+    public function testInsertWarehouseArea()
+    {
+        // lakukan proses simpan gudang
+        $warehouse = Warehouse::create(
+            [
+                'warehouse_code' => fake()->countryCode(),
+                'name' => fake()->name(),
+                'address' => fake()->address(),
+            ]
+        );
+
+        $warehouse->areas()->create(
+            ['name' => 'A1']
+        );
+
+        $warehouse->areas()->create(
+            ['name' => 'A2']
+        );
+        $warehouse->areas()->create(
+            ['name' => 'A3']
+        );
+
     }
 
 
@@ -54,6 +80,8 @@ class TestAreaModel extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        DB::table('warehouses')->delete();
 
         $this->warehouse = Warehouse::create([
             'warehouse_code' => fake()->uuid(),

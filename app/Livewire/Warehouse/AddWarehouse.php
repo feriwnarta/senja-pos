@@ -3,6 +3,8 @@
 namespace App\Livewire\Warehouse;
 
 use App\Models\Item;
+use App\Models\Warehouse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -15,7 +17,7 @@ class AddWarehouse extends Component
 {
     use WithPagination, WithFileUploads;
 
-    #[Rule('required|min:5')]
+    #[Rule('required|min:5|unique:warehouses,warehouse_code')]
     public string $codeWarehouse;
     #[Rule('required|min:5')]
     public string $nameWarehouse;
@@ -41,15 +43,17 @@ class AddWarehouse extends Component
     public string $category;
     public string $descriptiom;
 
+    public array $locationWarehouse;
+
 
     #[Rule('sometimes|image|max:1024')] // 1MB Max
     public $photoNewItem;
 
     protected $rules = [
-        'areas.*.area.area' => 'required|min:3',
-        'areas.*.area.rack' => 'required|min:3',
+        'areas.*.area.area' => 'required|min:2',
+        'areas.*.area.rack' => 'required|min:2',
         'areas.*.area.category_inventory' => 'required|min:3',
-        'areas.*.rack.*.rack' => 'required|min:3',
+        'areas.*.rack.*.rack' => 'required|min:2',
         'areas.*.rack.*.category_inventory' => 'required|min:3',
 
     ];
@@ -311,19 +315,106 @@ class AddWarehouse extends Component
 
         // lakukan validasi hanya data yang diperlukan
         $this->validate([
-            'areas.*.area.area' => 'required|min:3',
-            'areas.*.area.rack' => 'required|min:3',
+            'areas.*.area.area' => 'required|min:2',
+            'areas.*.area.rack' => 'required|min:2',
             'areas.*.area.category_inventory' => 'required|min:3',
-            'areas.*.rack.*.rack' => 'required|min:3',
+            'areas.*.rack.*.rack' => 'required|min:2',
             'areas.*.rack.*.category_inventory' => 'required|min:3',
             'codeWarehouse' => 'required|min:5',
             'nameWarehouse' => 'required|min:5',
             'addressWarehouse' => 'min:5',
+            'locationWarehouse' => 'array|required',
         ]);
 
         // tampilkan data yang dibutuhkan
         //:TODO simpan data warehouse ke database dengan membuat fungsi baru
         Log::info(json_encode($this->areas, JSON_PRETTY_PRINT));
+
+        $this->storeWarehouse();
+
+    }
+
+    private function storeWarehouse()
+    {
+
+        try {
+            // lakukan proses simpan gudang
+            $warehouse = Warehouse::create(
+                [
+                    'warehouse_code' => $this->codeWarehouse,
+                    'name' => $this->nameWarehouse,
+                    'address' => $this->addressWarehouse,
+                ]
+            );
+
+            // TODO: lakukan simpan warehouse jika lokasinya sebuah outlet, ini akan dikerjakan saat modul outlet sudah ada
+
+            foreach ($this->areas as $dataArea) {
+                // isi data area
+                $areaName = $dataArea['area']['area'];
+                $rackName = $dataArea['area']['rack'];
+                $categoryInventory = $dataArea['area']['category_inventory'];
+                $area = $warehouse->areas()->create([
+                    'name' => $areaName
+                ]);
+
+                // isi data rak
+                $rack = $area->racks()->create([
+                    'name' => $rackName,
+                    'category_inventory' => $categoryInventory
+                ]);
+
+                if (!empty($dataArea['area']['item'])) {
+                    foreach ($dataArea['area']['item'] as $item) {
+                        $id = $item['id'];
+
+                        $item = Item::find($id);
+
+                        if ($item) {
+                            $item->update(['racks_id' => $rack->id]);
+                        }
+
+                    }
+                }
+
+
+                if (isset($dataArea['rack'])) {
+                    foreach ($dataArea['rack'] as $dataRack) {
+                        $rackName = $dataRack['rack'];
+                        $categoryInventory = $dataRack['category_inventory'];
+
+                        $rack = $area->racks()->create([
+                            'name' => $rackName,
+                            'category_inventory' => $categoryInventory
+                        ]);
+
+                        if (isset($dataRack['item'])) {
+                            foreach ($dataRack['item'] as $item) {
+                                $itemId = $item['id'];
+
+                                $item = Item::find($id);
+
+                                if ($item) {
+                                    $item->update(['racks_id' => $rack->id]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+            Cache::forget('add-warehouse-first-cursor');
+            $this->reset();
+
+            // TODO: Perbaiki pesan sukses simpan gudang
+            $this->js("berhasil simpan gudang");
+
+        } catch (\Exception $exception) {
+            $this->js("console.log('{$exception->getMessage()}')");
+        }
+
 
     }
 
@@ -479,17 +570,28 @@ class AddWarehouse extends Component
         }
     }
 
-
-    #[Computed(cache: true, key: 'add-warehouse-next-cursor')]
-    private function nextCursor(): array
+    public function setLocationWarehouse($id, $name)
     {
-        return Item::orderBy('id')->cursorPaginate(20, ['*'], 'cursor', $this->nextCursorId)->toArray();
+        $this->locationWarehouse = [
+            'id' => $id,
+            'name' => $name
+        ];
     }
 
     #[Computed(cache: true, key: 'add-warehouse-first-cursor')]
     private function firstCursor(): array
     {
-        return Item::orderBy('id')->cursorPaginate(20)->toArray();
+        return Item::where('racks_id', null)->orderBy('id')->cursorPaginate(20)->toArray();
+    }
+
+
+    #[Computed(cache: true, key: 'add-warehouse-location-warehouse')]
+    private function locationWarehouse(): array
+    {
+        return [
+            'id' => '123',
+            'name' => 'Gudang pusat',
+        ];
     }
 
 

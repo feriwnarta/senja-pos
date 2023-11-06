@@ -19,6 +19,6 @@ class Warehouse extends Model
 
     public function areas(): HasMany
     {
-        return $this->hasMany(Area::class);
+        return $this->hasMany(Area::class, 'warehouses_id');
     }
 }

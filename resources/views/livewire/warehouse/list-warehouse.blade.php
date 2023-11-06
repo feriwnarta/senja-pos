@@ -64,14 +64,32 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>GPST01</td>
-                <td>Gudang pusat</td>
-                <td>Area A</td>
-                <td>A1,A2, A3</td>
-                <td>Jl Satu dua tiga raya</td>
-                <td>Joko</td>
-            </tr>
+
+
+            @foreach($this->warehouses as $data)
+
+                <tr>
+                    <td> {{ $data->warehouse_code }} </td>
+                    <td> {{ $data->name }} </td>
+                    <td>
+                        @foreach($data->areas as $area)
+                            {{ $area->name }}
+                        @endforeach
+                    </td>
+                    <td>
+                        @foreach($data->areas as $area)
+                            @foreach($area->racks as $rack)
+                                {{ $rack->name }},
+                            @endforeach
+                        @endforeach
+                    </td>
+                    <td>
+                        {{ $data->address }}
+                    </td>
+                    <td></td>
+                </tr>
+
+            @endforeach
             </tbody>
         </table>
 
