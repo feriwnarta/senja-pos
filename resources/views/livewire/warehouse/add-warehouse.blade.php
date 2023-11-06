@@ -256,7 +256,6 @@
                                     </div>
 
 
-
                                     @if(isset($data['checked'])&& $data['checked'])
                                         {{-- Pengecekan untuk checbox yang diklik oleh item yang sama, jika sama maka ada kemungkinan untuk menghapus item yang ditambahkan --}}
                                         {{-- Pengecekan jika dibuka oleh area  --}}
@@ -447,25 +446,33 @@
     <script>
         document.addEventListener('livewire:initialized', () => {
             $("#modalItem").on("shown.bs.modal", function () {
-                var modalBody = $(this).find(".modal-body");
-                var isRequesting = false;
+                let modalBody = $(this).find(".modal-body");
+                let isStop = false;
 
-                modalBody.off("scroll"); // Matikan event scroll sebelum menghubungkan lagi
 
                 // infinity loading
                 modalBody.on("scroll", function () {
-                    var scrollTop = modalBody.scrollTop();
-                    var scrollHeight = modalBody.prop("scrollHeight");
-                    var clientHeight = modalBody.prop("clientHeight");
+                    let scrollTop = modalBody.scrollTop();
+                    let scrollHeight = modalBody.prop("scrollHeight");
+                    let clientHeight = modalBody.prop("clientHeight");
 
                     // deteksi scroll layar dipaling bawah
-                    if (scrollTop + clientHeight + 1 >= scrollHeight && !isRequesting) {
-                        isRequesting = true;
+                    if (scrollTop + clientHeight + 1 >= scrollHeight && !isStop) {
+
 
                         // trigger event untuk meload data lebih banyak
+
                     @this.dispatch('load-more');
+
+
                     }
+
                 });
+
+            @this.on('stop-request', (event) => {
+                isStop = true;
+            });
+
 
             });
 

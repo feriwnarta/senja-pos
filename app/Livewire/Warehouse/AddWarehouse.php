@@ -29,7 +29,7 @@ class AddWarehouse extends Component
     public bool $isShowModalNewItem = false;
 
     public bool $isAddedArea = false;
-    public string $nextCursorId;
+    public ?string $nextCursorId = null;
 
     public string $area;
     public string $rack = '';
@@ -152,7 +152,7 @@ class AddWarehouse extends Component
         $this->items = [];
 
         // lakuakn cursor paginate data item sebanyak 20
-        $item = Item::orderBy('id')->cursorPaginate(20)->toArray();
+        $item = $this->firstCursor;
 
 
         // cek apakah data sudah ditambahkan item dan rak
@@ -165,247 +165,6 @@ class AddWarehouse extends Component
         // cursor id ini digunakan untuk mendapatkan data selanjutnya menggunakan id
         $this->nextCursorId = $item['next_cursor'];
 
-    }
-
-    /**
-     * fungsi terpisah untuk melakukan pembukaan modal dari data rack,
-     * dikarenakan pada tahap ini terdapat perbedaan logic dari pengolahan
-     * modal yang lainnya
-     * @param $area
-     * @param $rack
-     * @return void
-     */
-    #[On('load-modal-rack')]
-    public function loadRack($area, $rack)
-    {
-        // simpan area
-        $this->area = $area;
-        // simpan rack
-        $this->rack = $rack;
-        // buka modal
-        $this->openModal();
-    }
-
-    /**
-     * listener ini digunakan untuk melakuakn penutupan modal yang terbuka secara manual
-     * dan melakukan logic tambahan untuk mengosongkan data item cursor yang keload
-     * @return void
-     */
-    #[On('dismiss-modal')]
-    public function dismissModal()
-    {
-        $this->items = [];
-        $this->isShow = false;
-    }
-
-
-    #[On('dismiss-modal-new-item')]
-    public function dismissModalNewItem()
-    {
-
-        $this->isShowModalNewItem = false;
-    }
-
-    /**
-     * listener ini digunakan untuk mendapatkan data item lebih dari data sebelumnya (infinite loading)
-     * menggunakan cursor dengan cursor id
-     * @return void
-     */
-    #[On('load-more')]
-    public function handleScroll()
-    {
-        // cek terlebih dahulu apakah cursor id tidak null
-        // jika datanya null berarti sudah tidak ada data lagi
-        if ($this->nextCursorId != null) {
-            $nextItems = Item::orderBy('id')->cursorPaginate(20, ['*'], 'cursor', $this->nextCursorId)->toArray();
-
-            // tambahkan data baru ke variabel $items
-            foreach ($nextItems['data'] as $data) {
-
-                $this->validateAddedItem($data);
-            }
-
-            // simpan next cursor id dari cursor ini
-            $this->nextCursorId = $nextItems['next_cursor'];
-        }
-    }
-
-
-    /**
-     * fungsi ini digunakan untuk melakukan validasi data sebelum
-     * menambah warehouse
-     * @return void
-     */
-    public function validateInput()
-    {
-        // lakukan validasi hanya data yang diperlukan
-        $this->validate([
-            'areas.*.area.area' => 'required|min:3',
-            'areas.*.area.rack' => 'required|min:3',
-            'areas.*.area.category_inventory' => 'required|min:3',
-            'areas.*.rack.*.rack' => 'required|min:3',
-            'areas.*.rack.*.category_inventory' => 'required|min:3',
-            'codeWarehouse' => 'required|min:5',
-            'nameWarehouse' => 'required|min:5',
-            'addressWarehouse' => 'min:5',
-        ]);
-
-        // tampilkan data yang dibutuhkan
-        //:TODO simpan data warehouse ke database dengan membuat fungsi baru
-        Log::info(json_encode($this->areas, JSON_PRETTY_PRINT));
-
-    }
-
-
-    /**
-     * fungsi ini digunakan untuk menambahkan item baru ke area dan rak
-     * @param $id
-     * @param $name
-     * @return void
-     */
-    public function selectItem($id, $name)
-    {
-
-        // hapus jika item sudah ada di area atau rack
-        // cek apakah data sudah ditambahkan diarea
-        foreach ($this->areas as $key => $dataArea) {
-            Log::info(json_encode($dataArea));
-
-            // cek apakah item berada didalam area
-            $isExist = $this->checkExistItem($dataArea['area']['item'], $id);
-
-            // jika item sudah ditambahkan maka hentikan looping
-            if ($isExist) {
-                $areaCollection = collect($this->areas[$key]['area']['item']);
-                $areaCollection = $this->rejectCollectionAreaItem($areaCollection, $id);
-                $this->areas[$key]['area']['item'] = $areaCollection;
-                return;
-            }
-
-            // cek data di dalam area rack
-            if (isset($dataArea['rack'])) {
-                foreach ($dataArea['rack'] as $subKey => $subRack) {
-                    $isExist = $this->checkExistItem($subRack['item'], $id);
-
-                    $rackCollection = collect($this->areas[$key]['rack'][$subKey]['item']);
-                    $rackCollection = $this->rejectCollectionAreaItem($rackCollection, $id);
-                    $this->areas[$key]['rack'][$subKey]['item'] = $rackCollection;
-
-                    // jika item sudah ditambahkan didalam rack area maka hentikan looping
-                    if ($isExist) {
-                        return;
-                    }
-                }
-            }
-
-        }
-
-
-        // tambahkan item ke area atau rack
-        $this->addItem($id, $name);
-    }
-
-    private function addItem($id, $name) {
-
-        if ($this->rack == '') {
-
-            // tambahkan item ke area yang sudah dipilih
-            $this->areas[$this->area]['area']['item'][] = [
-                'id' => $id,
-                'name' => $name,
-            ];
-
-            Log::info($this->areas);
-            return;
-        }
-
-
-        $this->areas[$this->area]['rack'][$this->rack]['item'][] = [
-            'id' => $id,
-            'name' => $name,
-        ];
-    }
-
-    public function mount()
-    {
-        $this->dispatch('load-add-warehouse-script');
-    }
-
-    public function render()
-    {
-        return view('livewire.warehouse.add-warehouse');
-    }
-
-    public function openModalNewItem()
-    {
-        $this->isShowModalNewItem = true;
-    }
-
-    public function closeModalNewItem()
-    {
-        $this->isShowModalNewItem = false;
-    }
-
-    /**
-     * fungsi ini digunakan untuk menghapus area yang ditambahkan
-     * @param $id
-     * @param $index
-     * @return void
-     */
-    public function removeCheckboxArea($id, $index)
-    {
-        // lakukan penghapus item dengan area berdasarkan index
-        if($index !== null && $id !== null) {
-            $areaCollection = collect($this->areas[$index][ 'area']['item']);
-
-            $areaCollection = $this->rejectCollectionAreaItem($areaCollection, $id);
-
-            $this->areas[$index]['area']['item'] = $areaCollection;
-
-        }
-    }
-
-    private function rejectCollectionAreaItem($collection, $id) {
-        return $collection->reject(function($item) use ($id) {
-            return $item['id'] == $id;
-        })->values()->all();
-    }
-
-
-    /**
-     * fungsi ini digunakan untuk menghapus rack yang sudah ditambahkan
-     * @param $id
-     * @param $indexArea
-     * @param $indexRack
-     * @return void
-     */
-    public function removeCheckboxRack($id, $indexArea, $indexRack)
-    {
-        if($id !== null && $indexArea !== null && $indexRack !== null) {
-            $rackCollection = collect($this->areas[$indexArea]['rack'][$indexRack]['item']);
-
-            $rackCollection = $rackCollection->reject(function($item) use ($id) {
-                return $item['id'] == $id;
-            })->values()->all();
-
-
-            $this->areas[$indexArea]['rack'][$indexRack]['item'] = $rackCollection;
-        }
-    }
-
-    /**
-     * fungsi ini digunakan untuk mengecek apakah item sudah pernah ditambahkan
-     * @return void
-     */
-    private function checkExistItem(array $areas, string $id): bool
-    {
-        foreach ($areas as $dataItem) {
-            if ($dataItem['id'] == $id) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -472,6 +231,265 @@ class AddWarehouse extends Component
         }
     }
 
+    /**
+     * fungsi terpisah untuk melakukan pembukaan modal dari data rack,
+     * dikarenakan pada tahap ini terdapat perbedaan logic dari pengolahan
+     * modal yang lainnya
+     * @param $area
+     * @param $rack
+     * @return void
+     */
+    #[On('load-modal-rack')]
+    public function loadRack($area, $rack)
+    {
+        // simpan area
+        $this->area = $area;
+        // simpan rack
+        $this->rack = $rack;
+        // buka modal
+        $this->openModal();
+    }
+
+    /**
+     * listener ini digunakan untuk melakuakn penutupan modal yang terbuka secara manual
+     * dan melakukan logic tambahan untuk mengosongkan data item cursor yang keload
+     * @return void
+     */
+    #[On('dismiss-modal')]
+    public function dismissModal()
+    {
+        $this->items = [];
+        $this->isShow = false;
+    }
+
+
+    #[On('dismiss-modal-new-item')]
+    public function dismissModalNewItem()
+    {
+
+        $this->isShowModalNewItem = false;
+    }
+
+    /**
+     * listener ini digunakan untuk mendapatkan data item lebih dari data sebelumnya (infinite loading)
+     * menggunakan cursor dengan cursor id
+     * @return void
+     */
+    #[On('load-more')]
+    public function handleScroll()
+    {
+        // cek terlebih dahulu apakah cursor id tidak null
+        // jika datanya null berarti sudah tidak ada data lagi
+        if ($this->nextCursorId != null) {
+            $nextItems = $this->nextCursor;
+
+            Log::info($nextItems);
+
+            // tambahkan data baru ke variabel $items
+            foreach ($nextItems['data'] as $data) {
+
+                $this->validateAddedItem($data);
+            }
+
+
+            // simpan next cursor id dari cursor ini
+            $this->nextCursorId = $nextItems['next_cursor'];
+            return;
+        }
+
+        $this->dispatch('stop-request');
+
+    }
+
+    /**
+     * fungsi ini digunakan untuk melakukan validasi data sebelum
+     * menambah warehouse
+     * @return void
+     */
+    public function validateInput()
+    {
+        // lakukan validasi hanya data yang diperlukan
+        $this->validate([
+            'areas.*.area.area' => 'required|min:3',
+            'areas.*.area.rack' => 'required|min:3',
+            'areas.*.area.category_inventory' => 'required|min:3',
+            'areas.*.rack.*.rack' => 'required|min:3',
+            'areas.*.rack.*.category_inventory' => 'required|min:3',
+            'codeWarehouse' => 'required|min:5',
+            'nameWarehouse' => 'required|min:5',
+            'addressWarehouse' => 'min:5',
+        ]);
+
+        // tampilkan data yang dibutuhkan
+        //:TODO simpan data warehouse ke database dengan membuat fungsi baru
+        Log::info(json_encode($this->areas, JSON_PRETTY_PRINT));
+
+    }
+
+    /**
+     * fungsi ini digunakan untuk menambahkan item baru ke area dan rak
+     * @param $id
+     * @param $name
+     * @return void
+     */
+    public function selectItem($id, $name)
+    {
+
+        // hapus jika item sudah ada di area atau rack
+        // cek apakah data sudah ditambahkan diarea
+        foreach ($this->areas as $key => $dataArea) {
+            Log::info(json_encode($dataArea));
+
+            // cek apakah item berada didalam area
+            $isExist = $this->checkExistItem($dataArea['area']['item'], $id);
+
+            // jika item sudah ditambahkan maka hentikan looping
+            if ($isExist) {
+                $areaCollection = collect($this->areas[$key]['area']['item']);
+                $areaCollection = $this->rejectCollectionAreaItem($areaCollection, $id);
+                $this->areas[$key]['area']['item'] = $areaCollection;
+                return;
+            }
+
+            // cek data di dalam area rack
+            if (isset($dataArea['rack'])) {
+                foreach ($dataArea['rack'] as $subKey => $subRack) {
+                    $isExist = $this->checkExistItem($subRack['item'], $id);
+
+                    $rackCollection = collect($this->areas[$key]['rack'][$subKey]['item']);
+                    $rackCollection = $this->rejectCollectionAreaItem($rackCollection, $id);
+                    $this->areas[$key]['rack'][$subKey]['item'] = $rackCollection;
+
+                    // jika item sudah ditambahkan didalam rack area maka hentikan looping
+                    if ($isExist) {
+                        return;
+                    }
+                }
+            }
+
+        }
+
+
+        // tambahkan item ke area atau rack
+        $this->addItem($id, $name);
+    }
+
+    /**
+     * fungsi ini digunakan untuk mengecek apakah item sudah pernah ditambahkan
+     * @return void
+     */
+    private function checkExistItem(array $areas, string $id): bool
+    {
+        foreach ($areas as $dataItem) {
+            if ($dataItem['id'] == $id) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function rejectCollectionAreaItem($collection, $id)
+    {
+        return $collection->reject(function ($item) use ($id) {
+            return $item['id'] == $id;
+        })->values()->all();
+    }
+
+    private function addItem($id, $name)
+    {
+
+        if ($this->rack == '') {
+
+            // tambahkan item ke area yang sudah dipilih
+            $this->areas[$this->area]['area']['item'][] = [
+                'id' => $id,
+                'name' => $name,
+            ];
+
+            Log::info($this->areas);
+            return;
+        }
+
+
+        $this->areas[$this->area]['rack'][$this->rack]['item'][] = [
+            'id' => $id,
+            'name' => $name,
+        ];
+    }
+
+    public function mount()
+    {
+        $this->dispatch('load-add-warehouse-script');
+    }
+
+    public function render()
+    {
+        return view('livewire.warehouse.add-warehouse');
+    }
+
+    public function openModalNewItem()
+    {
+        $this->isShowModalNewItem = true;
+    }
+
+    public function closeModalNewItem()
+    {
+        $this->isShowModalNewItem = false;
+    }
+
+    /**
+     * fungsi ini digunakan untuk menghapus area yang ditambahkan
+     * @param $id
+     * @param $index
+     * @return void
+     */
+    public function removeCheckboxArea($id, $index)
+    {
+        // lakukan penghapus item dengan area berdasarkan index
+        if ($index !== null && $id !== null) {
+            $areaCollection = collect($this->areas[$index]['area']['item']);
+
+            $areaCollection = $this->rejectCollectionAreaItem($areaCollection, $id);
+
+            $this->areas[$index]['area']['item'] = $areaCollection;
+
+        }
+    }
+
+    /**
+     * fungsi ini digunakan untuk menghapus rack yang sudah ditambahkan
+     * @param $id
+     * @param $indexArea
+     * @param $indexRack
+     * @return void
+     */
+    public function removeCheckboxRack($id, $indexArea, $indexRack)
+    {
+        if ($id !== null && $indexArea !== null && $indexRack !== null) {
+            $rackCollection = collect($this->areas[$indexArea]['rack'][$indexRack]['item']);
+
+            $rackCollection = $rackCollection->reject(function ($item) use ($id) {
+                return $item['id'] == $id;
+            })->values()->all();
+
+
+            $this->areas[$indexArea]['rack'][$indexRack]['item'] = $rackCollection;
+        }
+    }
+
+
+    #[Computed(cache: true, key: 'add-warehouse-next-cursor')]
+    private function nextCursor(): array
+    {
+        return Item::orderBy('id')->cursorPaginate(20, ['*'], 'cursor', $this->nextCursorId)->toArray();
+    }
+
+    #[Computed(cache: true, key: 'add-warehouse-first-cursor')]
+    private function firstCursor(): array
+    {
+        return Item::orderBy('id')->cursorPaginate(20)->toArray();
+    }
 
 
 }
