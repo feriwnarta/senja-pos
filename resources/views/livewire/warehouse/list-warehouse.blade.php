@@ -1,7 +1,9 @@
 <x-page-layout>
 
     <x-slot name="sidebar">
-        <livewire:components.sidebar.sidebar/>
+        <div wire:ignore>
+            <livewire:components.sidebar.sidebar/>
+        </div>
     </x-slot>
 
     <x-slot name="appBar">
@@ -20,7 +22,7 @@
                     <form class="d-flex">
                         <input class="form-control search-bar clear" type="search"
                                placeholder="{{ __('app_locale.input.cari') }}"
-                               aria-label="Search">
+                               aria-label="Search" wire:model.live.debounce.600ms="search">
                     </form>
 
                     <div class="dropdown margin-left-10">
@@ -49,49 +51,7 @@
     </x-slot>
 
     <div id="content-loaded">
-
-        {{-- Table daftar gudang --}}
-        <table id="tableMenu" class="table table-hover">
-            <thead class="text-center">
-            <tr>
-                <th>Kode gudang</th>
-                <th>Nama gudang</th>
-                <th>Area</th>
-                <th>Rak</th>
-                <th>Alamat</th>
-                <th>Penanggung jawab</th>
-
-            </tr>
-            </thead>
-            <tbody>
-
-
-            @foreach($this->warehouses as $data)
-
-                <tr>
-                    <td> {{ $data->warehouse_code }} </td>
-                    <td> {{ $data->name }} </td>
-                    <td>
-                        @foreach($data->areas as $area)
-                            {{ $area->name }}
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach($data->areas as $area)
-                            @foreach($area->racks as $rack)
-                                {{ $rack->name }},
-                            @endforeach
-                        @endforeach
-                    </td>
-                    <td>
-                        {{ $data->address }}
-                    </td>
-                    <td></td>
-                </tr>
-
-            @endforeach
-            </tbody>
-        </table>
+        <livewire:warehouser-table wire:model="search"/>
 
     </div>
 

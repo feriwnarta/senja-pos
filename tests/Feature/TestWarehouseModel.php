@@ -47,6 +47,19 @@ class TestWarehouseModel extends TestCase
 
     }
 
+    public function testInsertWarehouse()
+    {
+        Warehouse::insert([
+            ['id' => fake()->uuid(), 'warehouse_code' => fake()->countryCode(), 'name' => fake()->name(), 'address' => fake()->address()],
+            ['id' => fake()->uuid(), 'warehouse_code' => fake()->countryCode(), 'name' => fake()->name(), 'address' => fake()->address()],
+            ['id' => fake()->uuid(), 'warehouse_code' => fake()->countryCode(), 'name' => fake()->name(), 'address' => fake()->address()],
+            ['id' => fake()->uuid(), 'warehouse_code' => fake()->countryCode(), 'name' => fake()->name(), 'address' => fake()->address()],
+            ['id' => fake()->uuid(), 'warehouse_code' => fake()->countryCode(), 'name' => fake()->name(), 'address' => fake()->address()],
+            ['id' => fake()->uuid(), 'warehouse_code' => fake()->countryCode(), 'name' => fake()->name(), 'address' => fake()->address()],
+            ['id' => fake()->uuid(), 'warehouse_code' => fake()->countryCode(), 'name' => fake()->name(), 'address' => fake()->address()],
+        ]);
+    }
+
 
     /**
      * test berharap mendapatkan exception unique constraint saat mengisi nama yang duplicate
@@ -74,6 +87,7 @@ class TestWarehouseModel extends TestCase
     {
         parent::setUp();
         $this->warehouse = Warehouse::factory()->create();
+//        DB::table('warehouses')->delete();
     }
 
 

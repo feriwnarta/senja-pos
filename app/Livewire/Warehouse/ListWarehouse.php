@@ -8,6 +8,9 @@ use Livewire\Component;
 
 class ListWarehouse extends Component
 {
+
+    public string $search = '';
+
     public function render()
     {
         return view('livewire.warehouse.list-warehouse');

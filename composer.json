@@ -12,6 +12,8 @@
         "laravel/telescope": "^4.16",
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.0",
+        "openspout/openspout": "^4.19",
+        "power-components/livewire-powergrid": "^5.1",
         "spatie/laravel-permission": "^6.0"
     },
     "require-dev": {

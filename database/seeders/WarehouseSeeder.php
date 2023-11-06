@@ -13,6 +13,5 @@ class WarehouseSeeder extends Seeder
     public function run(): void
     {
         $warehouse = Warehouse::factory()->create();
-        
     }
 }
