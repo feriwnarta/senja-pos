@@ -176,6 +176,7 @@ class AddWarehouse extends Component
         $isSkip = false;
         $itemId = $data['id'];
 
+
         // cek apakah data sudah ditambahkan kedalam area dan rak
         foreach ($this->areas as $key => $area) {
             $isItemAdded = false; // Tambahkan variabel ini
@@ -281,9 +282,7 @@ class AddWarehouse extends Component
         // cek terlebih dahulu apakah cursor id tidak null
         // jika datanya null berarti sudah tidak ada data lagi
         if ($this->nextCursorId != null) {
-            $nextItems = $this->nextCursor;
-
-            Log::info($nextItems);
+            $nextItems = Item::orderBy('id')->cursorPaginate(20, ['*'], 'cursor', $this->nextCursorId)->toArray();
 
             // tambahkan data baru ke variabel $items
             foreach ($nextItems['data'] as $data) {
@@ -308,6 +307,8 @@ class AddWarehouse extends Component
      */
     public function validateInput()
     {
+
+
         // lakukan validasi hanya data yang diperlukan
         $this->validate([
             'areas.*.area.area' => 'required|min:3',
