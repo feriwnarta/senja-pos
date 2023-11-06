@@ -409,10 +409,10 @@ class AddWarehouse extends Component
             $this->reset();
 
             // TODO: Perbaiki pesan sukses simpan gudang
-            $this->js("berhasil simpan gudang");
+            $this->js("console.log('berhasil simpan gudang')");
 
         } catch (\Exception $exception) {
-            $this->js("console.log('{$exception->getMessage()}')");
+            $this->js("alert('{$exception->getMessage()}')");
         }
 
 
