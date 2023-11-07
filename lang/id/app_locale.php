@@ -9,6 +9,8 @@ return [
         'simpan' => 'Simpan',
         'area' => 'Area',
         'rak' => "Rak",
+        'hapus' => 'Hapus',
+        'edit' => 'Edit',
     ],
     'input' => [
         'cari' => 'Cari',
@@ -22,6 +24,7 @@ return [
         'namaGudang' => 'Nama gudang',
         'kodeGudang' => 'Kode gudang',
         'areaGudang' => 'Area gudang',
+        'detailGudang' => 'Detail gudang',
 
     ],
     'placeholder' => [

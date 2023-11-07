@@ -2,23 +2,20 @@
 
 namespace App\Livewire\Warehouse;
 
-use App\Models\Warehouse;
-use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ListWarehouse extends Component
 {
 
+    use WithPagination;
+
     public string $search = '';
+
 
     public function render()
     {
         return view('livewire.warehouse.list-warehouse');
     }
 
-    #[Computed]
-    public function warehouses()
-    {
-        return Warehouse::all();
-    }
 }

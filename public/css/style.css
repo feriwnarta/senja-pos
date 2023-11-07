@@ -176,6 +176,7 @@ input[type="search"]::-webkit-search-results-decoration {
     TABLE  STYLE
 ----------------------------------------------------- */
 
+
 .power-grid-table {
     border: 1px solid white;
 }
@@ -201,6 +202,8 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .power-grid-table tbody td {
     padding: 14px 16px;
+    font-family: var(--font-family);
+    font-size: 14px;
 }
 
 .table-component > thead {
@@ -209,7 +212,7 @@ input[type="search"]::-webkit-search-results-decoration {
     color: var(--neutral-100, #0A0A0A);
 
     /* Body Text/Regular */
-    font-family: var(--font-family);
+    font-family: var(--font-family)
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -458,6 +461,26 @@ input[type="number"]:not([step="any"])::-webkit-outer-spin-button {
     border: 1px solid white !important;
     box-shadow: none;
 }
+
+/* ---------------------------------------------------
+    TAG STYLE
+----------------------------------------------------- */
+
+.tags {
+    border-radius: 6px;
+    border: 1px solid var(--danger-border, #EEB4B0);
+    background: var(--danger-surface, #FFF4F2);
+
+    color: var(--danger-main, #CB3A31);
+
+    /* Caption/Medium */
+    font-family: Poppins;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px; /* 133.333% */
+}
+
 
 
 /* ---------------------------------------------------

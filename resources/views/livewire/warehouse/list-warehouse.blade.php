@@ -51,18 +51,21 @@
     </x-slot>
 
     <div id="content-loaded">
-        <livewire:warehouser-table wire:model="search"/>
+
+        <livewire:warehouse-table wire:model="search"/>
+
 
     </div>
 
 
     <script>
-        $("#tableMenu").DataTable({
-            paging: true,
-            selected: false,
-            lengthChange: false,
-            searching: false,
-            info: false,
+        document.addEventListener('livewire:initialized', () => {
+            $('.power-grid-table tr').click(function () {
+                let id = $(this).attr('wire:key')
+                id = id.replace('tbody-', '');
+            @this.dispatch('detail-data', {id: id});
+            });
+
         });
     </script>
 

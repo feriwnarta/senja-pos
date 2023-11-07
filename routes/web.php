@@ -26,5 +26,6 @@ Route::controller(\App\Http\Controllers\Warehouse\WarehouseController::class)->g
     Route::get('warehouse/list-item', 'getItem');
     Route::get("warehouse/list-warehouse", \App\Livewire\Warehouse\ListWarehouse::class);
     Route::get("warehouse/list-warehouse/add-warehouse", \App\Livewire\Warehouse\AddWarehouse::class);
+    Route::get("warehouse/list-warehouse/detail-warehouse", \App\Livewire\Warehouse\DetailWarehouse::class);
 });
 
