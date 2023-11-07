@@ -8,6 +8,7 @@ use App\Models\Item;
 class WarehouseController extends Controller
 {
 
+
     public function getITem()
     {
         return Item::orderBy('id')->cursorPaginate(20);

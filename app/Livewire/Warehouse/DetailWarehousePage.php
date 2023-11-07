@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Models\Warehouse;
+use App\Service\WarehouseService;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -13,9 +15,36 @@ class DetailWarehousePage extends Component
     public string $locationWarehouse;
     public array $areas = [];
     public bool $isAddedArea = false;
+    public Warehouse $warehouse;
+
+    public string $mode = 'view';
 
     public function mount()
     {
+        $this->getDataWarehouse($this->urlQuery);
+
+    }
+
+    private function getDataWarehouse(string $id)
+    {
+
+        $warehouseService = app()->make(WarehouseService::class);
+
+        // jika id nya kosong
+        if (empty($this->urlQuery)) {
+            return;
+        }
+
+        try {
+            $this->warehouse = $warehouseService->getDetailWarehouse($id);
+
+        } catch (\Exception $e) {
+            // warehouse not found
+            if ($e->getCode() == 1) {
+
+            }
+        }
+
 
     }
 
@@ -35,9 +64,4 @@ class DetailWarehousePage extends Component
         return view('livewire.warehouse.detail-warehouse-page');
     }
 
-    private function getDataWarehouse(string $id)
-    {
-        
-
-    }
 }
