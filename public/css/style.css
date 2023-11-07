@@ -1,14 +1,34 @@
-#content-loaded {
-    margin-top: 2.75rem;
-    margin-left: 1.25rem;
-    margin-right: 3rem;
-}
 
 :root {
     font-size: 16px;
     --primary-main: #F16622;
     --font-family: 'Poppins Regular';
 }
+
+html, body {
+    font-family: "Poppins Regular";
+    height: 100%; /* Pastikan body dan html memiliki tinggi 100% */
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+}
+
+
+#page {
+    height: 100vh;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding-bottom: 100px;
+}
+
+
+#content-loaded {
+    margin-top: 2.75rem;
+    margin-left: 1.25rem;
+    margin-right: 3rem;
+
+}
+
 
 select {
     border: none;
@@ -25,9 +45,6 @@ option {
     display: none;
 } */
 
-html {
-    font-family: "Poppins Regular";
-}
 
 #imagePos {
     max-width: 13.18rem;
@@ -230,6 +247,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .table-component tbody td {
     padding: 14px 16px;
 }
+
 
 /*#tableMenu th {*/
 /*    border-top: 1px solid white;*/

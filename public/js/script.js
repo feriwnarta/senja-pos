@@ -19,8 +19,8 @@ function changeWidthTitle() {
     let offset = $(".navbar-title").offset().left;
 
     $("#title-divider").css({
-        position: "absolute",
-        left: offset - 20,
+        position: "relative",
+        left: offset - 270,
     });
     $("#title-divider").width(widthTitleNavbar);
 }
