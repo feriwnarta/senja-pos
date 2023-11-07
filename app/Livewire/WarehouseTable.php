@@ -95,7 +95,7 @@ final class WarehouseTable extends PowerGridComponent
     #[\Livewire\Attributes\On('detail')]
     public function edit($id): void
     {
-        $this->redirect('/warehouse/list-warehouse/detail-warehouse', true);
+        $this->redirect("/warehouse/list-warehouse/detail-warehouse?q=$id", true);
     }
 
     public function actions(\App\Models\Warehouse $row): array

@@ -212,7 +212,7 @@ input[type="search"]::-webkit-search-results-decoration {
     color: var(--neutral-100, #0A0A0A);
 
     /* Body Text/Regular */
-    font-family: var(--font-family)
+    font-family: var(--font-family);
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -480,7 +480,6 @@ input[type="number"]:not([step="any"])::-webkit-outer-spin-button {
     font-weight: 500;
     line-height: 16px; /* 133.333% */
 }
-
 
 
 /* ---------------------------------------------------

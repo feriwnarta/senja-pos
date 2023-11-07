@@ -37,10 +37,7 @@
         </div>
     </x-slot>
 
-    <div id="content-loaded">
 
-
-    </div>
-
+    <livewire:warehouse.detail-warehouse-page lazy/>
 
 </x-page-layout>
