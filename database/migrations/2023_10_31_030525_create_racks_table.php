@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('racks', function (Blueprint $table) {
             $table->uuid('id')->nullable(false)->primary();
             $table->uuid('areas_id')->nullable(false);
-            $table->string('name', 100)->nullable(false)->unique();
+            $table->string('name', 100)->nullable(false);
             $table->string('category_inventory', 100)->nullable(false);
             $table->foreign('areas_id')->references('id')->on('areas');
             $table->timestamps();

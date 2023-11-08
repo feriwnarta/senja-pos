@@ -80,11 +80,20 @@
                                     </td>
                                     <td>
                                         @foreach($area['area']['racks'] as $racks)
-                                            <p class="caption-medium">{{ (empty($racks['item'])) ? 'item belum ditambahkan' : '' }}</p>
+                                            <button class="btn icon-text" type="button" id="addItem"
+                                                    data-bs-toggle="modal" data-bs-target="#modalDetailItem"
+                                                    @click="$dispatch('detail-item')"
+                                                    style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
 
-                                            @foreach($racks['item'] as $item)
-
-                                            @endforeach
+                                            >
+                                                @if(empty($racks['item']))
+                                                    Item belum ditambahkan
+                                                @else
+                                                    @foreach($racks['item'] as $item )
+                                                        {{ $item['name'] }},
+                                                    @endforeach
+                                                @endif
+                                            </button>
                                         @endforeach
                                     </td>
 
@@ -125,8 +134,8 @@
                                                     @if(empty($value['item']))
                                                         + Item
                                                     @else
-                                                        @foreach($value['item'] as $text )
-                                                            {{ $text['name'] }},
+                                                        @foreach($value['item'] as $item )
+                                                            {{ $item['name'] }},
                                                         @endforeach
                                                     @endif
                                                 </button>

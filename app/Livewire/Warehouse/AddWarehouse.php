@@ -4,6 +4,7 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\Item;
 use App\Models\Warehouse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -309,17 +310,22 @@ class AddWarehouse extends Component
     public function validateInput()
     {
 
+        foreach ($this->areas as $area) {
+            Log::info($area);
+        }
+
+        // TODO: Perbaiki validasi rack yang sama untuk satu gudang
         // lakukan validasi hanya data yang diperlukan
         $this->validate([
-            'areas.*.area.area' => 'required|min:2',
-            'areas.*.area.rack' => 'required|min:2',
+            'areas.*.area.area' => 'required|min:2|distinct',
             'areas.*.area.category_inventory' => 'required|min:3',
-            'areas.*.rack.*.rack' => 'required|min:2',
+            'areas.*.area.rack' => 'required|min:2|distinct:strict',
+            'areas.*.rack.*.rack' => 'required|min:2|distinct',
             'areas.*.rack.*.category_inventory' => 'required|min:3',
             'codeWarehouse' => 'required|min:5',
             'nameWarehouse' => 'required|min:5',
             'addressWarehouse' => 'min:5',
-        ]);
+        ],);
 
         // tampilkan data yang dibutuhkan
         //:TODO simpan data warehouse ke database dengan membuat fungsi baru
@@ -333,6 +339,8 @@ class AddWarehouse extends Component
     {
 
         try {
+            DB::beginTransaction();
+
             // lakukan proses simpan gudang
             $warehouse = Warehouse::create(
                 [
@@ -401,7 +409,7 @@ class AddWarehouse extends Component
             }
 
             Log::info($this->areas);
-
+            DB::commit();
 
             $this->reset();
 
@@ -409,7 +417,9 @@ class AddWarehouse extends Component
             $this->js("console.log('berhasil simpan gudang')");
 
         } catch (\Exception $exception) {
+            DB::rollBack();
             $this->js("alert('{$exception->getMessage()}')");
+
         }
 
 
