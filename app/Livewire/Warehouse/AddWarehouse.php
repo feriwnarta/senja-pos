@@ -311,7 +311,7 @@ class AddWarehouse extends Component
     public function validateInput()
     {
 
-        // TODO: Perbaiki validasi rack yang sama untuk satu gudang
+        // TODO: Perbaiki validasi message rack yang sama untuk satu gudang atau area yg sama
         // lakukan validasi hanya data yang diperlukan
         $this->validate([
             'areas.*.area.rack' => [
@@ -352,11 +352,97 @@ class AddWarehouse extends Component
         ]);
 
 
-        // tampilkan data yang dibutuhkan
-        //:TODO simpan data warehouse ke database dengan membuat fungsi baru
+        $this->storeWarehouse();
+
+    }
+
+    private function storeWarehouse()
+    {
+
+        try {
+            DB::beginTransaction();
+
+            // lakukan proses simpan gudang
+            $warehouse = Warehouse::create(
+                [
+                    'warehouse_code' => $this->codeWarehouse,
+                    'name' => $this->nameWarehouse,
+                    'address' => $this->addressWarehouse,
+                ]
+            );
+
+            // TODO: lakukan simpan warehouse jika lokasinya sebuah outlet, ini akan dikerjakan saat modul outlet sudah ada
+
+            foreach ($this->areas as $dataArea) {
+                // isi data area
+                $areaName = $dataArea['area']['area'];
+                $rackName = $dataArea['area']['rack'];
+                $categoryInventory = $dataArea['area']['category_inventory'];
+                $area = $warehouse->areas()->create([
+                    'name' => $areaName
+                ]);
+
+                // isi data rak
+                $rack = $area->racks()->create([
+                    'name' => $rackName,
+                    'category_inventory' => $categoryInventory
+                ]);
+
+                if (!empty($dataArea['area']['item'])) {
+                    foreach ($dataArea['area']['item'] as $item) {
+                        $id = $item['id'];
+
+                        $item = Item::find($id);
+
+                        if ($item) {
+                            $item->update(['racks_id' => $rack->id]);
+                        }
+
+                    }
+                }
 
 
-//        $this->storeWarehouse();
+                if (isset($dataArea['rack'])) {
+                    foreach ($dataArea['rack'] as $dataRack) {
+                        $rackName = $dataRack['rack'];
+                        $categoryInventory = $dataRack['category_inventory'];
+
+                        $rack = $area->racks()->create([
+                            'name' => $rackName,
+                            'category_inventory' => $categoryInventory
+                        ]);
+
+                        if (isset($dataRack['item'])) {
+                            foreach ($dataRack['item'] as $item) {
+                                $itemId = $item['id'];
+
+                                $item = Item::find($id);
+
+                                if ($item) {
+                                    $item->update(['racks_id' => $rack->id]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
+            Log::info($this->areas);
+            DB::commit();
+
+            $this->reset();
+
+            // TODO: Perbaiki pesan sukses simpan gudang
+            $this->js("console.log('berhasil simpan gudang')");
+
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            $this->js("alert('{$exception->getMessage()}')");
+
+        }
+
 
     }
 
@@ -518,96 +604,6 @@ class AddWarehouse extends Component
             'id' => $id,
             'name' => $name
         ];
-    }
-
-    private function storeWarehouse()
-    {
-
-        try {
-            DB::beginTransaction();
-
-            // lakukan proses simpan gudang
-            $warehouse = Warehouse::create(
-                [
-                    'warehouse_code' => $this->codeWarehouse,
-                    'name' => $this->nameWarehouse,
-                    'address' => $this->addressWarehouse,
-                ]
-            );
-
-            // TODO: lakukan simpan warehouse jika lokasinya sebuah outlet, ini akan dikerjakan saat modul outlet sudah ada
-
-            foreach ($this->areas as $dataArea) {
-                // isi data area
-                $areaName = $dataArea['area']['area'];
-                $rackName = $dataArea['area']['rack'];
-                $categoryInventory = $dataArea['area']['category_inventory'];
-                $area = $warehouse->areas()->create([
-                    'name' => $areaName
-                ]);
-
-                // isi data rak
-                $rack = $area->racks()->create([
-                    'name' => $rackName,
-                    'category_inventory' => $categoryInventory
-                ]);
-
-                if (!empty($dataArea['area']['item'])) {
-                    foreach ($dataArea['area']['item'] as $item) {
-                        $id = $item['id'];
-
-                        $item = Item::find($id);
-
-                        if ($item) {
-                            $item->update(['racks_id' => $rack->id]);
-                        }
-
-                    }
-                }
-
-
-                if (isset($dataArea['rack'])) {
-                    foreach ($dataArea['rack'] as $dataRack) {
-                        $rackName = $dataRack['rack'];
-                        $categoryInventory = $dataRack['category_inventory'];
-
-                        $rack = $area->racks()->create([
-                            'name' => $rackName,
-                            'category_inventory' => $categoryInventory
-                        ]);
-
-                        if (isset($dataRack['item'])) {
-                            foreach ($dataRack['item'] as $item) {
-                                $itemId = $item['id'];
-
-                                $item = Item::find($id);
-
-                                if ($item) {
-                                    $item->update(['racks_id' => $rack->id]);
-                                }
-                            }
-                        }
-                    }
-                }
-
-
-            }
-
-            Log::info($this->areas);
-            DB::commit();
-
-            $this->reset();
-
-            // TODO: Perbaiki pesan sukses simpan gudang
-            $this->js("console.log('berhasil simpan gudang')");
-
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            $this->js("alert('{$exception->getMessage()}')");
-
-        }
-
-
     }
 
     #[Computed(cache: true, key: 'add-warehouse-first-cursor')]
