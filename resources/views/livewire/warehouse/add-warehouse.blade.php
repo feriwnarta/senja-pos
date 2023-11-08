@@ -39,6 +39,8 @@
                         <label for="warehouseInput"
                                class="form-label input-label">{{ __('app_locale.text.kodeGudang') }}</label>
 
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plKodeGudang') }}"
                                wire:model.blur="codeWarehouse">
@@ -50,6 +52,8 @@
                     <div class="container-input-default  margin-top-24">
                         <label for="warehouseInput"
                                class="form-label input-label">{{ __('app_locale.text.namaGudang') }}</label>
+
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plNamaGudang') }}"
@@ -64,6 +68,7 @@
                         <label for="warehouseInput"
                                class="form-label input-label">{{ __('app_locale.text.areaGudang') }}</label>
 
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <table id="areaGudangTable" class="table-component table table-hover">
                             <thead>
@@ -201,6 +206,7 @@
 
                         <div class="margin-top-24">
                             <label for="addressWarehouse" class="form-label">Alamat</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
                             <textarea class="form-control textarea" id="addressWarehouse" rows="5"
                                       placeholder="Jln. Ki Hajar Dewantoro"
                                       wire:model.blur="addressWarehouse"></textarea>

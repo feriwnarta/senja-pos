@@ -504,10 +504,6 @@ input[type="number"]:not([step="any"])::-webkit-outer-spin-button {
     MODAL STYLE
 ----------------------------------------------------- */
 
-.modal-body {
-    padding: 0px !important;
-    margin: 0px !important;
-}
 
 .modal-input-title {
     font-family: "Poppins Medium";
@@ -739,7 +735,7 @@ select {
 /* ---------------------------------------------------
     ADD WAREHOUSE STYLE
 ----------------------------------------------------- */
-#modalItem .modal-body {
+.modal-body {
     padding: 19px 24px !important;
 }
 
