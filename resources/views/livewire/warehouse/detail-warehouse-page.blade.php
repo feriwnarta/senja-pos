@@ -2,7 +2,16 @@
     {{ $urlQuery }}
 
     <form x-data="{open: false}">
-        @if($warehouse !== null)
+
+        @if($htmlCondition != '')
+            <h1> {{ $htmlCondition }}</h1>
+        @endif
+
+
+
+        @if($warehouse !== null && $htmlCondition == '')
+
+
 
             {{-- MODE VIEW --}}
             @if($mode == 'view')
@@ -26,18 +35,139 @@
                                value="{{ $warehouse->name }}" disabled>
                     </div>
 
-                    {{-- NAMA GUDANG --}}
-                    <div class="container-input-default margin-top-24
-                ">
-                        <label for="warehouseInput"
-                               class="form-label input-label">{{ __('app_locale.text.namaGudang') }}</label>
-
-                        <input type="name" class="form-control input-default" id="warehouseInput"
-                               value="{{ $warehouse->name }}" disabled>
-                    </div>
 
                     {{-- AREA GUDANG --}}
+                    <div class="container-input-default margin-top-24">
 
+                        <label for="warehouseInput"
+                               class="form-label input-label">{{ __('app_locale.text.areaGudang') }}</label>
+
+
+                        <table id="areaGudangTable" class="table-component table table-hover">
+                            <thead>
+                            <tr>
+                                <th>{{ __('app_locale.text.area') }}</th>
+                                <th>{{ __('app_locale.text.rak') }}</th>
+                                <th>{{ __('app_locale.text.kategoriInventory') }}</th>
+                                <th>{{ __('app_locale.text.item') }}</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="warehouseData">
+
+                            @foreach($areas as $key => $area)
+
+                                {{ \Illuminate\Support\Facades\Log::info($area) }}
+                                <tr>
+                                    <td>
+                                        <input type="text" class="input-no-border make-input areaInput caption-medium"
+                                               placeholder="Area A" style="width: 100%"
+                                               wire:model="areas.{{$key}}.area.area" disabled>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="input-no-border make-input rackInput caption-medium"
+                                               placeholder="A1" style="width: 100%"
+                                               wire:model="areas.{{$key}}.area.racks.0.name" disabled>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="input-no-border make-input catInvInput caption-medium"
+                                               placeholder="Bahan mentah" style="width: 100%"
+                                               wire:model="areas.{{$key}}.area.racks.0.category_inventory" disabled>
+
+                                    </td>
+                                    <td>
+                                        @foreach($area['area']['racks'] as $racks)
+                                            <p class="caption-medium">{{ (empty($racks['item'])) ? 'item belum ditambahkan' : '' }}</p>
+
+                                            @foreach($racks['item'] as $item)
+
+                                            @endforeach
+                                        @endforeach
+                                    </td>
+
+                                </tr>
+
+
+                                @foreach($area['area']['racks'] as $subKey => $value)
+
+                                    @if($subKey != 0)
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <input type="text"
+                                                       class="input-no-border make-input rackInput caption-medium"
+                                                       placeholder="A1" style="width: 100%"
+                                                       wire:model="areas.{{ $key }}.area.racks.{{ $subKey }}.name"
+                                                       disabled>
+
+                                            </td>
+                                            <td>
+                                                <input type="text"
+                                                       class="input-no-border make-input catInvInput caption-medium"
+                                                       placeholder="Bahan mentah" style="width: 100%"
+                                                       wire:model="areas.{{ $key }}.area.racks.{{ $subKey }}.category_inventory"
+                                                       disabled>
+                                                @if ($errors->has("areas.$key.rack.$subKey.category_inventory"))
+                                                    <span
+                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.category_inventory") }}</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <button class="btn icon-text" type="button" id="addItem"
+                                                        data-bs-toggle="modal" data-bs-target="#modalItem"
+                                                        @click="$dispatch('load-modal-rack', {area: {{ $key  }}, rack: {{ $subKey }} })"
+                                                        style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+
+                                                >
+                                                    @if(empty($value['item']))
+                                                        + Item
+                                                    @else
+                                                        @foreach($value['item'] as $text )
+                                                            {{ $text['name'] }},
+                                                        @endforeach
+                                                    @endif
+                                                </button>
+                                            </td>
+
+                                        </tr>
+                                    @endif
+
+                                @endforeach
+
+                            @endforeach
+
+
+                            {{--                        <tr id="addWarehouseAction">--}}
+                            {{--                            <td>--}}
+                            {{--                                <button class="btn icon-text caption-medium" type="button" id="addArea"--}}
+                            {{--                                        wire:click.prevent="addArea">--}}
+                            {{--                                    + Area--}}
+                            {{--                                </button>--}}
+                            {{--                            </td>--}}
+                            {{--                            <td>--}}
+
+                            {{--                                <button class="btn icon-text caption-medium" type="button" id="addRack"--}}
+                            {{--                                        wire:click="addRack"--}}
+                            {{--                                        style="display: {{ ($isAddedArea) ? 'block' : 'none' }}">--}}
+                            {{--                                    + Rak--}}
+                            {{--                                </button>--}}
+                            {{--                            </td>--}}
+                            {{--                            <td></td>--}}
+                            {{--                            <td></td>--}}
+                            {{--                            <td></td>--}}
+                            {{--                        </tr>--}}
+                            </tbody>
+                        </table>
+
+
+                        <div class="margin-top-24">
+                            <label for="addressWarehouse" class="form-label">Alamat</label>
+                            <textarea class="form-control textarea" id="addressWarehouse" rows="5"
+                                      placeholder="{{ $warehouse->address }}" disabled></textarea>
+                        </div>
+
+
+                    </div>
 
                 </div>
 

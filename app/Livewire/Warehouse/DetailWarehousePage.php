@@ -18,6 +18,7 @@ class DetailWarehousePage extends Component
     public Warehouse $warehouse;
 
     public string $mode = 'view';
+    public string $htmlCondition;
 
     public function mount()
     {
@@ -37,14 +38,16 @@ class DetailWarehousePage extends Component
 
         try {
             $this->warehouse = $warehouseService->getDetailWarehouse($id);
+
+            // tampilkan warehouse tidak ketemu
+            if ($this->warehouse == null) return;
+
+            $this->areas = $warehouseService->getDetailDataAreaRackItemWarehouse($this->warehouse);
+
         } catch (\Exception $e) {
             // warehouse not found
-            if ($e->getCode() == 1) {
-
-            }
-
-            if ($e->getCode() == 2) {
-                
+            if ($e->getCode() == 1 || $e->getCode() == 2) {
+                $this->htmlCondition = 'Data gudang tidak ditemukan, pastikan gudang ada jika masalah masih berlanjut silahkan hubungi administrator';
             }
         }
 

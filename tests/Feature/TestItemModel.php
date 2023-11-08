@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Item;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
@@ -34,6 +35,7 @@ class TestItemModel extends TestCase
     {
         parent::setUp();
         DB::table('items')->delete();
+        Cache::forget('add-warehouse-first-cursor');
 
         Item::insert(
             [

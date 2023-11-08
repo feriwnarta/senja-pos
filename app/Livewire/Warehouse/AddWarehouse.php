@@ -4,7 +4,6 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\Item;
 use App\Models\Warehouse;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -310,7 +309,6 @@ class AddWarehouse extends Component
     public function validateInput()
     {
 
-
         // lakukan validasi hanya data yang diperlukan
         $this->validate([
             'areas.*.area.area' => 'required|min:2',
@@ -402,7 +400,9 @@ class AddWarehouse extends Component
 
             }
 
-            Cache::forget('add-warehouse-first-cursor');
+            Log::info($this->areas);
+
+
             $this->reset();
 
             // TODO: Perbaiki pesan sukses simpan gudang
