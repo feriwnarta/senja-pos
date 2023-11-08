@@ -1,3 +1,7 @@
 <div wire:loading.flex>
-    <h1>load</h1>
+    <div class="d-flex justify-content-center align-items-center position-absolute start-50">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 </div>

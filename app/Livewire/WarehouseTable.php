@@ -37,9 +37,9 @@ final class WarehouseTable extends PowerGridComponent
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
             Header::make()->showToggleColumns(),
             Footer::make()
-                ->showPerPage(10)
+                ->showPerPage(7)
                 ->showRecordCount(),
-            Cache::make()->forever()->ttl(30000),
+            Cache::make()->forever(),
 
         ];
 
@@ -47,6 +47,7 @@ final class WarehouseTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
+        sleep(2);
         return Warehouse::query()
             ->join('areas', function ($areas) {
                 $areas->on('areas.warehouses_id', '=', 'warehouses.id');

@@ -21,11 +21,11 @@ class DetailWarehousePage extends Component
 
     public function mount()
     {
-        $this->getDataWarehouse($this->urlQuery);
+        $this->getDetailDataWarehouse($this->urlQuery);
 
     }
 
-    private function getDataWarehouse(string $id)
+    private function getDetailDataWarehouse(string $id)
     {
 
         $warehouseService = app()->make(WarehouseService::class);
@@ -37,11 +37,14 @@ class DetailWarehousePage extends Component
 
         try {
             $this->warehouse = $warehouseService->getDetailWarehouse($id);
-
         } catch (\Exception $e) {
             // warehouse not found
             if ($e->getCode() == 1) {
 
+            }
+
+            if ($e->getCode() == 2) {
+                
             }
         }
 
@@ -63,5 +66,6 @@ class DetailWarehousePage extends Component
     {
         return view('livewire.warehouse.detail-warehouse-page');
     }
+
 
 }

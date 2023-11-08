@@ -54,7 +54,6 @@
 
         <livewire:warehouse-table wire:model="search"/>
 
-
     </div>
 
 

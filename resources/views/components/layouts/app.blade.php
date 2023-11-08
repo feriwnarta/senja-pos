@@ -6,7 +6,8 @@
 
     <title>{{ $title ?? 'Page Title' }}</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('bootstrap-5.0.2/css/bootstrap.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/icon.css') }}">
     <link rel="stylesheet" href="{{ asset('css/button.css') }}">
@@ -22,8 +23,7 @@
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('data-table/datatables.js') }}"></script>
     {{--        <script src="{{ asset('js/toast.js') }}"></script>--}}
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+    
     </script>
     @livewireStyles
 </head>
@@ -32,7 +32,12 @@
 
 @livewireScripts
 <script src="{{ asset('js/script.js') }}"></script>
-<script src="{{ asset('bootstrap-5.0.2/js/bootstrap.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+        crossorigin="anonymous"></script>
 
 @yield('footer-script')
 </body>

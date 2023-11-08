@@ -43,8 +43,6 @@ class AddWarehouse extends Component
     public string $category;
     public string $descriptiom;
 
-    public array $locationWarehouse;
-
 
     #[Rule('sometimes|image|max:1024')] // 1MB Max
     public $photoNewItem;
@@ -323,7 +321,6 @@ class AddWarehouse extends Component
             'codeWarehouse' => 'required|min:5',
             'nameWarehouse' => 'required|min:5',
             'addressWarehouse' => 'min:5',
-            'locationWarehouse' => 'array|required',
         ]);
 
         // tampilkan data yang dibutuhkan

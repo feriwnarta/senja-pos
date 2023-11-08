@@ -9,4 +9,6 @@ interface WarehouseService
 
     public function getDetailWarehouse(string $id): Warehouse;
 
+    public function getDetailDataAreaRackItemWarehouse(?Warehouse $warehouse): array;
+
 }

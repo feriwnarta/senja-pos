@@ -2,20 +2,19 @@
     SIDEBAR STYLE
 ----------------------------------------------------- */
 #sidebar {
-    min-width: 250px;
-    max-width: 250px;
+    width: 250px;
     height: 80%;
     max-height: 100%;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
+    overflow-y: hidden; /* Sembunyikan scrollbar secara default */
+    overflow-x: hidden;
     border-right: 1px solid #E0E0E0;
     background-color: #FFFFFF;
     color: black;
-    transition: all 0.3s;
+    transition: width 0.3s; /* Mengatur transisi hanya pada lebar */
     padding: 1rem 2rem 1rem 3rem;
 }
 
-/* Mengatur scrollbar untuk elemen dengan class .side-menu-left */
+/* Mengatur scrollbar untuk elemen dengan id "sidebar" */
 #sidebar::-webkit-scrollbar {
     width: 7px; /* Lebar scrollbar */
     height: 7px; /* Tinggi scrollbar */
@@ -27,6 +26,11 @@
 
 #sidebar::-webkit-scrollbar-track {
     background-color: white;
+}
+
+/* Munculkan scrollbar saat dihover */
+#sidebar:hover {
+    overflow-y: auto; /* Aktifkan scrollbar vertikal saat dihover */
 }
 
 

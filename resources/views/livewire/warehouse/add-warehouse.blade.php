@@ -59,27 +59,6 @@
                     </div>
 
 
-                    <div class="container-input-default  margin-top-24">
-                        <label for="dropdownCategory" class="form-label input-label">Lokasi gudang</label>
-                        <div class="dropdown" id="dropdownCategory">
-                            <button class="btn dropdown-toggle dropdown-default" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                {{ ($locationWarehouse == null) ? 'Pilih lokasi' : $locationWarehouse['name'] }}
-                            </button>
-
-                            <ul class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
-                                <input type="text" placeholder="Cari outlet" style="margin: 6px; width: 95%;">
-
-
-                                <li><a class="dropdown-item"
-                                       wire:click="setLocationWarehouse('default', 'Gudang pusat')">Gudang
-                                        pusat</a></li>
-                            </ul>
-                        </div>
-                        @error('locationWarehouse') <span class="error">{{ $message }}</span> @enderror
-                    </div>
-
-
                     <div class="container-input-default margin-top-24">
 
                         <label for="warehouseInput"
