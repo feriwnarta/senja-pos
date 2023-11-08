@@ -88,13 +88,18 @@
                                             >
                                                 @if(empty($racks['item']))
                                                     Item belum ditambahkan
+                                                    @break('item kosong');
                                                 @else
-                                                    @foreach($racks['item'] as $item )
-                                                        {{ $item['name'] }},
+
+                                                    @foreach($racks['item'] as $item)
+                                                        {{ $item['name'] }}
                                                     @endforeach
+
                                                 @endif
                                             </button>
+
                                         @endforeach
+
                                     </td>
 
                                 </tr>
@@ -132,10 +137,10 @@
 
                                                 >
                                                     @if(empty($value['item']))
-                                                        + Item
+                                                        Item belum ditambahkan
                                                     @else
-                                                        @foreach($value['item'] as $item )
-                                                            {{ $item['name'] }},
+                                                        @foreach($value['item'] as $text )
+                                                            {{ $text['name'] }},
                                                         @endforeach
                                                     @endif
                                                 </button>

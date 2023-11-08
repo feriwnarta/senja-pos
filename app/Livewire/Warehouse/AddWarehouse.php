@@ -553,6 +553,7 @@ class AddWarehouse extends Component
         $this->isShowModalNewItem = true;
     }
 
+    // TODO: PERBAIKI BUG CLOSE MODAL SAAT PINDAH NAVIGATION PAGE
     public function closeModalNewItem()
     {
         $this->isShowModalNewItem = false;
