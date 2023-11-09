@@ -59,7 +59,7 @@
                             <tbody id="warehouseData">
 
                             @foreach($areas as $key => $area)
-
+                                {{ \Illuminate\Support\Facades\Log::info($area) }}
                                 <tr>
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
@@ -79,7 +79,7 @@
                                     <td>
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-target="#modalDetailItem"
-                                                @click="$dispatch('detail-item-area')"
+                                                @click="$dispatch('detail-item-area', {index: 'area', id: '{{ $area['area']['id'] }}' })"
                                                 style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             @forelse($area['area']['racks'][0]['item'] ?? [] as $item)
                                                 {{ $item['name'] }}

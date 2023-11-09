@@ -39,18 +39,26 @@ class WarehouseServiceImpl implements WarehouseService
 
 
         foreach ($warehouse->areas as $area) {
-
             // tambah rak
             $arrRack = [];
-            $arrItem = [];
+
             foreach ($area->racks as $rack) {
+                $arrItem = [];
 
-
+                // Ambil maksimal 5 item dari rak
+                $itemCount = 0;
                 foreach ($rack->item as $item) {
                     $arrItem[] = [
                         'id' => $item->id,
                         'name' => $item->name,
                     ];
+
+                    $itemCount++;
+
+                    // Hentikan loop jika sudah mencapai 5 item
+                    if ($itemCount == 5) {
+                        break;
+                    }
                 }
 
                 $arrRack[] = [
@@ -59,11 +67,7 @@ class WarehouseServiceImpl implements WarehouseService
                     'category_inventory' => $rack->category_inventory,
                     'item' => $arrItem,
                 ];
-
-                $arrItem = [];
-
             }
-
 
             // data area
             $areas[] = [
@@ -73,8 +77,8 @@ class WarehouseServiceImpl implements WarehouseService
                     'racks' => $arrRack,
                 ]
             ];
-
         }
+
 
         return $areas;
     }

@@ -19,7 +19,8 @@ class DetailWarehousePage extends Component
 
     public string $mode = 'view';
     public string $htmlCondition;
-    
+    public string $seeItemModal;
+
 
     public function mount()
     {
