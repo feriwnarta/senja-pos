@@ -4,7 +4,6 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\Item;
 use App\Models\Warehouse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -351,7 +350,6 @@ class AddWarehouse extends Component
             'addressWarehouse' => 'min:5',
         ]);
 
-
         $this->storeWarehouse();
 
     }
@@ -360,7 +358,6 @@ class AddWarehouse extends Component
     {
 
         try {
-            DB::beginTransaction();
 
             // lakukan proses simpan gudang
             $warehouse = Warehouse::create(
@@ -371,8 +368,7 @@ class AddWarehouse extends Component
                 ]
             );
 
-            // TODO: lakukan simpan warehouse jika lokasinya sebuah outlet, ini akan dikerjakan saat modul outlet sudah ada
-
+            
             foreach ($this->areas as $dataArea) {
                 // isi data area
                 $areaName = $dataArea['area']['area'];
@@ -429,16 +425,12 @@ class AddWarehouse extends Component
 
             }
 
-            Log::info($this->areas);
-            DB::commit();
-
             $this->reset();
-
             // TODO: Perbaiki pesan sukses simpan gudang
             $this->js("console.log('berhasil simpan gudang')");
 
         } catch (\Exception $exception) {
-            DB::rollBack();
+
             $this->js("alert('{$exception->getMessage()}')");
 
         }
@@ -554,6 +546,7 @@ class AddWarehouse extends Component
     }
 
     // TODO: PERBAIKI BUG CLOSE MODAL SAAT PINDAH NAVIGATION PAGE
+
     public function closeModalNewItem()
     {
         $this->isShowModalNewItem = false;
