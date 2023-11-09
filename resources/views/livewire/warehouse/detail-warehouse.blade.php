@@ -41,3 +41,7 @@
     <livewire:warehouse.detail-warehouse-page lazy/>
 
 </x-page-layout>
+
+@section('footer-script')
+    <script src="{{ asset('js/detail-warehouse.js') }}"></script>
+@endsection

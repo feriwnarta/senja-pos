@@ -176,6 +176,17 @@ class WarehouseServiceTest extends TestCase
         Log::debug(json_encode($data, JSON_PRETTY_PRINT));
     }
 
+    public function testGetItemRackByIdWithCursorWhenIdEmpty()
+    {
+        $racks = $this->warehouseService->getItemRackByIdWithCursor('asdsad');
+        self::assertEmpty($racks['data']);
+    }
+
+    public function test()
+    {
+
+    }
+
 
     protected function setUp(): void
     {

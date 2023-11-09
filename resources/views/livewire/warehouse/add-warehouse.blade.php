@@ -467,17 +467,14 @@
 
 
                         // trigger event untuk meload data lebih banyak
-
-                    @this.dispatch('load-more');
-
-
+                        Livewire.dispatch('load-more');
                     }
 
                 });
 
-            @this.on('stop-request', (event) => {
-                isStop = true;
-            });
+                Livewire.on('stop-request', (event) => {
+                    isStop = true;
+                });
 
 
             });
@@ -486,27 +483,27 @@
             // deteksi modal ditutup
             $("#modalItem").on("hidden.bs.modal", function () {
                 // kirim event ke livewire untuk menutup modal
-            @this.dispatch('dismiss-modal');
+                Livewire.dispatch('dismiss-modal');
             });
 
 
             // deteksi modal item baru ditutup
             $("#modalNewItem").on("hidden.bs.modal", function () {
                 // kirim event ke livewire untuk menutup modal
-            @this.dispatch('dismiss-modal-new-item');
+                Livewire.dispatch('dismiss-modal-new-item');
             });
 
 
-        @this.on('reject-checkbox', (event) => {
-            // tampilkan pesan tidak boleh tambahkan item lebih dari satu area atau rak
-            alert('hanya diperbolehkan satu item di satu area / rack, item ini tidak akan ditambahkan');
+            Livewire.on('reject-checkbox', (event) => {
+                // tampilkan pesan tidak boleh tambahkan item lebih dari satu area atau rak
+                alert('hanya diperbolehkan satu item di satu area / rack, item ini tidak akan ditambahkan');
 
-            // batalkan item yang dicheck
-            $('.item-modal .name-item-modal:contains(' + event + ')').each(function () {
-                // Melakukan sesuatu dengan elemen yang ditemukan, misalnya, mencetak teksnya
-                $(this).closest('.data-modal').find('#itemCheckBox').prop('checked', false);
+                // batalkan item yang dicheck
+                $('.item-modal .name-item-modal:contains(' + event + ')').each(function () {
+                    // Melakukan sesuatu dengan elemen yang ditemukan, misalnya, mencetak teksnya
+                    $(this).closest('.data-modal').find('#itemCheckBox').prop('checked', false);
+                });
             });
-        });
 
 
         });

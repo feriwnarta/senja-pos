@@ -1,6 +1,4 @@
 <div id="content-loaded">
-
-
     <form>
 
         @if($htmlCondition != '')
@@ -79,7 +77,7 @@
                                     <td>
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-target="#modalDetailItem"
-                                                @click="$dispatch('detail-item-area', {index: 'area', id: '{{ $area['area']['id'] }}' })"
+                                                @click="$dispatch('detail-item-rack', {id: '{{ $area['area']['racks'][0]['id'] }}' })"
                                                 style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             @forelse($area['area']['racks'][0]['item'] ?? [] as $item)
                                                 {{ $item['name'] }}
@@ -161,6 +159,7 @@
 
             {{-- MODAL DETAIL ITEM --}}
             <div class="modal modal-input" id="modalDetailItem" tabindex="-1" role="dialog"
+                 style="display: {{ ($isShow) ? 'block' : 'none'  }}"
             >
                 <!-- Konten modal -->
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -171,13 +170,7 @@
                                 Daftar Item Gudang</h1>
                         </div>
                         <div class="modal-body">
-                            <div wire:loading>
-                                <div class="position-absolute start-50 translate-middle">
-                                    <div class="spinner-border" role="status">
-                                        <span class="visually-hidden">Loading...</span>
-                                    </div>
-                                </div>
-                            </div>
+
 
                             {{-- TODO: Buat fungsi pencarian item --}}
                             <form class="d-flex ">
@@ -185,6 +178,34 @@
                                        placeholder="Search"
                                        aria-label="Search">
                             </form>
+
+                            {{-- ITEM --}}
+                            <div class="item-modal">
+                                @foreach($itemData as $item)
+                                    <div class="d-flex align-items-center data-modal">
+                                        <div class="item-modal d-flex flex-row align-items-center">
+                                            <div>
+                                                <img class="items-ingredient-img"
+                                                     src="https://media.istockphoto.com/id/1282866808/id/foto/ayam-mentah-segar.jpg?s=612x612&w=0&k=20&c=qcxOlEFxGkAU2G-Mejj_6Uo813qTmMixcXNXbG5plj0="
+                                                     alt="">
+                                            </div>
+                                            <div
+                                                class="body-text-regular name-item-modal">{{ $item['name'] }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div id="divider" class="margin-top-16"></div>
+                                @endforeach
+                            </div>
+
+
+                            <div wire:loading>
+                                <div class="position-absolute start-50 translate-middle">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
 
 
                         </div>
@@ -194,6 +215,16 @@
                     </div>
                 </div>
             </div>
+
     </form>
     @endif
+
+
 </div>
+
+
+
+
+
+
+

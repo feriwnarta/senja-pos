@@ -4,6 +4,8 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
+use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -19,19 +21,30 @@ class DetailWarehousePage extends Component
 
     public string $mode = 'view';
     public string $htmlCondition;
-    public string $seeItemModal;
+    public array $itemData;
+    public ?string $nextCursor = null;
+
+    public bool $isShow = false;
+
+
+    private WarehouseService $warehouseService;
 
 
     public function mount()
     {
+        $this->warehouseService = app()->make(WarehouseService::class);
         $this->getDetailDataWarehouse($this->urlQuery);
-
     }
 
+    /**
+     * dapatkan data detail gudang termasuk area, rack dan item
+     * @param string $id
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
     private function getDetailDataWarehouse(string $id)
     {
 
-        $warehouseService = app()->make(WarehouseService::class);
 
         // jika id nya kosong
         if (empty($this->urlQuery)) {
@@ -39,12 +52,12 @@ class DetailWarehousePage extends Component
         }
 
         try {
-            $this->warehouse = $warehouseService->getDetailWarehouse($id);
+            $this->warehouse = $this->warehouseService->getWarehouseById($id);
 
             // tampilkan warehouse tidak ketemu
             if ($this->warehouse == null) return;
 
-            $this->areas = $warehouseService->getDetailDataAreaRackItemWarehouse($this->warehouse);
+            $this->areas = $this->warehouseService->getDetailDataAreaRackItemWarehouse($this->warehouse);
 
         } catch (\Exception $e) {
             // warehouse not found
@@ -55,6 +68,64 @@ class DetailWarehousePage extends Component
 
 
     }
+
+
+    /**
+     * listener dapatkan isi item rack berdasarkan id
+     * fungsi ini akan memanggil fungsi warehouse service getItemRackByIdWithCursor
+     * kembalian dari fungsi ini adalah cursor array
+     * perhatikan bahwa pengelolaan next cursor harus kritikal
+     * @return void
+     */
+
+    #[On('detail-item-rack')]
+    public function getItemByRackId(string $id)
+    {
+        $this->isShow = true;
+
+        $this->warehouseService = app()->make(WarehouseService::class);
+        $cursor = $this->warehouseService->getItemRackByIdWithCursor($id);
+
+
+        if ($cursor == null) {
+            // cursor null dipastikan item tidak ada didalam rack ini
+            return;
+        }
+
+        // cursor ditemukan olah cursor data ini
+        $this->itemData = $cursor['data'];
+
+
+        // simpan next id cursor untuk mencari data berikut nya
+        $this->nextCursor = $cursor['next_cursor'];
+
+        // kirim event ke javascript file detail warehouse untuk menjalankan login modal terbuka dan discroll
+        $this->dispatch('after-load-modal-detail-item', rackId: $id);
+
+    }
+
+    #[On('load-more')]
+    public function loadMore($rackId)
+    {
+
+        Log::info($this->nextCursor);
+
+        if ($this->nextCursor != null) {
+            $this->warehouseService = app()->make(WarehouseService::class);
+            $nextCursor = $this->warehouseService->nextCursorItemRack($rackId, $this->nextCursor);
+            Log::info('load more');
+            Log::info($nextCursor);
+
+            if ($nextCursor['data'] != null) {
+                foreach ($nextCursor['data'] as $data) {
+                    $this->itemData[] = $data;
+                }
+            }
+
+            $this->nextCursor = $nextCursor['next_cursor'];
+        }
+    }
+
 
     public function placeholder()
     {
