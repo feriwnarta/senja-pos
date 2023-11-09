@@ -3,16 +3,17 @@
 document.addEventListener("after-load-modal-detail-item", (event) => {
 
 
-    $(() => {
-        let rackId = event.detail.rackId;
+    let rackId = event.detail.rackId;
 
-        onScrollModalDetailItem(rackId);
+    onScrollModalDetailItem(rackId);
 
-    });
+
 });
 
 const onScrollModalDetailItem = (rackId) => {
     let modalBody = $('#modalDetailItem .modal-body');
+
+
     let isStop = false;
 
     // Infinity loading
@@ -20,7 +21,7 @@ const onScrollModalDetailItem = (rackId) => {
         let scrollTop = modalBody.scrollTop();
         let scrollHeight = modalBody.prop("scrollHeight");
         let clientHeight = modalBody.prop("clientHeight");
-        
+
 
         // Deteksi scroll layar di paling bawah
         if (scrollTop + clientHeight >= scrollHeight - 1) {
@@ -35,5 +36,7 @@ const onScrollModalDetailItem = (rackId) => {
         isStop = true;
     });
 }
+
+
 
 

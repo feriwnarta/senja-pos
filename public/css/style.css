@@ -223,6 +223,12 @@ input[type="search"]::-webkit-search-results-decoration {
     font-size: 14px;
 }
 
+.spinner-border {
+    width: 18px;
+    height: 18px;
+    margin-left: 18px;
+}
+
 .table-component > thead {
     background-color: #FFF7F2;
 

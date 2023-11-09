@@ -43,5 +43,5 @@
 </x-page-layout>
 
 @section('footer-script')
-    <script src="{{ asset('js/detail-warehouse.js') }}"></script>
+    <script data-navigate-once src="{{ asset('js/detail-warehouse.js') }}"></script>
 @endsection

@@ -158,8 +158,7 @@
 
 
             {{-- MODAL DETAIL ITEM --}}
-            <div class="modal modal-input" id="modalDetailItem" tabindex="-1" role="dialog"
-                 style="display: {{ ($isShow) ? 'block' : 'none'  }}"
+            <div wire:ignore.self class="modal modal-input fade" id="modalDetailItem" tabindex="-1" role="dialog"
             >
                 <!-- Konten modal -->
                 <div class="modal-dialog modal-lg modal-dialog-scrollable">

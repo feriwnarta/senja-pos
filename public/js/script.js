@@ -2,13 +2,18 @@ $(window).on('load', function () {
     changeWidthTitle();
 })
 
+
 document.addEventListener('update-menu', function () {
     updateAccordionActive();
 
 });
 
 document.addEventListener('set-width-title', () => {
-    changeWidthTitle();
+
+    $(() => {
+        changeWidthTitle();
+    });
+
 });
 
 

@@ -12,6 +12,11 @@ class ListWarehouse extends Component
 
     public string $search = '';
 
+    public function rendered($view, $html)
+    {
+        $this->dispatch('set-width-title');
+        $this->dispatch('update-menu');
+    }
 
     public function render()
     {

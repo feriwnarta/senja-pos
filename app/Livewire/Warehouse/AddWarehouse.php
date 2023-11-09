@@ -536,11 +536,6 @@ class AddWarehouse extends Component
         ];
     }
 
-    public function mount()
-    {
-        $this->dispatch('load-add-warehouse-script');
-    }
-
     public function render()
     {
         return view('livewire.warehouse.add-warehouse');
@@ -605,6 +600,13 @@ class AddWarehouse extends Component
             'name' => $name
         ];
     }
+
+    public function rendered($view, $html)
+    {
+        $this->dispatch('set-width-title');
+        $this->dispatch('update-menu');
+    }
+
 
     #[Computed]
     private function firstCursor(): array
