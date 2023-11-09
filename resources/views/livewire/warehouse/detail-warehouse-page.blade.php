@@ -90,7 +90,7 @@
 
                                 @foreach($area['area']['racks'] as $subKey => $value)
                                     @if($subKey != 0)
-                                        {{ \Illuminate\Support\Facades\Log::info(json_encode($value['item'], JSON_PRETTY_PRINT)) }}
+                                        {{ \Illuminate\Support\Facades\Log::info(json_encode($value, JSON_PRETTY_PRINT)) }}
                                         <tr>
                                             <td></td>
                                             <td>
@@ -115,7 +115,7 @@
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalDetailItem"
-                                                        @click="$dispatch('detail-item')"
+                                                        @click="$dispatch('detail-item-rack', {id: '{{ $value['id'] }}' })"
                                                         style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
 
                                                 >

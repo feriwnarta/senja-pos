@@ -81,12 +81,18 @@ class DetailWarehousePage extends Component
     #[On('detail-item-rack')]
     public function getItemByRackId(string $id)
     {
+        // kosongkan array itemData
+        $this->itemData = [];
+
+        // buat is show true agar modal tidak tertutup
         $this->isShow = true;
 
+        // dapatkan data item berdasarkan rack dengan memanggil fungsi get item rack by id
+        // dari warehouse service
         $this->warehouseService = app()->make(WarehouseService::class);
         $cursor = $this->warehouseService->getItemRackByIdWithCursor($id);
 
-
+        // jika isinya null dapat dipastikan bahwa rak tidak memiliki item
         if ($cursor == null) {
             // cursor null dipastikan item tidak ada didalam rack ini
             return;
