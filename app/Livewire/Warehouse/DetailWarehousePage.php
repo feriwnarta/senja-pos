@@ -149,5 +149,11 @@ class DetailWarehousePage extends Component
         return view('livewire.warehouse.detail-warehouse-page');
     }
 
+    public function rendered($view, $html)
+    {
+        $this->dispatch('set-width-title');
+        $this->dispatch('update-menu');
+    }
+
 
 }

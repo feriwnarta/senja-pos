@@ -4,6 +4,7 @@ $(window).on('load', function () {
 
 document.addEventListener('update-menu', function () {
     updateAccordionActive();
+
 });
 
 document.addEventListener('set-width-title', () => {
@@ -32,25 +33,26 @@ function updateAccordionActive() {
     // Ambil URL saat ini
     var currentURL = window.location.pathname;
 
+    // Jika currentURL lebih dari 2, ambil hanya 2 data pertama
+    var urlParts = currentURL.split('/').filter(Boolean);
+    if (urlParts.length > 2) {
+        currentURL = '/' + urlParts.slice(0, 2).join('/');
+    }
 
     // Dapatkan semua elemen 'a' dalam Accordion
     var accordionLinks = $('.accordion-item a');
 
     accordionLinks.each(function () {
         if ($(this).attr('href') === currentURL) {
-
-            $('.accordion-item').find('.accordion-button')
-
             const accordionBtn = $(this).closest('.accordion-item').find('.accordion-button');
             const collapseBtn = $(this).closest('.accordion-collapse');
             const itemBtn = $(this).find('button');
 
-
             collapseBtn.addClass('show');
             itemBtn.addClass('inner-menu-active');
             accordionBtn.attr('aria-expanded', 'true');
-            accordionBtn.removeClass('collapsed')
-
+            accordionBtn.removeClass('collapsed');
         }
     });
+
 }
