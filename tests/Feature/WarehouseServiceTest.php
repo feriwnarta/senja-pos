@@ -76,23 +76,19 @@ class WarehouseServiceTest extends TestCase
 
         $item = Item::factory()->create([
             'racks_id' => $racks->id,
-            'name' => fake()->unique(true)->name(),
+            'name' => fake()->name(),
         ]);
 
-        Item::factory()->create([
-            'racks_id' => $racks->id,
-            'name' => fake()->unique(true)->name(),
-        ]);
-
-        Item::factory()->create([
-            'racks_id' => $racks->id,
-            'name' => fake()->unique(true)->name(),
-        ]);
-
-        Item::factory()->create([
+        $item = Item::factory()->create([
             'racks_id' => $racks2->id,
-            'name' => fake()->unique(true)->name(),
+            'name' => fake()->name() . '2',
         ]);
+
+        $item = Item::factory()->create([
+            'racks_id' => $racks2->id,
+            'name' => fake()->name() . '3',
+        ]);
+
 
         $data = $this->warehouseService->getDetailDataAreaRackItemWarehouse($this->warehouse);
 

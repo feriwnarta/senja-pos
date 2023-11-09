@@ -4,6 +4,7 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\Item;
 use App\Models\Warehouse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -350,6 +351,7 @@ class AddWarehouse extends Component
             'addressWarehouse' => 'min:5',
         ]);
 
+
         $this->storeWarehouse();
 
     }
@@ -359,6 +361,7 @@ class AddWarehouse extends Component
 
         try {
 
+            DB::beginTransaction();
             // lakukan proses simpan gudang
             $warehouse = Warehouse::create(
                 [
@@ -368,7 +371,7 @@ class AddWarehouse extends Component
                 ]
             );
 
-            
+
             foreach ($this->areas as $dataArea) {
                 // isi data area
                 $areaName = $dataArea['area']['area'];
@@ -386,6 +389,7 @@ class AddWarehouse extends Component
 
                 if (!empty($dataArea['area']['item'])) {
                     foreach ($dataArea['area']['item'] as $item) {
+
                         $id = $item['id'];
 
                         $item = Item::find($id);
@@ -412,7 +416,7 @@ class AddWarehouse extends Component
                             foreach ($dataRack['item'] as $item) {
                                 $itemId = $item['id'];
 
-                                $item = Item::find($id);
+                                $item = Item::find($itemId);
 
                                 if ($item) {
                                     $item->update(['racks_id' => $rack->id]);
@@ -425,13 +429,15 @@ class AddWarehouse extends Component
 
             }
 
+            DB::commit();
+
             $this->reset();
             // TODO: Perbaiki pesan sukses simpan gudang
-            $this->js("console.log('berhasil simpan gudang')");
+            $this->js("alert('berhasil simpan gudang')");
 
         } catch (\Exception $exception) {
-
-            $this->js("alert('{$exception->getMessage()}')");
+            DB::rollBack();
+            $this->js("console.log('{$exception->getMessage()}')");
 
         }
 
@@ -600,20 +606,10 @@ class AddWarehouse extends Component
         ];
     }
 
-    #[Computed(cache: true, key: 'add-warehouse-first-cursor')]
+    #[Computed]
     private function firstCursor(): array
     {
         return Item::where('racks_id', null)->orderBy('id')->cursorPaginate(20)->toArray();
-    }
-
-
-    #[Computed(cache: true, key: 'add-warehouse-location-warehouse')]
-    private function locationWarehouse(): array
-    {
-        return [
-            'id' => '123',
-            'name' => 'Gudang pusat',
-        ];
     }
 
 

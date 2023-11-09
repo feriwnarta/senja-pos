@@ -60,54 +60,39 @@
 
                             @foreach($areas as $key => $area)
 
-                                {{ \Illuminate\Support\Facades\Log::info($area) }}
                                 <tr>
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
                                                placeholder="Area A" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.area" disabled>
+                                               wire:model="areas.{{ $key }}.area.area" disabled>
                                     </td>
                                     <td>
                                         <input type="text" class="input-no-border make-input rackInput caption-medium"
                                                placeholder="A1" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.racks.0.name" disabled>
+                                               wire:model="areas.{{ $key }}.area.racks.0.name" disabled>
                                     </td>
                                     <td>
                                         <input type="text" class="input-no-border make-input catInvInput caption-medium"
                                                placeholder="Bahan mentah" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.racks.0.category_inventory" disabled>
-
+                                               wire:model="areas.{{ $key }}.area.racks.0.category_inventory" disabled>
                                     </td>
                                     <td>
-                                        @foreach($area['area']['racks'] as $racks)
-                                            <button class="btn icon-text" type="button" id="addItem"
-                                                    data-bs-toggle="modal" data-bs-target="#modalDetailItem"
-                                                    @click="$dispatch('detail-item')"
-                                                    style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-
-                                            >
-                                                @if(empty($racks['item']))
-                                                    Item belum ditambahkan
-                                                    @break('item kosong');
-                                                @else
-
-                                                    @foreach($racks['item'] as $item)
-                                                        {{ $item['name'] }}
-                                                    @endforeach
-
-                                                @endif
-                                            </button>
-
-                                        @endforeach
-
+                                        <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
+                                                data-bs-target="#modalDetailItem"
+                                                @click="$dispatch('detail-item-area')"
+                                                style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                            @forelse($area['area']['racks'][0]['item'] ?? [] as $item)
+                                                {{ $item['name'] }}
+                                            @empty
+                                                Item belum ditambahkan
+                                            @endforelse
+                                        </button>
                                     </td>
-
                                 </tr>
 
-
                                 @foreach($area['area']['racks'] as $subKey => $value)
-
                                     @if($subKey != 0)
+                                        {{ \Illuminate\Support\Facades\Log::info(json_encode($value['item'], JSON_PRETTY_PRINT)) }}
                                         <tr>
                                             <td></td>
                                             <td>
@@ -139,8 +124,8 @@
                                                     @if(empty($value['item']))
                                                         Item belum ditambahkan
                                                     @else
-                                                        @foreach($value['item'] as $text )
-                                                            {{ $text['name'] }},
+                                                        @foreach($value['item'] as $item )
+                                                            {{ $item['name'] }},
                                                         @endforeach
                                                     @endif
                                                 </button>
@@ -200,36 +185,6 @@
                                        placeholder="Search"
                                        aria-label="Search">
                             </form>
-
-
-                            @if(isset($areas) && $areas != null)
-                                @foreach($areas as $area)
-                                    <p class="subtitle-3-medium margin-top-24">Daftar Item</p>
-                                    <div id="divider"></div>
-                                    <div class="items-modal">
-
-                                        @foreach($area['area']['racks'] as $rack)
-                                            @foreach($rack['item'] as $item)
-                                                <div class="d-flex align-items-center data-modal">
-                                                    <div class="item-modal d-flex flex-row align-items-center">
-                                                        <div>
-                                                            <img class="items-ingredient-img"
-                                                                 src="https://media.istockphoto.com/id/1282866808/id/foto/ayam-mentah-segar.jpg?s=612x612&w=0&k=20&c=qcxOlEFxGkAU2G-Mejj_6Uo813qTmMixcXNXbG5plj0="
-                                                                 alt="">
-                                                        </div>
-                                                        <div
-                                                            class="body-text-regular name-item-modal">{{ $item['name'] }}</div>
-                                                    </div>
-                                                </div>
-
-                                                <div id="divider" class="margin-top-16"></div>
-                                            @endforeach
-                                        @endforeach
-
-                                    </div>
-
-                                @endforeach
-                            @endif
 
 
                         </div>

@@ -60,6 +60,8 @@ class WarehouseServiceImpl implements WarehouseService
                     'item' => $arrItem,
                 ];
 
+                $arrItem = [];
+
             }
 
 
