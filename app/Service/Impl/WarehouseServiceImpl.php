@@ -109,7 +109,7 @@ class WarehouseServiceImpl implements WarehouseService
     public function getItemRackByIdWithCursor(string $id): array
     {
         try {
-            return Item::where('racks_id', $id)->orderBy('id')->cursorPaginate(5)->toArray();
+            return Item::where('racks_id', $id)->orderBy('id')->cursorPaginate(10)->toArray();
         } catch (\Exception $exception) {
             return [];
             Log::error($exception->getMessage());

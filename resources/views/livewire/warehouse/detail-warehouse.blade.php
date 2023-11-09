@@ -40,6 +40,7 @@
 
     <livewire:warehouse.detail-warehouse-page lazy/>
 
+
 </x-page-layout>
 
 @section('footer-script')

@@ -19,7 +19,7 @@ class AddWarehouse extends Component
 
     #[Rule('required|min:5|unique:warehouses,warehouse_code')]
     public string $codeWarehouse;
-    #[Rule('required|min:5')]
+    #[Rule('required|min:5|unique:warehouses,name')]
     public string $nameWarehouse;
     #[Rule('required|min:5')]
     public string $addressWarehouse;

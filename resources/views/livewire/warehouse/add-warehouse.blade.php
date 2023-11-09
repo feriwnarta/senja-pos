@@ -43,7 +43,7 @@
 
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plKodeGudang') }}"
-                               wire:model.blur="codeWarehouse">
+                               wire:model.live.debounce.600ms="codeWarehouse">
                         @error('codeWarehouse') <span class="error">{{ $message }}</span> @enderror
 
                     </div>
@@ -57,7 +57,7 @@
 
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plNamaGudang') }}"
-                               wire:model.blur="nameWarehouse">
+                               wire:model.live.debounce.600ms="nameWarehouse">
                         @error('nameWarehouse') <span class="error">{{ $message }}</span> @enderror
 
                     </div>
