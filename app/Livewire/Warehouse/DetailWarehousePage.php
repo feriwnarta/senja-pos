@@ -161,6 +161,7 @@ class DetailWarehousePage extends Component
         $this->warehouseService = app()->make(WarehouseService::class);
         $this->itemEditData = $this->warehouseService->getItemRackAddedByIdWithCursor($id)['data'];
 
+
         // lakukan pengecekan apakah item sudah ter - edit
         if (!empty($this->itemSelected['dataItem'])) {
             foreach ($this->itemSelected['dataItem'] as $dataItem) {
@@ -178,6 +179,8 @@ class DetailWarehousePage extends Component
                     }
                 }
             }
+
+
         }
 
 
@@ -234,9 +237,6 @@ class DetailWarehousePage extends Component
                 ]
             ];
         }
-
-
-        Log::error($this->itemSelected);
     }
 
     #[On('load-more')]

@@ -26,7 +26,11 @@ document.addEventListener("after-load-modal-edit-item", (event) => {
                 console.log($(this).attr('id') + ' tidak dicentang');
                 Livewire.dispatch('item-added', {rackId: rackId, id: id, value: 'false'});
             }
+
+
         });
+
+
     });
 
 });
