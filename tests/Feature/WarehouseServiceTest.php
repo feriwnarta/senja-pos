@@ -7,7 +7,6 @@ use App\Models\Item;
 use App\Models\Rack;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotEmpty;
@@ -182,9 +181,14 @@ class WarehouseServiceTest extends TestCase
         self::assertEmpty($racks['data']);
     }
 
-    public function test()
+    public function testGetItemRackAddedByIdWithCursor()
     {
 
+
+        $data = $this->warehouseService->getItemRackAddedByIdWithCursor('9a91a5c0-289c-44cb-b37b-bb91d6cfad8b');
+        assertNotNull($data);
+        self::assertIsArray($data['data']);
+        Log::info($data);
     }
 
 
@@ -192,14 +196,14 @@ class WarehouseServiceTest extends TestCase
     {
         parent::setUp();
 
-        DB::table('items')->delete();
-        DB::table('racks')->delete();
-        DB::table('areas')->delete();
-        DB::table('warehouses')->delete();
-
-
+//        DB::table('items')->delete();
+//        DB::table('racks')->delete();
+//        DB::table('areas')->delete();
+//        DB::table('warehouses')->delete();
+//
+//
         $this->warehouseService = $this->app->make(WarehouseService::class);
-
+//
         $this->warehouse = Warehouse::factory()->create(
             [
                 'id' => fake()->uuid(),
