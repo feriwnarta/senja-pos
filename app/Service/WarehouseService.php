@@ -13,7 +13,11 @@ interface WarehouseService
 
     public function getItemRackByIdWithCursor(string $id): array;
 
-    public function nextCursorItemRack(string $rackId, string $cursorId): array;
+    public function nextCursorItemRack(string $rackId, string $nextCursorId): array;
 
-    public function getItemRackAddedByIdWithCursor(string $id): array;
+    public function getItemRackAddedByIdWithCursor(string $rackId): array;
+
+    public function nextCursorItemRackAddedById(string $rackId, string $nextCursorId): array;
+
+    public function manipulateItemRackAdded(array $dataItem, string $id): array;
 }

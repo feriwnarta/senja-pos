@@ -376,7 +376,17 @@
                                     </div>
                                     <div
                                         class="body-text-regular name-item-modal">{{ $item['name'] }}</div>
+
                                 </div>
+
+                                @if($item['checked'] == 'true')
+                                    <input id="{{ $item['id'] }}" class="red-input checkbox" type="checkbox" checked/>
+                                @else
+
+                                    {{-- JIKA ITEM TIDAK CHECKED --}}
+                                    <input id="{{ $item['id'] }}" class="red-input checkbox"
+                                           type="checkbox"/>
+                                @endif
                             </div>
 
                             <div id="divider" class="margin-top-16"></div>

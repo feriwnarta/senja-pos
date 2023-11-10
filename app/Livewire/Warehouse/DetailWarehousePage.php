@@ -32,6 +32,7 @@ class DetailWarehousePage extends Component
     #[Rule('required|min:5|unique:warehouses,name')]
     public string $warehouseName;
     public array $itemEditData;
+    public array $itemSelected;
     private WarehouseService $warehouseService;
 
     public function mount()
@@ -155,9 +156,11 @@ class DetailWarehousePage extends Component
     }
 
     #[On('detail-item-rack-edit')]
-    public function getItemEditAdded()
+    public function getItemEditAdded($id)
     {
-
+        $this->warehouseService = app()->make(WarehouseService::class);
+        $this->itemEditData = $this->warehouseService->getItemRackAddedByIdWithCursor($id)['data'];
+        $this->dispatch('after-load-modal-edit-item');
     }
 
     #[On('load-more')]
@@ -180,6 +183,11 @@ class DetailWarehousePage extends Component
 
             $this->nextCursor = $nextCursor['next_cursor'];
         }
+    }
+
+    public function selectItem($id, $name, $checked)
+    {
+
     }
 
     #[On('edit-warehouse')]

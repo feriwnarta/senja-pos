@@ -9,6 +9,7 @@ use App\Models\Warehouse;
 use App\Service\WarehouseService;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertNotEmpty;
 use function PHPUnit\Framework\assertNotNull;
 
@@ -184,11 +185,40 @@ class WarehouseServiceTest extends TestCase
     public function testGetItemRackAddedByIdWithCursor()
     {
 
-
         $data = $this->warehouseService->getItemRackAddedByIdWithCursor('9a91a5c0-289c-44cb-b37b-bb91d6cfad8b');
         assertNotNull($data);
         self::assertIsArray($data['data']);
         Log::info($data);
+    }
+
+    public function testManipulateItemRackAdded()
+    {
+        $id = '9a91a5c0-289c-44cb-b37b-bb91d6cfad8b';
+        $data = $this->warehouseService->getItemRackAddedByIdWithCursor($id);
+        assertNotNull($data);
+
+        $result = $this->warehouseService->manipulateItemRackAdded($data['data'], $id);
+        assertNotNull($result);
+        assertIsArray($result);
+        self::assertIsString($result[0]['id']);
+
+        Log::info($result);
+
+    }
+
+    public function testNextCursorItemRackAddedById()
+    {
+        $id = '9a91a5c0-289c-44cb-b37b-bb91d6cfad8b';
+        $data = $this->warehouseService->getItemRackAddedByIdWithCursor($id);
+        assertNotNull($data);
+
+        $result = $this->warehouseService->nextCursorItemRackAddedById($id, $data['next_cursor']);
+        assertNotNull($result);
+        assertIsArray($result['data']);
+
+        Log::info("nextCursorItemRackAddedById");
+        Log::info($result);
+
     }
 
 
@@ -204,14 +234,14 @@ class WarehouseServiceTest extends TestCase
 //
         $this->warehouseService = $this->app->make(WarehouseService::class);
 //
-        $this->warehouse = Warehouse::factory()->create(
-            [
-                'id' => fake()->uuid(),
-                'warehouse_code' => fake()->countryCode(),
-                'name' => fake()->name(),
-                'address' => fake()->address()
-            ]
-        );
+//        $this->warehouse = Warehouse::factory()->create(
+//            [
+//                'id' => fake()->uuid(),
+//                'warehouse_code' => fake()->countryCode(),
+//                'name' => fake()->name(),
+//                'address' => fake()->address()
+//            ]
+//        );
 
 
     }

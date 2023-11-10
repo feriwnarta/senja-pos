@@ -117,12 +117,12 @@ class WarehouseServiceImpl implements WarehouseService
 
     }
 
-    public function nextCursorItemRack(string $rackId, string $cursorId): array
+    public function nextCursorItemRack(string $rackId, string $nextCursorId): array
     {
         try {
             return Item::where('racks_id', $rackId)
                 ->orderBy('id')
-                ->cursorPaginate(10, ['*'], 'cursor', $cursorId)
+                ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
                 ->toArray();
         } catch (\Exception $exception) {
             return [];
@@ -132,11 +132,68 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function getItemRackAddedByIdWithCursor(string $id): array
     {
+        $data = $this->getItemRackAddedById($id);
+        $resultData = $this->manipulateItemRackAdded($data['data'], $id);
+
+        if (empty($resultData)) {
+            return [];
+        }
+
+        $data['data'] = $resultData;
+        return $data;
+    }
+
+    private function getItemRackAddedById(string $id)
+    {
         try {
             return Item::where('racks_id', $id)
                 ->orWhereNull('racks_id')
                 ->orderBy('id')
-                ->cursorPaginate(10)
+                ->cursorPaginate(20)
+                ->toArray();
+        } catch (\Exception $exception) {
+            return [];
+            Log::error($exception->getMessage());
+        }
+    }
+
+    public function manipulateItemRackAdded(array $dataItem, string $id): array
+    {
+        $returnData = [];
+        foreach ($dataItem as $item) {
+            if ($item['racks_id'] == $id) {
+                $returnData[] = [
+                    'id' => $item['id'],
+                    'name' => $item['name'],
+                    'checked' => 'true',
+                ];
+                continue;
+            }
+
+            $returnData[] = [
+                'id' => $item['id'],
+                'name' => $item['name'],
+                'checked' => 'false',
+            ];
+
+        }
+        return $returnData;
+    }
+
+
+    public function nextCursorItemRackAddedById(string $rackId, string $nextCursorId): array
+    {
+        return $this->nextCursorItemDataSource($rackId, $nextCursorId);
+    }
+
+
+    private function nextCursorItemDataSource(string $rackId, string $nextCursorId): array
+    {
+        try {
+            return Item::where('racks_id', $rackId)
+                ->orWhereNull('racks_id')
+                ->orderBy('id')
+                ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
                 ->toArray();
         } catch (\Exception $exception) {
             return [];

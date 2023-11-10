@@ -10,6 +10,12 @@ document.addEventListener("after-load-modal-detail-item", (event) => {
 
 });
 
+
+document.addEventListener("after-load-modal-edit-item", (event) => {
+    console.log('asd');
+});
+
+
 const onScrollModalDetailItem = (rackId) => {
     let modalBody = $('#modalDetailItem .modal-body');
 
