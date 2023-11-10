@@ -32,7 +32,7 @@ class DetailWarehousePage extends Component
     #[Rule('required|min:5|unique:warehouses,name')]
     public string $warehouseName;
     public array $itemEditData;
-    public array $itemSelected;
+    public array $itemSelected = ['dataItem' => []];
     private WarehouseService $warehouseService;
 
     public function mount()
@@ -160,7 +160,62 @@ class DetailWarehousePage extends Component
     {
         $this->warehouseService = app()->make(WarehouseService::class);
         $this->itemEditData = $this->warehouseService->getItemRackAddedByIdWithCursor($id)['data'];
-        $this->dispatch('after-load-modal-edit-item');
+        $this->dispatch('after-load-modal-edit-item', rackId: $id);
+    }
+
+    #[On('item-added')]
+    public function itemAdded($rackId, $id, $value)
+    {
+        Log::info('load');
+        Log::info($rackId);
+        Log::info($id);
+        Log::info($value);
+
+        $rackFound = false;
+
+        foreach ($this->itemSelected['dataItem'] as $dataItemKey => $dataItem) {
+            if (isset($dataItem['rack_id']) && $dataItem['rack_id'] == $rackId) {
+                $rackFound = true;
+
+                if (isset($dataItem['item'])) {
+                    $itemFound = false;
+
+                    foreach ($dataItem['item'] as $itemKey => $item) {
+                        if ($item['id'] == $id) {
+                            Log::error('sama');
+                            $this->itemSelected['dataItem'][$dataItemKey]['item'][$itemKey]['checked'] = $value;
+                            $itemFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!$itemFound) {
+                        $this->itemSelected['dataItem'][$dataItemKey]['item'][] = [
+                            'id' => $id,
+                            'checked' => $value,
+                        ];
+                    }
+                }
+
+                // Keluar dari loop jika rack_id sudah ditemukan
+                break;
+            }
+        }
+
+        if (!$rackFound) {
+            $this->itemSelected['dataItem'][] = [
+                'rack_id' => $rackId,
+                'item' => [
+                    [
+                        'id' => $id,
+                        'checked' => $value,
+                    ]
+                ]
+            ];
+        }
+
+
+        Log::error($this->itemSelected);
     }
 
     #[On('load-more')]

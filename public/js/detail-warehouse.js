@@ -12,7 +12,23 @@ document.addEventListener("after-load-modal-detail-item", (event) => {
 
 
 document.addEventListener("after-load-modal-edit-item", (event) => {
-    console.log('asd');
+    $(function () {
+        let rackId = event.detail.rackId;
+
+        $('.item-modal input[type="checkbox"]').on('change', function () {
+            // Cek apakah checkbox dicentang atau tidak
+            if ($(this).prop('checked')) {
+                let id = $(this).attr('id');
+                console.log($(this).attr('id') + ' dicentang');
+                Livewire.dispatch('item-added', {rackId: rackId, id: id, value: 'true'});
+            } else {
+                let id = $(this).attr('id');
+                console.log($(this).attr('id') + ' tidak dicentang');
+                Livewire.dispatch('item-added', {rackId: rackId, id: id, value: 'false'});
+            }
+        });
+    });
+
 });
 
 
