@@ -88,7 +88,8 @@
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
                                                placeholder="Area A" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.area">
+                                               wire:model.live="areas.{{$key}}.area.area">
+                                        
                                         @if ($errors->has("areas.$key.area.area"))
                                             <span
                                                 class="text-xs text-red-600">{{ $errors->first("areas.$key.area.area") }}</span>

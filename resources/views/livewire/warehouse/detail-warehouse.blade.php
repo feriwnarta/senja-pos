@@ -12,23 +12,39 @@
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        {{ __('app_locale.text.detailGudang') }}
+                        {{ ($mode == 'view') ? __('app_locale.text.detailGudang') : 'Edit gudang'}}
                     </div>
                 </div>
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
+                    @if($mode == 'view')
+                        <div class="dropdown margin-left-10">
+                            <button type="btn"
+                                    class="btn btn-text-only-secondary btn-nav margin-left-10">{{ __('app_locale.button.hapus') }}</button>
+                        </div>
 
-                    <div class="dropdown margin-left-10">
+
                         <button type="btn"
-                                class="btn btn-text-only-secondary btn-nav margin-left-10">{{ __('app_locale.button.hapus') }}</button>
-                    </div>
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                @click="$dispatch('edit-warehouse')"
+                        >{{ __('app_locale.button.edit') }}</button>
+
+                    @else
+                        <div class="dropdown margin-left-10">
+                            <button type="btn"
+                                    class="btn btn-text-only-secondary btn-nav margin-left-10">Batal
+                            </button>
+                        </div>
 
 
-                    <a href="/warehouse/list-warehouse/add-warehouse" wire:navigate>
                         <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.edit') }}</button>
-                    </a>
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                
+                        >Simpan
+                        </button>
+                    @endif
+
 
                 </div>
             </div>

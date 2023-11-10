@@ -6,13 +6,15 @@ use App\Models\Warehouse;
 use App\Service\WarehouseService;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class DetailWarehousePage extends Component
 {
     #[Url(as: 'q')]
-    public string $urlQuery;
+    public string $urlQuery = '';
+    public string $warehouseId;
 
     public string $locationWarehouse;
     public array $areas = [];
@@ -26,14 +28,57 @@ class DetailWarehousePage extends Component
 
     public bool $isShow = false;
 
-
+    public string $warehouseCode;
+    #[Rule('required|min:5|unique:warehouses,name')]
+    public string $warehouseName;
+    public array $itemEditData;
     private WarehouseService $warehouseService;
-
 
     public function mount()
     {
+
+        // TODO: extract url query, untuk menentukan mode edit atau view
+
+
+        // extract url query
+        $this->extractUrl();
+
+
         $this->warehouseService = app()->make(WarehouseService::class);
-        $this->getDetailDataWarehouse($this->urlQuery);
+        $this->getDetailDataWarehouse($this->warehouseId);
+    }
+
+    /**
+     * fungsi ini dilakukan untuk melakukan extract url query parameter
+     * ini digunakan untuk menentukan apakah warehouse dalam mode edit atau view
+     * saat web direfresh tampilan akan menyesuaikan berdasarkan mode
+     * @return void
+     */
+    private function extractUrl()
+    {
+        // jika url kosong atau null, maka redirect ke warehouse list
+        if ($this->urlQuery == '' || $this->urlQuery == null) {
+            $this->redirect('/warehouse/list-warehouse/', true);
+        }
+
+
+        // Mencari nilai parameter "mode" menggunakan preg_match
+        if (preg_match('/^([^&]+)&mode=([^&]+)/', $this->urlQuery, $matches)) {
+            $id = $matches[1];
+            $modeValue = $matches[2];
+
+            // set id
+            $this->warehouseId = $id;
+
+            // ubah modenya menjadi edit
+            if ($modeValue == 'edit') {
+                $this->dispatch('edit-warehouse');
+            }
+
+        } else {
+            $this->warehouseId = $this->urlQuery;
+        }
+
     }
 
     /**
@@ -47,7 +92,7 @@ class DetailWarehousePage extends Component
 
 
         // jika id nya kosong
-        if (empty($this->urlQuery)) {
+        if (empty($id)) {
             return;
         }
 
@@ -68,7 +113,6 @@ class DetailWarehousePage extends Component
 
 
     }
-
 
     /**
      * listener dapatkan isi item rack berdasarkan id
@@ -110,6 +154,12 @@ class DetailWarehousePage extends Component
 
     }
 
+    #[On('detail-item-rack-edit')]
+    public function getItemEditAdded()
+    {
+
+    }
+
     #[On('load-more')]
     public function loadMore($rackId)
     {
@@ -132,6 +182,20 @@ class DetailWarehousePage extends Component
         }
     }
 
+    #[On('edit-warehouse')]
+    public function editWarehouse()
+    {
+        // buat mode nya menjadi edit
+        $this->mode = 'edit';
+        $this->urlQuery = "{$this->warehouseId}&mode=edit";
+
+        if ($this->warehouse != null) {
+            // isi field warehouse name
+            $this->warehouseName = $this->warehouse->name;
+        }
+
+
+    }
 
     public function placeholder()
     {

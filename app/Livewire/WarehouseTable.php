@@ -6,7 +6,6 @@ use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Attributes\Modelable;
 use PowerComponents\LivewirePowerGrid\Button;
-use PowerComponents\LivewirePowerGrid\Cache;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Facades\Filter;
@@ -31,6 +30,8 @@ final class WarehouseTable extends PowerGridComponent
 
     public function setUp(): array
     {
+
+
         return [
 
             Exportable::make('warehouse-data')
@@ -39,7 +40,7 @@ final class WarehouseTable extends PowerGridComponent
             Footer::make()
                 ->showPerPage(7)
                 ->showRecordCount(),
-            Cache::make()->forever(),
+
 
         ];
 
@@ -47,7 +48,6 @@ final class WarehouseTable extends PowerGridComponent
 
     public function datasource(): Builder
     {
-        sleep(2);
         return Warehouse::query()
             ->join('areas', function ($areas) {
                 $areas->on('areas.warehouses_id', '=', 'warehouses.id');
@@ -56,6 +56,7 @@ final class WarehouseTable extends PowerGridComponent
             })
             ->select(['warehouses.id', 'warehouses.address', 'warehouses.name', 'warehouses.warehouse_code', 'areas.name AS areas_name', 'racks.name AS rack_name']);
     }
+
 
     public function relationSearch(): array
     {

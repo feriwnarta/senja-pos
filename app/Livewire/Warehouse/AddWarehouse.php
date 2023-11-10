@@ -23,7 +23,7 @@ class AddWarehouse extends Component
     public string $nameWarehouse;
     #[Rule('required|min:5')]
     public string $addressWarehouse;
-
+    
     public array $areas = [];
 
     public array $items = [];
