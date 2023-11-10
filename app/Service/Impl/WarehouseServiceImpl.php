@@ -149,7 +149,7 @@ class WarehouseServiceImpl implements WarehouseService
             return Item::where('racks_id', $id)
                 ->orWhereNull('racks_id')
                 ->orderBy('id')
-                ->cursorPaginate(20)
+                ->cursorPaginate(10)
                 ->toArray();
         } catch (\Exception $exception) {
             return [];

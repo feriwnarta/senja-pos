@@ -160,6 +160,27 @@ class DetailWarehousePage extends Component
     {
         $this->warehouseService = app()->make(WarehouseService::class);
         $this->itemEditData = $this->warehouseService->getItemRackAddedByIdWithCursor($id)['data'];
+
+        // lakukan pengecekan apakah item sudah ter - edit
+        if (!empty($this->itemSelected['dataItem'])) {
+            foreach ($this->itemSelected['dataItem'] as $dataItem) {
+                // rak yang sama
+                if ($dataItem['rack_id'] == $id) {
+                    foreach ($dataItem['item'] as $item) {
+
+                        foreach ($this->itemEditData as $itemEditKey => $itemEdit) {
+                            if ($itemEdit['id'] == $item['id']) {
+                                $this->itemEditData[$itemEditKey]['checked'] = $item['checked'];
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+
         $this->dispatch('after-load-modal-edit-item', rackId: $id);
     }
 
