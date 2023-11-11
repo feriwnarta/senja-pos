@@ -12,8 +12,11 @@ document.addEventListener("after-load-modal-detail-item", (event) => {
 
 
 document.addEventListener("after-load-modal-edit-item", (event) => {
+
     $(function () {
+
         let rackId = event.detail.rackId;
+        onScrollModalEditItem(rackId);
 
         $('.item-modal input[type="checkbox"]').on('change', function () {
             console.log('change');
@@ -49,6 +52,32 @@ document.addEventListener("after-load-modal-edit-item", (event) => {
     });
 
 });
+
+const onScrollModalEditItem = (rackId) => {
+    let modalBody = $('#modalEditItem .modal-body');
+
+    let isStop = false;
+
+    // Infinity loading
+    modalBody.on("scroll", function () {
+        let scrollTop = modalBody.scrollTop();
+        let scrollHeight = modalBody.prop("scrollHeight");
+        let clientHeight = modalBody.prop("clientHeight");
+
+
+        // Deteksi scroll layar di paling bawah
+        if (scrollTop + clientHeight >= scrollHeight - 1) {
+            console.log('Mencapai bagian bawah modal');
+            // Lakukan aksi atau logika lainnya saat scroll mencapai bagian bawah modal
+            Livewire.dispatch('load-more-edit', {rackId: rackId});
+        }
+    });
+
+
+    Livewire.on('stop-request-edit', (event) => {
+        isStop = true;
+    });
+}
 
 
 const onScrollModalDetailItem = (rackId) => {

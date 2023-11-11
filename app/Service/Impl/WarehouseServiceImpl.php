@@ -183,15 +183,8 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function nextCursorItemRackAddedById(string $rackId, string $nextCursorId): array
     {
-        return $this->nextCursorItemDataSource($rackId, $nextCursorId);
-    }
-
-
-    private function nextCursorItemDataSource(string $rackId, string $nextCursorId): array
-    {
         try {
-            return Item::where('racks_id', $rackId)
-                ->orWhereNull('racks_id')
+            return Item::whereNull('racks_id')
                 ->orderBy('id')
                 ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
                 ->toArray();
@@ -205,6 +198,20 @@ class WarehouseServiceImpl implements WarehouseService
     {
         try {
             return Item::whereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
+        } catch (\Exception $exception) {
+            return [];
+            Log::error($exception->getMessage());
+        }
+    }
+
+    private function nextCursorItemDataSource(string $rackId, string $nextCursorId): array
+    {
+        try {
+            return Item::where('racks_id', $rackId)
+                ->orWhereNull('racks_id')
+                ->orderBy('id')
+                ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
+                ->toArray();
         } catch (\Exception $exception) {
             return [];
             Log::error($exception->getMessage());

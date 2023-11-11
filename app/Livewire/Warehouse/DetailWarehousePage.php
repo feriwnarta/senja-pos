@@ -5,6 +5,7 @@ namespace App\Livewire\Warehouse;
 use App\Models\Item;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -27,6 +28,7 @@ class DetailWarehousePage extends Component
     public string $htmlCondition;
     public array $itemData;
     public ?string $nextCursor = null;
+    public ?string $nextCursorEdit = null;
 
     public bool $isShow = false;
 
@@ -185,7 +187,10 @@ class DetailWarehousePage extends Component
     public function getItemEditAdded($id)
     {
         $this->warehouseService = app()->make(WarehouseService::class);
-        $this->itemEditData = $this->warehouseService->getItemRackAddedByIdWithCursor($id)['data'];
+        $result = $this->warehouseService->getItemRackAddedByIdWithCursor($id);
+        $this->nextCursorEdit = $result['next_cursor'];
+        $this->itemEditData = $result['data'];
+
 
         Log::info($this->itemSelected);
 
@@ -251,48 +256,92 @@ class DetailWarehousePage extends Component
         Log::info($id);
         Log::info($value);
 
-        $rackFound = false;
 
-        foreach ($this->itemSelected['dataItem'] as $dataItemKey => $dataItem) {
-            if (isset($dataItem['rack_id']) && $dataItem['rack_id'] == $rackId) {
-                $rackFound = true;
+        // Ambil item berdasarkan ID
+        $item = Item::find($id);
 
-                if (isset($dataItem['item'])) {
-                    $itemFound = false;
 
-                    foreach ($dataItem['item'] as $itemKey => $item) {
-                        if ($item['id'] == $id) {
-                            Log::error('sama');
-                            $this->itemSelected['dataItem'][$dataItemKey]['item'][$itemKey]['checked'] = $value;
-                            $itemFound = true;
-                            break;
-                        }
-                    }
+        if ($item) {
+            if ($value == 'true') {
+                // Perbarui nilai kolom 'racks_id' dengan nilai baru
+                $item->racks_id = $rackId;
 
-                    if (!$itemFound) {
-                        $this->itemSelected['dataItem'][$dataItemKey]['item'][] = [
-                            'id' => $id,
-                            'checked' => $value,
-                        ];
-                    }
-                }
-
-                // Keluar dari loop jika rack_id sudah ditemukan
-                break;
+                // Simpan perubahan ke database
+                $item->save();
+                return;
             }
+            $item->racks_id = null;
+            $item->save();
         }
 
-        if (!$rackFound) {
-            $this->itemSelected['dataItem'][] = [
-                'rack_id' => $rackId,
-                'item' => [
-                    [
-                        'id' => $id,
-                        'checked' => $value,
-                    ]
-                ]
-            ];
+
+//        $rackFound = false;
+//
+//        foreach ($this->itemSelected['dataItem'] as $dataItemKey => $dataItem) {
+//            if (isset($dataItem['rack_id']) && $dataItem['rack_id'] == $rackId) {
+//                $rackFound = true;
+//
+//                if (isset($dataItem['item'])) {
+//                    $itemFound = false;
+//
+//                    foreach ($dataItem['item'] as $itemKey => $item) {
+//                        if ($item['id'] == $id) {
+//                            Log::error('sama');
+//                            $this->itemSelected['dataItem'][$dataItemKey]['item'][$itemKey]['checked'] = $value;
+//                            $itemFound = true;
+//                            break;
+//                        }
+//                    }
+//
+//                    if (!$itemFound) {
+//                        $this->itemSelected['dataItem'][$dataItemKey]['item'][] = [
+//                            'id' => $id,
+//                            'checked' => $value,
+//                        ];
+//                    }
+//                }
+//
+//                // Keluar dari loop jika rack_id sudah ditemukan
+//                break;
+//            }
+//        }
+//
+//        if (!$rackFound) {
+//            $this->itemSelected['dataItem'][] = [
+//                'rack_id' => $rackId,
+//                'item' => [
+//                    [
+//                        'id' => $id,
+//                        'checked' => $value,
+//                    ]
+//                ]
+//            ];
+//        }
+    }
+
+    #[On('load-more-edit')]
+    public function loadMoreEdit($rackId)
+    {
+
+        if ($this->nextCursorEdit != null) {
+            $this->warehouseService = app()->make(WarehouseService::class);
+            $nextCursor = $this->warehouseService->nextCursorItemRackAddedById($rackId, $this->nextCursorEdit);
+
+            if ($nextCursor['data'] != null) {
+                foreach ($nextCursor['data'] as $data) {
+                    $this->itemEditData[] = [
+                        'id' => $data['id'],
+                        'name' => $data['name'],
+                        'checked' => 'false',
+                    ];
+                }
+            }
+
+            Log::info($this->itemEditData);
+
+            $this->nextCursor = $nextCursor['next_cursor'];
         }
+
     }
 
     #[On('load-more')]
@@ -325,6 +374,7 @@ class DetailWarehousePage extends Component
     #[On('edit-warehouse')]
     public function editWarehouse()
     {
+        DB::beginTransaction();
         // buat mode nya menjadi edit
         $this->mode = 'edit';
         $this->urlQuery = "{$this->warehouseId}&mode=edit";
