@@ -200,4 +200,14 @@ class WarehouseServiceImpl implements WarehouseService
             Log::error($exception->getMessage());
         }
     }
+
+    public function getItemNotYetAddedRackCursor(): array
+    {
+        try {
+            return Item::whereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
+        } catch (\Exception $exception) {
+            return [];
+            Log::error($exception->getMessage());
+        }
+    }
 }

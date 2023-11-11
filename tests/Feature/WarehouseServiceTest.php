@@ -34,6 +34,18 @@ class WarehouseServiceTest extends TestCase
         self::assertSame($result->id, $this->warehouse->id);
     }
 
+    public function testGetItemNotYetAddedRackCursor()
+    {
+
+        $result = $this->warehouseService->getItemNotYetAddedRackCursor();
+        Log::info($result);
+        assertNotNull($result);
+        assertIsArray($result['data']);
+
+
+    }
+
+
     /**
      * test fungsi detail warehouse jika id nya tidak ditemukan
      * dan berharap execption dengan code 1

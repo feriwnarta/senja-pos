@@ -254,10 +254,10 @@
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalEditItem"
-                                                        @click="$dispatch('detail-item-rack-edit', {id: '{{ $value['id'] }}' })"
-                                                        style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-
+                                                        wire:click="{{ !empty($value['item']) ? 'dispatch(\'detail-item-rack-edit\', {id: \'' . $value['id'] . '\'})' : 'dispatch(\'add-new-item-rack-edit\')' }}"
+                                                        style="width: 120px; text-align: start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                                 >
+
                                                     @if(empty($value['item']))
                                                         Item belum ditambahkan
                                                     @else
@@ -406,7 +406,7 @@
                                     {{-- JIKA ITEM TIDAK CHECKED --}}
                                     <input id="{{ $item['id'] }}" data-meta="{{ $item['name'] }}"
                                            class="red-input checkbox"
-                                           type="checkbox"/>
+                                           type="checkbox" {{ (isset($item['disabled'])) ? 'disabled checked' : '' }}/>
                                 @endif
                             </div>
 

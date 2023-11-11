@@ -20,4 +20,6 @@ interface WarehouseService
     public function nextCursorItemRackAddedById(string $rackId, string $nextCursorId): array;
 
     public function manipulateItemRackAdded(array $dataItem, string $id): array;
+
+    public function getItemNotYetAddedRackCursor(): array;
 }

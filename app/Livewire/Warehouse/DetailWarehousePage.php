@@ -187,26 +187,42 @@ class DetailWarehousePage extends Component
 
 
         // lakukan pengecekan apakah item sudah ter - edit
+        // Jika data item terpilih tidak kosong
         if (!empty($this->itemSelected['dataItem'])) {
+            // Iterasi melalui setiap data item
             foreach ($this->itemSelected['dataItem'] as $dataItem) {
-                // rak yang sama
+                // Jika rack ID sama dengan ID yang diberikan
                 if ($dataItem['rack_id'] == $id) {
+                    // Iterasi melalui setiap item di dalam data item
                     foreach ($dataItem['item'] as $item) {
-
+                        // Iterasi melalui setiap item dalam data edit
                         foreach ($this->itemEditData as $itemEditKey => $itemEdit) {
+                            // Jika ID item di dalam data edit sama dengan ID item di dalam data item
                             if ($itemEdit['id'] == $item['id']) {
+                                // Tetapkan nilai 'checked' dari item edit ke nilai 'checked' dari item di dalam data item
                                 $this->itemEditData[$itemEditKey]['checked'] = $item['checked'];
                                 break;
                             }
                         }
-
                     }
                 }
+
+                foreach ($dataItem['item'] as $item) {
+                    // Iterasi melalui setiap item dalam data edit
+                    foreach ($this->itemEditData as $itemEditKey => $itemEdit) {
+                        // Jika ID item di dalam data edit sama dengan ID item di dalam data item
+                        if ($itemEdit['id'] == $item['id']) {
+                            // Tetapkan nilai 'checked' dari item edit ke nilai 'checked' dari item di dalam data item
+                            $this->itemEditData[$itemEditKey]['disabled'] = 'true';
+                            break;
+                        }
+                    }
+                }
+
+
             }
-
+            Log::info($this->itemEditData);
         }
-
-        Log::debug($this->itemEditData);
 
 
         $this->dispatch('after-load-modal-edit-item', rackId: $id);
@@ -343,6 +359,12 @@ class DetailWarehousePage extends Component
             'name' => '',
             'category_inventory' => '',
             'item' => [],];
+    }
+
+    #[On('add-new-item-rack-edit')]
+    public function loadModalNewIte()
+    {
+
     }
 
     public function render()
