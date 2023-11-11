@@ -254,7 +254,7 @@
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalEditItem"
-                                                        wire:click="{{ !empty($value['item']) ? 'dispatch(\'detail-item-rack-edit\', {id: \'' . $value['id'] . '\'})' : 'dispatch(\'add-new-item-rack-edit\')' }}"
+                                                        wire:click="{{ !empty($value['item']) ? 'dispatch(\'detail-item-rack-edit\', {id: \'' . $value['id'] . '\'})' : 'dispatch(\'add-new-item-rack-edit\', {id: \'' . $value['id'] . '\'})',}}"
                                                         style="width: 120px; text-align: start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                                 >
 

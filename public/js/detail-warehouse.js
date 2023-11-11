@@ -16,6 +16,7 @@ document.addEventListener("after-load-modal-edit-item", (event) => {
         let rackId = event.detail.rackId;
 
         $('.item-modal input[type="checkbox"]').on('change', function () {
+            console.log('change');
             // Cek apakah checkbox dicentang atau tidak
             if ($(this).prop('checked')) {
                 let id = $(this).attr('id');
@@ -33,7 +34,7 @@ document.addEventListener("after-load-modal-edit-item", (event) => {
                 let checkedCheckboxes = modalItems.find('input[type="checkbox"]:checked');
 
                 // Membuat array untuk menyimpan nilai atribut data-meta yang mengandung nama item checkbox yang tercentang
-                let item = checkedCheckboxes.map(function() {
+                let item = checkedCheckboxes.map(function () {
                     return $(this).data('meta');
                 }).get();
 
@@ -43,8 +44,6 @@ document.addEventListener("after-load-modal-edit-item", (event) => {
                 console.log('Elemen dengan kelas item-modal tidak ditemukan.');
             }
         });
-
-
 
 
     });

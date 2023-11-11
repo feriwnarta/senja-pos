@@ -10,6 +10,7 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Ramsey\Uuid\Uuid;
 
 class DetailWarehousePage extends Component
 {
@@ -186,6 +187,7 @@ class DetailWarehousePage extends Component
         $this->warehouseService = app()->make(WarehouseService::class);
         $this->itemEditData = $this->warehouseService->getItemRackAddedByIdWithCursor($id)['data'];
 
+        Log::info($this->itemSelected);
 
         // lakukan pengecekan apakah item sudah ter - edit
         // Jika data item terpilih tidak kosong
@@ -206,6 +208,7 @@ class DetailWarehousePage extends Component
                             }
                         }
                     }
+
                 } else {
                     foreach ($dataItem['item'] as $item) {
                         $isItemEdited = false; // Tambahkan variabel penanda untuk item yang sudah di-edit
@@ -349,13 +352,16 @@ class DetailWarehousePage extends Component
     {
         Log::debug(json_encode($this->areas, JSON_PRETTY_PRINT));
 
+        $rackId = Uuid::uuid4();
+        $areaId = Uuid::uuid4();
+
         $this->areas[] = [
             'area' => [
-                'id' => '',
+                'id' => $areaId->toString(),
                 'area' => '',
                 'racks' => [
                     [
-                        'id' => '',
+                        'id' => $rackId->toString(),
                         'name' => '',
                         'category_inventory' => '',
                         'item' => []
@@ -367,14 +373,16 @@ class DetailWarehousePage extends Component
 
     public function addNewRack()
     {
-        $this->areas[count($this->areas) - 1]['area']['racks'][] = ['id' => '',
+        $rackId = Uuid::uuid4();
+
+        $this->areas[count($this->areas) - 1]['area']['racks'][] = ['id' => $rackId->toString(),
             'name' => '',
             'category_inventory' => '',
             'item' => [],];
     }
 
     #[On('add-new-item-rack-edit')]
-    public function loadModalNewIte()
+    public function loadModalNewIte($id)
     {
         $this->itemEditData = [];
         $this->warehouseService = app()->make(WarehouseService::class);
@@ -399,7 +407,7 @@ class DetailWarehousePage extends Component
                                 $result['data'][] = [
                                     'id' => $foundItem['id'],
                                     'name' => $foundItem['name'],
-                                    'checked' => 'false',
+                                    'checked' => $item['checked'],
                                 ];
                                 $addedItemIds[] = $foundItem['id']; // Tandai ID item sebagai ditambahkan
                             }
@@ -415,6 +423,8 @@ class DetailWarehousePage extends Component
             Log::info($result['data']);
             $this->itemEditData = $result['data'];
         }
+
+        $this->dispatch('after-load-modal-edit-item', rackId: $id);
     }
 
     public function render()
