@@ -5,7 +5,6 @@ namespace App\Livewire\Warehouse;
 use App\Models\Item;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -41,6 +40,7 @@ class DetailWarehousePage extends Component
 
     public function mount()
     {
+
 
         // TODO: extract url query, untuk menentukan mode edit atau view
 
@@ -366,7 +366,7 @@ class DetailWarehousePage extends Component
     #[On('edit-warehouse')]
     public function editWarehouse()
     {
-        DB::beginTransaction();
+
         // buat mode nya menjadi edit
         $this->mode = 'edit';
         $this->urlQuery = "{$this->warehouseId}&mode=edit";
@@ -478,6 +478,17 @@ class DetailWarehousePage extends Component
     {
         $this->dispatch('set-width-title');
         $this->dispatch('update-menu');
+    }
+
+    private function isItemInDifferentRack($item, $itemSelected)
+    {
+        foreach ($itemSelected['item'] as $selectedItem) {
+            if ($item['id'] == $selectedItem['id'] && $itemSelected['rack_id'] != $item['rack_id']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
