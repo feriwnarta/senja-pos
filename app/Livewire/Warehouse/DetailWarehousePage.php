@@ -317,6 +317,34 @@ class DetailWarehousePage extends Component
         HTML;
     }
 
+    public function addNewArea()
+    {
+        Log::debug(json_encode($this->areas, JSON_PRETTY_PRINT));
+
+        $this->areas[] = [
+            'area' => [
+                'id' => '',
+                'area' => '',
+                'racks' => [
+                    [
+                        'id' => '',
+                        'name' => '',
+                        'category_inventory' => '',
+                        'item' => []
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    public function addNewRack()
+    {
+        $this->areas[count($this->areas) - 1]['area']['racks'][] = ['id' => '',
+            'name' => '',
+            'category_inventory' => '',
+            'item' => [],];
+    }
+
     public function render()
     {
         return view('livewire.warehouse.detail-warehouse-page');

@@ -237,7 +237,7 @@
                                                        class="input-no-border make-input rackInput caption-medium"
                                                        placeholder="A1" style="width: 100%"
                                                        wire:model="areas.{{ $key }}.area.racks.{{ $subKey }}.name"
-                                                       disabled>
+                                                >
 
                                             </td>
                                             <td>
@@ -245,7 +245,7 @@
                                                        class="input-no-border make-input catInvInput caption-medium"
                                                        placeholder="Bahan mentah" style="width: 100%"
                                                        wire:model="areas.{{ $key }}.area.racks.{{ $subKey }}.category_inventory"
-                                                       disabled>
+                                                >
                                                 @if ($errors->has("areas.$key.rack.$subKey.category_inventory"))
                                                     <span
                                                         class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.category_inventory") }}</span>
@@ -269,9 +269,27 @@
                                             </td>
 
                                         </tr>
+
                                     @endif
                                 @endforeach
                             @endforeach
+
+                            <tr id="addWarehouseAction">
+                                <td>
+                                    <button class="btn icon-text caption-medium" type="button" id="addArea"
+                                            wire:click="addNewArea">
+                                        + Area
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn icon-text caption-medium" type="button" id="addRack"
+                                            wire:click="addNewRack">
+                                        + Rak
+                                    </button>
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
 
                             </tbody>
                         </table>
