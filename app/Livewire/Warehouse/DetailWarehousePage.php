@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Models\Item;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
 use Illuminate\Support\Facades\Log;
@@ -205,16 +206,16 @@ class DetailWarehousePage extends Component
                             }
                         }
                     }
-                }
-
-                foreach ($dataItem['item'] as $item) {
-                    // Iterasi melalui setiap item dalam data edit
-                    foreach ($this->itemEditData as $itemEditKey => $itemEdit) {
-                        // Jika ID item di dalam data edit sama dengan ID item di dalam data item
-                        if ($itemEdit['id'] == $item['id']) {
-                            // Tetapkan nilai 'checked' dari item edit ke nilai 'checked' dari item di dalam data item
-                            $this->itemEditData[$itemEditKey]['disabled'] = 'true';
-                            break;
+                } else {
+                    foreach ($dataItem['item'] as $item) {
+                        // Iterasi melalui setiap item dalam data edit
+                        foreach ($this->itemEditData as $itemEditKey => $itemEdit) {
+                            // Jika ID item di dalam data edit sama dengan ID item di dalam data item
+                            if ($itemEdit['id'] == $item['id']) {
+                                // Tetapkan nilai 'checked' dari item edit ke nilai 'checked' dari item di dalam data item
+                                $this->itemEditData[$itemEditKey]['disabled'] = 'true';
+                                break;
+                            }
                         }
                     }
                 }
@@ -364,7 +365,45 @@ class DetailWarehousePage extends Component
     #[On('add-new-item-rack-edit')]
     public function loadModalNewIte()
     {
+        $this->itemEditData = [];
+        $this->warehouseService = app()->make(WarehouseService::class);
+        $result = $this->warehouseService->getItemNotYetAddedRackCursor();
 
+
+        if (!empty($result)) {
+
+            // lakukan pengecekan item selected
+            Log::info('item selected');
+            Log::info($this->itemSelected);
+
+            $addedItemIds = [];
+
+            foreach ($result['data'] as $dataKey => $dataItem) {
+                foreach ($this->itemSelected['dataItem'] as $itemSelected) {
+                    foreach ($itemSelected['item'] as $item) {
+                        if ($item['checked'] == 'false' && !in_array($item['id'], $addedItemIds)) {
+                            // cari data item berdasarkan id
+                            $foundItem = Item::find($item['id']);
+                            if ($foundItem != null) {
+                                $result['data'][] = [
+                                    'id' => $foundItem['id'],
+                                    'name' => $foundItem['name'],
+                                    'checked' => 'false',
+                                ];
+                                $addedItemIds[] = $foundItem['id']; // Tandai ID item sebagai ditambahkan
+                            }
+                        }
+                    }
+                }
+                // Setel nilai 'checked' untuk data yang sudah ada
+                $result['data'][$dataKey]['checked'] = 'false';
+            }
+
+
+            Log::info('cursor data');
+            Log::info($result['data']);
+            $this->itemEditData = $result['data'];
+        }
     }
 
     public function render()
