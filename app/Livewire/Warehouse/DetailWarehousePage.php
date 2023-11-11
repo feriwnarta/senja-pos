@@ -208,18 +208,29 @@ class DetailWarehousePage extends Component
                     }
                 } else {
                     foreach ($dataItem['item'] as $item) {
+                        $isItemEdited = false; // Tambahkan variabel penanda untuk item yang sudah di-edit
                         // Iterasi melalui setiap item dalam data edit
                         foreach ($this->itemEditData as $itemEditKey => $itemEdit) {
                             // Jika ID item di dalam data edit sama dengan ID item di dalam data item
-                            if ($itemEdit['id'] == $item['id']) {
+                            if ($itemEdit['id'] == $item['id'] && $item['checked'] == 'true') {
                                 // Tetapkan nilai 'checked' dari item edit ke nilai 'checked' dari item di dalam data item
                                 $this->itemEditData[$itemEditKey]['disabled'] = 'true';
+                                $isItemEdited = true;
                                 break;
                             }
                         }
+
+                        // Jika item belum di-edit, tambahkan ke dalam data edit
+                        if (!$isItemEdited && $item['checked'] == 'false') {
+                            $foundItem = Item::find($item['id']);
+                            $this->itemEditData[] = [
+                                'id' => $item['id'],
+                                'name' => $foundItem['name'],
+                                'checked' => 'false',
+                            ];
+                        }
                     }
                 }
-
 
             }
             Log::info($this->itemEditData);
