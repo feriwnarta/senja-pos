@@ -257,66 +257,48 @@ class DetailWarehousePage extends Component
         Log::info($value);
 
 
-        // Ambil item berdasarkan ID
-        $item = Item::find($id);
+        $rackFound = false;
 
+        foreach ($this->itemSelected['dataItem'] as $dataItemKey => $dataItem) {
+            if (isset($dataItem['rack_id']) && $dataItem['rack_id'] == $rackId) {
+                $rackFound = true;
 
-        if ($item) {
-            if ($value == 'true') {
-                // Perbarui nilai kolom 'racks_id' dengan nilai baru
-                $item->racks_id = $rackId;
+                if (isset($dataItem['item'])) {
+                    $itemFound = false;
 
-                // Simpan perubahan ke database
-                $item->save();
-                return;
+                    foreach ($dataItem['item'] as $itemKey => $item) {
+                        if ($item['id'] == $id) {
+                            Log::error('sama');
+                            $this->itemSelected['dataItem'][$dataItemKey]['item'][$itemKey]['checked'] = $value;
+                            $itemFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!$itemFound) {
+                        $this->itemSelected['dataItem'][$dataItemKey]['item'][] = [
+                            'id' => $id,
+                            'checked' => $value,
+                        ];
+                    }
+                }
+
+                // Keluar dari loop jika rack_id sudah ditemukan
+                break;
             }
-            $item->racks_id = null;
-            $item->save();
         }
 
-
-//        $rackFound = false;
-//
-//        foreach ($this->itemSelected['dataItem'] as $dataItemKey => $dataItem) {
-//            if (isset($dataItem['rack_id']) && $dataItem['rack_id'] == $rackId) {
-//                $rackFound = true;
-//
-//                if (isset($dataItem['item'])) {
-//                    $itemFound = false;
-//
-//                    foreach ($dataItem['item'] as $itemKey => $item) {
-//                        if ($item['id'] == $id) {
-//                            Log::error('sama');
-//                            $this->itemSelected['dataItem'][$dataItemKey]['item'][$itemKey]['checked'] = $value;
-//                            $itemFound = true;
-//                            break;
-//                        }
-//                    }
-//
-//                    if (!$itemFound) {
-//                        $this->itemSelected['dataItem'][$dataItemKey]['item'][] = [
-//                            'id' => $id,
-//                            'checked' => $value,
-//                        ];
-//                    }
-//                }
-//
-//                // Keluar dari loop jika rack_id sudah ditemukan
-//                break;
-//            }
-//        }
-//
-//        if (!$rackFound) {
-//            $this->itemSelected['dataItem'][] = [
-//                'rack_id' => $rackId,
-//                'item' => [
-//                    [
-//                        'id' => $id,
-//                        'checked' => $value,
-//                    ]
-//                ]
-//            ];
-//        }
+        if (!$rackFound) {
+            $this->itemSelected['dataItem'][] = [
+                'rack_id' => $rackId,
+                'item' => [
+                    [
+                        'id' => $id,
+                        'checked' => $value,
+                    ]
+                ]
+            ];
+        }
     }
 
     #[On('load-more-edit')]
@@ -326,21 +308,31 @@ class DetailWarehousePage extends Component
         if ($this->nextCursorEdit != null) {
             $this->warehouseService = app()->make(WarehouseService::class);
             $nextCursor = $this->warehouseService->nextCursorItemRackAddedById($rackId, $this->nextCursorEdit);
+            $this->dispatch('stop-request-edit');
 
             if ($nextCursor['data'] != null) {
+                // Filter duplikat menggunakan ID
+                $existingIds = array_column($this->itemEditData, 'id');
+
                 foreach ($nextCursor['data'] as $data) {
-                    $this->itemEditData[] = [
-                        'id' => $data['id'],
-                        'name' => $data['name'],
-                        'checked' => 'false',
-                    ];
+                    // Periksa apakah ID sudah ada di $this->itemEditData
+                    if (!in_array($data['id'], $existingIds)) {
+                        $this->itemEditData[] = [
+                            'id' => $data['id'],
+                            'name' => $data['name'],
+                            'checked' => 'false',
+                        ];
+                    }
                 }
+
+
             }
 
             Log::info($this->itemEditData);
 
             $this->nextCursor = $nextCursor['next_cursor'];
         }
+
 
     }
 

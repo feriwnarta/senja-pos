@@ -66,7 +66,7 @@ const onScrollModalEditItem = (rackId) => {
 
 
         // Deteksi scroll layar di paling bawah
-        if (scrollTop + clientHeight >= scrollHeight - 1) {
+        if (scrollTop + clientHeight >= scrollHeight - 1 && !isStop) {
             console.log('Mencapai bagian bawah modal');
             // Lakukan aksi atau logika lainnya saat scroll mencapai bagian bawah modal
             Livewire.dispatch('load-more-edit', {rackId: rackId});
@@ -75,6 +75,7 @@ const onScrollModalEditItem = (rackId) => {
 
 
     Livewire.on('stop-request-edit', (event) => {
+        console.log('asd');
         isStop = true;
     });
 }
