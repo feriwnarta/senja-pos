@@ -267,7 +267,7 @@
                                                 <input type="text"
                                                        class="input-no-border make-input catInvInput caption-medium"
                                                        placeholder="Bahan mentah" style="width: 100%"
-                                                       wire:model="areas.{{ $key }}.area.racks.{{ $subKey }}.category_inventory"
+                                                       wire:model.live="areas.{{ $key }}.area.racks.{{ $subKey }}.category_inventory"
                                                 >
                                                 @if ($errors->has("areas.$key.area.racks.$subKey.category_inventory"))
                                                     <span

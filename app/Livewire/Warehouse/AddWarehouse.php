@@ -23,7 +23,7 @@ class AddWarehouse extends Component
     public string $nameWarehouse;
     #[Rule('required|min:5')]
     public string $addressWarehouse;
-    
+
     public array $areas = [];
 
     public array $items = [];
@@ -285,7 +285,7 @@ class AddWarehouse extends Component
         // cek terlebih dahulu apakah cursor id tidak null
         // jika datanya null berarti sudah tidak ada data lagi
         if ($this->nextCursorId != null) {
-            $nextItems = Item::orderBy('id')->cursorPaginate(20, ['*'], 'cursor', $this->nextCursorId)->toArray();
+            $nextItems = Item::orderBy('id')->cursorPaginate(10, ['*'], 'cursor', $this->nextCursorId)->toArray();
 
             // tambahkan data baru ke variabel $items
             foreach ($nextItems['data'] as $data) {

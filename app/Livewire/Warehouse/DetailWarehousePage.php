@@ -18,6 +18,7 @@ class DetailWarehousePage extends Component
     public string $warehouseId;
 
     public string $locationWarehouse;
+
     public array $areas = [];
     public bool $isAddedArea = false;
     public Warehouse $warehouse;
@@ -151,7 +152,6 @@ class DetailWarehousePage extends Component
         }
     }
 
-
     /**
      * listener dapatkan isi item rack berdasarkan id
      * fungsi ini akan memanggil fungsi warehouse service getItemRackByIdWithCursor
@@ -202,9 +202,22 @@ class DetailWarehousePage extends Component
         $this->nextCursorEdit = $result['next_cursor'];
 
 
-        foreach ($result['data'] as $item) {
+        $this->setItemEditData($result['data'], $id);
 
-            if ($item['racks_id'] == $id) {
+
+        $this->dispatch('after-load-modal-edit-item', rackId: $id);
+    }
+
+    /**
+     * @param $data
+     * @param $rackId
+     * @return void
+     */
+    private function setItemEditData($data, $rackId): void
+    {
+        foreach ($data as $item) {
+
+            if ($item['racks_id'] == $rackId) {
                 $this->itemEditData[] = [
                     'id' => $item['id'],
                     'name' => $item['name'],
@@ -219,9 +232,6 @@ class DetailWarehousePage extends Component
             ];
 
         }
-
-
-        $this->dispatch('after-load-modal-edit-item', rackId: $id);
     }
 
     #[On('item-added')]
@@ -269,13 +279,15 @@ class DetailWarehousePage extends Component
 
         if ($this->nextCursorEdit != null) {
             $this->warehouseService = app()->make(WarehouseService::class);
-            $nextCursor = $this->warehouseService->nextCursorItemRackAddedById($rackId, $this->nextCursorEdit);
+            $result = $this->warehouseService->nextCursorItemRackAddedById($rackId, $this->nextCursorEdit);
             $this->dispatch('stop-request-edit');
 
             Log::info('load more');
-            Log::info($nextCursor);
+            Log::info($result);
             Log::info($this->nextCursorEdit);
-            Log::info($nextCursor);
+            Log::info($result);
+
+            $this->setItemEditData($result['data'], $rackId);
 
 
         }
@@ -383,7 +395,6 @@ class DetailWarehousePage extends Component
             'item' => [],];
     }
 
-
     public function removeArea($areaIndex)
     {
 
@@ -393,7 +404,6 @@ class DetailWarehousePage extends Component
         }
 
     }
-
 
     public function removeAreaRack($areaIndex, $rackIndex)
     {
@@ -406,7 +416,6 @@ class DetailWarehousePage extends Component
         }
 
     }
-
 
     #[On('saveEditWarehouse')]
     public function validateInput()
@@ -427,7 +436,6 @@ class DetailWarehousePage extends Component
 
 
     }
-
 
     public function render()
     {

@@ -166,12 +166,7 @@ class WarehouseServiceImpl implements WarehouseService
     public function nextCursorItemRackAddedById(string $rackId, string $nextCursorId): array
     {
         try {
-            return Item::where('rack_id', $rackId)
-                ->orWhereNull('rack_id') // Ganti 'racks_id' menjadi 'rack_id'
-                ->where('id', '>', $nextCursorId) // Menambahkan kondisi untuk id yang lebih besar dari cursor sebelumnya
-                ->orderBy('id')
-                ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
-                ->toArray();
+            return Item::orderBy('id')->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)->toArray();
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
             return [];
