@@ -34,92 +34,13 @@ class DetailWarehousePage extends Component
     public string $rackId;
 
     public string $warehouseCode;
+    #[Rule('required|min:5|unique:warehouses,address')]
+    public string $warehouseAddress;
     #[Rule('required|min:5|unique:warehouses,name')]
     public string $warehouseName;
     public array $itemEditData;
     public array $itemSelected = ['dataItem' => []];
     private WarehouseService $warehouseService;
-
-    public function mount()
-    {
-
-
-        // TODO: extract url query, untuk menentukan mode edit atau view
-
-
-        // extract url query
-        $this->extractUrl();
-
-
-        $this->warehouseService = app()->make(WarehouseService::class);
-        $this->getDetailDataWarehouse($this->warehouseId);
-    }
-
-    /**
-     * fungsi ini dilakukan untuk melakukan extract url query parameter
-     * ini digunakan untuk menentukan apakah warehouse dalam mode edit atau view
-     * saat web direfresh tampilan akan menyesuaikan berdasarkan mode
-     * @return void
-     */
-    private function extractUrl()
-    {
-        // jika url kosong atau null, maka redirect ke warehouse list
-        if ($this->urlQuery == '' || $this->urlQuery == null) {
-            $this->redirect('/warehouse/list-warehouse/', true);
-        }
-
-
-        // Mencari nilai parameter "mode" menggunakan preg_match
-        if (preg_match('/^([^&]+)&mode=([^&]+)/', $this->urlQuery, $matches)) {
-            $id = $matches[1];
-            $modeValue = $matches[2];
-
-            // set id
-            $this->warehouseId = $id;
-
-            // ubah modenya menjadi edit
-            if ($modeValue == 'edit') {
-                $this->dispatch('edit-warehouse');
-            }
-
-        } else {
-            $this->warehouseId = $this->urlQuery;
-        }
-
-    }
-
-    /**
-     * dapatkan data detail gudang termasuk area, rack dan item
-     * @param string $id
-     * @return void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     */
-    private function getDetailDataWarehouse(string $id)
-    {
-
-
-        // jika id nya kosong
-        if (empty($id)) {
-            return;
-        }
-
-        try {
-            $this->warehouse = $this->warehouseService->getWarehouseById($id);
-
-            // tampilkan warehouse tidak ketemu
-            if ($this->warehouse == null) return;
-
-            $this->areas = $this->warehouseService->getDetailDataAreaRackItemWarehouse($this->warehouse);
-
-        } catch (\Exception $e) {
-            // warehouse not found
-            if ($e->getCode() == 1 || $e->getCode() == 2) {
-                $this->htmlCondition = 'Data gudang tidak ditemukan, pastikan gudang ada jika masalah masih berlanjut silahkan hubungi administrator';
-            }
-        }
-
-
-    }
 
     #[On('update-item-rack')]
     public function updateItemRack($rackId, $item)
@@ -276,7 +197,6 @@ class DetailWarehousePage extends Component
     #[On('load-more-edit')]
     public function loadMoreEdit($rackId)
     {
-
         if ($this->nextCursorEdit != null) {
             $this->warehouseService = app()->make(WarehouseService::class);
             $result = $this->warehouseService->nextCursorItemRackAddedById($rackId, $this->nextCursorEdit);
@@ -288,11 +208,7 @@ class DetailWarehousePage extends Component
             Log::info($result);
 
             $this->setItemEditData($result['data'], $rackId);
-
-
         }
-
-
     }
 
     #[On('load-more')]
@@ -446,6 +362,88 @@ class DetailWarehousePage extends Component
     {
         $this->dispatch('set-width-title');
         $this->dispatch('update-menu');
+    }
+
+
+    public function mount()
+    {
+        // TODO: extract url query, untuk menentukan mode edit atau view
+
+        // extract url query
+        $this->extractUrl();
+
+
+        $this->warehouseService = app()->make(WarehouseService::class);
+        $this->getDetailDataWarehouse($this->warehouseId);
+    }
+
+    /**
+     * fungsi ini dilakukan untuk melakukan extract url query parameter
+     * ini digunakan untuk menentukan apakah warehouse dalam mode edit atau view
+     * saat web direfresh tampilan akan menyesuaikan berdasarkan mode
+     * @return void
+     */
+    private function extractUrl()
+    {
+        // jika url kosong atau null, maka redirect ke warehouse list
+        if ($this->urlQuery == '' || $this->urlQuery == null) {
+            $this->redirect('/warehouse/list-warehouse/', true);
+        }
+
+
+        // Mencari nilai parameter "mode" menggunakan preg_match
+        if (preg_match('/^([^&]+)&mode=([^&]+)/', $this->urlQuery, $matches)) {
+            $id = $matches[1];
+            $modeValue = $matches[2];
+
+            // set id
+            $this->warehouseId = $id;
+
+            // ubah modenya menjadi edit
+            if ($modeValue == 'edit') {
+                $this->dispatch('edit-warehouse');
+            }
+
+        } else {
+            $this->warehouseId = $this->urlQuery;
+        }
+
+    }
+
+    /**
+     * dapatkan data detail gudang termasuk area, rack dan item
+     * @param string $id
+     * @return void
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    private function getDetailDataWarehouse(string $id)
+    {
+
+
+        // jika id nya kosong
+        if (empty($id)) {
+            return;
+        }
+
+        try {
+            $this->warehouse = $this->warehouseService->getWarehouseById($id);
+
+            // set addess
+            $this->warehouseAddress = $this->warehouse->address;
+
+            // tampilkan warehouse tidak ketemu
+            if ($this->warehouse == null) return;
+
+            $this->areas = $this->warehouseService->getDetailDataAreaRackItemWarehouse($this->warehouse);
+
+        } catch (\Exception $e) {
+            // warehouse not found
+            if ($e->getCode() == 1 || $e->getCode() == 2) {
+                $this->htmlCondition = 'Data gudang tidak ditemukan, pastikan gudang ada jika masalah masih berlanjut silahkan hubungi administrator';
+            }
+        }
+
+
     }
 
 

@@ -139,6 +139,7 @@
                         </table>
 
 
+                        {{-- ALAMAT --}}
                         <div class="margin-top-24">
                             <label for="addressWarehouse" class="form-label">Alamat</label>
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
@@ -301,6 +302,7 @@
                                 @endforeach
                             @endforeach
 
+                            {{-- BUTTON ACTION ADD RACK / AREA --}}
                             <tr id="addWarehouseAction">
                                 <td>
                                     <button class="btn icon-text caption-medium" type="button" id="addArea"
@@ -315,11 +317,23 @@
                                     </button>
                                 </td>
                                 <td></td>
-                                <td></td>
                             </tr>
 
                             </tbody>
                         </table>
+
+
+                        {{-- ALAMAT --}}
+                        <div class="margin-top-24">
+                            <label for="addressWarehouse" class="form-label">Alamat</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                            <textarea class="form-control textarea" id="addressWarehouse" rows="5"
+                                      wire:model.live.debounce.600ms="warehouseAddress"></textarea>
+                            @if ($errors->has("warehouseAddress"))
+                                <span
+                                    class="text-xs text-red-600">{{ $errors->first("warehouseAddress") }}</span>
+                            @endif
+                        </div>
 
 
                     </div>
