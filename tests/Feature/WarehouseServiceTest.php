@@ -188,6 +188,31 @@ class WarehouseServiceTest extends TestCase
         Log::debug(json_encode($data, JSON_PRETTY_PRINT));
     }
 
+    public function testAddRack()
+    {
+
+        $area = Area::factory()->create([
+            'id' => fake()->uuid(),
+            'warehouses_id' => $this->warehouse->id,
+            'name' => fake()->name(),
+        ]);
+
+        $result = $this->warehouseService->addNewRack($area->id);
+        assertNotNull($result);
+
+    }
+
+    public function testAddRackFailed()
+    {
+
+
+        $result = $this->warehouseService->addNewRack('asd');
+        self::assertNull($result);
+
+
+    }
+
+
     public function testGetItemRackByIdWithCursorWhenIdEmpty()
     {
         $racks = $this->warehouseService->getItemRackByIdWithCursor('asdsad');
@@ -246,14 +271,14 @@ class WarehouseServiceTest extends TestCase
 //
         $this->warehouseService = $this->app->make(WarehouseService::class);
 //
-//        $this->warehouse = Warehouse::factory()->create(
-//            [
-//                'id' => fake()->uuid(),
-//                'warehouse_code' => fake()->countryCode(),
-//                'name' => fake()->name(),
-//                'address' => fake()->address()
-//            ]
-//        );
+        $this->warehouse = Warehouse::factory()->create(
+            [
+                'id' => fake()->uuid(),
+                'warehouse_code' => fake()->countryCode(),
+                'name' => fake()->name(),
+                'address' => fake()->address()
+            ]
+        );
 
 
     }

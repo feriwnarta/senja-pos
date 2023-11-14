@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Models\Area;
+use App\Models\Rack;
 use App\Models\Warehouse;
 
 interface WarehouseService
@@ -22,4 +24,8 @@ interface WarehouseService
     public function manipulateItemRackAdded(array $dataItem, string $id): array;
 
     public function getItemNotYetAddedRackCursor(): array;
+
+    public function addNewArea(string $warehouseId): ?Area;
+
+    public function addNewRack(string $areaId): ?Rack;
 }

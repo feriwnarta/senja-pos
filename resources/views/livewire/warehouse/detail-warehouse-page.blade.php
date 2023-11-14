@@ -56,7 +56,7 @@
                             <tbody id="warehouseData">
 
                             @foreach($areas as $key => $area)
-                                {{ \Illuminate\Support\Facades\Log::info($area) }}
+
                                 <tr>
                                     <td>
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
@@ -73,6 +73,7 @@
                                                placeholder="Bahan mentah" style="width: 100%"
                                                wire:model="areas.{{ $key }}.area.racks.0.category_inventory" disabled>
                                     </td>
+
                                     <td>
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-target="#modalDetailItem"
@@ -85,11 +86,12 @@
                                             @endforelse
                                         </button>
                                     </td>
+
                                 </tr>
 
                                 @foreach($area['area']['racks'] as $subKey => $value)
                                     @if($subKey != 0)
-                                        {{ \Illuminate\Support\Facades\Log::info(json_encode($value, JSON_PRETTY_PRINT)) }}
+
                                         <tr>
                                             <td></td>
                                             <td>
@@ -189,28 +191,42 @@
                                 <th>{{ __('app_locale.text.rak') }}</th>
                                 <th>{{ __('app_locale.text.kategoriInventory') }}</th>
                                 <th>{{ __('app_locale.text.item') }}</th>
+                                <th></th>
                             </tr>
                             </thead>
 
                             <tbody id="warehouseData">
 
                             @foreach($areas as $key => $area)
-                                {{ \Illuminate\Support\Facades\Log::info($area) }}
+
                                 <tr>
                                     <td>
-                                        <input type="text" class="input-no-border make-input areaInput caption-medium"
+                                        <input type="text"
+                                               class="input-no-border make-input areaInput caption-medium"
                                                placeholder="Area A" style="width: 100%"
-                                               wire:model="areas.{{ $key }}.area.area">
+                                               wire:model="areas.{{ $key }}.area.area"
+                                        >
+
+                                        @error("areas.$key.area.area")
+                                        <span class="text-xs text-red-600">{{ $message }}</span>
+                                        @enderror
                                     </td>
+
                                     <td>
                                         <input type="text" class="input-no-border make-input rackInput caption-medium"
                                                placeholder="A1" style="width: 100%"
                                                wire:model="areas.{{ $key }}.area.racks.0.name">
+                                        @error("areas.$key.area.racks.0.name")
+                                        <span class="text-xs text-red-600">{{ $message }}</span>
+                                        @enderror
                                     </td>
                                     <td>
                                         <input type="text" class="input-no-border make-input catInvInput caption-medium"
                                                placeholder="Bahan mentah" style="width: 100%"
                                                wire:model="areas.{{ $key }}.area.racks.0.category_inventory">
+                                        @error("areas.$key.area.racks.0.category_inventory")
+                                        <span class="text-xs text-red-600">{{ $message }}</span>
+                                        @enderror
                                     </td>
                                     <td>
                                         <button class="btn icon-text hoy" type="button"
@@ -225,11 +241,14 @@
                                             @endforelse
                                         </button>
                                     </td>
+                                    <td class="delete-item" wire:click.prevent="removeArea({{ $key }})">
+                                        <i class="x-icon"></i>
+                                    </td>
                                 </tr>
 
                                 @foreach($area['area']['racks'] as $subKey => $value)
                                     @if($subKey != 0)
-                                        {{ \Illuminate\Support\Facades\Log::info(json_encode($value, JSON_PRETTY_PRINT)) }}
+
                                         <tr>
                                             <td></td>
                                             <td>
@@ -238,6 +257,10 @@
                                                        placeholder="A1" style="width: 100%"
                                                        wire:model="areas.{{ $key }}.area.racks.{{ $subKey }}.name"
                                                 >
+                                                @if ($errors->has("areas.$key.area.racks.$subKey.name"))
+                                                    <span
+                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.area.racks.$subKey.name") }}</span>
+                                                @endif
 
                                             </td>
                                             <td>
@@ -246,15 +269,15 @@
                                                        placeholder="Bahan mentah" style="width: 100%"
                                                        wire:model="areas.{{ $key }}.area.racks.{{ $subKey }}.category_inventory"
                                                 >
-                                                @if ($errors->has("areas.$key.rack.$subKey.category_inventory"))
+                                                @if ($errors->has("areas.$key.area.racks.$subKey.category_inventory"))
                                                     <span
-                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.category_inventory") }}</span>
+                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.area.racks.$subKey.category_inventory") }}</span>
                                                 @endif
                                             </td>
                                             <td>
                                                 <button class="btn icon-text" type="button" id="addItem"
                                                         data-bs-toggle="modal" data-bs-target="#modalEditItem"
-                                                        wire:click="{{ !empty($value['item']) ? 'dispatch(\'detail-item-rack-edit\', {id: \'' . $value['id'] . '\'})' : 'dispatch(\'add-new-item-rack-edit\', {id: \'' . $value['id'] . '\'})',}}"
+                                                        @click="$dispatch('detail-item-rack-edit', {id: '{{ $area['area']['racks'][$subKey]['id'] }}' })"
                                                         style="width: 120px; text-align: start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
                                                 >
 
@@ -266,6 +289,10 @@
                                                         @endforeach
                                                     @endif
                                                 </button>
+                                            </td>
+                                            <td class="delete-item"
+                                                wire:click.prevent="removeAreaRack({{ $key }}, {{ $subKey }})">
+                                                <i class="x-icon"></i>
                                             </td>
 
                                         </tr>

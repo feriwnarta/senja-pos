@@ -40,7 +40,7 @@
 
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
-                                @click="$dispatch('save')"
+                                @click="$dispatch('saveEditWarehouse')"
                         >Simpan
                         </button>
                     @endif

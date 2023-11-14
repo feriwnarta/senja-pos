@@ -2,7 +2,9 @@
 
 namespace App\Service\Impl;
 
+use App\Models\Area;
 use App\Models\Item;
+use App\Models\Rack;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
 use Illuminate\Support\Facades\Log;
@@ -99,24 +101,6 @@ class WarehouseServiceImpl implements WarehouseService
         return $areas;
     }
 
-    /**
-     * dapatkan detail item  berdasarkan id rack dengan menggunakan konsep cursor
-     * balikan fungsi ini berupa array cursor, hal ini karena livewire tidak bisa menangani
-     * data cursor
-     * @param string $id
-     * @return array
-     */
-    public function getItemRackByIdWithCursor(string $id): array
-    {
-        try {
-            return Item::where('racks_id', $id)->orderBy('id')->cursorPaginate(10)->toArray();
-        } catch (\Exception $exception) {
-            return [];
-            Log::error($exception->getMessage());
-        }
-
-    }
-
     public function nextCursorItemRack(string $rackId, string $nextCursorId): array
     {
         try {
@@ -132,33 +116,32 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function getItemRackAddedByIdWithCursor(string $id): array
     {
-        $data = $this->getItemRackAddedById($id);
-        $resultData = $this->manipulateItemRackAdded($data['data'], $id);
-
-        if (empty($resultData)) {
-            return [];
-        }
-
-        $data['data'] = $resultData;
-        return $data;
+        return $this->getItemRackByIdWithCursor($id);
     }
 
-    private function getItemRackAddedById(string $id)
+    /**
+     * dapatkan detail item  berdasarkan id rack dengan menggunakan konsep cursor
+     * balikan fungsi ini berupa array cursor, hal ini karena livewire tidak bisa menangani
+     * data cursor
+     * @param string $id
+     * @return array
+     */
+    public function getItemRackByIdWithCursor(string $id): array
     {
         try {
-            return Item::where('racks_id', $id)
-                ->orWhereNull('racks_id')
-                ->orderBy('id')
-                ->cursorPaginate(10)
-                ->toArray();
+            return Item::where('racks_id', $id)->orWhereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
         } catch (\Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }
+
     }
 
     public function manipulateItemRackAdded(array $dataItem, string $id): array
     {
+
+        Log::error($dataItem);
+
         $returnData = [];
         foreach ($dataItem as $item) {
             if ($item['racks_id'] == $id) {
@@ -180,24 +163,77 @@ class WarehouseServiceImpl implements WarehouseService
         return $returnData;
     }
 
-
     public function nextCursorItemRackAddedById(string $rackId, string $nextCursorId): array
     {
         try {
-            return Item::whereNull('racks_id')
+            return Item::where('rack_id', $rackId)
+                ->orWhereNull('rack_id') // Ganti 'racks_id' menjadi 'rack_id'
+                ->where('id', '>', $nextCursorId) // Menambahkan kondisi untuk id yang lebih besar dari cursor sebelumnya
                 ->orderBy('id')
                 ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
                 ->toArray();
+        } catch (\Exception $exception) {
+            Log::error($exception->getMessage());
+            return [];
+        }
+    }
+
+
+    public function getItemNotYetAddedRackCursor(): array
+    {
+        try {
+            return Item::whereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
         } catch (\Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }
     }
 
-    public function getItemNotYetAddedRackCursor(): array
+    public function addNewRack(string $areaId): ?Rack
+    {
+
+        try {
+            return Rack::create([
+                'areas_id' => $areaId,
+                'name' => '',
+                'category_inventory' => ''
+            ]);
+
+
+        } catch (\Exception $e) {
+
+            Log::error($e);
+            return null;
+        }
+
+
+    }
+
+    public function addNewArea(string $warehouseId): ?Area
     {
         try {
-            return Item::whereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
+
+            return Area::create([
+                'warehouses_id' => $warehouseId,
+                'name' => '',
+                'name' => '',
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return null;
+        }
+    }
+
+
+    private function getItemRackAddedById(string $id)
+    {
+        try {
+            return Item::where('racks_id', $id)
+                ->orWhereNull('racks_id')
+                ->orderBy('id')
+                ->cursorPaginate(10)
+                ->toArray();
         } catch (\Exception $exception) {
             return [];
             Log::error($exception->getMessage());

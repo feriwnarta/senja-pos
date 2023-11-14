@@ -24,11 +24,11 @@ document.addEventListener("after-load-modal-edit-item", (event) => {
             if ($(this).prop('checked')) {
                 let id = $(this).attr('id');
                 console.log($(this).attr('id') + ' dicentang');
-                Livewire.dispatch('item-added', {rackId: rackId, id: id, value: 'true'});
+                Livewire.dispatch('item-added', {rackId: rackId, id: id, value: true});
             } else {
                 let id = $(this).attr('id');
                 console.log($(this).attr('id') + ' tidak dicentang');
-                Livewire.dispatch('item-added', {rackId: rackId, id: id, value: 'false'});
+                Livewire.dispatch('item-added', {rackId: rackId, id: id, value: false});
             }
 
             let modalItems = $('.item-modal');
