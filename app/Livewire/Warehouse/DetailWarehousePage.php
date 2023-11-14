@@ -319,11 +319,14 @@ class DetailWarehousePage extends Component
             unset($this->areas[$areaIndex]);
         }
 
+        // TODO: HAPUS JUGA DIDATABASE
+
     }
 
     public function removeAreaRack($areaIndex, $rackIndex)
     {
 
+        // TODO: HAPUS JUGA DIDATABASE
         Log::info('remove area rack function');
         Log::info($this->areas);
 
@@ -337,7 +340,6 @@ class DetailWarehousePage extends Component
     public function validateInput()
     {
 
-//        Log::info($this->areas);
 
         /**
          * Lakukan validasi untuk array areas
@@ -355,6 +357,8 @@ class DetailWarehousePage extends Component
                 'required',
                 'min:2',
                 function ($attribute, $value, $fail) {
+
+                    // ambil index dari validasi laravel
                     $parts = explode('.', $attribute);
                     $keyPosition = array_search('areas', $parts);
 
@@ -362,6 +366,8 @@ class DetailWarehousePage extends Component
                         $desiredValue = $parts[$keyPosition + 1];
 
                         $count = 0;
+
+                        // lakukan proses pencarian rack yang duplikat untuk satu area
                         foreach ($this->areas[$desiredValue] as $area) {
                             Log::debug($area);
                             if (isset($area['racks'])) {
@@ -373,6 +379,7 @@ class DetailWarehousePage extends Component
                             }
                         }
 
+                        // deteksi duplikat data
                         if ($count > 1) {
                             $fail("The $attribute must contain distinct values.");
                         }
@@ -386,7 +393,14 @@ class DetailWarehousePage extends Component
             'areas.*.area.racks.*.category_inventory' => 'required|min:2',
         ]);
 
+        // TODO: Lakukan proses penyimpanan data warehouse kedatabase
+        $this->saveWarehouse();
 
+    }
+
+    private function saveWarehouse()
+    {
+        Log::info($this->areas);
     }
 
     public function render()
@@ -399,7 +413,6 @@ class DetailWarehousePage extends Component
         $this->dispatch('set-width-title');
         $this->dispatch('update-menu');
     }
-
 
     public function mount()
     {
