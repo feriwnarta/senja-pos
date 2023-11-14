@@ -8,9 +8,6 @@
 
 
         @if($warehouse !== null && $htmlCondition == '')
-
-
-
             {{-- MODE VIEW --}}
             @if($mode == 'view')
                 <div class="col-sm-6 offset-1">
@@ -316,6 +313,7 @@
                                         + Rak
                                     </button>
                                 </td>
+                                <td></td>
                                 <td></td>
                             </tr>
 

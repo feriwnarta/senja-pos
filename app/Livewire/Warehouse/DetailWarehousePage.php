@@ -337,16 +337,52 @@ class DetailWarehousePage extends Component
     public function validateInput()
     {
 
+//        Log::info($this->areas);
 
+        /**
+         * Lakukan validasi untuk array areas
+         * pastikan bahwa nama rak untuk setiap area unique
+         */
         $this->validate([
             'areas.*.area.area' => [
                 'required',
                 'min:2',
                 'distinct',
             ],
-            'areas.*.area.racks.0.name' => 'required|min:2|distinct',
+            'areas.*.area.racks.0.name' => 'required|min:2',
             'areas.*.area.racks.0.category_inventory' => 'required|min:2',
-            'areas.*.area.racks.*.name' => 'required|min:2|distinct',
+            'areas.*.area.racks.*.name' => [
+                'required',
+                'min:2',
+                function ($attribute, $value, $fail) {
+                    $parts = explode('.', $attribute);
+                    $keyPosition = array_search('areas', $parts);
+
+                    if ($keyPosition !== false && isset($parts[$keyPosition + 1])) {
+                        $desiredValue = $parts[$keyPosition + 1];
+
+                        $count = 0;
+                        foreach ($this->areas[$desiredValue] as $area) {
+                            Log::debug($area);
+                            if (isset($area['racks'])) {
+                                foreach ($area['racks'] as $rack) {
+                                    if ($value == $rack['name']) {
+                                        $count++;
+                                    }
+                                }
+                            }
+                        }
+
+                        if ($count > 1) {
+                            $fail("The $attribute must contain distinct values.");
+                        }
+
+                    }
+
+                    Log::info($attribute);
+                    Log::info($value);
+                }
+            ],
             'areas.*.area.racks.*.category_inventory' => 'required|min:2',
         ]);
 
