@@ -212,6 +212,155 @@ class WarehouseServiceTest extends TestCase
 
     }
 
+    public function testGetRacks()
+    {
+
+        $racks = Rack::where('areas_id', '9a9c14b3-90cb-4879-b928-2e5b02e167e4')->get();
+
+        assertNotNull($racks);
+        Log::debug('test get rack');
+        Log::debug($racks);
+
+    }
+
+    public function testSaveWarehouse()
+    {
+        $sample = [
+            [
+                'area' => [
+                    'id' => '9a9df812-0bc4-4b3f-9626-7de117966307',
+                    'area' => 'Area Lengkap',
+                    'racks' => [
+                        [
+                            'id' => '9a9df812-0c52-4cd9-ac1a-76351a0a720e',
+                            'name' => 'A1',
+                            'category_inventory' => 'Bahan mentah',
+                            'item' => [],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+
+        $result = $this->warehouseService->saveWarehouse($sample);
+
+        assertNotNull($result);
+        self::assertTrue($result);
+    }
+
+    public function testEditWithOneAreaTwoRacks()
+    {
+        $data = [
+            [
+                'area' => [
+                    'id' => '9a9df812-0bc4-4b3f-9626-7de117966307',
+                    'area' => 'Area Lengkap',
+                    'racks' => [
+                        [
+                            'id' => '9a9df812-0c52-4cd9-ac1a-76351a0a720e',
+                            'name' => 'A1',
+                            'category_inventory' => 'Bahan mentah',
+                            'item' => [],
+                        ],
+                        [
+                            'id' => '9a9dfc70-01f8-46cf-afb2-9b64fce292b5',
+                            'name' => 'A3',
+                            'category_inventory' => 'Bahan 1/2 jadi',
+                            'item' => [],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $result = $this->warehouseService->saveWarehouse($data);
+
+        assertNotNull($result);
+        self::assertTrue($result);
+
+    }
+
+    public function testEditWithDoubleArea()
+    {
+        $data = [
+            [
+                'area' => [
+                    'id' => '9a9df812-0bc4-4b3f-9626-7de117966307',
+                    'area' => 'Area Lengkap',
+                    'racks' => [
+                        [
+                            'id' => '9a9df812-0c52-4cd9-ac1a-76351a0a720e',
+                            'name' => 'A1',
+                            'category_inventory' => 'Bahan mentah',
+                            'item' => [],
+                        ],
+                        [
+                            'id' => '9a9dfc70-01f8-46cf-afb2-9b64fce292b5',
+                            'name' => 'A3',
+                            'category_inventory' => 'Bahan 1/2 jadi',
+                            'item' => [],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'area' => [
+                    'id' => '9a9dfd5d-480b-44d3-b367-1d5cdd0ac0e8',
+                    'area' => 'Area bahan',
+                    'racks' => [
+                        [
+                            'id' => '9a9dfd5d-4907-45cd-9f75-05dd5d6fac64',
+                            'name' => 'AB1',
+                            'category_inventory' => 'Bahan mentah',
+                            'item' => [],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $result = $this->warehouseService->saveWarehouse($data);
+
+        assertNotNull($result);
+        self::assertTrue($result);
+
+    }
+
+
+    public function testSaveWarehouseDataEmpty()
+    {
+        $this->expectException(\Exception::class);
+        $result = $this->warehouseService->saveWarehouse([]);
+        $this->expectExceptionMessage('Gagal melakukan update warehouse parameter kosong');
+    }
+
+    public function testSaveWarehouseMustException()
+    {
+        $sample = [
+            [
+                "area" => [
+                    "id" => "kosong",
+                    "area" => "Area Bahan",
+
+
+                ]
+            ],
+            [
+                "area" => [
+                    "id" => "kosong",
+                    "area" => "Area Pelengkap",
+
+                ]
+            ]
+        ];
+
+        $this->expectException(\Exception::class);
+        $result = $this->warehouseService->saveWarehouse($sample);
+        $this->expectExceptionMessage('Gagal melakukan update warehouse data area kosong');
+
+
+    }
+
 
     public function testGetItemRackByIdWithCursorWhenIdEmpty()
     {
@@ -268,17 +417,17 @@ class WarehouseServiceTest extends TestCase
 //        DB::table('areas')->delete();
 //        DB::table('warehouses')->delete();
 //
-//
+////
         $this->warehouseService = $this->app->make(WarehouseService::class);
-//
-        $this->warehouse = Warehouse::factory()->create(
-            [
-                'id' => fake()->uuid(),
-                'warehouse_code' => fake()->countryCode(),
-                'name' => fake()->name(),
-                'address' => fake()->address()
-            ]
-        );
+////
+//        $this->warehouse = Warehouse::factory()->create(
+//            [
+//                'id' => fake()->uuid(),
+//                'warehouse_code' => fake()->countryCode(),
+//                'name' => fake()->name(),
+//                'address' => fake()->address()
+//            ]
+//        );
 
 
     }

@@ -319,14 +319,11 @@ class DetailWarehousePage extends Component
             unset($this->areas[$areaIndex]);
         }
 
-        // TODO: HAPUS JUGA DIDATABASE
-
     }
 
     public function removeAreaRack($areaIndex, $rackIndex)
     {
 
-        // TODO: HAPUS JUGA DIDATABASE
         Log::info('remove area rack function');
         Log::info($this->areas);
 
@@ -339,7 +336,7 @@ class DetailWarehousePage extends Component
     #[On('saveEditWarehouse')]
     public function validateInput()
     {
-
+        Log::info(json_encode($this->areas, JSON_PRETTY_PRINT));
 
         /**
          * Lakukan validasi untuk array areas
@@ -394,13 +391,27 @@ class DetailWarehousePage extends Component
         ]);
 
         // TODO: Lakukan proses penyimpanan data warehouse kedatabase
-        $this->saveWarehouse();
+        Log::info('proses');
+        $this->saveWarehouse($this->areas);
 
     }
 
-    private function saveWarehouse()
+    private function saveWarehouse(array $areas)
     {
-        Log::info($this->areas);
+        Log::info('proses simpan edit warehouse');
+        Log::info(json_encode($this->areas, JSON_PRETTY_PRINT));
+
+        try {
+            $this->warehouseService = app()->make(WarehouseService::class);
+            $resultSave = $this->warehouseService->saveWarehouse($areas);
+
+            if ($resultSave) {
+
+            }
+
+        } catch (\Exception $e) {
+            // tampilkan pesan error
+        }
     }
 
     public function render()

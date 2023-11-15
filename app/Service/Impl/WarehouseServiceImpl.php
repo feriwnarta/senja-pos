@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Rack;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class WarehouseServiceImpl implements WarehouseService
@@ -116,7 +117,13 @@ class WarehouseServiceImpl implements WarehouseService
 
     public function getItemRackAddedByIdWithCursor(string $id): array
     {
-        return $this->getItemRackByIdWithCursor($id);
+        try {
+            return Item::where('racks_id', $id)->orWhereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
+        } catch (\Exception $exception) {
+            return [];
+            Log::error($exception->getMessage());
+        }
+
     }
 
     /**
@@ -129,7 +136,7 @@ class WarehouseServiceImpl implements WarehouseService
     public function getItemRackByIdWithCursor(string $id): array
     {
         try {
-            return Item::where('racks_id', $id)->orWhereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
+            return Item::where('racks_id', $id)->orderBy('id')->cursorPaginate(10)->toArray();
         } catch (\Exception $exception) {
             return [];
             Log::error($exception->getMessage());
@@ -220,6 +227,156 @@ class WarehouseServiceImpl implements WarehouseService
         }
     }
 
+    /**
+     * fungsi untuk menyimpan data edit warehouse ke database
+     * @param array $areas
+     * @return bool
+     * @throws \Exception
+     */
+    public function saveWarehouse(array $areas): bool
+    {
+        if (empty($areas))
+            throw new \Exception('Gagal melakukan update warehouse parameter kosong');
+
+        Log::debug('area');
+        Log::debug($areas);
+
+        foreach ($areas as $area) {
+
+            $area = $area['area'];
+            $areaId = $area['id'] ?? null;
+            $areaName = $area['area'] ?? null;
+            $racks = $area['racks'] ?? null;
+
+
+            if ($areaId == null || $areaName == null || $racks == null) {
+
+                throw new \Exception('Gagal melakukan update warehouse data area kosong');
+            }
+
+            try {
+                // update data area
+                $resultUpdateArea = $this->updateArea($areaId, $areaName);
+
+                // update racks
+                $resultUpdateRacks = $this->updateRacks($areaId, $racks);
+
+                if ($resultUpdateArea == null || $resultUpdateRacks == null) {
+                    throw new \Exception('Gagal melakukan update warehouse hasil update null');
+                }
+
+            } catch (\Exception $e) {
+                throw new \Exception($e->getMessage(), $e->getCode(), $e);
+            }
+
+        }
+
+        return true;
+    }
+
+    /**
+     * lakukan update area saat fungsi save warehouse dipanggil
+     * @throws \Exception
+     */
+    private function updateArea(string $areaId, string $areaName): ?bool
+    {
+
+        // jika parameternya kosong maka kembalikan data null
+        if (empty($areaId) || empty($areaName)) {
+            return null;
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $area = Area::findOrFail($areaId);
+
+            if ($area->name !== $areaName) {
+
+
+                $area->update(['name' => $areaName]);
+                Log::debug('save');
+
+            }
+
+            DB::commit();
+            return true;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Gagal memperbarui area. Exception: ' . $e->getMessage());
+            throw new \Exception('Gagal memperbarui area: Pesan Kesalahan yang Informatif', $e->getCode(), $e);
+        }
+    }
+
+    /**
+     * fungsi ini berguna untuk melakukan update nama rack berdasarkan area
+     * saat dilakukan proses penyimpanan edit area warehouse
+     * @param string $areaId
+     * @param array $updateRacks
+     * @return bool|null
+     */
+    private function updateRacks(string $areaId, array $updateRacks): ?bool
+    {
+
+        // jika paramater kosong maka kembalikan null
+        if (empty($areaId) || empty($updateRacks)) return null;
+
+
+        /**
+         * Lakukan perbandingan di rack terbaru dengan rack lama
+         * apakah ada perbedaan data
+         */
+        try {
+            DB::beginTransaction();
+
+            // cari rak berdasarkan area id
+            $racks = Rack::where('areas_id', $areaId)->get();
+
+
+            if ($racks != null) {
+
+                foreach ($racks as $rack) {
+                    $rackId = $rack['id'];
+                    $rackName = $rack['name'];
+                    $categoryInv = $rack['category_inventory'];
+
+
+                    Log::debug('data racks');
+                    Log::debug($rack);
+                    Log::debug($rackId);
+
+                    foreach ($updateRacks as $updateRack) {
+                        if ($updateRack['id'] == $rackId) {
+                            if ($updateRack['name'] != $rackName) {
+                                Log::debug('rack name tidak sama');
+
+
+                                $rack->update(['name' => $updateRack['name']]);
+
+                            }
+
+                            if ($updateRack['category_inventory'] != $categoryInv) {
+                                Log::debug('cat inv tidak sama');
+                                $rack->update(['category_inventory' => $updateRack['category_inventory']]);
+                            }
+                        }
+
+
+                    }
+
+                }
+
+                DB::commit();
+                return true; // Transaksi berhasil, kembalikan nilai true
+            }
+
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e);
+
+        }
+    }
 
     private function getItemRackAddedById(string $id)
     {
