@@ -25,6 +25,7 @@
     {{--        <script src="{{ asset('js/toast.js') }}"></script>--}}
 
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @livewireStyles
 </head>
 <body>
@@ -37,7 +38,9 @@
         crossorigin="anonymous"></script>
 <script data-navigate-once src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
         integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
-        crossorigin="anonymous" d></script>
+        crossorigin="anonymous"></script>
+<script src="{{ asset('js/toast.js') }}"></script>
+<script src="{{ asset('js/popup.js') }}"></script>
 
 @yield('footer-script')
 </body>

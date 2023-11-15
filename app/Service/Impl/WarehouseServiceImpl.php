@@ -233,13 +233,15 @@ class WarehouseServiceImpl implements WarehouseService
      * @return bool
      * @throws \Exception
      */
-    public function saveWarehouse(array $areas): bool
+    public function saveWarehouse(array $areas, string $warehouseId): bool
     {
         if (empty($areas))
             throw new \Exception('Gagal melakukan update warehouse parameter kosong');
 
         Log::debug('area');
         Log::debug($areas);
+        $areaContainer = [];
+
 
         foreach ($areas as $area) {
 
@@ -250,9 +252,13 @@ class WarehouseServiceImpl implements WarehouseService
 
 
             if ($areaId == null || $areaName == null || $racks == null) {
-
                 throw new \Exception('Gagal melakukan update warehouse data area kosong');
             }
+
+            $areaContainer[] = $areaId;
+
+            Log::debug('rack container');
+            Log::debug($areaContainer);
 
             try {
                 // update data area
@@ -270,6 +276,30 @@ class WarehouseServiceImpl implements WarehouseService
             }
 
         }
+
+
+        try {
+            // dapatkan data rack
+
+            // TODO: HAPUS AREA RACK DAN ITEM
+
+            Rack::whereIn('areas_id', $areaContainer)
+                ->get()
+                ->each(function ($rack) {
+                    $rack->item()->delete();
+                    $rack->delete();
+                    $rack->area()->delete();
+                });
+
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
+
+
+        Log::debug('area container');
+        Log::debug($areaContainer);
+
 
         return true;
     }
@@ -293,7 +323,6 @@ class WarehouseServiceImpl implements WarehouseService
 
             if ($area->name !== $areaName) {
 
-
                 $area->update(['name' => $areaName]);
                 Log::debug('save');
 
@@ -304,7 +333,7 @@ class WarehouseServiceImpl implements WarehouseService
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Gagal memperbarui area. Exception: ' . $e->getMessage());
-            throw new \Exception('Gagal memperbarui area: Pesan Kesalahan yang Informatif', $e->getCode(), $e);
+            throw new \Exception('Gagal memperbarui area, area tidak ditemukan');
         }
     }
 
@@ -334,7 +363,6 @@ class WarehouseServiceImpl implements WarehouseService
 
 
             if ($racks != null) {
-
                 foreach ($racks as $rack) {
                     $rackId = $rack['id'];
                     $rackName = $rack['name'];
@@ -366,7 +394,10 @@ class WarehouseServiceImpl implements WarehouseService
 
                 }
 
+
                 DB::commit();
+
+
                 return true; // Transaksi berhasil, kembalikan nilai true
             }
 
@@ -377,6 +408,12 @@ class WarehouseServiceImpl implements WarehouseService
 
         }
     }
+
+    private function deleteArea($rackContainer, $area)
+    {
+
+    }
+
 
     private function getItemRackAddedById(string $id)
     {

@@ -16,8 +16,8 @@
 
 /* Mengatur scrollbar untuk elemen dengan id "sidebar" */
 #sidebar::-webkit-scrollbar {
-    width: 7px; /* Lebar scrollbar */
-    height: 7px; /* Tinggi scrollbar */
+    width: 0px; /* Lebar scrollbar */
+    height: 0px; /* Tinggi scrollbar */
 }
 
 #sidebar::-webkit-scrollbar-thumb {

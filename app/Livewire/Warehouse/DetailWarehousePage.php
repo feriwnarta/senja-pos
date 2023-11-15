@@ -313,13 +313,12 @@ class DetailWarehousePage extends Component
 
     public function removeArea($areaIndex)
     {
-
-
         if (!empty($this->areas)) {
             unset($this->areas[$areaIndex]);
         }
 
     }
+
 
     public function removeAreaRack($areaIndex, $rackIndex)
     {
@@ -392,18 +391,18 @@ class DetailWarehousePage extends Component
 
         // TODO: Lakukan proses penyimpanan data warehouse kedatabase
         Log::info('proses');
-        $this->saveWarehouse($this->areas);
+        $this->saveWarehouse($this->areas, $this->warehouseId);
 
     }
 
-    private function saveWarehouse(array $areas)
+    private function saveWarehouse(array $areas, string $warehouseId)
     {
         Log::info('proses simpan edit warehouse');
         Log::info(json_encode($this->areas, JSON_PRETTY_PRINT));
 
         try {
             $this->warehouseService = app()->make(WarehouseService::class);
-            $resultSave = $this->warehouseService->saveWarehouse($areas);
+            $resultSave = $this->warehouseService->saveWarehouse($areas, $warehouseId);
 
             if ($resultSave) {
 
