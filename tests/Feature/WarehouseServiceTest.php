@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Item;
 use App\Models\Rack;
 use App\Models\Warehouse;
+use App\Service\Impl\WarehouseServiceImpl;
 use App\Service\WarehouseService;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
@@ -324,6 +325,14 @@ class WarehouseServiceTest extends TestCase
         assertNotNull($result);
         self::assertTrue($result);
 
+    }
+
+    public function testDeleteArea()
+    {
+        $warehouse = $this->app->make(WarehouseServiceImpl::class);
+        $areaContainer = ['9a9f8ee4-e10c-418e-be7b-91b32b5eba5e'];
+        $warehouse->deleteAreaAndRack($areaContainer);
+        assertNotNull($warehouse);
     }
 
 

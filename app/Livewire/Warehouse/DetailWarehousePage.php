@@ -241,11 +241,12 @@ class DetailWarehousePage extends Component
         $this->mode = 'edit';
         $this->urlQuery = "{$this->warehouseId}&mode=edit";
 
-        if ($this->warehouse != null) {
-            // isi field warehouse name
-            $this->warehouseName = $this->warehouse->name;
+        if (isset($this->warehouse)) {
+            if ($this->warehouse != null) {
+                // isi field warehouse name
+                $this->warehouseName = $this->warehouse->name;
+            }
         }
-
 
     }
 
@@ -314,6 +315,12 @@ class DetailWarehousePage extends Component
     public function removeArea($areaIndex)
     {
         if (!empty($this->areas)) {
+
+            if ($areaIndex == 0) {
+                $this->js("alert('gudang wajib memiliki 1 area, area ini tidak akan terhapus')");
+                return;
+            }
+
             unset($this->areas[$areaIndex]);
         }
 
@@ -405,11 +412,15 @@ class DetailWarehousePage extends Component
             $resultSave = $this->warehouseService->saveWarehouse($areas, $warehouseId);
 
             if ($resultSave) {
+                $this->js("alert('berhasil edit gudang')");
+                $this->redirect("/warehouse/list-warehouse/detail-warehouse?q={$this->warehouseId}", true);
+                $this->reset();
 
             }
 
         } catch (\Exception $e) {
-            // tampilkan pesan error
+            $this->js("alert('ada kesalahan')");
+            Log::error($e->getMessage());
         }
     }
 

@@ -72,9 +72,10 @@
                                     </td>
 
                                     <td>
+
                                         <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
                                                 data-bs-target="#modalDetailItem"
-                                                @click="$dispatch('detail-item-rack', {id: '{{ $area['area']['racks'][0]['id'] }}' })"
+                                                @click="$dispatch('detail-item-rack', {id: '{{ ($area['area']['racks'][0]['id']) ?? '' }}' })"
                                                 style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             @forelse($area['area']['racks'][0]['item'] ?? [] as $item)
                                                 {{ $item['name'] }}
@@ -228,9 +229,10 @@
                                     </td>
                                     <td>
                                         <button class="btn icon-text hoy" type="button"
-                                                id="{{ $area['area']['racks'][0]['id'] }}" data-bs-toggle="modal"
+                                                id="{{ ($area['area']['racks'][0]['id']) ?? '' }}"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#modalEditItem"
-                                                @click="$dispatch('detail-item-rack-edit', {id: '{{ $area['area']['racks'][0]['id'] }}' })"
+                                                @click="$dispatch('detail-item-rack-edit', {id: '{{ ($area['area']['racks'][0]['id']) ?? '' }}' })"
                                                 style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                             @forelse($area['area']['racks'][0]['item'] ?? [] as $item)
                                                 {{ $item['name'] }}

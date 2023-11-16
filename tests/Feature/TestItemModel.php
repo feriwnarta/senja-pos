@@ -15,8 +15,6 @@ class TestItemModel extends TestCase
     {
 
         $items = Item::orderBy('id')->cursorPaginate(10);
-
-
         self::assertNotNull($items);
 
     }

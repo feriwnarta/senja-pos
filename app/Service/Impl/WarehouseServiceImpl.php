@@ -235,21 +235,22 @@ class WarehouseServiceImpl implements WarehouseService
      */
     public function saveWarehouse(array $areas, string $warehouseId): bool
     {
+
         if (empty($areas))
             throw new \Exception('Gagal melakukan update warehouse parameter kosong');
 
         Log::debug('area');
         Log::debug($areas);
         $areaContainer = [];
+        $rackContainer = [];
 
 
-        foreach ($areas as $area) {
+        foreach ($areas as $areaKey => $area) {
 
             $area = $area['area'];
             $areaId = $area['id'] ?? null;
             $areaName = $area['area'] ?? null;
             $racks = $area['racks'] ?? null;
-
 
             if ($areaId == null || $areaName == null || $racks == null) {
                 throw new \Exception('Gagal melakukan update warehouse data area kosong');
@@ -257,16 +258,22 @@ class WarehouseServiceImpl implements WarehouseService
 
             $areaContainer[] = $areaId;
 
-            Log::debug('rack container');
-            Log::debug($areaContainer);
+            Log::debug($racks);
+
+            $rackContainer[] = [
+                'area_id' => $areaId,
+            ];
+
+            foreach ($racks as $rack) {
+                $rackContainer[$areaKey]['rack'][] = $rack['id'];
+            }
+
 
             try {
                 // update data area
                 $resultUpdateArea = $this->updateArea($areaId, $areaName);
-
                 // update racks
                 $resultUpdateRacks = $this->updateRacks($areaId, $racks);
-
                 if ($resultUpdateArea == null || $resultUpdateRacks == null) {
                     throw new \Exception('Gagal melakukan update warehouse hasil update null');
                 }
@@ -277,29 +284,12 @@ class WarehouseServiceImpl implements WarehouseService
 
         }
 
-
-        try {
-            // dapatkan data rack
-
-            // TODO: HAPUS AREA RACK DAN ITEM
-
-            Rack::whereIn('areas_id', $areaContainer)
-                ->get()
-                ->each(function ($rack) {
-                    $rack->item()->delete();
-                    $rack->delete();
-                    $rack->area()->delete();
-                });
+        Log::debug('racks container');
+        Log::debug($rackContainer);
 
 
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
-
-
-        Log::debug('area container');
-        Log::debug($areaContainer);
-
+        // delete area berdasarkan id area yang tidak ada di area container
+        $this->deleteAreaAndRack($areaContainer, $rackContainer);
 
         return true;
     }
@@ -409,9 +399,50 @@ class WarehouseServiceImpl implements WarehouseService
         }
     }
 
-    private function deleteArea($rackContainer, $area)
+    public function deleteAreaAndRack(array $areaContainer, array $rackContainer)
     {
+        try {
 
+            DB::beginTransaction();
+
+            // delete rack dan item dari penghapusan 1 area penuh
+            Rack::whereNotIn('areas_id', $areaContainer)
+                ->get()
+                ->each(function ($rack) {
+                    $rack->item()->delete();
+                    $rack->delete();
+                });
+
+            // delete area
+            Area::whereNotIn('id', $areaContainer)->delete();
+
+
+            // delete rack
+            foreach ($rackContainer as $rack) {
+
+                $areaId = $rack['area_id'];
+                $rack = $rack['rack'];
+
+
+                Rack::where('areas_id', $areaId)
+                    ->whereNotIn('id', $rack)
+                    ->get()
+                    ->each(function ($rack) {
+                        // Hapus item terkait pada rak
+                        $rack->item()->delete();
+                        // Hapus rak itu sendiri
+                        $rack->delete();
+                    });
+
+
+            }
+
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+        }
     }
 
 
