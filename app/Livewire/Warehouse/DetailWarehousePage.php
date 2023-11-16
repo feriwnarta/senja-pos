@@ -426,13 +426,13 @@ class DetailWarehousePage extends Component
 
     public function render()
     {
+        $this->dispatch('set-width-title');
         return view('livewire.warehouse.detail-warehouse-page');
     }
 
     public function rendered($view, $html)
     {
-        $this->dispatch('set-width-title');
-        $this->dispatch('update-menu');
+
     }
 
     public function mount()
