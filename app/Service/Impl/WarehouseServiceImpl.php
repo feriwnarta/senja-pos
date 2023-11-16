@@ -420,20 +420,22 @@ class WarehouseServiceImpl implements WarehouseService
             // delete rack
             foreach ($rackContainer as $rack) {
 
-                $areaId = $rack['area_id'];
-                $rack = $rack['rack'];
 
+                if (isset($rack['area_id']) && isset($rack['rack'])) {
+                    $areaId = $rack['area_id'];
+                    $rack = $rack['rack'];
 
-                Rack::where('areas_id', $areaId)
-                    ->whereNotIn('id', $rack)
-                    ->get()
-                    ->each(function ($rack) {
-                        // Hapus item terkait pada rak
-                        $rack->item()->delete();
-                        // Hapus rak itu sendiri
-                        $rack->delete();
-                    });
+                    Rack::where('areas_id', $areaId)
+                        ->whereNotIn('id', $rack)
+                        ->get()
+                        ->each(function ($rack) {
+                            // Hapus item terkait pada rak
+                            $rack->item()->delete();
+                            // Hapus rak itu sendiri
+                            $rack->delete();
+                        });
 
+                }
 
             }
 
