@@ -33,7 +33,9 @@
                     @else
                         <div class="dropdown margin-left-10">
                             <button type="btn"
-                                    class="btn btn-text-only-secondary btn-nav margin-left-10">Batal
+                                    class="btn btn-text-only-secondary btn-nav margin-left-10"
+                                    @click="$dispatch('cancel-edit-warehouse')">
+                                Batal
                             </button>
                         </div>
 

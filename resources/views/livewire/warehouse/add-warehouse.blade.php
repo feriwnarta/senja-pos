@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 <x-page-layout>
 
     <x-slot name="sidebar">
@@ -49,7 +50,7 @@
                     </div>
 
 
-                    <div class="container-input-default  margin-top-24">
+                    <div class="container-input-default  margin-top-16">
                         <label for="warehouseInput"
                                class="form-label input-label">{{ __('app_locale.text.namaGudang') }}</label>
 
@@ -63,7 +64,7 @@
                     </div>
 
 
-                    <div class="container-input-default margin-top-24">
+                    <div class="container-input-default margin-top-16">
 
                         <label for="warehouseInput"
                                class="form-label input-label">{{ __('app_locale.text.areaGudang') }}</label>
@@ -89,7 +90,7 @@
                                         <input type="text" class="input-no-border make-input areaInput caption-medium"
                                                placeholder="Area A" style="width: 100%"
                                                wire:model.live="areas.{{$key}}.area.area">
-                                        
+
                                         @if ($errors->has("areas.$key.area.area"))
                                             <span
                                                 class="text-xs text-red-600">{{ $errors->first("areas.$key.area.area") }}</span>
@@ -205,7 +206,7 @@
                         </table>
 
 
-                        <div class="margin-top-24">
+                        <div class="margin-top-16">
                             <label for="addressWarehouse" class="form-label">Alamat</label>
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
                             <textarea class="form-control textarea" id="addressWarehouse" rows="5"
@@ -221,81 +222,20 @@
             </form>
         </div>
     </div>
-    <div wire:ignore.self class="modal modal-input fade" id="modalItem" tabindex="-1" role="dialog"
+    <div wire:ignore.self class="modal modal-input fade" data-bs-backdrop="static" id="modalItem" tabindex="-1"
+         role="dialog"
     >
-        <!-- Konten modal -->
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
-                    <h1 class="modal-title modal-input-title" id="exampleModalLabel">
-                        {{ __('app_locale.modal.modalTambahGudang') }}</h1>
-                </div>
-                <div class="modal-body
-                ">
-                    <div wire:loading>
-                        <div class="position-absolute start-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
+
+        @if(!$isShowModalNewItem)
+            <!-- Konten modal Item -->
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
+                        <h1 class="modal-title modal-input-title" id="exampleModalLabel">
+                            {{ __('app_locale.modal.modalTambahGudang') }}</h1>
                     </div>
-
-                    <form class="d-flex ">
-                        <input class="form-control full-search-bar clear container-fluid" type="search"
-                               placeholder="Search"
-                               aria-label="Search">
-                    </form>
-
-                    @if(isset($items) && !empty($items))
-                        @foreach($items['data'] as $data)
-                            <div class="items-modal">
-                                <div class="d-flex align-items-center data-modal">
-
-                                    <div class="item-modal d-flex flex-row align-items-center">
-                                        <div>
-                                            <img class="items-ingredient-img"
-                                                 src="https://media.istockphoto.com/id/1282866808/id/foto/ayam-mentah-segar.jpg?s=612x612&w=0&k=20&c=qcxOlEFxGkAU2G-Mejj_6Uo813qTmMixcXNXbG5plj0="
-                                                 alt="">
-                                        </div>
-                                        <div
-                                            class="body-text-regular name-item-modal">{{ $data['name'] }}</div>
-
-                                    </div>
-
-
-                                    @if(isset($data['checked'])&& $data['checked'])
-                                        {{-- Pengecekan untuk checbox yang diklik oleh item yang sama, jika sama maka ada kemungkinan untuk menghapus item yang ditambahkan --}}
-                                        {{-- Pengecekan jika dibuka oleh area  --}}
-
-                                        @if(isset($data['from']) && $this->rack == '' && $data['from'] == 'area' && $data['indexArea'] == $this->area)
-                                            {{-- Pengecekan untuk checbox yang diklik oleh area yang sama --}}
-
-                                            <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
-                                                   checked
-                                                   wire:click="removeCheckboxArea('{{ $data['id'] }}', '{{ $data['indexArea'] }}')"/>
-                                        @elseif(isset($data['from'])  && $data['from'] == 'rack' && $data['indexArea'] == $this->area  && $data['indexRack'] == $this->rack)
-                                            {{-- Pengecekan untuk checbox yang diklik oleh rack yang sama --}}
-                                            <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
-                                                   checked
-                                                   wire:click="removeCheckboxRack('{{ $data['id'] }}', '{{ $data['indexArea'] }}', '{{ $data['indexRack'] }}')"/>
-                                        @else
-
-                                            {{-- Pengecekan untuk checbox yang diklik oleh area yang sama --}}
-                                            <input id="itemCheckBox" class="red-input checkbox" type="checkbox" checked
-                                                   disabled/>
-                                        @endif
-
-                                    @else
-                                        <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
-                                               wire:click="selectItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
-                                    @endif
-
-
-                                </div>
-                                <div id="divider" class="margin-top-20"></div>
-                            </div>
-
-                        @endforeach
+                    <div class="modal-body
+                ">
                         <div wire:loading>
                             <div class="position-absolute start-50 translate-middle">
                                 <div class="spinner-border" role="status">
@@ -303,147 +243,270 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+
+                        <form class="d-flex ">
+                            <input class="form-control full-search-bar clear container-fluid" type="search"
+                                   placeholder="Search"
+                                   aria-label="Search">
+                        </form>
+
+                        {{-- Item baru ditambahkan --}}
+                        @if(!empty($item))
+                            <p class="subtitle-3-medium" style="margin-top: 24px">Item baru ditambahkan</p>
+                            <div id="divider"></div>
+                            <div class="items-modal">
+                                <div class="d-flex align-items-center data-modal">
+
+                                    <div class="item-modal d-flex flex-row align-items-center">
+                                        <div>
+                                            <img class="items-ingredient-img"
+                                                 src="{{ ($item['item_image'] == null) ? asset('img/no-image.png') : asset("storage/item-image/{$item['item_image']}") }}"
+                                                 alt="">
+                                        </div>
+                                        <div
+                                            class="body-text-regular name-item-modal">{{ $item['name'] }}</div>
+                                    </div>
+                                    <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
+                                           wire:click="selectItem('{{ $item['id'] }}', '{{ $item['name'] }}')"/>
+                                </div>
+                            </div>
+                            <div id="divider" class="margin-top-16"></div>
+
+                            <p class="subtitle-3-medium" style="margin-top: 24px;">Daftar item</p>
+                            <div id="divider" class="margin-top-16"></div>
+                        @endif
 
 
-                </div>
-                <div class="modal-footer row">
+                        @if(isset($items) && !empty($items))
+                            @foreach($items['data'] as $data)
+                                <div class="items-modal">
+                                    <div class="d-flex align-items-center data-modal">
 
-                    <div class=" d-flex flex-row justify-content-end">
+                                        <div
+                                            class="item-modal d-flex flex-row align-items-center justify-content-between">
+
+                                            <div class="d-flex flex-row align-items-center">
+                                                <img class="items-ingredient-img"
+                                                     src="{{ ($data['image'] == null) ? asset('img/no-image.png') : asset("storage/item-image/{$data['image']}") }}"
+                                                     alt="">
+
+                                                <div
+                                                    class="body-text-regular name-item-modal">{{ $data['name'] }}</div>
+                                            </div>
+                                            <div>
 
 
-                        <div>
-                            <button class="btn text-only-outlined cancel-btn">Batal</button>
-                            <button class="btn btn-text-only-primary margin-left-10" data-bs-toggle="modal"
-                                    data-bs-target="#modalNewItem" wire:click="openModalNewItem">Buat
-                                item baru
-                            </button>
-                        </div>
+                                                @if(isset($data['checked'])&& $data['checked'])
+                                                    {{-- Pengecekan untuk checbox yang diklik oleh item yang sama, jika sama maka ada kemungkinan untuk menghapus item yang ditambahkan --}}
+                                                    {{-- Pengecekan jika dibuka oleh area  --}}
+
+                                                    @if(isset($data['from']) && $this->rack == '' && $data['from'] == 'area' && $data['indexArea'] == $this->area)
+                                                        {{-- Pengecekan untuk checbox yang diklik oleh area yang sama --}}
+
+                                                        <input id="itemCheckBox" class="red-input checkbox"
+                                                               type="checkbox"
+                                                               checked
+                                                               wire:click="removeCheckboxArea('{{ $data['id'] }}', '{{ $data['indexArea'] }}')"/>
+                                                    @elseif(isset($data['from'])  && $data['from'] == 'rack' && $data['indexArea'] == $this->area  && $data['indexRack'] == $this->rack)
+                                                        {{-- Pengecekan untuk checbox yang diklik oleh rack yang sama --}}
+                                                        <input id="itemCheckBox" class="red-input checkbox"
+                                                               type="checkbox"
+                                                               checked
+                                                               wire:click="removeCheckboxRack('{{ $data['id'] }}', '{{ $data['indexArea'] }}', '{{ $data['indexRack'] }}')"/>
+                                                    @else
+
+                                                        {{-- Pengecekan untuk checbox yang diklik oleh area yang sama --}}
+                                                        <input id="itemCheckBox" class="red-input checkbox"
+                                                               type="checkbox"
+                                                               checked
+                                                               disabled/>
+                                                    @endif
+
+                                                @else
+                                                    <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
+                                                           wire:click="selectItem('{{ $data['id'] }}', '{{ $data['name'] }}')"/>
+                                                @endif
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div id="divider" class="margin-top-20"></div>
+                                </div>
+
+                            @endforeach
+                            <div wire:loading>
+                                <div class="position-absolute start-50 translate-middle">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
+
                     </div>
+                    <div class="modal-footer row">
+
+                        <div class=" d-flex flex-row justify-content-end">
 
 
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    {{-- Modal new Item--}}
-    <div class="modal modal-input" data-bs-backdrop="static" id="modalNewItem" tabindex="-1" role="dialog"
-         style="display: {{ ($isShowModalNewItem) ? 'block' : 'none'  }}">
-        <!-- Konten modal -->
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
-                    <h1 class="modal-title modal-input-title" id="exampleModalLabel">
-                        Buat item baru</h1>
-                </div>
-                <div class="modal-body" id="modalBodyNewItem">
-
-
-                    <div wire:loading>
-                        <div class="position-absolute start-50 translate-middle">
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                            <div>
+                                <button class="btn text-only-outlined cancel-btn" data-bs-dismiss="modal">
+                                    Batal
+                                </button>
+                                <button class="btn btn-text-only-primary margin-left-10"
+                                        wire:click="openModalNewItem">Buat
+                                    item baru
+                                </button>
                             </div>
                         </div>
-                    </div>
 
-
-                    {{-- Item Image --}}
-                    <div class="d-flex flex-column align-self-center align-items-center">
-
-                        @if ($photoNewItem && !$errors->has('photoNewItem'))
-                            <img src="{{ $photoNewItem->temporaryUrl() }}" width="140">
-                        @else
-                            <img
-                                src="https://s3-alpha-sig.figma.com/img/473a/648b/8c5e12d4ea9042ba824140de2d5e468c?Expires=1699833600&Signature=EclP9HAIqnSZLSrsPTG0K-lULYxs1PeeTyg3ONhqnWBzRDFM7m6u~1NhNd7iBIcvn5p2rRl-0NjYrMRJ0m6CZYfhNGmRGy764Zp06aJORkBjk5ZU47eXuL664~KaS~mMLLbhvPQK9d9SNr47-eG9gP0xPa25lp2ZxY5z9Om0UR8IOgYqTW1lR-36rj-vxgTpURMtXug4fjqinvjTQPHhpMqwrgYQe2QtbR53jcXJvNspvraRVcXgQThVasNXhn4rahm~GkRIj35FaQwJyhVF2wTvN~wlVjXh0toIMNYNJZg0vGOqmrP-r3I5H8ZPtxOs5cK43wH7e5d7jpLZocDydg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
-                                alt="" srcset="" width="140">
-                        @endif
-                        <div wire:loading wire:target.prevent="photoNewItem">Uploading...</div>
-                        @error('photoNewItem') <span class="error">{{ $message }}</span> @enderror
-
-                        <div>
-                            <button type="button" class="btn btn-icon-text-outlined margin-top-16"
-                                    onclick="document.getElementById('file-input').click();">
-                                <i class="pencil-icon"></i>
-                                Pilih foto
-                            </button>
-                            <input type="file" id="file-input" wire:model="photoNewItem" style="display: none;"
-                                   accept="image/*">
-                        </div>
 
                     </div>
-
-
-                    {{--Kode Item  --}}
-                    <div class=" container-input-default margin-top-24">
-                        <label for="codeItem"
-                               class="form-label input-label">Kode item</label>
-
-                        <input type="name" class="form-control input-default"
-                               id="codeItem" placeholder="BMDGSP01" wire:model.blur="codeItem"
-                        >
-                        @error('codeItem') <span class="error">{{ $message }}</span> @enderror
-
-                    </div>
-
-                    <div id="divider" class="margin-top-20"></div>
-
-                    {{-- Nama  --}}
-                    <div class="container-input-default margin-top-20">
-                        <label for="nameItem"
-                               class="form-label input-label">Nama</label>
-
-                        <input type="name" class="form-control input-default"
-                               id="nameItem" placeholder="Daging sapi"
-                        >
-                    </div>
-
-                    <div id="divider" class="margin-top-20"></div>
-
-
-                    <div class="margin-top-20">
-                        <label for="dropdownCategory" class="form-label input-label">Kategori</label>
-                        <div class="dropdown" id="dropdownCategory">
-                            <button class="btn dropdown-toggle dropdown-default" type="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                Kategori
-                            </button>
-
-                            <ul class="dropdown-menu" style="max-height: 200px; overflow-y: auto;">
-                                <input type="text" placeholder="Cari kategori" style="margin: 6px; width: 95%;">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                            </ul>
-                        </div>
-                    </div>
-
-
-                    <div id="divider" class="margin-top-20"></div>
-
-                    <div class="margin-top-20">
-                        <label for="description" class="form-label">Deskripsi item</label>
-                        <textarea class="form-control textarea" id="description" rows="5"
-                                  placeholder="Daging sapi ayam segar"></textarea>
-                    </div>
-
-                </div>
-                <div class="modal-footer row">
-                    <div class=" d-flex flex-row justify-content-end">
-
-                        <div>
-                            <button class="btn text-only-outlined cancel-btn" data-bs-dismiss="modal"
-                                    wire:click="closeModalNewItem">Batal
-                            </button>
-                            <button class="btn btn-text-only-primary margin-left-10" data-bs-toggle="modal"
-                                    data-bs-target="modalNewItem">Simpan
-                            </button>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-        </div>
+        @else
+            <!-- Konten modal tambah item -->
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
+                        <h1 class="modal-title modal-input-title" id="exampleModalLabel">
+                            Buat item baru</h1>
+                    </div>
+                    <div class="modal-body" id="modalBodyNewItem">
+
+                        {{-- Item Image --}}
+                        <div class="d-flex flex-column align-self-center align-items-center">
+
+                            @if ($photoNewItem && !$errors->has('photoNewItem'))
+                                <img src="{{ $photoNewItem->temporaryUrl() }}" width="140">
+                            @else
+                                <img
+                                    src="https://s3-alpha-sig.figma.com/img/473a/648b/8c5e12d4ea9042ba824140de2d5e468c?Expires=1701043200&Signature=moY~rAa-4k3hCaxWn0HH5HUSCTDSJUZ-tUeoTLMjVcWtS-riZIbl0-0iyaxyf-RqEkmqdRhobrWqoq5164K7-NGlb5f2eWX-SDm1UTG7RiP00IunvGFzKxVTg63z-d0HSWw-s4G60zZ1XoF41GGxRCwTFUemvx4TpS~3t3evAqnG6z1wRfSmsxKEChWfVfpIv2zGOGEtJ4jhK-QyWoPzGU5g~XaBWzvpCF67OH0wCPd3e9P52YQCFzaPhsRB2Kiap~-9pucACptxt14Q6JOszManxnflqb2DbFlaz3iqS~ta9y8rY-3Tw2~332CmzwDxX-ltN3fWF8VZ7eqVcW1qCg__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
+                                    alt="" srcset="" width="140">
+                            @endif
+                            <div wire:loading wire:target.prevent="photoNewItem">Uploading...</div>
+                            @error('photoNewItem') <span class="error">{{ $message }}</span> @enderror
+
+                            <div>
+                                <button type="button" class="btn btn-icon-text-outlined margin-top-16"
+                                        onclick="document.getElementById('file-input').click();">
+                                    <i class="pencil-icon"></i>
+                                    Pilih foto
+                                </button>
+                                <input type="file" id="file-input" wire:model="photoNewItem"
+                                       style="display: none;"
+                                       accept="image/*">
+                            </div>
+
+                        </div>
+
+
+                        {{--Kode Item  --}}
+                        <div class=" container-input-default margin-top-16">
+                            <label for="codeItem"
+                                   class="form-label input-label">Kode item</label>
+
+                            <input type="name" class="form-control input-default"
+                                   id="codeItem" placeholder="BMDGSP01" wire:model.blur="codeItem"
+                            >
+                            @error('codeItem') <span class="error">{{ $message }}</span> @enderror
+
+                        </div>
+
+                        <div id="divider" class="margin-top-20"></div>
+
+                        {{-- Nama  --}}
+                        <div class="container-input-default margin-top-20">
+                            <label for="nameItem"
+                                   class="form-label input-label">Nama</label>
+
+                            <input type="name" class="form-control input-default"
+                                   id="nameItem" placeholder="Daging sapi" wire:model.blur="nameItem"
+                            >
+                            @error('nameItem') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div id="divider" class="margin-top-20"></div>
+
+
+                        <div class="margin-top-20">
+                            <label for="dropdownCategory" class="form-label input-label">Kategori</label>
+                            <div class="dropdown" id="dropdownCategory">
+                                <button class="btn dropdown-toggle dropdown-default" type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        wire:click="loadCategory"
+                                >
+                                    {{ $categoryName == null ? 'Kategori' : $categoryName }}
+                                </button>
+
+
+                                <ul class="dropdown-menu" style="max-height: 200px; overflow-y: auto;"
+                                    wire:ignore.self>
+                                    <input type="text" placeholder="Cari kategori"
+                                           style="margin: 6px;">
+                                    @if(empty($categoryItems))
+                                        <div wire:loading>
+                                            <div class="position-absolute start-50 translate-middle">
+                                                <div class="spinner-border" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+
+                                        @foreach($categoryItems as $categoryItem)
+                                            <li><a class="dropdown-item"
+                                                   wire:click="selectCategory('{{ $categoryItem->id }}', '{{ $categoryItem->category_name }}' )">{{ $categoryItem->category_name }}</a>
+                                            </li>
+                                        @endforeach
+
+                                    @endif
+
+                                </ul>
+                            </div>
+                            @error('categoryName') <span class="error">{{ $message }}</span> @enderror
+                        </div>
+
+
+                        <div id="divider" class="margin-top-20"></div>
+
+                        <div class="margin-top-20">
+                            <label for="description" class="form-label">Deskripsi item</label>
+                            <textarea class="form-control textarea" id="description" rows="5"
+                                      placeholder="Daging sapi ayam segar"
+                                      wire:model.blur="description"></textarea>
+                        </div>
+
+
+                        {{--                        <div wire:loading>--}}
+                        {{--                            <div class="position-absolute start-50 translate-middle">--}}
+                        {{--                                <div class="spinner-border" role="status">--}}
+                        {{--                                    <span class="visually-hidden">Loading...</span>--}}
+                        {{--                                </div>--}}
+                        {{--                            </div>--}}
+                        {{--                        </div>--}}
+
+
+                    </div>
+                    <div class="modal-footer row">
+                        <div class=" d-flex flex-row justify-content-end">
+
+                            <div>
+                                <button class="btn text-only-outlined cancel-btn"
+                                        wire:click="cancelNewItem">Batal
+                                </button>
+                                <button class="btn btn-text-only-primary margin-left-10"
+                                        wire:click="saveNewItem">Simpan
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
 

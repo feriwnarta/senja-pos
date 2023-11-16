@@ -246,7 +246,10 @@ class DetailWarehousePage extends Component
                 // isi field warehouse name
                 $this->warehouseName = $this->warehouse->name;
             }
+            return;
         }
+
+        $this->mode = 'view';
 
     }
 
@@ -336,6 +339,19 @@ class DetailWarehousePage extends Component
         if (!empty($this->areas)) {
             unset($this->areas[$areaIndex]['area']['racks'][$rackIndex]);
         }
+
+    }
+
+    #[On('cancel-edit-warehouse')]
+    public function cancelEdit()
+    {
+        $this->urlQuery = "{$this->warehouseId}";
+        $this->urlQuery = "{$this->warehouseId}";
+        $this->mode = 'view';
+        $this->dispatch('view-warehouse');
+
+//        $this->redirect("/warehouse/list-warehouse/detail-warehouse?q={$this->warehouseId}", true);
+//        $this->reset();
 
     }
 
@@ -430,10 +446,6 @@ class DetailWarehousePage extends Component
         return view('livewire.warehouse.detail-warehouse-page');
     }
 
-    public function rendered($view, $html)
-    {
-
-    }
 
     public function mount()
     {

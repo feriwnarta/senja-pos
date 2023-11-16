@@ -56,4 +56,9 @@ $(() => {
     });
 
 
+    Livewire.on('close-dropdown', (e) => {
+        $('.dropdown-menu').removeClass('show');
+    });
+
+
 });

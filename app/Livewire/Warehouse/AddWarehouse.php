@@ -2,8 +2,11 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Models\CategoryItem;
 use App\Models\Item;
 use App\Models\Warehouse;
+use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
@@ -36,12 +39,22 @@ class AddWarehouse extends Component
     public string $area;
     public string $rack = '';
 
+    #[Rule('required|min:5|unique:items,item_code')]
     public string $codeItem;
 
+    #[Rule('required|min:5|unique:items,name')]
     public string $nameItem;
 
     public string $category;
-    public string $descriptiom;
+    public ?string $description = null;
+
+
+    // buat item baru
+    public Collection $categoryItems;
+    public string $categoryId;
+
+    public string $categoryName;
+    public Item $item;
 
 
     #[Rule('sometimes|image|max:1024')] // 1MB Max
@@ -67,6 +80,70 @@ class AddWarehouse extends Component
         'areas.*.rack.*.category_inventory.required' => 'The Category Inventory field is required.',
         'areas.*.rack.*.category_inventory.min' => 'The Category Inventory field should be at least 3 characters.',
     ];
+
+    public function saveNewItem()
+    {
+        $this->validate([
+            'codeItem' => 'required|min:5|unique:items,item_code',
+            'nameItem' => 'required|min:5|unique:items,name',
+            'categoryName' => 'required'
+        ]);
+
+        $result = null;
+        if ($this->photoNewItem != null) {
+            $result = $this->photoNewItem->store('public/item-image');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // valiadasi item baru
+
+
+            // simpan item
+            $this->item = Item::create([
+                'item_code' => $this->codeItem,
+                'item_image' => ($result != null) ? basename($result) : null,
+                'name' => $this->nameItem,
+                'description' => $this->description,
+            ]);
+
+            DB::commit();
+
+            // gagal membuat item
+            if ($this->item == null) {
+                $this->js("alert('gagal menyimpan item')");
+                return;
+            }
+
+            $this->isShowModalNewItem = false;
+
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+        }
+
+    }
+
+    public function cancelNewItem()
+    {
+        $this->isShowModalNewItem = false;
+    }
+
+
+    public function loadCategory()
+    {
+        $this->categoryItems = CategoryItem::all();
+    }
+
+    public function selectCategory(string $idCategory, string $categoryName)
+    {
+
+        $this->categoryId = $idCategory;
+        $this->categoryName = $categoryName;
+        $this->dispatch('close-dropdown');
+    }
 
     /**
      * fungsi ini digunakan untuk menambahkan input area baru
@@ -192,6 +269,7 @@ class AddWarehouse extends Component
                     $this->items['data'][] = [
                         'id' => $data['id'],
                         'name' => $data['name'],
+                        'image' => $data['item_image'],
                         'checked' => true,
                         'from' => 'area',
                         'indexArea' => $key,
@@ -209,6 +287,7 @@ class AddWarehouse extends Component
                             $this->items['data'][] = [
                                 'id' => $data['id'],
                                 'name' => $data['name'],
+                                'image' => $data['item_image'],
                                 'checked' => true,
                                 'from' => 'rack',
                                 'indexArea' => $key,
@@ -229,6 +308,7 @@ class AddWarehouse extends Component
         if (!$isSkip) {
             $this->items['data'][] = [
                 'id' => $data['id'],
+                'image' => $data['item_image'],
                 'name' => $data['name'],
                 'checked' => false,
             ];
@@ -435,7 +515,7 @@ class AddWarehouse extends Component
             // TODO: Perbaiki pesan sukses simpan gudang
             $this->js("alert('berhasil simpan gudang')");
 
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             DB::rollBack();
             $this->js("console.log('{$exception->getMessage()}')");
 
