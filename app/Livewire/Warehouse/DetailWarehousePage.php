@@ -5,6 +5,9 @@ namespace App\Livewire\Warehouse;
 use App\Models\Item;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
+use Exception;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
@@ -142,6 +145,7 @@ class DetailWarehousePage extends Component
                 $this->itemEditData[] = [
                     'id' => $item['id'],
                     'name' => $item['name'],
+                    'item_image' => $item['item_image'],
                     'checked' => true,
                 ];
                 continue;
@@ -149,6 +153,7 @@ class DetailWarehousePage extends Component
             $this->itemEditData[] = [
                 'id' => $item['id'],
                 'name' => $item['name'],
+                'item_image' => $item['item_image'],
                 'checked' => false,
             ];
 
@@ -182,11 +187,11 @@ class DetailWarehousePage extends Component
                 Log::error('Failed to save item');
                 return false;
             }
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             // Jika item tidak ditemukan
             Log::error('Item not found: ' . $itemId);
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Jika terjadi exception lainnya
             Log::error($e);
             return false;
@@ -365,6 +370,9 @@ class DetailWarehousePage extends Component
          * pastikan bahwa nama rak untuk setiap area unique
          */
         $this->validate([
+            'warehouseName' => 'required|min:5|unique:warehouses,name,' . $this->warehouseId,
+            'warehouseAddress' => 'required|min:5|unique:warehouses,address,' . $this->warehouseId,
+
             'areas.*.area.area' => [
                 'required',
                 'min:2',
@@ -425,7 +433,7 @@ class DetailWarehousePage extends Component
 
         try {
             $this->warehouseService = app()->make(WarehouseService::class);
-            $resultSave = $this->warehouseService->saveWarehouse($areas, $warehouseId);
+            $resultSave = $this->warehouseService->saveWarehouse($areas, $warehouseId, $this->warehouseName, $this->warehouseAddress);
 
             if ($resultSave) {
                 $this->js("alert('berhasil edit gudang')");
@@ -434,11 +442,12 @@ class DetailWarehousePage extends Component
 
             }
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->js("alert('ada kesalahan')");
             Log::error($e->getMessage());
         }
     }
+
 
     public function render()
     {
@@ -496,7 +505,7 @@ class DetailWarehousePage extends Component
      * dapatkan data detail gudang termasuk area, rack dan item
      * @param string $id
      * @return void
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     * @throws BindingResolutionException
      */
     private function getDetailDataWarehouse(string $id)
     {
@@ -518,7 +527,7 @@ class DetailWarehousePage extends Component
 
             $this->areas = $this->warehouseService->getDetailDataAreaRackItemWarehouse($this->warehouse);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // warehouse not found
             if ($e->getCode() == 1 || $e->getCode() == 2) {
                 $this->htmlCondition = 'Data gudang tidak ditemukan, pastikan gudang ada jika masalah masih berlanjut silahkan hubungi administrator';

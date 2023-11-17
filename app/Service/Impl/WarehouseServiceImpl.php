@@ -7,6 +7,7 @@ use App\Models\Item;
 use App\Models\Rack;
 use App\Models\Warehouse;
 use App\Service\WarehouseService;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -16,7 +17,7 @@ class WarehouseServiceImpl implements WarehouseService
     /** dapatkan data warehouse berdasarkan id
      * @param string $id
      * @return Warehouse
-     * @throws \Exception
+     * @throws Exception
      */
     public function getWarehouseById(string $id): Warehouse
     {
@@ -28,7 +29,7 @@ class WarehouseServiceImpl implements WarehouseService
 
             // Ambil fungsi yang memanggil method ini
             $callingFunction = $callStack[1]['function'];
-            throw new \Exception("detail warehouse tidak ditemukan karena data null $callingFunction", code: 1);
+            throw new Exception("detail warehouse tidak ditemukan karena data null $callingFunction", code: 1);
         }
 
         return $warehouse;
@@ -41,7 +42,7 @@ class WarehouseServiceImpl implements WarehouseService
      * ini digunakan untuk keperluan performa
      * @param Warehouse|null $warehouse
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getDetailDataAreaRackItemWarehouse(?Warehouse $warehouse): array
     {
@@ -53,7 +54,7 @@ class WarehouseServiceImpl implements WarehouseService
             // Ambil fungsi yang memanggil method ini
             $callingFunction = $callStack[1]['function'];
 
-            throw new \Exception("data warehouse dari $callingFunction nullable", code: 2);
+            throw new Exception("data warehouse dari $callingFunction nullable", code: 2);
         }
 
 
@@ -109,7 +110,7 @@ class WarehouseServiceImpl implements WarehouseService
                 ->orderBy('id')
                 ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
                 ->toArray();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }
@@ -119,7 +120,7 @@ class WarehouseServiceImpl implements WarehouseService
     {
         try {
             return Item::where('racks_id', $id)->orWhereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }
@@ -137,7 +138,7 @@ class WarehouseServiceImpl implements WarehouseService
     {
         try {
             return Item::where('racks_id', $id)->orderBy('id')->cursorPaginate(10)->toArray();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }
@@ -174,7 +175,7 @@ class WarehouseServiceImpl implements WarehouseService
     {
         try {
             return Item::orderBy('id')->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)->toArray();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception->getMessage());
             return [];
         }
@@ -185,7 +186,7 @@ class WarehouseServiceImpl implements WarehouseService
     {
         try {
             return Item::whereNull('racks_id')->orderBy('id')->cursorPaginate(10)->toArray();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }
@@ -202,7 +203,7 @@ class WarehouseServiceImpl implements WarehouseService
             ]);
 
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             Log::error($e);
             return null;
@@ -221,7 +222,7 @@ class WarehouseServiceImpl implements WarehouseService
                 'name' => '',
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
             return null;
         }
@@ -231,83 +232,78 @@ class WarehouseServiceImpl implements WarehouseService
      * fungsi untuk menyimpan data edit warehouse ke database
      * @param array $areas
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
-    public function saveWarehouse(array $areas, string $warehouseId): bool
+    public function saveWarehouse(array $areas, string $warehouseId, string $warehouseName, string $warehouseAddress): bool
     {
 
         if (empty($areas))
-            throw new \Exception('Gagal melakukan update warehouse parameter kosong');
+            throw new Exception('Gagal melakukan update warehouse parameter kosong');
 
-        Log::debug('area');
-        Log::debug($areas);
+
         $areaContainer = [];
         $rackContainer = [];
 
+        try {
+            foreach ($areas as $areaKey => $area) {
 
-        foreach ($areas as $areaKey => $area) {
+                $area = $area['area'];
+                $areaId = $area['id'] ?? null;
+                $areaName = $area['area'] ?? null;
+                $racks = $area['racks'] ?? null;
 
-            $area = $area['area'];
-            $areaId = $area['id'] ?? null;
-            $areaName = $area['area'] ?? null;
-            $racks = $area['racks'] ?? null;
+                if ($areaId == null || $areaName == null || $racks == null) {
+                    throw new Exception('Gagal melakukan update warehouse data area kosong');
+                }
 
-            if ($areaId == null || $areaName == null || $racks == null) {
-                throw new \Exception('Gagal melakukan update warehouse data area kosong');
-            }
+                $areaContainer[] = $areaId;
 
-            $areaContainer[] = $areaId;
+                Log::debug($racks);
 
-            Log::debug($racks);
+                $rackContainer[] = [
+                    'area_id' => $areaId,
+                ];
 
-            $rackContainer[] = [
-                'area_id' => $areaId,
-            ];
-
-            foreach ($racks as $rack) {
-                $rackContainer[$areaKey]['rack'][] = $rack['id'];
-            }
+                foreach ($racks as $rack) {
+                    $rackContainer[$areaKey]['rack'][] = $rack['id'];
+                }
 
 
-            try {
                 // update data area
                 $resultUpdateArea = $this->updateArea($areaId, $areaName);
                 // update racks
                 $resultUpdateRacks = $this->updateRacks($areaId, $racks);
-                if ($resultUpdateArea == null || $resultUpdateRacks == null) {
-                    throw new \Exception('Gagal melakukan update warehouse hasil update null');
-                }
 
-            } catch (\Exception $e) {
-                throw new \Exception($e->getMessage(), $e->getCode(), $e);
             }
 
+            // delete area berdasarkan id area yang tidak ada di area container
+            $this->deleteAreaAndRack($areaContainer, $rackContainer);
+
+            // update warehouse name dan address
+            $this->updateWarehouseNameAndAddress($warehouseId, $warehouseName, $warehouseAddress);
+
+            DB::commit();
+
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
         }
-
-        Log::debug('racks container');
-        Log::debug($rackContainer);
-
-
-        // delete area berdasarkan id area yang tidak ada di area container
-        $this->deleteAreaAndRack($areaContainer, $rackContainer);
 
         return true;
     }
 
     /**
      * lakukan update area saat fungsi save warehouse dipanggil
-     * @throws \Exception
+     * @throws Exception
      */
-    private function updateArea(string $areaId, string $areaName): ?bool
+    private function updateArea(string $areaId, string $areaName)
     {
 
-        // jika parameternya kosong maka kembalikan data null
+        // jika parameternya kosong maka lempar exception
         if (empty($areaId) || empty($areaName)) {
-            return null;
+            throw new Exception('Gagal memperbarui area, parameter kosong');
         }
 
         try {
-            DB::beginTransaction();
 
             $area = Area::findOrFail($areaId);
 
@@ -318,12 +314,8 @@ class WarehouseServiceImpl implements WarehouseService
 
             }
 
-            DB::commit();
-            return true;
-        } catch (\Exception $e) {
-            DB::rollBack();
+        } catch (Exception $e) {
             Log::error('Gagal memperbarui area. Exception: ' . $e->getMessage());
-            throw new \Exception('Gagal memperbarui area, area tidak ditemukan');
         }
     }
 
@@ -334,11 +326,11 @@ class WarehouseServiceImpl implements WarehouseService
      * @param array $updateRacks
      * @return bool|null
      */
-    private function updateRacks(string $areaId, array $updateRacks): ?bool
+    private function updateRacks(string $areaId, array $updateRacks)
     {
 
-        // jika paramater kosong maka kembalikan null
-        if (empty($areaId) || empty($updateRacks)) return null;
+        // jika paramater kosong maka lempar expcetion
+        if (empty($areaId) || empty($updateRacks)) throw new Exception('Gagal memperbarui rack, parameter kosong');
 
 
         /**
@@ -346,7 +338,6 @@ class WarehouseServiceImpl implements WarehouseService
          * apakah ada perbedaan data
          */
         try {
-            DB::beginTransaction();
 
             // cari rak berdasarkan area id
             $racks = Rack::where('areas_id', $areaId)->get();
@@ -367,10 +358,7 @@ class WarehouseServiceImpl implements WarehouseService
                         if ($updateRack['id'] == $rackId) {
                             if ($updateRack['name'] != $rackName) {
                                 Log::debug('rack name tidak sama');
-
-
                                 $rack->update(['name' => $updateRack['name']]);
-
                             }
 
                             if ($updateRack['category_inventory'] != $categoryInv) {
@@ -385,16 +373,12 @@ class WarehouseServiceImpl implements WarehouseService
                 }
 
 
-                DB::commit();
-
-
-                return true; // Transaksi berhasil, kembalikan nilai true
             }
 
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error($e);
+        } catch (Exception $e) {
+
+            Log::error($e->getMessage());
 
         }
     }
@@ -402,8 +386,8 @@ class WarehouseServiceImpl implements WarehouseService
     public function deleteAreaAndRack(array $areaContainer, array $rackContainer)
     {
         try {
-
-            DB::beginTransaction();
+            // jika paramater kosong maka lempar expcetion
+            if (empty($areaContainer) || empty($rackContainer)) throw new Exception('Gagal mengahapus area dan rack, karena parameter kosong');
 
             // delete rack dan item dari penghapusan 1 area penuh
             Rack::whereNotIn('areas_id', $areaContainer)
@@ -440,13 +424,30 @@ class WarehouseServiceImpl implements WarehouseService
             }
 
 
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
+        } catch (Exception $e) {
+
             Log::error($e->getMessage());
         }
     }
 
+    private function updateWarehouseNameAndAddress(string $warehouseId, string $warehouseName, string $warehouseAddress)
+    {
+        try {
+            $warehouse = Warehouse::findOrFail($warehouseId);
+
+            if ($warehouseName != null) {
+                $warehouse->update(['name' => $warehouseName]);
+            }
+
+            if ($warehouseAddress != null) {
+                $warehouse->update(['address' => $warehouseAddress]);
+            }
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+        }
+
+
+    }
 
     private function getItemRackAddedById(string $id)
     {
@@ -456,7 +457,7 @@ class WarehouseServiceImpl implements WarehouseService
                 ->orderBy('id')
                 ->cursorPaginate(10)
                 ->toArray();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }
@@ -470,7 +471,7 @@ class WarehouseServiceImpl implements WarehouseService
                 ->orderBy('id')
                 ->cursorPaginate(10, ['*'], 'cursor', $nextCursorId)
                 ->toArray();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return [];
             Log::error($exception->getMessage());
         }

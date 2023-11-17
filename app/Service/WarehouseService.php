@@ -29,5 +29,5 @@ interface WarehouseService
 
     public function addNewRack(string $areaId): ?Rack;
 
-    public function saveWarehouse(array $areas, string $warehouseId): bool;
+    public function saveWarehouse(array $areas, string $warehouseId, string $warehouseName, string $warehouseAddress): bool;
 }

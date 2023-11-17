@@ -1,6 +1,7 @@
-class Toast {
-    static showSuccess(element, title, message) {
-        let styleHeader = `
+$(function () {
+    class Toast {
+        static showSuccess(element, title, message) {
+            let styleHeader = `
         font-family: 'Poppins';
         font-style: normal;
         font-weight: 500;
@@ -9,7 +10,7 @@ class Toast {
         color: #0A0A0A;
         `;
 
-        let styleBody = `
+            let styleBody = `
         font-family: 'Poppins';
         font-style: normal;
         font-weight: 400;
@@ -20,7 +21,7 @@ class Toast {
         color: #616161;
         `;
 
-        let html = `
+            let html = `
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
@@ -54,13 +55,13 @@ class Toast {
         </div>
       </div>
         `;
-        $(element).append(html);
+            $(element).append(html);
 
-        new bootstrap.Toast($("#liveToast")).show();
-    }
+            new bootstrap.Toast($("#liveToast")).show();
+        }
 
-    static showError(element, title, message) {
-        let styleHeader = `
+        static showError(element, title, message) {
+            let styleHeader = `
       font-family: 'Poppins';
       font-style: normal;
       font-weight: 500;
@@ -70,7 +71,7 @@ class Toast {
       color: #0A0A0A;
       `;
 
-        let styleBody = `
+            let styleBody = `
       font-family: 'Poppins';
       font-style: normal;
       font-weight: 400;
@@ -82,7 +83,7 @@ class Toast {
       color: #616161;
       `;
 
-        let html = `
+            let html = `
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
@@ -116,13 +117,13 @@ class Toast {
       </div>
     </div>
       `;
-        $(element).append(html);
+            $(element).append(html);
 
-        new bootstrap.Toast($("#liveToast")).show();
-    }
+            new bootstrap.Toast($("#liveToast")).show();
+        }
 
-    static showInfo(element, title, message) {
-        let styleHeader = `
+        static showInfo(element, title, message) {
+            let styleHeader = `
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 500;
@@ -132,7 +133,7 @@ class Toast {
     color: #0A0A0A;
     `;
 
-        let styleBody = `
+            let styleBody = `
     font-family: 'Poppins';
     font-style: normal;
     font-weight: 400;
@@ -144,7 +145,7 @@ class Toast {
     color: #616161;
     `;
 
-        let html = `
+            let html = `
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
@@ -178,13 +179,13 @@ class Toast {
     </div>
   </div>
     `;
-        $(element).append(html);
+            $(element).append(html);
 
-        new bootstrap.Toast($("#liveToast")).show();
-    }
+            new bootstrap.Toast($("#liveToast")).show();
+        }
 
-    static showConfirm(element, title, message, onYes, onNo) {
-        let styleHeader = `
+        static showConfirm(element, title, message, onYes, onNo) {
+            let styleHeader = `
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 500;
@@ -194,7 +195,7 @@ class Toast {
   color: #0A0A0A;
   `;
 
-        let styleBody = `
+            let styleBody = `
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 400;
@@ -206,7 +207,7 @@ class Toast {
   color: #616161;
   `;
 
-        let html = `
+            let html = `
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
@@ -299,10 +300,12 @@ class Toast {
   </div>
 </div>
   `;
-        $(element).append(html);
+            $(element).append(html);
 
-        new bootstrap.Toast($("#liveToast")).show();
+            new bootstrap.Toast($("#liveToast")).show();
+
+        }
 
     }
 
-}
+})

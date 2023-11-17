@@ -373,7 +373,7 @@
                                 <div class="item-modal d-flex flex-row align-items-center">
                                     <div>
                                         <img class="items-ingredient-img"
-                                             src="https://media.istockphoto.com/id/1282866808/id/foto/ayam-mentah-segar.jpg?s=612x612&w=0&k=20&c=qcxOlEFxGkAU2G-Mejj_6Uo813qTmMixcXNXbG5plj0="
+                                             src="{{ ($item['item_image'] == null) ? asset('img/no-image.png') : asset("storage/item-image/{$item['item_image']}") }}"
                                              alt="">
                                     </div>
                                     <div
@@ -432,7 +432,7 @@
                                 <div class="item-modal d-flex flex-row align-items-center">
                                     <div>
                                         <img class="items-ingredient-img"
-                                             src="https://media.istockphoto.com/id/1282866808/id/foto/ayam-mentah-segar.jpg?s=612x612&w=0&k=20&c=qcxOlEFxGkAU2G-Mejj_6Uo813qTmMixcXNXbG5plj0="
+                                             src="{{ ($item['item_image'] == null) ? asset('img/no-image.png') : asset("storage/item-image/{$item['item_image']}") }}"
                                              alt="">
                                     </div>
                                     <div
