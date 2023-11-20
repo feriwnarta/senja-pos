@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\CategoryItem;
 use Illuminate\Database\Seeder;
 
@@ -14,9 +15,9 @@ class CategoryItemSeeder extends Seeder
     {
 
         for ($i = 0; $i <= 10; $i++) {
-            CategoryItem::factory()->create([
-                'category_code' => fake()->countryCode(),
-                'category_name' => fake()->name(),
+            Category::factory()->create([
+                'code' => fake()->countryCode(),
+                'name' => fake()->name(),
             ]);
         }
 

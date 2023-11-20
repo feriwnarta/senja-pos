@@ -459,7 +459,7 @@
 
                                         @foreach($categoryItems as $categoryItem)
                                             <li><a class="dropdown-item"
-                                                   wire:click="selectCategory('{{ $categoryItem->id }}', '{{ $categoryItem->category_name }}' )">{{ $categoryItem->category_name }}</a>
+                                                   wire:click="selectCategory('{{ $categoryItem->id }}', '{{ $categoryItem->name }}' )">{{ $categoryItem->name }}</a>
                                             </li>
                                         @endforeach
 

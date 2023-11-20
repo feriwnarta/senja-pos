@@ -116,10 +116,11 @@ option {
 }
 
 #divider {
-    max-width: 100%;
-
-    border: 1px solid #E0E0E0;
+    max-width: 100%; /* Lebar garis */
+    height: 1px; /* Tinggi garis, sesuaikan dengan kebutuhan Anda */
+    background: linear-gradient(to bottom, transparent, #E0E0E0, transparent); /* Efek gradient */
 }
+
 
 #title-divider {
     margin-left: 1.25rem;

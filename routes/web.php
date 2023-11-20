@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Livewire\PointOfSales\PosCategory;
 use App\Livewire\PointOfSales\PosMenu;
+use App\Livewire\Warehouse\AddCategory;
+use App\Livewire\Warehouse\AddWarehouse;
+use App\Livewire\Warehouse\CategoryItem;
+use App\Livewire\Warehouse\DetailWarehouse;
+use App\Livewire\Warehouse\ListWarehouse;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,10 +27,13 @@ Route::get('point-of-sales/category', PosCategory::class);
 
 // Warehouse
 
-Route::controller(\App\Http\Controllers\Warehouse\WarehouseController::class)->group(function () {
+Route::controller(WarehouseController::class)->group(function () {
     Route::get('warehouse/list-item', 'getItem');
-    Route::get("warehouse/list-warehouse", \App\Livewire\Warehouse\ListWarehouse::class);
-    Route::get("warehouse/list-warehouse/add-warehouse", \App\Livewire\Warehouse\AddWarehouse::class);
-    Route::get("warehouse/list-warehouse/detail-warehouse", \App\Livewire\Warehouse\DetailWarehouse::class);
+    Route::get("warehouse/list-warehouse", ListWarehouse::class);
+    Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class);
+    Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class);
+
+    Route::get("warehouse/category-item", CategoryItem::class);
+    Route::get("warehouse/category-item/add-category", AddCategory::class);
 });
 

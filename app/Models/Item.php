@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Item extends Model
 {
@@ -20,5 +21,11 @@ class Item extends Model
     public function racks(): BelongsTo
     {
         return $this->belongsTo(Rack::class);
+    }
+
+    // Relasi many to many ke category
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Item::class, 'category_items', 'items_id', 'categories_id');
     }
 }

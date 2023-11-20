@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Models\Category;
 use App\Models\CategoryItem;
 use App\Models\Item;
 use App\Models\Warehouse;
@@ -134,7 +135,7 @@ class AddWarehouse extends Component
 
     public function loadCategory()
     {
-        $this->categoryItems = CategoryItem::all();
+        $this->categoryItems = Category::all();
     }
 
     public function selectCategory(string $idCategory, string $categoryName)

@@ -55,69 +55,74 @@
                 </div>
 
 
-{{--                <div class="accordion-item">--}}
-{{--                    <h2 class="accordion-header">--}}
+                {{--                <div class="accordion-item">--}}
+                {{--                    <h2 class="accordion-header">--}}
 
-{{--                        <button class="accordion-button button-icon-text description-1-medium collapsed"--}}
-{{--                                type="button" data-bs-toggle="collapse" aria-expanded="false"--}}
-{{--                                data-bs-target="#collapseIngredients">--}}
-{{--                            <i class="ingredients-icon"></i>--}}
-{{--                            Ingredients--}}
-{{--                        </button>--}}
+                {{--                        <button class="accordion-button button-icon-text description-1-medium collapsed"--}}
+                {{--                                type="button" data-bs-toggle="collapse" aria-expanded="false"--}}
+                {{--                                data-bs-target="#collapseIngredients">--}}
+                {{--                            <i class="ingredients-icon"></i>--}}
+                {{--                            Ingredients--}}
+                {{--                        </button>--}}
 
-{{--                    </h2>--}}
-{{--                    <div id="collapseIngredients" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">--}}
-{{--                        <div class="accordion-body">--}}
-{{--                            <a href="ingredients/library" wire:navigate>--}}
-{{--                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"--}}
-{{--                                        id="">--}}
-{{--                                    Library--}}
-{{--                                </button>--}}
-{{--                            </a>--}}
-{{--                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">--}}
-{{--                                Category--}}
-{{--                            </button>--}}
-{{--                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">--}}
-{{--                                Recipes--}}
-{{--                            </button>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
+                {{--                    </h2>--}}
+                {{--                    <div id="collapseIngredients" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">--}}
+                {{--                        <div class="accordion-body">--}}
+                {{--                            <a href="ingredients/library" wire:navigate>--}}
+                {{--                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"--}}
+                {{--                                        id="">--}}
+                {{--                                    Library--}}
+                {{--                                </button>--}}
+                {{--                            </a>--}}
+                {{--                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">--}}
+                {{--                                Category--}}
+                {{--                            </button>--}}
+                {{--                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">--}}
+                {{--                                Recipes--}}
+                {{--                            </button>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+                {{--                </div>--}}
 
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                         <button class="accordion-button button-icon-text description-1-medium collapsed" type="button"
-                                    data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseInventory">
-                                <i class="inventory-icon"></i>
-                                {{ __('sidebar_locale.gudang.name') }}
-                         </button>
+                        <button class="accordion-button button-icon-text description-1-medium collapsed" type="button"
+                                data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseInventory">
+                            <i class="inventory-icon"></i>
+                            {{ __('sidebar_locale.gudang.name') }}
+                        </button>
 
                     </h2>
                     <div id="collapseInventory" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
                             <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.stokItem') }}
                                 </button>
                             </a>
                             <a href="/warehouse/list-warehouse" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.daftarGudang') }}
                                 </button>
                             </a>
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                            <a href="/warehouse/category-item" wire:navigate>
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.kategoriItem') }}
                                 </button>
                             </a>
                             <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.unit') }}
                                 </button>
                             </a>
                             <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.itemKeluar') }}
                                 </button>
                             </a>
@@ -127,17 +132,20 @@
                                 </button>
                             </a>
                             <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.permintaanPembelian') }}
                                 </button>
                             </a>
                             <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.permintaanProduksi') }}
                                 </button>
                             </a>
                             <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
                                     {{ __('sidebar_locale.gudang.laporanGudang') }}
                                 </button>
                             </a>
