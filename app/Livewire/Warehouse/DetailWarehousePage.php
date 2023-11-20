@@ -104,6 +104,7 @@ class DetailWarehousePage extends Component
             return;
         }
 
+
         // cursor ditemukan olah cursor data ini
         $this->itemData = $cursor['data'];
 
@@ -350,7 +351,7 @@ class DetailWarehousePage extends Component
     #[On('cancel-edit-warehouse')]
     public function cancelEdit()
     {
-        $this->urlQuery = "{$this->warehouseId}";
+
         $this->urlQuery = "{$this->warehouseId}";
         $this->mode = 'view';
         $this->dispatch('view-warehouse');
@@ -420,7 +421,6 @@ class DetailWarehousePage extends Component
             'areas.*.area.racks.*.category_inventory' => 'required|min:2',
         ]);
 
-        // TODO: Lakukan proses penyimpanan data warehouse kedatabase
         Log::info('proses');
         $this->saveWarehouse($this->areas, $this->warehouseId);
 
@@ -458,7 +458,6 @@ class DetailWarehousePage extends Component
 
     public function mount()
     {
-        // TODO: extract url query, untuk menentukan mode edit atau view
 
         // extract url query
         $this->extractUrl();

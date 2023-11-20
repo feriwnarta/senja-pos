@@ -19,6 +19,7 @@
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
                     @if($mode == 'view')
+                        {{-- TODO: Buat penghapusan warehouse --}}
                         <div class="dropdown margin-left-10">
                             <button type="btn"
                                     class="btn btn-text-only-secondary btn-nav margin-left-10">{{ __('app_locale.button.hapus') }}</button>
