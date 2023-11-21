@@ -52,10 +52,7 @@ class AddCategory extends Component
             }
 
             Log::debug($id);
-            $this->items = [];
 
-            Log::debug('kosong');
-            Log::debug($this->items);
             $items = $this->categoryService->getItemCursor($id);
 
 
@@ -63,8 +60,6 @@ class AddCategory extends Component
                 $this->items = $items['data'];
             }
 
-            Log::debug('isi');
-            Log::debug($this->items);
 
             $this->nextCursor = $items['next_cursor'];
         } catch (Exception $exception) {
@@ -166,6 +161,7 @@ class AddCategory extends Component
     {
         $this->isSave = true;
         Log::info($this->selectedItem);
+        $this->items = [];
     }
 
 

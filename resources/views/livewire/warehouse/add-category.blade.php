@@ -118,6 +118,25 @@
                     @endif
 
 
+                    <div class="margin-top-24">
+                        <label for="dropdownCategory" class="form-label input-label">Unit</label>
+                        <div class="dropdown" id="dropdownCategory">
+                            <button class="btn dropdown-toggle dropdown-default" type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                Ekor
+                            </button>
+
+                            <ul class="dropdown-menu" wire:ignore.self>
+                                <li>
+                                    <input type="text" placeholder="Cari Unit" style="margin: 6px;">
+                                </li>
+                                <li><a class="dropdown-item" href="#">1</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+
                 </div>
             </form>
 
