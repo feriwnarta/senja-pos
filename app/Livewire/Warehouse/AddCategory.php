@@ -5,6 +5,7 @@ namespace App\Livewire\Warehouse;
 use App\Service\CategoryItemService;
 use App\Service\Impl\CategoryItemServiceImpl;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -16,6 +17,10 @@ class AddCategory extends Component
     public array $selectedItem;
     public ?string $nextCursor = null;
     public bool $isSave = false;
+    public Collection $units;
+    public string $unitSelected;
+    public ?string $search = null;
+    private array $unit;
     private CategoryItemService $categoryService;
 
     public function boot()
@@ -36,7 +41,52 @@ class AddCategory extends Component
 
     public function render()
     {
+        // cari
+        $units = $this->searchUnit($this->search);
+
+        if (!empty($units)) {
+            $this->units = $units;
+        }
         return view('livewire.warehouse.add-category');
+    }
+
+    private function searchUnit($unit)
+    {
+        try {
+            if ($unit) {
+                // Jika $unit tidak null (nama unit diberikan), lakukan pencarian
+                return \App\Models\Unit::where('name', 'like', "%{$unit}%")->get();
+            } else {
+                // Jika $unit null (nama unit tidak diberikan), tampilkan semua unit
+                return \App\Models\Unit::all();
+            }
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+        }
+
+        return [];
+    }
+
+    public function loadUnit()
+    {
+        try {
+            $this->units = \App\Models\Unit::get();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+        }
+    }
+
+    public function setUnit(string $id, string $name)
+    {
+        if ($id != null && $name != null) {
+            $this->unit = [
+                'id' => $id,
+                'name' => $name
+            ];
+
+            $this->unitSelected = $name;
+        }
+
     }
 
     #[On('load-item')]
@@ -86,7 +136,6 @@ class AddCategory extends Component
 
     }
 
-
     /**
      * fungsi ini akan dijalankan saat checkbox diklik atau tidak diklik
      * lakukan pencarian di array selected item, jika id sudah ada maka hapus, jika belum maka tambahkan
@@ -96,7 +145,7 @@ class AddCategory extends Component
      */
     public function selectItem(string $id, string $name)
     {
-        if ($id !== null && $name !== null) {
+        if ($id != null && $name != null) {
 
             if (count($this->selectedItem) < 1) {
                 $this->selectedItem[] = [
@@ -155,7 +204,6 @@ class AddCategory extends Component
         }
 
     }
-
 
     public function saveSelectedItem()
     {

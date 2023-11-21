@@ -26,9 +26,14 @@ $(() => {
         });
     }
 
+
     onScrollModalEditItem();
 
 })
+
+function closeDropdown() {
+    $('.dropdown-toggle').dropdown('toggle');
+}
 
 
 

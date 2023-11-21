@@ -123,15 +123,40 @@
                         <div class="dropdown" id="dropdownCategory">
                             <button class="btn dropdown-toggle dropdown-default" type="button"
                                     data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                Ekor
+                                    aria-expanded="false"
+                                    wire:click="loadUnit"
+                            >
+                                {{ (empty($unitSelected)) ? 'Pilih unit ' : $unitSelected }}
                             </button>
 
-                            <ul class="dropdown-menu" wire:ignore.self>
+                            <ul class="dropdown-menu" style="min-height: 120px" wire:ignore.self>
                                 <li>
-                                    <input type="text" placeholder="Cari Unit" style="margin: 6px;">
+                                    <input type="text" placeholder="Cari Unit" style="margin:6px; width: 95%;"
+                                           wire:model.live.debounce.600ms="search">
                                 </li>
-                                <li><a class="dropdown-item" href="#">1</a></li>
+
+                                @if(!empty($units))
+
+                                    @foreach($units as $unit)
+                                        <li wire:key="{{ $unit['id'] }}">
+                                            <a class="dropdown-item"
+                                               href="#"
+                                               onclick="closeDropdown()"
+                                               wire:click="setUnit('{{ $unit['id'] }}', '{{ $unit['name'] }}')"
+                                            >
+                                                {{ $unit['name'] }}
+                                            </a>
+                                        </li>
+                                    @endforeach
+
+                                @endif
+                                <div wire:loading>
+                                    <div class="position-absolute start-50 translate-middle">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </ul>
                         </div>
                     </div>
@@ -191,7 +216,6 @@
                                 <div id="divider" class="margin-top-20"></div>
                             </div>
                         @endforeach
-
                     @endif
 
 

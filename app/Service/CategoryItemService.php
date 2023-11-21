@@ -9,5 +9,6 @@ interface CategoryItemService
     public function getItemCursor(array $id): array;
 
     public function getItemNextCursor(string $nextCursor): array;
+    
 
 }

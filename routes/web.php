@@ -4,10 +4,12 @@ use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Livewire\PointOfSales\PosCategory;
 use App\Livewire\PointOfSales\PosMenu;
 use App\Livewire\Warehouse\AddCategory;
+use App\Livewire\Warehouse\AddUnit;
 use App\Livewire\Warehouse\AddWarehouse;
 use App\Livewire\Warehouse\CategoryItem;
 use App\Livewire\Warehouse\DetailWarehouse;
 use App\Livewire\Warehouse\ListWarehouse;
+use App\Livewire\Warehouse\Unit;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,5 +37,9 @@ Route::controller(WarehouseController::class)->group(function () {
 
     Route::get("warehouse/category-item", CategoryItem::class);
     Route::get("warehouse/category-item/add-category", AddCategory::class);
+
+
+    Route::get("warehouse/unit", Unit::class);
+    Route::get("warehouse/unit/add-unit", AddUnit::class);
 });
 

@@ -114,7 +114,7 @@
                                     {{ __('sidebar_locale.gudang.kategoriItem') }}
                                 </button>
                             </a>
-                            <a href="#" wire:navigate>
+                            <a href="/warehouse/unit" wire:navigate>
                                 <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
                                         id="">
                                     {{ __('sidebar_locale.gudang.unit') }}
