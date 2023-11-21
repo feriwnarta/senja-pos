@@ -39,16 +39,14 @@ class TestItemModel extends TestCase
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()], ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()], ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()], ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()], ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()], ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
                 ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
+                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
+                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
+    
 
             ]
         );

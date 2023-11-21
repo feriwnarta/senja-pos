@@ -50,12 +50,25 @@
     margin-left: .625rem;
 }
 
+.margin-left-8 {
+    margin-left: 8px;
+}
+
+.margin-right-16 {
+    margin-right: 16px;
+}
+
+
 .margin-bottom-32 {
     margin-bottom: 2rem;
 }
 
 .margin-bottom-8 {
     margin-bottom: 8px;
+}
+
+.margin-bottom-16 {
+    margin-bottom: 16px;
 }
 
 .margin-left-102 {

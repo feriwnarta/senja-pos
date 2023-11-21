@@ -2,43 +2,32 @@
 
 namespace Tests\Feature;
 
-use App\Models\Category;
-use App\Models\Item;
-use Illuminate\Support\Facades\DB;
+use App\Service\CategoryItemService;
+use App\Service\Impl\CategoryItemServiceImpl;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertIsArray;
 use function PHPUnit\Framework\assertNotNull;
 
 class CategoryItemServiceTest extends TestCase
 {
-    public function testInsertCategory()
+
+    private CategoryItemService $categoryItemService;
+
+    public function testGetItemCursor()
     {
 
-        $category = Category::create([
-            'code' => 'CATEGORY01',
-            'name' => 'NAME 01'
-        ]);
-
-        self::assertNotNull($category);
-        self::assertEquals($category->name, 'NAME 01');
-
-        $item = Item::create([
-            'item_code' => 'ITEM01',
-            'item_image' => 'ITEM IMAGE',
-            'name' => 'Item baru'
-        ]);
-
-        assertNotNull($item);
-
-        $category->items()->attach($item->id);
-        assertNotNull($category);
-
+        $data = $this->categoryItemService->getItemCursor();
+        assertNotNull($data);
+        assertIsArray($data);
+        assertIsArray($data['data']);
+        Log::info($data);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        DB::table('categories')->delete();
-        DB::table('items')->delete();
+        $this->categoryItemService = app()->make(CategoryItemServiceImpl::class);
     }
 
 

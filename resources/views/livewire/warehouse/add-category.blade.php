@@ -94,10 +94,29 @@
                             + Tambah item ke kategori
                         </button>
 
-
                     </div>
 
                     <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                    {{-- LOOPIMG ISI SELECTED ITEM JIKA ISSAVE BERNILAI TRUE --}}
+
+                    @if($isSave)
+                        <div class="d-flex flex-wrap margin-top-12">
+                            @foreach($selectedItem as $select)
+                                <div wire:key="{{ $select['id'] }}"
+                                     class="d-flex flex-row align-items-center margin-right-16 margin-bottom-8"
+                                >
+                                    <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
+                                           wire:click="unSelect('{{ $select['id'] }}')"
+                                           checked/>
+                                    <div
+                                        class="body-text-regular name-item-modal margin-left-8">{{ $select['name'] }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                    @endif
+
 
                 </div>
             </form>
@@ -106,7 +125,7 @@
     </div>
 
 
-    {{-- MODAL EDIT ITEM --}}
+    {{-- MODAL TAMBAH ITEM KE KATEGORI --}}
     <div wire:ignore.self class="modal modal-input fade" id="modalAddCategory" tabindex="-1"
          role="dialog"
     >
@@ -127,6 +146,35 @@
                                aria-label="Search">
                     </form>
 
+                    {{-- LOOPING ISI ITEMS --}}
+                    @if(!empty($items))
+                        @foreach($items as $item)
+                            <div wire:key="{{ $item['id'] }}" class="items-modal">
+                                <div class="d-flex align-items-center data-modal">
+                                    <div
+                                        class="item-modal d-flex flex-row align-items-center justify-content-between">
+
+                                        <div class="d-flex flex-row align-items-center">
+                                            <img class="items-ingredient-img"
+                                                 src="{{ ($item['item_image'] == null) ? asset('img/no-image.png') : asset("storage/item-image/{$item['item_image']}") }}"
+                                                 alt="">
+
+                                            <div
+                                                class="body-text-regular name-item-modal">{{ $item['name'] }}</div>
+                                        </div>
+                                        <div>
+                                            <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
+                                                   wire:click="selectItem('{{ $item['id'] }}', '{{ $item['name'] }}')"/>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div id="divider" class="margin-top-20"></div>
+                            </div>
+                        @endforeach
+
+                    @endif
+
 
                     <div wire:loading>
                         <div class="position-absolute start-50 translate-middle">
@@ -139,7 +187,16 @@
 
                 </div>
                 <div class="modal-footer row">
-
+                    <div class=" d-flex flex-row justify-content-end">
+                        <div>
+                            <button class="btn text-only-outlined cancel-btn" data-bs-dismiss="modal">
+                                Batal
+                            </button>
+                            <button class="btn btn-text-only-primary margin-left-10" data-bs-dismiss="modal"
+                                    wire:click="saveSelectedItem">Simpan
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -149,5 +206,5 @@
 </x-page-layout>
 
 @section('footer-script')
-
+    <script src="{{ asset('js/add-category.js') }}"></script>
 @endsection
