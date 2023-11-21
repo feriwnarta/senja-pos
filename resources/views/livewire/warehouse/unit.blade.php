@@ -40,6 +40,11 @@
             <div id="title-divider"></div>
             <div id="divider"></div>
         </div>
+
+        <div id="content-loaded">
+            <livewire:unit-table/>
+        </div>
+
     </x-slot>
 
 

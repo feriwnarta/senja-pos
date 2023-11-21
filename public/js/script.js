@@ -3,11 +3,6 @@ $(window).on('load', function () {
 })
 
 
-document.addEventListener('update-menu', function () {
-    updateAccordionActive();
-
-});
-
 document.addEventListener('set-width-title', () => {
 
     $(() => {
@@ -52,13 +47,7 @@ function changeWidthTitle() {
     $("#title-divider").width(widthTitleNavbar);
 }
 
-/**
- * fungsi ini berguna untuk membuka accordion menu secara dinamis berdasarkan url
- */
-function updateAccordionActive() {
-    // Tambahkan class 'no-transition' pada elemen-elemen collapse untuk menonaktifkan efek animasi
-    $('.accordion-collapse').addClass('no-transition');
-
+document.addEventListener('update-menu', function () {
     // Ambil URL saat ini
     var currentURL = window.location.pathname;
 
@@ -73,21 +62,14 @@ function updateAccordionActive() {
 
     accordionLinks.each(function () {
         if ($(this).attr('href') === currentURL) {
-            const accordionItem = $(this).closest('.accordion-item');
-            const accordionCollapse = accordionItem.find('.accordion-collapse');
+            const accordionBtn = $(this).closest('.accordion-item').find('.accordion-button');
+            const collapseBtn = $(this).closest('.accordion-collapse');
             const itemBtn = $(this).find('button');
 
-            // Sembunyikan semua elemen collapse terlebih dahulu
-            $('.accordion-item').not(accordionItem).find('.accordion-collapse').removeClass('show');
-
-            // Tambahkan kelas 'show' pada elemen collapse dan 'inner-menu-active' pada elemen button
-            accordionCollapse.addClass('show');
+            collapseBtn.addClass('show');
             itemBtn.addClass('inner-menu-active');
+            accordionBtn.attr('aria-expanded', 'true');
+            accordionBtn.removeClass('collapsed');
         }
     });
-
-    // Hapus class 'no-transition' setelah pembaruan selesai
-    setTimeout(function () {
-        $('.accordion-collapse').removeClass('no-transition');
-    }, 0);
-}
+});

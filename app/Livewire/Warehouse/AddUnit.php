@@ -16,7 +16,7 @@ class AddUnit extends Component
 
     #[Rule('required|min:5|unique:units,code')]
     public string $code;
-    #[Rule('required|min:5|unique:units,name')]
+    #[Rule('required|min:1|unique:units,name')]
     public string $name;
 
 
@@ -60,6 +60,7 @@ class AddUnit extends Component
 
     public function render()
     {
+
         return view('livewire.warehouse.add-unit');
     }
 }
