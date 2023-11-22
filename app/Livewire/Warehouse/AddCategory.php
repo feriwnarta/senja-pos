@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Rule;
 use Livewire\Component;
 
 class AddCategory extends Component
@@ -20,13 +21,17 @@ class AddCategory extends Component
     public Collection $units;
     public string $unitSelected;
     public ?string $search = null;
-    private array $unit;
+    #[Rule('required|min:5|unique:categories,code')]
+    public string $code;
+    #[Rule('required|min:2|unique:categories,name')]
+    public string $name;
+
+    public array $unit;
     private CategoryItemService $categoryService;
 
     public function boot()
     {
         $this->categoryService = app()->make(CategoryItemServiceImpl::class);
-
     }
 
 
@@ -212,5 +217,48 @@ class AddCategory extends Component
         $this->items = [];
     }
 
+
+    #[On('save-category')]
+    public function validateInput()
+    {
+
+        // lakukan validasi input
+        $this->validate([
+            'code' => 'required|min:5|unique:categories,code',
+            'name' => 'required|min:5|unique:categories,name',
+            'selectedItem' => 'required|array',
+            'unit' => 'required|array',
+        ]);
+
+        // extract selected item ambil id nya saja
+        $extractSelectedItem = array_column($this->selectedItem, 'id');
+
+
+        // jika lebih unit lebih dari 2 maka tampilkan error
+        // kenapa harus 2, karena unit berisi array dengan id dan name
+        if (count($this->unit) > 2) {
+            $this->js("alert('something went wrong')");
+            Log::error('unit lebih dari satu di pembuatan kategori');
+            return;
+        }
+
+
+        try {
+            $result = $this->categoryService->saveCategory($this->code, $this->name, $this->unit['id'], $extractSelectedItem);
+
+            if ($result) {
+                $this->js("alert('berhasil buat kategori baru')");
+                $this->reset();
+                return;
+            }
+
+            $this->js("alert('gagal buat kategori baru')");
+
+        } catch (Exception $exception) {
+            $this->js("alert('gagal buat kategori baru')");
+        }
+
+
+    }
 
 }

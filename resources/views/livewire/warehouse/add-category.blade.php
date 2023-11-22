@@ -31,7 +31,7 @@
 
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
-                            @click="$dispatch('saveEditWarehouse')"
+                            @click="$dispatch('save-category')"
                     >Simpan
                     </button>
 
@@ -59,8 +59,8 @@
 
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="KTUH01"
-                               wire:model.live.debounce.600ms="codeWarehouse">
-                        @error('codeWarehouse') <span class="error">{{ $message }}</span> @enderror
+                               wire:model.live.debounce.600ms="code">
+                        @error('code') <span class="error">{{ $message }}</span> @enderror
 
                     </div>
 
@@ -73,8 +73,8 @@
 
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="Unggas"
-                               wire:model.live.debounce.600ms="codeWarehouse">
-                        @error('codeWarehouse') <span class="error">{{ $message }}</span> @enderror
+                               wire:model.live.debounce.600ms="name">
+                        @error('name') <span class="error">{{ $message }}</span> @enderror
                     </div>
 
 
@@ -93,8 +93,8 @@
                         >
                             + Tambah item ke kategori
                         </button>
-
                     </div>
+                    @error('selectedItem') <span class="error">{{ $message }}</span> @enderror
 
                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
@@ -159,6 +159,7 @@
                                 </div>
                             </ul>
                         </div>
+                        @error('unit') <span class="error">{{ $message }}</span> @enderror
                     </div>
 
 

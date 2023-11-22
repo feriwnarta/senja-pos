@@ -10,22 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('categories_items', function (Blueprint $table) {
+        Schema::create('categories_units', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('categories_id')->nullable(false);
-            $table->foreign('categories_id')
-                ->references('id')
-                ->on('categories')->onDelete('cascade');
-            $table->uuid('items_id')->nullable(false);
-            $table->foreign('items_id')
-                ->references('id')
-                ->on('items')->onDelete('cascade');
+            $table->uuid('units_id')->nullable(false);
+            $table->foreign('categories_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('units_id')->references('id')->on('units')->onDelete('cascade');
             $table->timestamps();
-
-
         });
-
-
     }
 
     /**
@@ -33,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories_items');
+        Schema::dropIfExists('categories_units');
     }
 };

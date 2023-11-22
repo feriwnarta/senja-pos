@@ -23,6 +23,13 @@ class Category extends Model
     {
         return $this->belongsToMany(Item::class, 'categories_items', 'categories_id', 'items_id')->using(new class extends Pivot {
             use HasUuids;
-        });
+        })->withTimestamps();
+    }
+
+    public function units(): BelongsToMany
+    {
+        return $this->belongsToMany(Unit::class, 'categories_units', 'categories_id', 'units_id')->using(new class extends Pivot {
+            use  HasUuids;
+        })->withTimestamps();
     }
 }

@@ -10,10 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('category_items', function (Blueprint $table) {
-            $table->uuid('id');
-            $table->string('category_code', 150)->nullable(false)->unique(true);
-            $table->string('category_name', 200)->nullable(false);
+        Schema::create('categories', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->string('code', 150)->nullable(false)->unique(true);
+            $table->string('name', 200)->nullable(false);
             $table->timestamps();
         });
     }

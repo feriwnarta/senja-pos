@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('code', 255)->unique()->nullable(false);
             $table->string('name', 255)->unique()->nullable(false);
             $table->timestamps();
+            
+
         });
     }
 

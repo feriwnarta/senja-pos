@@ -29,6 +29,6 @@ class Item extends Model
     {
         return $this->belongsToMany(Item::class, 'category_items', 'items_id', 'categories_id') > using(new class extends Pivot {
                 use HasUuids;
-            });
+            })->withTimestamps();
     }
 }

@@ -42,7 +42,7 @@
         </div>
 
         <div id="content-loaded">
-            <livewire:unit-table/>
+            <livewire:unit-table wire:model="search"/>
         </div>
 
     </x-slot>
