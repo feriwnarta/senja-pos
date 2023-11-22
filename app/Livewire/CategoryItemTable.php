@@ -85,7 +85,7 @@ final class CategoryItemTable extends PowerGridComponent
     #[On('detail')]
     public function detail($id): void
     {
-        $this->js("alert('detail')");
+        $this->redirect('/warehouse/category-item/detail-category', true);
     }
 
     public function actions(Category $category): array

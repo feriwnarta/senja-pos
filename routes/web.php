@@ -7,6 +7,7 @@ use App\Livewire\Warehouse\AddCategory;
 use App\Livewire\Warehouse\AddUnit;
 use App\Livewire\Warehouse\AddWarehouse;
 use App\Livewire\Warehouse\CategoryItem;
+use App\Livewire\Warehouse\DetailCategoryItem;
 use App\Livewire\Warehouse\DetailUnit;
 use App\Livewire\Warehouse\DetailWarehouse;
 use App\Livewire\Warehouse\ListWarehouse;
@@ -38,6 +39,7 @@ Route::controller(WarehouseController::class)->group(function () {
 
     Route::get("warehouse/category-item", CategoryItem::class);
     Route::get("warehouse/category-item/add-category", AddCategory::class);
+    Route::get("warehouse/category-item/detail-category", DetailCategoryItem::class);
 
 
     Route::get("warehouse/unit", Unit::class);
