@@ -1,63 +1,67 @@
 <div id="content-loaded">
     <div class="row">
-        <div class="col-sm-4 offset-1">
-            @if($mode != 'view')
-                {{-- KODE UNIT --}}
-                <div class="container-input-default">
-                    <label for="warehouseInput"
-                           class="form-label input-label">Kode Unit</label>
+        @if(!$notFound)
+            <div class="col-sm-4 offset-1">
+                @if($mode != 'view')
+                    {{-- KODE UNIT --}}
+                    <div class="container-input-default">
+                        <label for="warehouseInput"
+                               class="form-label input-label">Kode Unit</label>
 
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
 
-                    <input type="name" class="form-control input-default"
-                           id="warehouseInput" placeholder="KU004"
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput" placeholder="KU004"
 
-                           wire:model.live.debounce.600ms="code">
-                    @error('code') <span class="error">{{ $message }}</span> @enderror
+                               wire:model.live.debounce.600ms="code">
+                        @error('code') <span class="error">{{ $message }}</span> @enderror
 
-                </div>
+                    </div>
 
-                {{-- NAMA UNIT --}}
-                <div class="container-input-default margin-top-24">
-                    <label for="warehouseInput"
-                           class="form-label input-label">Nama Unit</label>
+                    {{-- NAMA UNIT --}}
+                    <div class="container-input-default margin-top-24">
+                        <label for="warehouseInput"
+                               class="form-label input-label">Nama Unit</label>
 
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
 
-                    <input type="name" class="form-control input-default"
-                           id="warehouseInput" placeholder="Btl (Botol)"
-                           
-                           wire:model.live.debounce.600ms="name">
-                    @error('name') <span class="error">{{ $message }}</span> @enderror
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput" placeholder="Btl (Botol)"
 
-                </div>
-            @else
-                {{-- KODE UNIT --}}
-                <div class="container-input-default">
-                    <label for="warehouseInput"
-                           class="form-label input-label">Kode Unit</label>
+                               wire:model.live.debounce.600ms="name">
+                        @error('name') <span class="error">{{ $message }}</span> @enderror
 
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
+                    </div>
+                @else
+                    {{-- KODE UNIT --}}
+                    <div class="container-input-default">
+                        <label for="warehouseInput"
+                               class="form-label input-label">Kode Unit</label>
 
-                    <input type="name" class="form-control input-default"
-                           id="warehouseInput" placeholder="KU004"
-                           value="{{ $unit->code }}" disabled>
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
 
-                </div>
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput" placeholder="KU004"
+                               value="{{ $unit->code }}" disabled>
 
-                {{-- NAMA UNIT --}}
-                <div class="container-input-default margin-top-24">
-                    <label for="warehouseInput"
-                           class="form-label input-label">Nama Unit</label>
+                    </div>
 
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
+                    {{-- NAMA UNIT --}}
+                    <div class="container-input-default margin-top-24">
+                        <label for="warehouseInput"
+                               class="form-label input-label">Nama Unit</label>
 
-                    <input type="name" class="form-control input-default"
-                           id="warehouseInput" placeholder="Btl (Botol)"
-                           value="{{ $unit->name }}" disabled>
-                </div>
-            @endif
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
 
-        </div>
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput" placeholder="Btl (Botol)"
+                               value="{{ $unit->name }}" disabled>
+                    </div>
+                @endif
+
+            </div>
+        @else
+            <h1>Data unit tidak ditemukan</h1>
+        @endif
     </div>
 </div>

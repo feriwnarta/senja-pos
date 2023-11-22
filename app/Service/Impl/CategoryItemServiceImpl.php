@@ -15,7 +15,14 @@ class CategoryItemServiceImpl implements CategoryItemService
     public function getItemCursor(array $id): array
     {
 
-        return Item::whereNotIn('id', $id)->orderBy('id')->cursorPaginate(10)->toArray();
+        return Item::whereNotExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('categories_items')
+                ->whereRaw('categories_items.items_id = items.id');
+        })
+            ->orderBy('id')
+            ->cursorPaginate(10)
+            ->toArray();
 
     }
 

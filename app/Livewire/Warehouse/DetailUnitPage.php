@@ -23,6 +23,7 @@ class DetailUnitPage extends Component
     public string $code;
     #[Rule('required|min:1|unique:units,name')]
     public string $name;
+    public bool $notFound = false;
 
 
     public function mount()
@@ -30,7 +31,14 @@ class DetailUnitPage extends Component
         $this->extractUrl();
 
         // ambil data unit berdasarkan id
-        $this->unit = $this->getUnitById($this->unitId);
+        $unit = $this->getUnitById($this->unitId);
+
+        if ($unit == null) {
+            $this->notFound = true;
+            return;
+        }
+
+        $this->unit = $unit;
         $this->code = $this->unit->code;
         $this->name = $this->unit->name;
     }

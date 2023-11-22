@@ -119,6 +119,7 @@ class AddCategory extends Component
             $this->nextCursor = $items['next_cursor'];
         } catch (Exception $exception) {
             Log::error('adaerror');
+            Log::error($exception->getMessage());
         }
     }
 
