@@ -54,7 +54,7 @@
             <div id="divider"></div>
         </div>
 
-
+        <livewire:warehouse.detail-category-item-page lazy/>
     </x-slot>
 
 
