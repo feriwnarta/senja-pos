@@ -8,7 +8,7 @@ class Sidebar extends Component
 {
     public function mount()
     {
-        $this->dispatch('update-menu');
+        
     }
 
     public function render()

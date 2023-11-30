@@ -10,4 +10,10 @@ class StockItem extends Component
     {
         return view('livewire.warehouse.stock-item');
     }
+
+    public function rendered($view, $html)
+    {
+        
+        $this->dispatch('update-menu');
+    }
 }

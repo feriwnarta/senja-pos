@@ -12,9 +12,11 @@
     color: black;
     transition: width 0.3s; /* Mengatur transisi hanya pada lebar */
     padding: 1rem 2rem 1rem 3rem;
-    visibility: hidden;
 }
 
+.accordion {
+    visibility: hidden;
+}
 
 .accordion-button::after {
     transition: none !important;

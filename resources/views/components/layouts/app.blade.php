@@ -43,6 +43,7 @@
 <script src="{{ asset('js/popup.js') }}"></script>
 <script data-navigate-once src="{{ asset('js/script.js') }}"></script>
 
+
 @yield('footer-script')
 </body>
 </html>
