@@ -39,7 +39,6 @@ class AddCategory extends Component
     {
 
         $this->dispatch('set-width-title');
-        $this->dispatch('update-menu');
         $this->dispatch('load-script');
 
     }

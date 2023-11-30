@@ -12,6 +12,16 @@
     color: black;
     transition: width 0.3s; /* Mengatur transisi hanya pada lebar */
     padding: 1rem 2rem 1rem 3rem;
+    visibility: hidden;
+}
+
+
+.accordion-button::after {
+    transition: none !important;
+}
+
+.accordion-init::after {
+    transition: transform 0.9s ease-in-out;
 }
 
 /* Mengatur scrollbar untuk elemen dengan id "sidebar" */

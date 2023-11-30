@@ -1,10 +1,5 @@
 <x-page-layout>
 
-    <x-slot name="sidebar">
-        <div wire:ignore>
-            <livewire:components.sidebar.sidebar/>
-        </div>
-    </x-slot>
 
     <x-slot name="appBar">
         <div class="navbar-app">

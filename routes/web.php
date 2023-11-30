@@ -11,6 +11,7 @@ use App\Livewire\Warehouse\DetailCategoryItem;
 use App\Livewire\Warehouse\DetailUnit;
 use App\Livewire\Warehouse\DetailWarehouse;
 use App\Livewire\Warehouse\ListWarehouse;
+use App\Livewire\Warehouse\StockItem;
 use App\Livewire\Warehouse\Unit;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +33,8 @@ Route::get('point-of-sales/category', PosCategory::class);
 // Warehouse
 
 Route::controller(WarehouseController::class)->group(function () {
-    Route::get('warehouse/list-item', 'getItem');
+    Route::get("warehouse/stock", StockItem::class);
+
     Route::get("warehouse/list-warehouse", ListWarehouse::class);
     Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class);
     Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class);

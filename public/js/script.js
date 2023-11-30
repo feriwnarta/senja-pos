@@ -1,8 +1,3 @@
-$(window).on('load', function () {
-    changeWidthTitle();
-})
-
-
 document.addEventListener('set-width-title', () => {
 
     $(() => {
@@ -48,6 +43,8 @@ function changeWidthTitle() {
 }
 
 document.addEventListener('update-menu', function () {
+
+
     // Ambil URL saat ini
     var currentURL = window.location.pathname;
 
@@ -56,6 +53,9 @@ document.addEventListener('update-menu', function () {
     if (urlParts.length > 2) {
         currentURL = '/' + urlParts.slice(0, 2).join('/');
     }
+
+    // buat sidebar visible
+    $('#sidebar').css('visibility', 'visible');
 
     // Dapatkan semua elemen 'a' dalam Accordion
     var accordionLinks = $('.accordion-item a');

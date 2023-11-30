@@ -1,7 +1,7 @@
 <div class="wrapper">
 
 
-    {{ $sidebar }}
+    <livewire:components.sidebar.sidebar/>
 
 
     <div id="content">

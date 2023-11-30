@@ -1,12 +1,13 @@
 <x-page-layout>
 
+
     <x-slot name="appBar">
         <div class="navbar-app">
             <div class="content-navbar d-flex flex-row justify-content-between">
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        {{ __('sidebar_locale.gudang.daftarGudang') }}
+                        Daftar item
                     </div>
                 </div>
 
@@ -46,21 +47,8 @@
 
     <div id="content-loaded">
 
-        <livewire:warehouse-table wire:model="search"/>
 
     </div>
-
-
-    <script>
-        document.addEventListener('livewire:initialized', () => {
-            $('.power-grid-table tr').click(function () {
-                let id = $(this).attr('wire:key')
-                id = id.replace('tbody-', '');
-            @this.dispatch('detail-data', {id: id});
-            });
-
-        });
-    </script>
 
 
 </x-page-layout>
