@@ -33,19 +33,19 @@ Route::get('point-of-sales/category', PosCategory::class);
 // Warehouse
 
 Route::controller(WarehouseController::class)->group(function () {
-    Route::get("warehouse/stock", StockItem::class);
+    Route::get("warehouse/stock", StockItem::class)->name('stock');
 
-    Route::get("warehouse/list-warehouse", ListWarehouse::class);
-    Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class);
-    Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class);
+    Route::get("warehouse/list-warehouse", ListWarehouse::class)->name('list-warehouse');
+    Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class)->name('add-warehouse');
+    Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class)->name('detail-warehouse');
 
-    Route::get("warehouse/category-item", CategoryItem::class);
-    Route::get("warehouse/category-item/add-category", AddCategory::class);
-    Route::get("warehouse/category-item/detail-category", DetailCategoryItem::class);
+    Route::get("warehouse/category-item", CategoryItem::class)->name('category-item');
+    Route::get("warehouse/category-item/add-category", AddCategory::class)->name('add-category');
+    Route::get("warehouse/category-item/detail-category", DetailCategoryItem::class)->name('detail-category');
 
 
-    Route::get("warehouse/unit", Unit::class);
-    Route::get("warehouse/unit/add-unit", AddUnit::class);
-    Route::get("warehouse/unit/detail-unit", DetailUnit::class);
+    Route::get("warehouse/unit", Unit::class)->name('unit');
+    Route::get("warehouse/unit/add-unit", AddUnit::class)->name('add-unit');
+    Route::get("warehouse/unit/detail-unit", DetailUnit::class)->name('detail-unit');
 });
 

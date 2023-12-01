@@ -1,11 +1,10 @@
 <!-- Sidebar  -->
-
 <nav id="sidebar">
-
 
     <div class="sidebar-logo">
         <img src="{{ asset('img/cahaya_senja_logo.png') }}" alt="logo cahaya senja" class="logo-sidebar">
     </div>
+
 
     <div class="button-menu">
 
@@ -91,39 +90,58 @@
                 {{--                </div>--}}
 
 
+                @php
+                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'detail-unit']);
+                @endphp
+
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button button-icon-text description-1-medium collapsed"
-                                type="button"
-                                data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseInventory">
+                        <button
+                            class="accordion-button button-icon-text description-1-medium {{ $collapseInv ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            aria-expanded="{{ $collapseInv ? 'true': 'false' }}"
+                            data-bs-target="#collapseInventory">
                             <i class="inventory-icon"></i>
                             {{ __('sidebar_locale.gudang.name') }}
                         </button>
 
                     </h2>
-                    <div id="collapseInventory" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
+
+
+                    <div id="collapseInventory"
+                         class="accordion-collapse collapse {{ $collapseInv ? 'show' : '' }} "
+                         data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
                             <a href="/warehouse/stock" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('stock') ? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
                                     {{ __('sidebar_locale.gudang.stokItem') }}
                                 </button>
                             </a>
                             <a href="/warehouse/list-warehouse" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-warehouse') ? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
                                     {{ __('sidebar_locale.gudang.daftarGudang') }}
                                 </button>
                             </a>
                             <a href="/warehouse/category-item" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') ? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
                                     {{ __('sidebar_locale.gudang.kategoriItem') }}
                                 </button>
                             </a>
                             <a href="/warehouse/unit" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('unit') ? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
                                     {{ __('sidebar_locale.gudang.unit') }}
                                 </button>
                             </a>
@@ -287,3 +305,5 @@
         </div>
     </div>
 </nav>
+
+

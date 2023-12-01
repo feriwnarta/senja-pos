@@ -1,8 +1,8 @@
 <div class="wrapper">
 
-
-    <livewire:components.sidebar.sidebar/>
-
+    <div wire:ignore.self>
+        <livewire:components.sidebar.sidebar/>
+    </div>
 
     <div id="content">
         <div id="page">
