@@ -1,10 +1,11 @@
-<!-- Sidebar  -->
+@php use Illuminate\Support\Facades\Route; @endphp
+    <!-- Sidebar  -->
+
 <nav id="sidebar">
 
     <div class="sidebar-logo">
         <img src="{{ asset('img/cahaya_senja_logo.png') }}" alt="logo cahaya senja" class="logo-sidebar">
     </div>
-
 
     <div class="button-menu">
 
@@ -60,36 +61,6 @@
                 </div>
 
 
-                {{--                <div class="accordion-item">--}}
-                {{--                    <h2 class="accordion-header">--}}
-
-                {{--                        <button class="accordion-button button-icon-text description-1-medium collapsed"--}}
-                {{--                                type="button" data-bs-toggle="collapse" aria-expanded="false"--}}
-                {{--                                data-bs-target="#collapseIngredients">--}}
-                {{--                            <i class="ingredients-icon"></i>--}}
-                {{--                            Ingredients--}}
-                {{--                        </button>--}}
-
-                {{--                    </h2>--}}
-                {{--                    <div id="collapseIngredients" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">--}}
-                {{--                        <div class="accordion-body">--}}
-                {{--                            <a href="ingredients/library" wire:navigate>--}}
-                {{--                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"--}}
-                {{--                                        id="">--}}
-                {{--                                    Library--}}
-                {{--                                </button>--}}
-                {{--                            </a>--}}
-                {{--                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">--}}
-                {{--                                Category--}}
-                {{--                            </button>--}}
-                {{--                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button" id="">--}}
-                {{--                                Recipes--}}
-                {{--                            </button>--}}
-                {{--                        </div>--}}
-                {{--                    </div>--}}
-                {{--                </div>--}}
-
-
                 @php
                     $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'detail-unit']);
                 @endphp
@@ -123,7 +94,7 @@
                             </a>
                             <a href="/warehouse/list-warehouse" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-warehouse') ? 'inner-menu-active' : ''}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-warehouse') ||  Route::is('add-warehouse') ||  Route::is('detail-warehouse') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     {{ __('sidebar_locale.gudang.daftarGudang') }}
@@ -131,7 +102,7 @@
                             </a>
                             <a href="/warehouse/category-item" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') ? 'inner-menu-active' : ''}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') ||  Route::is('add-category') ||  Route::is('detail-category')? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     {{ __('sidebar_locale.gudang.kategoriItem') }}
@@ -178,45 +149,104 @@
                     </div>
                 </div>
 
+
+                @php
+                    $collapseCk = Route::is(['list-central-kitchen', 'add-central-kitchen']);
+                @endphp
+
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button button-icon-text description-1-medium collapsed"
-                                type="button"
-                                data-bs-toggle="collapse" aria-expanded="false"
-                                data-bs-target="#collapseCentralKitchen">
+                        <button
+                            class="accordion-button button-icon-text description-1-medium {{ $collapseCk ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            aria-expanded="{{ $collapseCk ? 'true': 'false' }}"
+                            data-bs-target="#collapseCentralKitchen">
                             <i class="central-kitchen-icon"></i>
                             {{ __('sidebar_locale.dapurSentral.name') }}
                         </button>
                     </h2>
-                    <div id="collapseCentralKitchen" class="accordion-collapse collapse"
+                    <div id="collapseCentralKitchen"
+                         class="accordion-collapse collapse {{ $collapseCk ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
-                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                            <a href="/central-kitchen/list-central-kitchen" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-central-kitchen') || Route::is('add-central-kitchen') ? 'inner-menu-active' : ''}}"
+                                    type="button"
                                     id="">
-                                Stock
-                            </button>
+                                    Daftar central kitchen
+                                </button>
+                            </a>
+
+                            <a href="#" wire:navigate>
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
+                                    Stok
+                                </button>
+                            </a>
+
+                            <a href="#" wire:navigate>
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
+                                    Produksi
+                                </button>
+                            </a>
+
+                            <a href="#" wire:navigate>
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
+                                    Resep
+                                </button>
+                            </a>
+
+                            <a href="#" wire:navigate>
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
+                                    Permintaan Item
+                                </button>
+                            </a>
+
+                            <a href="#" wire:navigate>
+                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                                        id="">
+                                    Laporan
+                                </button>
+                            </a>
                         </div>
                     </div>
                 </div>
 
 
+                @php
+                    $collapseOutlet = Route::is(['list-outlet', 'add-outlet']);
+                @endphp
+
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button button-icon-text description-1-medium collapsed"
-                                type="button"
-                                data-bs-toggle="collapse" aria-expanded="false"
-                                data-bs-target="#collapseCentralKitchen">
-                            <i class="central-kitchen-icon"></i>
+
+                        <button
+                            class="accordion-button button-icon-text description-1-medium {{ $collapseOutlet ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            aria-expanded="{{ $collapseOutlet ? 'true': 'false' }}"
+                            data-bs-target="#collapseOutlet">
+                            <i class="inventory-icon"></i>
                             {{ __('sidebar_locale.outlet.name') }}
                         </button>
                     </h2>
-                    <div id="collapseCentralKitchen" class="accordion-collapse collapse"
+                    <div id="collapseOutlet"
+                         class="accordion-collapse collapse {{ $collapseOutlet ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
-                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                            <a href="/outlet/list-outlet" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-outlet') || Route::is('add-outlet') ? 'inner-menu-active' : ''}}"
+                                    type="button"
                                     id="">
-                                Stock
-                            </button>
+                                    Daftar Outlet
+                                </button>
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -71,8 +71,6 @@
                             <tr>
                                 <th>{{ __('app_locale.text.area') }}</th>
                                 <th>{{ __('app_locale.text.rak') }}</th>
-                                <th>{{ __('app_locale.text.kategoriInventory') }}</th>
-                                <th>{{ __('app_locale.text.item') }}</th>
                                 <th></th>
                             </tr>
                             </thead>
@@ -100,31 +98,9 @@
                                                 class="text-xs text-red-600">{{ $errors->first("areas.$key.area.rack") }}</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        <input type="text" class="input-no-border make-input catInvInput caption-medium"
-                                               placeholder="Bahan mentah" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.category_inventory">
-                                        @if ($errors->has("areas.$key.area.category_inventory"))
-                                            <span
-                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.area.category_inventory") }}</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <button class="btn icon-text" type="button" id="addItem" data-bs-toggle="modal"
-                                                data-bs-target="#modalItem"
-                                                @click="$dispatch('load-modal', {area: {{ $key }} })"
-                                                style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-                                        >
-                                            @if(empty($area['area']['item']))
-                                                + Item
-                                            @else
-                                                @foreach($area['area']['item'] as $text )
-                                                    {{ $text['name'] }},
-                                                @endforeach
-                                            @endif
-                                        </button>
-                                    </td>
-                                    <td class="delete-item" wire:click.prevent="remove( {{ $key }})">
+
+                                    <td class="delete-item" style="width: 16px"
+                                        wire:click.prevent="remove( {{ $key }})">
                                         <i class="x-icon"></i>
                                     </td>
                                 </tr>
@@ -142,31 +118,6 @@
                                                     <span
                                                         class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
                                                 @endif
-                                            </td>
-                                            <td>
-                                                <input type="text"
-                                                       class="input-no-border make-input catInvInput caption-medium"
-                                                       placeholder="Bahan mentah" style="width: 100%"
-                                                       wire:model="areas.{{$key}}.rack.{{ $subKey }}.category_inventory">
-                                                @if ($errors->has("areas.$key.rack.$subKey.category_inventory"))
-                                                    <span
-                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.category_inventory") }}</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <button class="btn icon-text" type="button" id="addItem"
-                                                        data-bs-toggle="modal" data-bs-target="#modalItem"
-                                                        @click="$dispatch('load-modal-rack', {area: {{ $key  }}, rack: {{ $subKey }} })"
-                                                        style="width: 120px; text-align: start;  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-                                                >
-                                                    @if(empty($value['item']))
-                                                        + Item
-                                                    @else
-                                                        @foreach($value['item'] as $text )
-                                                            {{ $text['name'] }},
-                                                        @endforeach
-                                                    @endif
-                                                </button>
                                             </td>
                                             <td class="delete-item"
                                                 wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
@@ -194,8 +145,7 @@
                                     </button>
                                 </td>
                                 <td></td>
-                                <td></td>
-                                <td></td>
+
                             </tr>
                             </tbody>
                         </table>

@@ -3,14 +3,14 @@
 ----------------------------------------------------- */
 #sidebar {
     width: 250px;
-    height: 80%;
+    height: calc(100vh - .1rem); /* Menggunakan tinggi viewport - padding sebagai tinggi */
     max-height: 100%;
-    overflow-y: hidden; /* Sembunyikan scrollbar secara default */
+    overflow-y: hidden;
     overflow-x: hidden;
     border-right: 1px solid #E0E0E0;
     background-color: #FFFFFF;
     color: black;
-    transition: width 0.3s; /* Mengatur transisi hanya pada lebar */
+    transition: width 0.3s;
     padding: 1rem 2rem 1rem 3rem;
 }
 

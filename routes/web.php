@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Warehouse\WarehouseController;
+use App\Livewire\CentralKitchen\AddCentralKitchen;
+use App\Livewire\CentralKitchen\ListCentralKitchen;
+use App\Livewire\Outlet\AddOutlet;
+use App\Livewire\Outlet\ListOutlet;
 use App\Livewire\PointOfSales\PosCategory;
 use App\Livewire\PointOfSales\PosMenu;
 use App\Livewire\Warehouse\AddCategory;
@@ -48,4 +52,10 @@ Route::controller(WarehouseController::class)->group(function () {
     Route::get("warehouse/unit/add-unit", AddUnit::class)->name('add-unit');
     Route::get("warehouse/unit/detail-unit", DetailUnit::class)->name('detail-unit');
 });
+
+Route::get('central-kitchen/list-central-kitchen', ListCentralKitchen::class)->name('list-central-kitchen');
+Route::get('central-kitchen/list-central-kitchen/add-central-kitchen', AddCentralKitchen::class)->name('add-central-kitchen');
+
+Route::get('outlet/list-outlet', ListOutlet::class)->name('list-outlet');
+Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet');
 

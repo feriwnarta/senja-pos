@@ -425,8 +425,6 @@ class AddWarehouse extends Component
                 },
             ],
             'areas.*.area.area' => 'required|min:2|distinct',
-            'areas.*.area.category_inventory' => 'required|min:3',
-            'areas.*.rack.*.category_inventory' => 'required|min:3',
             'codeWarehouse' => 'required|min:5',
             'nameWarehouse' => 'required|min:5',
             'addressWarehouse' => 'min:5',
@@ -457,7 +455,7 @@ class AddWarehouse extends Component
                 // isi data area
                 $areaName = $dataArea['area']['area'];
                 $rackName = $dataArea['area']['rack'];
-                $categoryInventory = $dataArea['area']['category_inventory'];
+
                 $area = $warehouse->areas()->create([
                     'name' => $areaName
                 ]);
@@ -465,7 +463,6 @@ class AddWarehouse extends Component
                 // isi data rak
                 $rack = $area->racks()->create([
                     'name' => $rackName,
-                    'category_inventory' => $categoryInventory
                 ]);
 
                 if (!empty($dataArea['area']['item'])) {
@@ -486,11 +483,9 @@ class AddWarehouse extends Component
                 if (isset($dataArea['rack'])) {
                     foreach ($dataArea['rack'] as $dataRack) {
                         $rackName = $dataRack['rack'];
-                        $categoryInventory = $dataRack['category_inventory'];
 
                         $rack = $area->racks()->create([
                             'name' => $rackName,
-                            'category_inventory' => $categoryInventory
                         ]);
 
                         if (isset($dataRack['item'])) {

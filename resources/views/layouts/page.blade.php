@@ -1,6 +1,6 @@
 <div class="wrapper">
 
-    <div wire:ignore.self>
+    <div wire:ignore>
         <livewire:components.sidebar.sidebar/>
     </div>
 
