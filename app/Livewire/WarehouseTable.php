@@ -34,37 +34,15 @@ final class WarehouseTable extends PowerGridComponent
     public function setUp(): array
     {
 
-
         return [
-
             Exportable::make('warehouse-data')
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
             Header::make()->showToggleColumns(),
             Footer::make()
                 ->showPerPage(7)
                 ->showRecordCount(),
-
-
         ];
-
     }
-
-    public function datasource(): Builder
-    {
-        return Warehouse::query()
-            ->join('areas', 'areas.warehouses_id', '=', 'warehouses.id')
-            ->join('racks', 'racks.areas_id', '=', 'areas.id')
-            ->select([
-                'warehouses.id',
-                'warehouses.address',
-                'warehouses.name',
-                'warehouses.warehouse_code',
-                DB::raw('GROUP_CONCAT(areas.name) as areas_names'),
-                DB::raw('GROUP_CONCAT(racks.name) as rack_names'),
-            ])
-            ->groupBy('warehouses.id', 'warehouses.address', 'warehouses.name', 'warehouses.warehouse_code');
-    }
-
 
     public function relationSearch(): array
     {
@@ -106,7 +84,24 @@ final class WarehouseTable extends PowerGridComponent
         return [
             Filter::inputText('id')->operators(['contains']),
             Filter::datetimepicker('created_at'),
+//            Filter::select('name', 'name')->dataSource(Warehouse::all())->optionValue('name')->optionLabel('address'),
         ];
+    }
+
+    public function datasource(): Builder
+    {
+        return Warehouse::query()
+            ->join('areas', 'areas.warehouses_id', '=', 'warehouses.id')
+            ->join('racks', 'racks.areas_id', '=', 'areas.id')
+            ->select([
+                'warehouses.id',
+                'warehouses.address',
+                'warehouses.name',
+                'warehouses.warehouse_code',
+                DB::raw('GROUP_CONCAT(areas.name) as areas_names'),
+                DB::raw('GROUP_CONCAT(racks.name) as rack_names'),
+            ])
+            ->groupBy('warehouses.id', 'warehouses.address', 'warehouses.name', 'warehouses.warehouse_code');
     }
 
     #[On('detail')]

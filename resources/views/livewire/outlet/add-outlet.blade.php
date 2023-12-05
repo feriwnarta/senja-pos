@@ -26,7 +26,7 @@
 
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
-                            @click="$dispatch('saveUnit')"
+                            @click="$dispatch('save')"
                     >Simpan
                     </button>
 

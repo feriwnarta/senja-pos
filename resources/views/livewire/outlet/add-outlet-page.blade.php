@@ -1,4 +1,5 @@
 <div id="content-loaded">
+    <x-notify::notify/>
     <div class="row">
         <div class="col-sm-4 offset-1">
             {{-- KODE OUTLET --}}
@@ -38,8 +39,8 @@
 
                 <input type="name" class="form-control input-default"
                        id="warehouseInput" placeholder="Jl Braga Bandung Asia Afrika"
-                       wire:model.live.debounce.600ms="name">
-                @error('name') <span class="error">{{ $message }}</span> @enderror
+                       wire:model.live.debounce.600ms="address">
+                @error('address') <span class="error">{{ $message }}</span> @enderror
 
             </div>
 
@@ -52,8 +53,8 @@
 
                 <input type="number" class="form-control input-default"
                        id="warehouseInput" placeholder="08xxxxxxxxx"
-                       wire:model.live.debounce.600ms="name">
-                @error('name') <span class="error">{{ $message }}</span> @enderror
+                       wire:model.live.debounce.600ms="phone">
+                @error('phone') <span class="error">{{ $message }}</span> @enderror
 
             </div>
 
@@ -66,8 +67,8 @@
 
                 <input type="email" class="form-control input-default"
                        id="warehouseInput" placeholder="cahayasenja.bandung@gmail.com"
-                       wire:model.live.debounce.600ms="name">
-                @error('name') <span class="error">{{ $message }}</span> @enderror
+                       wire:model.live.debounce.600ms="email">
+                @error('email') <span class="error">{{ $message }}</span> @enderror
 
             </div>
 
@@ -87,6 +88,9 @@
                 @error('selectedCentralKitchen') <span class="error">{{ $message }}</span> @enderror
             </div>
 
+
         </div>
     </div>
 </div>
+
+

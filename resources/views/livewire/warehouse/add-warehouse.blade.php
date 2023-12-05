@@ -1,6 +1,6 @@
 @php use Illuminate\Support\Facades\Storage; @endphp
 <x-page-layout>
-
+    <x-notify::notify/>
 
     <x-slot name="appBar">
         <div class="navbar-app">
@@ -31,138 +31,145 @@
         <div class="row">
             <form x-data="{open: false}">
                 <div class="col-sm-6 offset-1">
-                    <div class="container-input-default">
-                        <label for="warehouseInput"
-                               class="form-label input-label">{{ __('app_locale.text.kodeGudang') }}</label>
 
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                    @if($notFound)
+                        <h1>Warehouse atau outlet tidak ada</h1>
+                    @else
 
-                        <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plKodeGudang') }}"
-                               wire:model.live.debounce.600ms="codeWarehouse">
-                        @error('codeWarehouse') <span class="error">{{ $message }}</span> @enderror
+                        <div class="container-input-default">
+                            <label for="warehouseInput"
+                                   class="form-label input-label">{{ __('app_locale.text.kodeGudang') }}</label>
 
-                    </div>
-
-
-                    <div class="container-input-default  margin-top-16">
-                        <label for="warehouseInput"
-                               class="form-label input-label">{{ __('app_locale.text.namaGudang') }}</label>
-
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
-
-                        <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plNamaGudang') }}"
-                               wire:model.live.debounce.600ms="nameWarehouse">
-                        @error('nameWarehouse') <span class="error">{{ $message }}</span> @enderror
-
-                    </div>
-
-
-                    <div class="container-input-default margin-top-16">
-
-                        <label for="warehouseInput"
-                               class="form-label input-label">{{ __('app_locale.text.areaGudang') }}</label>
-
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
-
-                        <table id="areaGudangTable" class="table-component table table-hover">
-                            <thead>
-                            <tr>
-                                <th>{{ __('app_locale.text.area') }}</th>
-                                <th>{{ __('app_locale.text.rak') }}</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-
-                            <tbody id="warehouseData">
-
-                            @foreach($areas as $key => $area)
-                                <tr>
-                                    <td>
-                                        <input type="text" class="input-no-border make-input areaInput caption-medium"
-                                               placeholder="Area A" style="width: 100%"
-                                               wire:model.live="areas.{{$key}}.area.area">
-
-                                        @if ($errors->has("areas.$key.area.area"))
-                                            <span
-                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.area.area") }}</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <input type="text" class="input-no-border make-input rackInput caption-medium"
-                                               placeholder="A1" style="width: 100%"
-                                               wire:model="areas.{{$key}}.area.rack">
-                                        @if ($errors->has("areas.$key.area.rack"))
-                                            <span
-                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.area.rack") }}</span>
-                                        @endif
-                                    </td>
-
-                                    <td class="delete-item" style="width: 16px"
-                                        wire:click.prevent="remove( {{ $key }})">
-                                        <i class="x-icon"></i>
-                                    </td>
-                                </tr>
-
-                                @if(isset($area['rack']))
-                                    @foreach($area['rack'] as $subKey => $value)
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                <input type="text"
-                                                       class="input-no-border make-input rackInput caption-medium"
-                                                       placeholder="A1" style="width: 100%"
-                                                       wire:model="areas.{{ $key }}.rack.{{ $subKey }}.rack">
-                                                @if ($errors->has("areas.$key.rack.$subKey.rack"))
-                                                    <span
-                                                        class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="delete-item"
-                                                wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
-                                                <i class="x-icon"></i>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                            @endforeach
-
-
-                            <tr id="addWarehouseAction">
-                                <td>
-                                    <button class="btn icon-text caption-medium" type="button" id="addArea"
-                                            wire:click.prevent="addArea">
-                                        + Area
-                                    </button>
-                                </td>
-                                <td>
-
-                                    <button class="btn icon-text caption-medium" type="button" id="addRack"
-                                            wire:click="addRack"
-                                            style="display: {{ ($isAddedArea) ? 'block' : 'none' }}">
-                                        + Rak
-                                    </button>
-                                </td>
-                                <td></td>
-
-                            </tr>
-                            </tbody>
-                        </table>
-
-
-                        <div class="margin-top-16">
-                            <label for="addressWarehouse" class="form-label">Alamat</label>
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
-                            <textarea class="form-control textarea" id="addressWarehouse" rows="5"
-                                      placeholder="Jln. Ki Hajar Dewantoro"
-                                      wire:model.blur="addressWarehouse"></textarea>
-                            @error('addressWarehouse') <span class="error">{{ $message }}</span> @enderror
+
+                            <input type="name" class="form-control input-default"
+                                   id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plKodeGudang') }}"
+                                   wire:model.live.debounce.600ms="codeWarehouse">
+                            @error('codeWarehouse') <span class="error">{{ $message }}</span> @enderror
+
                         </div>
 
 
-                    </div>
+                        <div class="container-input-default  margin-top-16">
+                            <label for="warehouseInput"
+                                   class="form-label input-label">{{ __('app_locale.text.namaGudang') }}</label>
 
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                            <input type="name" class="form-control input-default"
+                                   id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plNamaGudang') }}"
+                                   wire:model.live.debounce.600ms="nameWarehouse">
+                            @error('nameWarehouse') <span class="error">{{ $message }}</span> @enderror
+
+                        </div>
+
+
+                        <div class="container-input-default margin-top-16">
+
+                            <label for="warehouseInput"
+                                   class="form-label input-label">{{ __('app_locale.text.areaGudang') }}</label>
+
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                            <table id="areaGudangTable" class="table-component table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>{{ __('app_locale.text.area') }}</th>
+                                    <th>{{ __('app_locale.text.rak') }}</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+
+                                <tbody id="warehouseData">
+
+                                @foreach($areas as $key => $area)
+                                    <tr>
+                                        <td>
+                                            <input type="text"
+                                                   class="input-no-border make-input areaInput caption-medium"
+                                                   placeholder="Area A" style="width: 100%"
+                                                   wire:model.live="areas.{{$key}}.area.area">
+
+                                            @if ($errors->has("areas.$key.area.area"))
+                                                <span
+                                                    class="text-xs text-red-600">{{ $errors->first("areas.$key.area.area") }}</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <input type="text"
+                                                   class="input-no-border make-input rackInput caption-medium"
+                                                   placeholder="A1" style="width: 100%"
+                                                   wire:model="areas.{{$key}}.area.rack">
+                                            @if ($errors->has("areas.$key.area.rack"))
+                                                <span
+                                                    class="text-xs text-red-600">{{ $errors->first("areas.$key.area.rack") }}</span>
+                                            @endif
+                                        </td>
+
+                                        <td class="delete-item" style="width: 16px"
+                                            wire:click.prevent="remove( {{ $key }})">
+                                            <i class="x-icon"></i>
+                                        </td>
+                                    </tr>
+
+                                    @if(isset($area['rack']))
+                                        @foreach($area['rack'] as $subKey => $value)
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <input type="text"
+                                                           class="input-no-border make-input rackInput caption-medium"
+                                                           placeholder="A1" style="width: 100%"
+                                                           wire:model="areas.{{ $key }}.rack.{{ $subKey }}.rack">
+                                                    @if ($errors->has("areas.$key.rack.$subKey.rack"))
+                                                        <span
+                                                            class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
+                                                    @endif
+                                                </td>
+                                                <td class="delete-item"
+                                                    wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
+                                                    <i class="x-icon"></i>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+
+
+                                <tr id="addWarehouseAction">
+                                    <td>
+                                        <button class="btn icon-text caption-medium" type="button" id="addArea"
+                                                wire:click.prevent="addArea">
+                                            + Area
+                                        </button>
+                                    </td>
+                                    <td>
+
+                                        <button class="btn icon-text caption-medium" type="button" id="addRack"
+                                                wire:click="addRack"
+                                                style="display: {{ ($isAddedArea) ? 'block' : 'none' }}">
+                                            + Rak
+                                        </button>
+                                    </td>
+                                    <td></td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+                            <div class="margin-top-16">
+                                <label for="addressWarehouse" class="form-label">Alamat</label>
+                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                <textarea class="form-control textarea" id="addressWarehouse" rows="5"
+                                          placeholder="Jln. Ki Hajar Dewantoro"
+                                          wire:model.blur="addressWarehouse"></textarea>
+                                @error('addressWarehouse') <span class="error">{{ $message }}</span> @enderror
+                            </div>
+
+
+                        </div>
+                    @endif
                 </div>
             </form>
         </div>

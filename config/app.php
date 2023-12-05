@@ -1,5 +1,6 @@
 <?php
 
+use App\Providers\WarehouseServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 
@@ -169,7 +170,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
-        \App\Providers\WarehouseServiceProvider::class,
+        WarehouseServiceProvider::class,
+        
     ])->toArray(),
 
     /*

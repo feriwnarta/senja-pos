@@ -6,28 +6,32 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class Warehouse extends Model
+class Outlet extends Model
 {
     use HasFactory, HasUuids;
 
     public $incrementing = false;
-
-    protected $guarded = [];
-
     protected $keyType = 'string';
 
-    public function areas(): HasMany
-    {
-        return $this->hasMany(Area::class, 'warehouses_id');
-    }
+    protected $fillable = [
+        'central_kitchens_id',
+        'code',
+        'name',
+        'address',
+        'phone',
+        'email',
+        'created_by',
+        'updated_by',
+    ];
 
-    public function outlet(): BelongsToMany
+    public function Warehouse(): BelongsToMany
     {
-        return $this->belongsToMany(Outlet::class, 'warehouses_outlets', 'warehouses_id', 'outlets_id')->using(new class extends Pivot {
+        return $this->belongsToMany(Warehouse::class, 'warehouses_outlets', 'outlets_id', 'warehouses_id')->using(new class extends Pivot {
             use  HasUuids;
         })->withTimestamps();
     }
+
+
 }

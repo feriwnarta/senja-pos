@@ -4,15 +4,17 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\Category;
 use App\Models\CategoryItem;
+use App\Models\CentralKitchen;
 use App\Models\Item;
+use App\Models\Outlet;
 use App\Models\Warehouse;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -35,31 +37,13 @@ class AddWarehouse extends Component
     public bool $isShowModalNewItem = false;
 
     public bool $isAddedArea = false;
-    public ?string $nextCursorId = null;
+    public bool $notFound = false;
+    public string $state;
 
     public string $area;
     public string $rack = '';
-
-    #[Rule('required|min:5|unique:items,item_code')]
-    public string $codeItem;
-
-    #[Rule('required|min:5|unique:items,name')]
-    public string $nameItem;
-
-    public string $category;
-    public ?string $description = null;
-
-
-    // buat item baru
-    public Collection $categoryItems;
-    public string $categoryId;
-
-    public string $categoryName;
-    public Item $item;
-
-
-    #[Rule('sometimes|image|max:1024')] // 1MB Max
-    public $photoNewItem;
+    #[Url(as: 'qId', keep: true)]
+    public string $url = '';
 
     protected $rules = [
         'areas.*.area.area' => 'required|min:2',
@@ -82,50 +66,6 @@ class AddWarehouse extends Component
         'areas.*.rack.*.category_inventory.min' => 'The Category Inventory field should be at least 3 characters.',
     ];
 
-    public function saveNewItem()
-    {
-        $this->validate([
-            'codeItem' => 'required|min:5|unique:items,item_code',
-            'nameItem' => 'required|min:5|unique:items,name',
-            'categoryName' => 'required'
-        ]);
-
-        $result = null;
-        if ($this->photoNewItem != null) {
-            $result = $this->photoNewItem->store('public/item-image');
-        }
-
-        try {
-            DB::beginTransaction();
-
-            // valiadasi item baru
-
-
-            // simpan item
-            $this->item = Item::create([
-                'item_code' => $this->codeItem,
-                'item_image' => ($result != null) ? basename($result) : null,
-                'name' => $this->nameItem,
-                'description' => $this->description,
-            ]);
-
-            DB::commit();
-
-            // gagal membuat item
-            if ($this->item == null) {
-                $this->js("alert('gagal menyimpan item')");
-                return;
-            }
-
-            $this->isShowModalNewItem = false;
-
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error($exception->getMessage());
-        }
-
-    }
 
     public function cancelNewItem()
     {
@@ -451,6 +391,20 @@ class AddWarehouse extends Component
             );
 
 
+            // simpan warheouse dan outlet ke warehouses outlets
+            if ($this->url == '' && !isset($this->url)) {
+
+                return;
+            }
+
+            if ($this->state == 'outlet') {
+                // simpan ke warehouses_outlet
+                $warehouse->outlet()->syncWithoutDetaching($this->url);
+            } else {
+                // simpan ke warehouse_central_kitchen
+            }
+
+
             foreach ($this->areas as $dataArea) {
                 // isi data area
                 $areaName = $dataArea['area']['area'];
@@ -508,12 +462,16 @@ class AddWarehouse extends Component
             DB::commit();
 
             $this->reset();
-            // TODO: Perbaiki pesan sukses simpan gudang
-            $this->js("alert('berhasil simpan gudang')");
+            notify()->success('Berhasil tambah gudang', 'Sukses');
 
         } catch (Exception $exception) {
             DB::rollBack();
-            $this->js("console.log('{$exception->getMessage()}')");
+
+            Log::error('gagal menambahkan gudang baru');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+
+            notify()->error('gagal tambah gudang', 'Gagal');
 
         }
 
@@ -612,8 +570,38 @@ class AddWarehouse extends Component
         ];
     }
 
+    public function mount()
+    {
+        try {
+
+            $outlet = Outlet::find($this->url);
+            $centralKitchen = CentralKitchen::find($this->url);
+
+            if ($outlet == null && $centralKitchen == null) {
+                $this->notFound = true;
+                return;
+            }
+
+            if ($outlet != null) {
+                $this->state = 'outlet';
+            }
+
+            if ($centralKitchen != null) {
+                $this->state = 'central kitchen';
+            }
+
+            $this->notFound = false;
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan id outlet / central kitchen di add warehouse');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+    }
+
     public function render()
     {
+
         return view('livewire.warehouse.add-warehouse');
     }
 

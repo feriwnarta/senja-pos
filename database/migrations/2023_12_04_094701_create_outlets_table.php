@@ -10,16 +10,19 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('central_kitchens', function (Blueprint $table) {
+        Schema::create('outlets', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('code', 255)->nullable(false)->unique();
+            $table->uuid('central_kitchens_id')->nullable(false);
+            $table->string('code', 150)->nullable(false)->unique();
             $table->string('name', 255)->nullable(false);
             $table->string('address', 255)->nullable(false);
-            $table->string('phone', 25)->nullable(true);
-            $table->string('email', 150)->nullable(true);
+            $table->string('phone', 255)->nullable(true);
+            $table->string('email', 255)->nullable(true);
             $table->uuid('created_by')->nullable(true);
             $table->uuid('updated_by')->nullable(true);
             $table->timestamps();
+
+            $table->foreign('central_kitchens_id')->on('central_kitchens')->references('id');
         });
     }
 
@@ -28,6 +31,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('central_kitchens');
+        Schema::dropIfExists('outlets');
     }
 };
+

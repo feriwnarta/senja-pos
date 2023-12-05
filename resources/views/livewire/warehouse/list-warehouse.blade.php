@@ -1,6 +1,8 @@
 <x-page-layout>
 
+
     <x-slot name="appBar">
+
         <div class="navbar-app">
             <div class="content-navbar d-flex flex-row justify-content-between">
 
@@ -12,29 +14,27 @@
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
+                    <div class="dropdown margin-left-10">
+                        <select class="form-select input-default" id="resupplyOutlet"
+                                wire:model="selected">
+                            <option value="" disabled selected>Semua outlet & central kitchen</option>
+                            @foreach($outletCentralKitchenDropdown as $result)
+                                <option value="{{ $result->id }}">{{ $result->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                    <form class="d-flex">
+
+                    <form class="d-flex margin-left-10">
                         <input class="form-control search-bar clear" type="search"
                                placeholder="{{ __('app_locale.input.cari') }}"
                                aria-label="Search" wire:model.live.debounce.600ms="search">
                     </form>
 
-                    <div class="dropdown margin-left-10">
-                        <button class="btn btn-dropdown-no-icon dropdown-toggle" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                            {{ __('app_locale.button.outlet') }}
-                        </button>
-                        <ul class="dropdown-menu">
 
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                        </ul>
-                    </div>
-
-
-                    <a href="/warehouse/list-warehouse/add-warehouse" wire:navigate>
-                        <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
-                    </a>
+                    <button type="btn"
+                            wire:click="addWarehouse"
+                            class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
 
 
                 </div>
@@ -46,21 +46,10 @@
 
     <div id="content-loaded">
 
+
         <livewire:warehouse-table wire:model="search"/>
 
     </div>
-
-
-    <script>
-        document.addEventListener('livewire:initialized', () => {
-            $('.power-grid-table tr').click(function () {
-                let id = $(this).attr('wire:key')
-                id = id.replace('tbody-', '');
-            @this.dispatch('detail-data', {id: id});
-            });
-
-        });
-    </script>
 
 
 </x-page-layout>

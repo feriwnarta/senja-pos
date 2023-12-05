@@ -19,6 +19,7 @@ class CentralKitchen extends Model
         'phone',
         'email',
         'created_by',
+        'updated_by',
     ];
     protected $keyType = 'string';
 
@@ -28,6 +29,11 @@ class CentralKitchen extends Model
         static::creating(function ($model) {
             $userId = Auth::check() ? Auth::id() : 'USER NOT LOGIN';
             $model->created_by = $userId;
+        });
+
+        static::updating(function ($model) {
+            $userId = Auth::check() ? Auth::id() : 'USER NOT LOGIN';
+            $model->updated_by = $userId;
         });
     }
 }
