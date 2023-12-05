@@ -6,8 +6,8 @@ use App\Models\Warehouse;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Log;
-use Livewire\Attributes\Modelable;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use PowerComponents\LivewirePowerGrid\Button;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
@@ -25,11 +25,19 @@ final class WarehouseTable extends PowerGridComponent
 
     public bool $deferLoading = true; // default false
 
-    #[Modelable]
+    #[Reactive]
     public string $search = '';
 
-    public string $loadingComponent = 'components.loading';
+    public array $filters = [
+        'select' => [
+            'warehouses' => [
+                'id' => ''
+            ]
+        ]
+    ];
 
+
+    public string $loadingComponent = 'components.loading';
 
     public function setUp(): array
     {
@@ -81,18 +89,24 @@ final class WarehouseTable extends PowerGridComponent
 
     public function filters(): array
     {
+
         return [
             Filter::inputText('id')->operators(['contains']),
             Filter::datetimepicker('created_at'),
-//            Filter::select('name', 'name')->dataSource(Warehouse::all())->optionValue('name')->optionLabel('address'),
+
         ];
+
     }
 
     public function datasource(): Builder
     {
-        return Warehouse::query()
+        $warehouses = Warehouse::query()
+            ->leftJoin('warehouses_central_kitchens', 'warehouses.id', '=', 'warehouses_central_kitchens.warehouses_id')
+            ->leftJoin('warehouses_outlets', 'warehouses.id', '=', 'warehouses_outlets.warehouses_id')
             ->join('areas', 'areas.warehouses_id', '=', 'warehouses.id')
             ->join('racks', 'racks.areas_id', '=', 'areas.id')
+            ->leftJoin('central_kitchens', 'central_kitchens.id', '=', 'warehouses_central_kitchens.central_kitchens_id')
+            ->leftJoin('outlets', 'outlets.id', '=', 'warehouses_outlets.outlets_id')
             ->select([
                 'warehouses.id',
                 'warehouses.address',
@@ -100,9 +114,23 @@ final class WarehouseTable extends PowerGridComponent
                 'warehouses.warehouse_code',
                 DB::raw('GROUP_CONCAT(areas.name) as areas_names'),
                 DB::raw('GROUP_CONCAT(racks.name) as rack_names'),
+                DB::raw('GROUP_CONCAT(DISTINCT central_kitchens.name) as central_kitchen_names'),
+                DB::raw('GROUP_CONCAT(DISTINCT outlets.name) as outlet_names'),
             ])
             ->groupBy('warehouses.id', 'warehouses.address', 'warehouses.name', 'warehouses.warehouse_code');
+
+
+        return $warehouses;
+
     }
+
+    #[On('reload')]
+    public function setCustomDatasource()
+    {
+        Log::info('reload');
+        $this->datasource = [];
+    }
+
 
     #[On('detail')]
     public function edit($id): void

@@ -4,15 +4,18 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('warehouse_central_kitchen', function (Blueprint $table) {
-            $table->id();
+        Schema::create('warehouses_central_kitchens', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('warehouses_id')->nullable(false);
+            $table->uuid('central_kitchens_id')->nullable(false);
+            $table->foreign('warehouses_id')->references('id')->on('warehouses');
+            $table->foreign('central_kitchens_id')->references('id')->on('central_kitchens');
             $table->timestamps();
         });
     }

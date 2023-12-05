@@ -1,8 +1,13 @@
 <?php
 
 return [
-    'pos' => [
-        'name' => 'POS',
+    'komposisi' => [
+        'name' => 'Komposisi',
+        'item' => 'Item',
+        'kategoriItem' => 'Kategori item',
+        'kategoriBahan' => 'Kategori bahan',
+        'resep' => 'Resep',
+        'unit' => 'Unit',
     ],
     'gudang' => [
         'name' => 'Gudang',

@@ -8,11 +8,19 @@
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        {{ __('sidebar_locale.gudang.daftarGudang') }}
+                        Item
                     </div>
                 </div>
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
+
+
+                    <form class="d-flex margin-left-10">
+                        <input class="form-control search-bar clear" type="search"
+                               placeholder="{{ __('app_locale.input.cari') }}"
+                               aria-label="Search" wire:model.live.debounce.600ms="search">
+                    </form>
+
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default" id="resupplyOutlet"
@@ -25,16 +33,11 @@
                     </div>
 
 
-                    <form class="d-flex margin-left-10">
-                        <input class="form-control search-bar clear" type="search"
-                               placeholder="{{ __('app_locale.input.cari') }}"
-                               aria-label="Search" wire:model.live.debounce.600ms="search">
-                    </form>
-
-
                     <button type="btn"
-                            wire:click="addWarehouse"
-                            class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
+                            wire:click="addItem"
+                            class="btn btn-text-only-primary btn-nav margin-left-10">+ Buat
+                        item
+                    </button>
 
 
                 </div>
@@ -45,9 +48,6 @@
     </x-slot>
 
     <div id="content-loaded">
-
-
-        <livewire:warehouse-table :$search/>
 
 
     </div>

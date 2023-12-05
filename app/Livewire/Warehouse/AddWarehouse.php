@@ -402,6 +402,7 @@ class AddWarehouse extends Component
                 $warehouse->outlet()->syncWithoutDetaching($this->url);
             } else {
                 // simpan ke warehouse_central_kitchen
+                $warehouse->centralKitchen()->syncWithoutDetaching($this->url);
             }
 
 

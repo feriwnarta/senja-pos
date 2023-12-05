@@ -33,21 +33,29 @@
                     </div>
                 </div>
 
+                @php
+                    $collapseComposition = Route::is(['composition-item', 'composition-create-item']);
+                @endphp
+
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button button-icon-text description-1-medium collapsed"
-                                type="button"
-                                data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapsePos">
+                        <button
+                            class="accordion-button button-icon-text description-1-medium {{ $collapseComposition ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse" aria-expanded="{{ $collapseComposition ? 'true': 'false' }}"
+                            data-bs-target="#collapsePos">
                             <i class="pos-icon"></i>
-                            {{ __('sidebar_locale.pos.name') }}
+                            {{ __('sidebar_locale.komposisi.name') }}
                         </button>
                     </h2>
-                    <div id="collapsePos" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
+                    <div id="collapsePos" class="accordion-collapse collapse {{ $collapseComposition ? 'show' : '' }} "
+                         data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
-                            <a href="/point-of-sales/menu" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium"
-                                        type="button" id="">
-                                    Menu
+                            <a href="/composition/item" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('composition-item') || Route::is('composition-create-item') ? 'inner-menu-active' : ''}}"
+                                    type="button" id="">
+                                    {{ __('sidebar_locale.komposisi.item') }}
                                 </button>
                             </a>
                             <a href="/point-of-sales/category" wire:navigate>

@@ -30,4 +30,11 @@ class Warehouse extends Model
             use  HasUuids;
         })->withTimestamps();
     }
+
+    public function centralKitchen(): BelongsToMany
+    {
+        return $this->belongsToMany(CentralKitchen::class, 'warehouses_central_kitchens', 'warehouses_id', 'central_kitchens_id')->using(new class extends Pivot {
+            use  HasUuids;
+        })->withTimestamps();
+    }
 }

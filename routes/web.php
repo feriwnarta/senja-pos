@@ -3,10 +3,10 @@
 use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Livewire\CentralKitchen\AddCentralKitchen;
 use App\Livewire\CentralKitchen\ListCentralKitchen;
+use App\Livewire\Composition\CreateItem;
+use App\Livewire\Composition\Item;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
-use App\Livewire\PointOfSales\PosCategory;
-use App\Livewire\PointOfSales\PosMenu;
 use App\Livewire\Warehouse\AddCategory;
 use App\Livewire\Warehouse\AddUnit;
 use App\Livewire\Warehouse\AddWarehouse;
@@ -31,8 +31,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('point-of-sales/menu', PosMenu::class);
-Route::get('point-of-sales/category', PosCategory::class);
+Route::get('composition/item', Item::class)->name('composition-item');
+Route::get('composition/item/create-item', CreateItem::class)->name('composition-create-item');
 
 // Warehouse
 

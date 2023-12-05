@@ -1,34 +1,21 @@
 <?php
 
-namespace App\Livewire\Warehouse;
+namespace App\Livewire\Composition;
 
 use App\Models\CentralKitchen;
 use App\Models\Outlet;
-use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
-use Livewire\WithPagination;
 
-class ListWarehouse extends Component
+class Item extends Component
 {
 
-    use WithPagination;
-
-    public string $search = '';
-
-    public array $filters = ['select' => [
-        'warehouses' => [
-            'id' => ''
-        ]
-    ]];
-
+    public array $outletCentralKitchenDropdown;
     public string $selected = '';
 
-    public array $outletCentralKitchenDropdown;
-
-    public function addWarehouse()
+    public function render()
     {
-        $this->redirect("/warehouse/list-warehouse/add-warehouse?qId={$this->selected}", navigate: true);
+        return view('livewire.composition.item');
     }
 
     public function mount()
@@ -57,15 +44,8 @@ class ListWarehouse extends Component
         }
     }
 
-    public function rendered($view, $html)
+    public function addItem()
     {
-        $this->dispatch('set-width-title');
-
+        $this->redirect("/composition/item/create-item/?qId={$this->selected}", true);
     }
-
-    public function render()
-    {
-        return view('livewire.warehouse.list-warehouse');
-    }
-
 }
