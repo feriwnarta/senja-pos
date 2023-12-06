@@ -65,24 +65,53 @@ class CompositionServiceImpl implements CompositionService
 
     }
 
-    public function getPlacement(string $outletCentralId, bool $isOutlet)
+    public function getPlacement(string $identifier, bool $isOutlet): ?array
     {
         try {
+            $result = [];
 
-            if ($isOutlet) {
-                $outlet = Outlet::find($outletCentralId);
+            $warehouses = $this->getWarehouses($identifier, $isOutlet);
 
-                Log::info($outlet);
+            foreach ($warehouses as $warehouse) {
+                foreach ($warehouse->areas()->get() as $area) {
+                    $result[] = $this->formatAreaData($area);
+                }
             }
 
+            return $result;
 
         } catch (ModelNotFoundException $notFoundException) {
-            Log::error('model not found');
+            Log::error('Model not found');
+
         } catch (Exception $exception) {
-            Log::error('gagal mendapatkan data semua category');
+            Log::error('Failed to get data for all categories');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
-            return null;
         }
+
+        return null;
+    }
+
+    private function getWarehouses(string $identifier, bool $isOutlet)
+    {
+        if ($isOutlet) {
+            return Outlet::find($identifier)->warehouse()->get();
+        }
+
+        return CentralKitchen::find($identifier)->warehouse()->get();
+    }
+
+    private function formatAreaData($area)
+    {
+        return [
+            'areaId' => $area->id,
+            'areaName' => $area->name,
+            'rack' => $area->racks()->get()->map(function ($rack) {
+                return [
+                    'rackId' => $rack->id,
+                    'rackName' => $rack->name,
+                ];
+            })->all(),
+        ];
     }
 }

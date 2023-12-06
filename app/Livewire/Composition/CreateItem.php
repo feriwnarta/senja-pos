@@ -27,7 +27,7 @@ class CreateItem extends Component
     public string $minimumStock;
     #[Rule('required')]
     public string $category = '';
-    public string $placement;
+    public string $placement = '';
     #[Rule('required|min:0')]
     public string $route;
 
@@ -38,6 +38,7 @@ class CreateItem extends Component
 
     public Collection $allUnit;
     public Collection $allCategory;
+    public array $warehousePlacement;
 
     public string $unitName;
 
@@ -48,20 +49,10 @@ class CreateItem extends Component
     public function mount()
     {
         $this->compositionService = app()->make(CompositionServiceImpl::class);
+        $this->extractUrl();
         $this->getAllUnit();
         $this->getAllCategory();
-        $this->extractUrl();
-    }
-
-    private function getAllUnit()
-    {
-        $this->allUnit = $this->compositionService->getAllUnit();
-
-    }
-
-    private function getAllCategory()
-    {
-        $this->allCategory = $this->compositionService->getAllCategory();
+        $this->getPlacement();
 
     }
 
@@ -96,7 +87,27 @@ class CreateItem extends Component
         }
 
         $this->isEmpty = true;
+        return;
 
+    }
+
+    private function getAllUnit()
+    {
+        $this->allUnit = $this->compositionService->getAllUnit();
+
+    }
+
+    private function getAllCategory()
+    {
+        $this->allCategory = $this->compositionService->getAllCategory();
+
+    }
+
+    private function getPlacement()
+    {
+        if ($this->url != '') {
+            $this->warehousePlacement = $this->compositionService->getPlacement($this->url, $this->isOutlet);
+        }
     }
 
     public function updateUnitName()

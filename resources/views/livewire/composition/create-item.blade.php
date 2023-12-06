@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -153,7 +154,7 @@
                             <div class="container-input-default">
                                 <label for="description" class="form-label">Kategori item</label>
                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                <select class="form-select input-default" id="resupplyOutlet"
+                                <select class="form-select input-default"
                                         wire:model="category">
                                     <option value="" disabled selected>Pilih kategori item</option>
 
@@ -177,9 +178,20 @@
                             <div class="container-input-default">
                                 <label for="description" class="form-label">Penempatan</label>
                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                <select class="form-select input-default" id="resupplyOutlet"
+                                <select class="form-select input-default"
                                         wire:model="placement">
                                     <option value="" disabled selected>Pilih area dan rak</option>
+
+                                    @if(isset($warehousePlacement))
+                                        @foreach($warehousePlacement as $placement)
+
+                                            @foreach($placement['rack'] as $rack)
+                                                <option value="{{ $rack['rackId'] }}">Area
+                                                    - {{ $placement['areaName'] }}
+                                                    / Rak - {{ $rack['rackName'] }}</option>
+                                            @endforeach
+                                        @endforeach
+                                    @endif
 
                                 </select>
                             </div>

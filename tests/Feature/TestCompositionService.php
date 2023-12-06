@@ -62,6 +62,14 @@ class TestCompositionService extends TestCase
         self::assertNull($result);
     }
 
+    public function testGetPlacementOutlet()
+    {
+
+        $this->compositionService->getPlacement('9ac63a7b-a460-49a5-a490-6a34dc75d9bc', false);
+
+    }
+
+
     protected function setUp(): void
 
     {

@@ -17,6 +17,6 @@ interface CompositionService
 
     public function getAllCategory(): ?Collection;
 
-    public function getPlacement(string $outletCentralId, bool $isOutlet);
+    public function getPlacement(string $identifier, bool $isOutlet): ?array;
 
 }
