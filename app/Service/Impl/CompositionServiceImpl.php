@@ -82,7 +82,6 @@ class CompositionServiceImpl implements CompositionService
 
         } catch (ModelNotFoundException $notFoundException) {
             Log::error('Model not found');
-
         } catch (Exception $exception) {
             Log::error('Failed to get data for all categories');
             Log::error($exception->getMessage());
@@ -95,6 +94,12 @@ class CompositionServiceImpl implements CompositionService
     private function getWarehouses(string $identifier, bool $isOutlet)
     {
         if ($isOutlet) {
+            $outlet = Outlet::find($identifier);
+
+            if ($outlet == null) {
+                return null;
+            }
+
             return Outlet::find($identifier)->warehouse()->get();
         }
 

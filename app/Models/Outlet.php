@@ -34,4 +34,12 @@ class Outlet extends Model
     }
 
 
+    public function item(): BelongsToMany
+    {
+        return $this->belongsToMany(Item::class, 'items_outlets', 'outlets_id', 'items_id')->using(new class extends Pivot {
+            use  HasUuids;
+        })->withTimestamps();
+    }
+
+
 }

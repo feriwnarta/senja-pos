@@ -34,7 +34,7 @@ class AddOutletPage extends Component
     #[On('save')]
     public function save()
     {
-        
+
         $this->validate();
 
         $this->store();
@@ -54,13 +54,17 @@ class AddOutletPage extends Component
             ]);
             DB::commit();
 
+
             if ($result) {
                 notify()->success('Berhasil menambahkan outlet', 'Sukses');
+                $this->reset('code', 'name', 'address', 'phone', 'email');
                 return;
             }
 
             notify()->error('Gagal menambahkan outet', 'Gagal');
+            $this->reset('code', 'name', 'address', 'phone', 'email');
             return;
+
 
         } catch (Exception $exception) {
             DB::rollBack();

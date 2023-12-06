@@ -1,6 +1,6 @@
 @php use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
-
+    <x-notify::notify/>
 
     <x-slot name="appBar">
         <div class="navbar-app">
@@ -27,7 +27,7 @@
 
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
-                            @click="$dispatch('saveUnit')"
+                            wire:click="save"
                     >Simpan
                     </button>
 
@@ -170,6 +170,7 @@
                                     @endif
 
                                 </select>
+                                @error('category') <span class="error">{{ $message }}</span> @enderror
                             </div>
                         </div>
 
@@ -201,25 +202,73 @@
                         <div class="margin-top-20">
                             <label for="description" class="form-label">Rute</label>
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
+
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                                       value="buy" checked>
+                                <input class="form-check-input" type="radio" name="exampleRadios"
+                                       id="exampleRadios1"
+                                       value="BUY" checked wire:model.live="route">
                                 <label class="form-check-label" for="exampleRadios1">
                                     Dapat dibeli
                                 </label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                                       value="produce">
+                                <input class="form-check-input" type="radio" name="exampleRadios"
+                                       id="exampleRadios2"
+                                       value="PRODUCE" wire:model.live="route">
                                 <label class="form-check-label" for="exampleRadios2">
                                     Dapat diproduksi
                                 </label>
                             </div>
 
+
                         </div>
 
+                        <div class="margin-top-8">
+                            @if($route == 'PRODUCE')
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="produceOutlet"
+                                           id="produceOutlet"
+                                           value="PRODUCECENTRALKITCHEN" checked wire:model.live="routeProduce">
+                                    <label class="form-check-label" for="produceOutlet">
+                                        Diproduksi central kitchen
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="produceOutlet"
+                                           id="produceOutlet"
+                                           value="PRODUCEOUTLET" checked wire:model.live="routeProduce">
+                                    <label class="form-check-label" for="produceOutlet">
+                                        Diproduksi outlet
+                                    </label>
+                                </div>
+
+                            @endif
+                        </div>
                     </div>
 
+                    <div class="col-sm-4 offset-1">
+                        <div class="d-flex flex-column align-self-center align-items-center">
+
+                            @if ($thumbnail && !$errors->has('$thumbnail'))
+                                <img src="{{ $thumbnail->temporaryUrl() }}" width="221" height="221"
+                                     @click="document.getElementById('fileInput').click()"
+                                >
+                            @else
+                                <img
+                                    src="{{ asset('img/no-image.png') }}"
+                                    alt="" srcset="" width="140" @click="document.getElementById('fileInput').click()">
+                            @endif
+                            <div wire:loading wire:target.prevent="thumbnail">Uploading...</div>
+                            @error('thumbnail') <span class="error">{{ $message }}</span> @enderror
+
+
+                            <input type="file" id="fileInput" wire:model="thumbnail"
+                                   style="display: none;"
+                                   accept="image/*">
+
+
+                        </div>
+                    </div>
                 @endif
 
             </div>

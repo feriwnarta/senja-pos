@@ -15,12 +15,10 @@ return new class extends Migration {
             $table->renameColumn('item_image', 'thumbnail');
             $table->uuid('units_id')->nullable(false);
             $table->uuid('categories_id')->nullable(false);
-            $table->uuid('warehouses_id')->nullable(false);
-            $table->enum('route', ['BUY, PRODUCE']);
+            $table->enum('route', ['BUY', 'PRODUCECENTRALKITCHEN', 'PRODUCEOUTLET'])->default('BUY');
 
             $table->foreign('units_id')->references('id')->on('units');
             $table->foreign('categories_id')->references('id')->on('categories');
-            $table->foreign('warehouses_id')->references('id')->on('warehouses');
 
         });
     }
