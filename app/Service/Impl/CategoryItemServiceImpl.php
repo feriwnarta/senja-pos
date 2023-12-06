@@ -55,4 +55,21 @@ class CategoryItemServiceImpl implements CategoryItemService
         }
 
     }
+
+    public function saveCategoryOnlyCodeAndName(string $code, string $name): ?Category
+    {
+        try {
+
+            return Category::create([
+                'code' => $code,
+                'name' => $name,
+            ]);
+
+        } catch (Exception $exception) {
+            Log::error('gagal memnyimpan category ' . $exception->getFile());
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            return null;
+        }
+    }
 }

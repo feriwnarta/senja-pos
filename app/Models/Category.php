@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
@@ -15,6 +16,11 @@ class Category extends Model
     protected $keyType = 'string';
 
     protected $fillable = ['code', 'name'];
+
+    public function item(): HasMany
+    {
+        return $this->hasMany(Item::class, 'categories_id');
+    }
 
     // Relasi many to many ke item model
 //    public function items(): BelongsToMany

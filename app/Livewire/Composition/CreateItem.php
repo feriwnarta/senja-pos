@@ -5,21 +5,30 @@ namespace App\Livewire\Composition;
 use App\Service\CompositionService;
 use App\Service\Impl\CompositionServiceImpl;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class CreateItem extends Component
 {
 
+    #[Rule('required|min:5|unique:items,code')]
     public string $code;
+    #[Rule('required')]
     public string $name;
     public string $description;
-    public string $unit;
+    #[Rule('required')]
+    public string $unit = '';
+    #[Rule('required|numeric|min:0')]
     public string $inStock;
+    #[Rule('required|numeric|min:0')]
     public string $minimumStock;
-    public string $category;
+    #[Rule('required')]
+    public string $category = '';
     public string $placement;
+    #[Rule('required|min:0')]
     public string $route;
 
     public bool $isEmpty = false;
@@ -27,16 +36,34 @@ class CreateItem extends Component
     #[Url(as: 'qId', keep: true)]
     public string $url = '';
 
+    public Collection $allUnit;
+    public Collection $allCategory;
+
+    public string $unitName;
+
 
     // ambil id url
     private CompositionService $compositionService;
 
     public function mount()
     {
-
+        $this->compositionService = app()->make(CompositionServiceImpl::class);
+        $this->getAllUnit();
+        $this->getAllCategory();
         $this->extractUrl();
     }
 
+    private function getAllUnit()
+    {
+        $this->allUnit = $this->compositionService->getAllUnit();
+
+    }
+
+    private function getAllCategory()
+    {
+        $this->allCategory = $this->compositionService->getAllCategory();
+
+    }
 
     /**
      * extract url untuk dapatkan id outlet atau central kitchen
@@ -46,7 +73,6 @@ class CreateItem extends Component
     private function extractUrl()
     {
         Log::info('proses extract url id outlet / central kitchen');
-        $this->compositionService = app()->make(CompositionServiceImpl::class);
 
 
         if ($this->url == '') {
@@ -71,6 +97,18 @@ class CreateItem extends Component
 
         $this->isEmpty = true;
 
+    }
+
+    public function updateUnitName()
+    {
+
+        $selectedUnit = $this->allUnit->firstWhere('id', $this->unit);
+
+        if ($selectedUnit) {
+            $this->unitName = $selectedUnit->name;
+        } else {
+            $this->unitName = null;
+        }
     }
 
     public function render()

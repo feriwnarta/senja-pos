@@ -38,6 +38,11 @@ Route::get("composition/category-item", CategoryItem::class)->name('category-ite
 Route::get("composition/category-item/add-category", AddCategory::class)->name('add-category');
 Route::get("composition/category-item/detail-category", DetailCategoryItem::class)->name('detail-category');
 
+
+Route::get("composition/unit", Unit::class)->name('unit');
+Route::get("composition/unit/add-unit", AddUnit::class)->name('add-unit');
+Route::get("composition/unit/detail-unit", DetailUnit::class)->name('detail-unit');
+
 // Warehouse
 
 Route::controller(WarehouseController::class)->group(function () {
@@ -47,9 +52,6 @@ Route::controller(WarehouseController::class)->group(function () {
     Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class)->name('add-warehouse');
     Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class)->name('detail-warehouse');
 
-    Route::get("warehouse/unit", Unit::class)->name('unit');
-    Route::get("warehouse/unit/add-unit", AddUnit::class)->name('add-unit');
-    Route::get("warehouse/unit/detail-unit", DetailUnit::class)->name('detail-unit');
 });
 
 Route::get('central-kitchen/list-central-kitchen', ListCentralKitchen::class)->name('list-central-kitchen');

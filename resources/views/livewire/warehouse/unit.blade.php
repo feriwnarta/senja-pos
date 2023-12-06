@@ -21,7 +21,7 @@
                     </form>
 
 
-                    <a href="/warehouse/unit/add-unit" wire:navigate>
+                    <a href="/composition/unit/add-unit" wire:navigate>
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
                                 @click="$dispatch('saveEditWarehouse')"

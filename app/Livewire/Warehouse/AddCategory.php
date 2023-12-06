@@ -217,8 +217,30 @@ class AddCategory extends Component
         $this->items = [];
     }
 
-
     #[On('save-category')]
+    public function save()
+    {
+        $this->validate([
+            'code' => 'required|min:5|unique:categories,code',
+            'name' => 'required|min:5|unique:categories,name',
+        ]);
+
+
+        $result = $this->categoryService->saveCategoryOnlyCodeAndName($this->code, $this->name);
+
+        if ($result == null) {
+            notify()->error('Gagal membuat kategori baru', 'Gagal');
+            return;
+        }
+
+        notify()->success('Berhasil membuat kategori', 'Sukses');
+
+        $this->reset();
+
+    }
+
+
+    // deprecated
     public function validateInput()
     {
 
@@ -226,8 +248,6 @@ class AddCategory extends Component
         $this->validate([
             'code' => 'required|min:5|unique:categories,code',
             'name' => 'required|min:5|unique:categories,name',
-            'selectedItem' => 'required|array',
-            'unit' => 'required|array',
         ]);
 
         // extract selected item ambil id nya saja

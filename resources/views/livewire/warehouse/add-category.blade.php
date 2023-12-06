@@ -40,8 +40,8 @@
 
 
     <div id="content-loaded">
+        <x-notify::notify/>
         <div class="row">
-
             {{-- Tamabah kategori baru --}}
             <form>
                 <div class="col-sm-4 offset-1">

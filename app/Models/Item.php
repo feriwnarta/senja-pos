@@ -22,6 +22,16 @@ class Item extends Model
         return $this->belongsTo(Rack::class);
     }
 
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
 //    // Relasi many to many ke category
 //    public function categories(): BelongsToMany
 //    {

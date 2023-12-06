@@ -26,7 +26,7 @@ class Outlet extends Model
         'updated_by',
     ];
 
-    public function Warehouse(): BelongsToMany
+    public function warehouse(): BelongsToMany
     {
         return $this->belongsToMany(Warehouse::class, 'warehouses_outlets', 'outlets_id', 'warehouses_id')->using(new class extends Pivot {
             use  HasUuids;

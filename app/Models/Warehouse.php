@@ -19,6 +19,11 @@ class Warehouse extends Model
 
     protected $keyType = 'string';
 
+    public function item(): HasMany
+    {
+        return $this->hasMany(Item::class, 'warehouses_id');
+    }
+
     public function areas(): HasMany
     {
         return $this->hasMany(Area::class, 'warehouses_id');

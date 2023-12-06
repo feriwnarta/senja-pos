@@ -34,7 +34,7 @@
                 </div>
 
                 @php
-                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category',]);
+                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'detail-unit']);
                 @endphp
 
                 <div class="accordion-item">
@@ -67,12 +67,20 @@
                                 </button>
                             </a>
                         </div>
+                        <a href="/composition/unit" wire:navigate>
+                            <button
+                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('unit') ? 'inner-menu-active' : ''}}"
+                                type="button"
+                                id="">
+                                {{ __('sidebar_locale.gudang.unit') }}
+                            </button>
+                        </a>
                     </div>
                 </div>
 
 
                 @php
-                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse', 'unit', 'add-unit', 'detail-unit']);
+                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse']);
                 @endphp
 
                 <div class="accordion-item">
@@ -103,14 +111,7 @@
                                     {{ __('sidebar_locale.gudang.daftarGudang') }}
                                 </button>
                             </a>
-                            <a href="/warehouse/unit" wire:navigate>
-                                <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('unit') ? 'inner-menu-active' : ''}}"
-                                    type="button"
-                                    id="">
-                                    {{ __('sidebar_locale.gudang.unit') }}
-                                </button>
-                            </a>
+
                             <a href="#" wire:navigate>
                                 <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
                                         id="">

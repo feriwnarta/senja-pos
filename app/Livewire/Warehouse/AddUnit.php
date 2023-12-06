@@ -41,15 +41,17 @@ class AddUnit extends Component
             DB::commit();
 
             if ($unit) {
-                $this->js("alert('berhasil simpan unit')");
+                notify()->success('Berhasil membuat unit', 'Sukses');
                 $this->reset();
                 return;
             }
-            $this->js("alert('gagal simpan unit')");
 
+            notify()->error('Gagal membuat unit baru', 'Gagal');
         } catch (Exception $e) {
             Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             DB::rollBack();
+            notify()->error('Gagal membuat unit baru', 'Gagal');
         }
     }
 

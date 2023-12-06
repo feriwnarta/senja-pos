@@ -89,9 +89,16 @@
                             <div class="container-input-default">
                                 <label for="description" class="form-label">Unit</label>
                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                <select class="form-select input-default" wire:model="unit">
-                                    <option value="" disabled selected>Pilih unit</option>
-
+                                <select class="form-select input-default" wire:model="unit"
+                                        wire:change="updateUnitName">
+                                    <option value="" selected disabled>Pilih unit</option>
+                                    @if(!empty($allUnit))
+                                        @foreach($allUnit as $unit)
+                                            <option value="{{ $unit->id }}">
+                                                {{ $unit->name }}
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -112,11 +119,9 @@
                                     <div class="container-input-default">
                                         <label for="description" class="form-label">Unit</label>
                                         <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                        <select class="form-select input-default"
-                                                disabled>
-                                            <option value="" disabled selected>Pilih unit</option>
-                                            <!-- Opsi lainnya bisa ditambahkan di sini -->
-                                        </select>
+                                        <input type="text" class="form-control input-default" disabled
+                                               wire:model="unitName">
+
                                     </div>
                                 </div>
                             </div>
@@ -137,11 +142,8 @@
                                     <div class="container-input-default">
                                         <label for="description" class="form-label">Unit</label>
                                         <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                        <select class="form-select input-default"
-                                                disabled>
-                                            <option value="" disabled selected>Pilih unit</option>
-                                            <!-- Opsi lainnya bisa ditambahkan di sini -->
-                                        </select>
+                                        <input type="text" class="form-control input-default" disabled
+                                               wire:model="unitName">
                                     </div>
                                 </div>
                             </div>
@@ -154,6 +156,17 @@
                                 <select class="form-select input-default" id="resupplyOutlet"
                                         wire:model="category">
                                     <option value="" disabled selected>Pilih kategori item</option>
+
+
+                                    @if(isset($allCategory))
+                                        @foreach($allCategory as $category)
+
+                                            <option value="{{ $category->id }}">
+                                                {{ $category->name }}
+                                            </option>
+
+                                        @endforeach
+                                    @endif
 
                                 </select>
                             </div>

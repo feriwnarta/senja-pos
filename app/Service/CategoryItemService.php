@@ -14,4 +14,6 @@ interface CategoryItemService
 
     public function saveCategory(string $code, string $name, string $unit, array $items): Category;
 
+    public function saveCategoryOnlyCodeAndName(string $code, string $name): ?Category;
+
 }

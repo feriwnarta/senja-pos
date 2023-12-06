@@ -38,7 +38,7 @@
     </x-slot>
 
     <div id="content-loaded">
-        <livewire:category-item-table wire:model="search"/>
+        {{--        <livewire:category-item-table wire:model="search"/>--}}
     </div>
 
 </x-page-layout>
