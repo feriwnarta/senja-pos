@@ -73,89 +73,89 @@
                     </div>
 
 
-                    {{-- Tambah item ke kategori --}}
-                    <div class="d-flex flex-row align-items-center margin-top-24">
-                        <div class="body-text-regular">Item</div>
+                    {{--                    --}}{{-- Tambah item ke kategori --}}
+                    {{--                    <div class="d-flex flex-row align-items-center margin-top-24">--}}
+                    {{--                        <div class="body-text-regular">Item</div>--}}
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="2" height="20" viewBox="0 0 2 20" fill="none"
-                             class="margin-left-102">
-                            <path d="M0.621094 0V20" stroke="#E0E0E0"/>
-                        </svg>
+                    {{--                        <svg xmlns="http://www.w3.org/2000/svg" width="2" height="20" viewBox="0 0 2 20" fill="none"--}}
+                    {{--                             class="margin-left-102">--}}
+                    {{--                            <path d="M0.621094 0V20" stroke="#E0E0E0"/>--}}
+                    {{--                        </svg>--}}
 
-                        <button class="btn icon-text margin-left-16" type="button" id="addItem" data-bs-toggle="modal"
-                                data-bs-target="#modalAddCategory"
-                                @click="$dispatch('load-item')"
-                        >
-                            + Tambah item ke kategori
-                        </button>
-                    </div>
-                    @error('selectedItem') <span class="error">{{ $message }}</span> @enderror
+                    {{--                        <button class="btn icon-text margin-left-16" type="button" id="addItem" data-bs-toggle="modal"--}}
+                    {{--                                data-bs-target="#modalAddCategory"--}}
+                    {{--                                @click="$dispatch('load-item')"--}}
+                    {{--                        >--}}
+                    {{--                            + Tambah item ke kategori--}}
+                    {{--                        </button>--}}
+                    {{--                    </div>--}}
+                    {{--                    @error('selectedItem') <span class="error">{{ $message }}</span> @enderror--}}
 
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
+                    {{--                    <div id="divider" class="margin-symmetric-vertical-6"></div>--}}
 
-                    {{-- LOOPIMG ISI SELECTED ITEM JIKA ISSAVE BERNILAI TRUE --}}
+                    {{--                    --}}{{-- LOOPIMG ISI SELECTED ITEM JIKA ISSAVE BERNILAI TRUE --}}
 
-                    @if($isSave)
-                        <div class="d-flex flex-wrap margin-top-12">
-                            @foreach($selectedItem as $select)
-                                <div wire:key="{{ $select['id'] }}"
-                                     class="d-flex flex-row align-items-center margin-right-16 margin-bottom-8"
-                                >
-                                    <input id="itemCheckBox" class="red-input checkbox" type="checkbox"
-                                           wire:click="unSelect('{{ $select['id'] }}')"
-                                           checked/>
-                                    <div
-                                        class="body-text-regular name-item-modal margin-left-8">{{ $select['name'] }}</div>
-                                </div>
-                            @endforeach
-                        </div>
+                    {{--                    @if($isSave)--}}
+                    {{--                        <div class="d-flex flex-wrap margin-top-12">--}}
+                    {{--                            @foreach($selectedItem as $select)--}}
+                    {{--                                <div wire:key="{{ $select['id'] }}"--}}
+                    {{--                                     class="d-flex flex-row align-items-center margin-right-16 margin-bottom-8"--}}
+                    {{--                                >--}}
+                    {{--                                    <input id="itemCheckBox" class="red-input checkbox" type="checkbox"--}}
+                    {{--                                           wire:click="unSelect('{{ $select['id'] }}')"--}}
+                    {{--                                           checked/>--}}
+                    {{--                                    <div--}}
+                    {{--                                        class="body-text-regular name-item-modal margin-left-8">{{ $select['name'] }}</div>--}}
+                    {{--                                </div>--}}
+                    {{--                            @endforeach--}}
+                    {{--                        </div>--}}
 
-                    @endif
+                    {{--                    @endif--}}
 
 
-                    <div class="margin-top-24">
-                        <label for="dropdownCategory" class="form-label input-label">Unit</label>
-                        <div class="dropdown" id="dropdownCategory">
-                            <button class="btn dropdown-toggle dropdown-default" type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    wire:click="loadUnit"
-                            >
-                                {{ (empty($unitSelected)) ? 'Pilih unit ' : $unitSelected }}
-                            </button>
+                    {{--                    <div class="margin-top-24">--}}
+                    {{--                        <label for="dropdownCategory" class="form-label input-label">Unit</label>--}}
+                    {{--                        <div class="dropdown" id="dropdownCategory">--}}
+                    {{--                            <button class="btn dropdown-toggle dropdown-default" type="button"--}}
+                    {{--                                    data-bs-toggle="dropdown"--}}
+                    {{--                                    aria-expanded="false"--}}
+                    {{--                                    wire:click="loadUnit"--}}
+                    {{--                            >--}}
+                    {{--                                {{ (empty($unitSelected)) ? 'Pilih unit ' : $unitSelected }}--}}
+                    {{--                            </button>--}}
 
-                            <ul class="dropdown-menu" style="min-height: 120px" wire:ignore.self>
-                                <li>
-                                    <input type="text" placeholder="Cari Unit" style="margin:6px; width: 95%;"
-                                           wire:model.live.debounce.600ms="search">
-                                </li>
+                    {{--                            <ul class="dropdown-menu" style="min-height: 120px" wire:ignore.self>--}}
+                    {{--                                <li>--}}
+                    {{--                                    <input type="text" placeholder="Cari Unit" style="margin:6px; width: 95%;"--}}
+                    {{--                                           wire:model.live.debounce.600ms="search">--}}
+                    {{--                                </li>--}}
 
-                                @if(!empty($units))
+                    {{--                                @if(!empty($units))--}}
 
-                                    @foreach($units as $unit)
-                                        <li wire:key="{{ $unit['id'] }}">
-                                            <a class="dropdown-item"
-                                               href="#"
-                                               onclick="closeDropdown()"
-                                               wire:click="setUnit('{{ $unit['id'] }}', '{{ $unit['name'] }}')"
-                                            >
-                                                {{ $unit['name'] }}
-                                            </a>
-                                        </li>
-                                    @endforeach
+                    {{--                                    @foreach($units as $unit)--}}
+                    {{--                                        <li wire:key="{{ $unit['id'] }}">--}}
+                    {{--                                            <a class="dropdown-item"--}}
+                    {{--                                               href="#"--}}
+                    {{--                                               onclick="closeDropdown()"--}}
+                    {{--                                               wire:click="setUnit('{{ $unit['id'] }}', '{{ $unit['name'] }}')"--}}
+                    {{--                                            >--}}
+                    {{--                                                {{ $unit['name'] }}--}}
+                    {{--                                            </a>--}}
+                    {{--                                        </li>--}}
+                    {{--                                    @endforeach--}}
 
-                                @endif
-                                <div wire:loading>
-                                    <div class="position-absolute start-50 translate-middle">
-                                        <div class="spinner-border" role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ul>
-                        </div>
-                        @error('unit') <span class="error">{{ $message }}</span> @enderror
-                    </div>
+                    {{--                                @endif--}}
+                    {{--                                <div wire:loading>--}}
+                    {{--                                    <div class="position-absolute start-50 translate-middle">--}}
+                    {{--                                        <div class="spinner-border" role="status">--}}
+                    {{--                                            <span class="visually-hidden">Loading...</span>--}}
+                    {{--                                        </div>--}}
+                    {{--                                    </div>--}}
+                    {{--                                </div>--}}
+                    {{--                            </ul>--}}
+                    {{--                        </div>--}}
+                    {{--                        @error('unit') <span class="error">{{ $message }}</span> @enderror--}}
+                    {{--                    </div>--}}
 
 
                 </div>

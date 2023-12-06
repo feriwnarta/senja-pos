@@ -5,8 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Unit extends Model
 {
@@ -18,10 +16,10 @@ class Unit extends Model
     protected $fillable = ['code', 'name'];
 
 
-    public function categories(): BelongsToMany
-    {
-        return $this->belongsToMany(Category::class, 'categories_units', 'units_id', 'categories_id')->using(new class extends Pivot {
-            use  HasUuids;
-        })->withTimestamps();
-    }
+//    public function categories(): BelongsToMany
+//    {
+//        return $this->belongsToMany(Category::class, 'categories_units', 'units_id', 'categories_id')->using(new class extends Pivot {
+//            use  HasUuids;
+//        })->withTimestamps();
+//    }
 }

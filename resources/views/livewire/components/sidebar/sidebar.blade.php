@@ -34,7 +34,7 @@
                 </div>
 
                 @php
-                    $collapseComposition = Route::is(['composition-item', 'composition-create-item']);
+                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category',]);
                 @endphp
 
                 <div class="accordion-item">
@@ -58,9 +58,11 @@
                                     {{ __('sidebar_locale.komposisi.item') }}
                                 </button>
                             </a>
-                            <a href="/point-of-sales/category" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
+                            <a href="/composition/category-item" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') ||  Route::is('add-category') ||  Route::is('detail-category')? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
                                     Category
                                 </button>
                             </a>
@@ -70,7 +72,7 @@
 
 
                 @php
-                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'detail-unit']);
+                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse', 'unit', 'add-unit', 'detail-unit']);
                 @endphp
 
                 <div class="accordion-item">
@@ -92,28 +94,13 @@
                          class="accordion-collapse collapse {{ $collapseInv ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
-                            <a href="/warehouse/stock" wire:navigate>
-                                <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('stock') ? 'inner-menu-active' : ''}}"
-                                    type="button"
-                                    id="">
-                                    {{ __('sidebar_locale.gudang.stokItem') }}
-                                </button>
-                            </a>
+
                             <a href="/warehouse/list-warehouse" wire:navigate>
                                 <button
                                     class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-warehouse') ||  Route::is('add-warehouse') ||  Route::is('detail-warehouse') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     {{ __('sidebar_locale.gudang.daftarGudang') }}
-                                </button>
-                            </a>
-                            <a href="/warehouse/category-item" wire:navigate>
-                                <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') ||  Route::is('add-category') ||  Route::is('detail-category')? 'inner-menu-active' : ''}}"
-                                    type="button"
-                                    id="">
-                                    {{ __('sidebar_locale.gudang.kategoriItem') }}
                                 </button>
                             </a>
                             <a href="/warehouse/unit" wire:navigate>

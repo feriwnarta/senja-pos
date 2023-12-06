@@ -34,6 +34,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('composition/item', Item::class)->name('composition-item');
 Route::get('composition/item/create-item', CreateItem::class)->name('composition-create-item');
 
+Route::get("composition/category-item", CategoryItem::class)->name('category-item');
+Route::get("composition/category-item/add-category", AddCategory::class)->name('add-category');
+Route::get("composition/category-item/detail-category", DetailCategoryItem::class)->name('detail-category');
+
 // Warehouse
 
 Route::controller(WarehouseController::class)->group(function () {
@@ -42,11 +46,6 @@ Route::controller(WarehouseController::class)->group(function () {
     Route::get("warehouse/list-warehouse", ListWarehouse::class)->name('list-warehouse');
     Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class)->name('add-warehouse');
     Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class)->name('detail-warehouse');
-
-    Route::get("warehouse/category-item", CategoryItem::class)->name('category-item');
-    Route::get("warehouse/category-item/add-category", AddCategory::class)->name('add-category');
-    Route::get("warehouse/category-item/detail-category", DetailCategoryItem::class)->name('detail-category');
-
 
     Route::get("warehouse/unit", Unit::class)->name('unit');
     Route::get("warehouse/unit/add-unit", AddUnit::class)->name('add-unit');
