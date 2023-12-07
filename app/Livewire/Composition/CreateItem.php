@@ -173,12 +173,12 @@ class CreateItem extends Component
 
         if ($item == 'success') {
             notify()->success('Berhasil buat item', 'Sukses');
-            $this->reset();
+            $this->reset('code', 'name', 'description', 'unit', 'inStock', 'minimumStock', 'avgCost', 'lastCost', 'placement', 'category', 'thumbnail');
             return;
         }
 
         notify()->error('Gagal buat item', 'Gagal');
-        $this->reset();
+        $this->reset('code', 'name', 'description', 'unit', 'inStock', 'minimumStock', 'avgCost', 'lastCost', 'placement', 'category', 'thumbnail');
     }
 
     private function validateRoute()
