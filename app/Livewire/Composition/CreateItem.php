@@ -141,37 +141,11 @@ class CreateItem extends Component
 
     private function store()
     {
-
         $this->compositionService = app()->make(CompositionServiceImpl::class);
 
-        if ($this->route != 'BUY' && $this->route != 'PRODUCE') {
-            notify()->error('Rutediluar yang ditentukan', 'Gagal');
-            return;
-        }
-
-
-        if ($this->routeProduce != 'PRODUCEOUTLET' && $this->routeProduce != 'PRODUCECENTRALKITCHEN') {
-            Log::info($this->routeProduce);
-            notify()->error('Rute produksi diluar yang ditentukan', 'Gagal');
-            return;
-        }
-
-
-        if ($this->inStock == '') {
-            $this->inStock = '0';
-        }
-
-        if ($this->minimumStock == '') {
-            $this->minimumStock = '0';
-        }
-
-        if ($this->avgCost == '') {
-            $this->avgCost = '0';
-        }
-
-        if ($this->lastCost == '') {
-            $this->lastCost = '0';
-        }
+        $this->validateRoute();
+        $this->validateRouteProduce();
+        $this->sanitizeInput();
 
         $result = null;
 
@@ -179,22 +153,59 @@ class CreateItem extends Component
             $result = $this->thumbnail->store('public/item-image');
         }
 
-
-        $item = $this->compositionService->saveItem($this->route, $this->routeProduce, $this->inStock, $this->minimumStock, $this->thumbnail, $this->isOutlet, $this->placement, $this->code, $this->name, $this->unit, $this->description, $this->category, $this->url, $this->avgCost, $this->lastCost);
-
-        Log::debug($item);
+        $item = $this->compositionService->saveItem(
+            $this->route,
+            $this->routeProduce,
+            $this->inStock,
+            $this->minimumStock,
+            $this->thumbnail,
+            $this->isOutlet,
+            $this->placement,
+            $this->code,
+            $this->name,
+            $this->unit,
+            $this->description,
+            $this->category,
+            $this->url,
+            $this->avgCost,
+            $this->lastCost
+        );
 
         if ($item == 'success') {
             notify()->success('Berhasil buat item', 'Sukses');
-
             $this->reset();
             return;
         }
 
         notify()->error('Gagal buat item', 'Gagal');
         $this->reset();
-
     }
+
+    private function validateRoute()
+    {
+        if ($this->route != 'BUY' && $this->route != 'PRODUCE') {
+            notify()->error('Rutediluar yang ditentukan', 'Gagal');
+            abort(422, 'Invalid route.');
+        }
+    }
+
+    private function validateRouteProduce()
+    {
+        if ($this->routeProduce != 'PRODUCEOUTLET' && $this->routeProduce != 'PRODUCECENTRALKITCHEN') {
+            Log::info($this->routeProduce);
+            notify()->error('Rute produksi diluar yang ditentukan', 'Gagal');
+            abort(422, 'Invalid production route.');
+        }
+    }
+
+    private function sanitizeInput()
+    {
+        $this->inStock = $this->inStock ?: '0';
+        $this->minimumStock = $this->minimumStock ?: '0';
+        $this->avgCost = $this->avgCost ?: '0';
+        $this->lastCost = $this->lastCost ?: '0';
+    }
+
 
     public function updateUnitName()
     {

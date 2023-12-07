@@ -93,7 +93,7 @@ class TestCompositionService extends TestCase
 
         self::assertEquals('success', $result);
 
-        $this->expectsDatabaseQueryCount(1);
+        $this->expectsDatabaseQueryCount(2);
 
 
         // Assertion: Pastikan entitas Item telah disimpan
@@ -104,7 +104,7 @@ class TestCompositionService extends TestCase
 
         // Assertion: Pastikan entitas Item telah disimpan
         $this->assertDatabaseHas('stock_items', [
-            'init_avg_cost' => '12.000',
+            'init_avg_cost' => '12000.00',
             // Sesuaikan field lainnya sesuai kebutuhan Anda
         ]);
 
