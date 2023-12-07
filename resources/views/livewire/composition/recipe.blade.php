@@ -8,7 +8,7 @@
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        Item
+                        Resep
                     </div>
                 </div>
 
@@ -23,20 +23,17 @@
 
 
                     <div class="dropdown margin-left-10">
-                        <select class="form-select input-default {{ ($notSelected) ? 'border border-danger' : '' }}"
-                                id="resupplyOutlet" wire:model="selected">
-                            <option value="" disabled selected>Semua outlet & central kitchen</option>
-                            @foreach($outletCentralKitchenDropdown as $result)
-                                <option value="{{ $result->id }}">{{ $result->name }}</option>
-                            @endforeach
+                        <select class="form-select input-default"
+                                id="resupplyOutlet" wire:model="typeRecipe">
+                            <option value="recipeMenu" selected>Resep menu</option>
+                            <option value="recipeSemi">Resep 1 / 2 jadi</option>
                         </select>
                     </div>
 
 
                     <button type="btn"
-                            wire:click="addItem"
-                            class="btn btn-text-only-primary btn-nav margin-left-10">+ Buat
-                        item
+                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="createRecipe">Buat
+                        Resep
                     </button>
 
 

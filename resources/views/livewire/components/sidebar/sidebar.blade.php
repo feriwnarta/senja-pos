@@ -34,7 +34,7 @@
                 </div>
 
                 @php
-                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'detail-unit']);
+                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'detail-unit', 'recipe', 'create-recipe']);
                 @endphp
 
                 <div class="accordion-item">
@@ -73,6 +73,14 @@
                                 type="button"
                                 id="">
                                 {{ __('sidebar_locale.gudang.unit') }}
+                            </button>
+                        </a>
+                        <a href="/composition/recipe" wire:navigate>
+                            <button
+                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('recipe') || Route::is('create-recipe') ? 'inner-menu-active' : ''}}"
+                                type="button"
+                                id="">
+                                Resep
                             </button>
                         </a>
                     </div>

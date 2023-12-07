@@ -4,7 +4,9 @@ use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Livewire\CentralKitchen\AddCentralKitchen;
 use App\Livewire\CentralKitchen\ListCentralKitchen;
 use App\Livewire\Composition\CreateItem;
+use App\Livewire\Composition\CreateRecipe;
 use App\Livewire\Composition\Item;
+use App\Livewire\Composition\Recipe;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
 use App\Livewire\Warehouse\AddCategory;
@@ -42,6 +44,8 @@ Route::get("composition/category-item/detail-category", DetailCategoryItem::clas
 Route::get("composition/unit", Unit::class)->name('unit');
 Route::get("composition/unit/add-unit", AddUnit::class)->name('add-unit');
 Route::get("composition/unit/detail-unit", DetailUnit::class)->name('detail-unit');
+Route::get("composition/recipe", Recipe::class)->name('recipe');
+Route::get("composition/recipe/create-recipe", CreateRecipe::class)->name('create-recipe');
 
 // Warehouse
 

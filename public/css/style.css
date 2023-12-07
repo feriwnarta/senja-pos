@@ -334,12 +334,16 @@ input[type="search"]::-webkit-search-results-decoration {
 /* Table in recipes -> create recipes */
 .only-underline {
     border-top: 1px solid white;
+
 }
+
 
 .no-border-side {
     border-left: 1px solid white;
     border-right: 1px solid white;
+
 }
+
 
 /*tr {*/
 /*    border-left: 1px solid white;*/
@@ -359,9 +363,17 @@ input[type="search"]::-webkit-search-results-decoration {
     font-size: 14px;
 }
 
+.table-create-recipes tr {
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+
+.select2-selection--single {
+    border: none !important;
+    
+}
 
 /* DATA TABLE */
-
 .dataTable thead {
     background-color: #FFF7F2;
     color: var(--primary-main, #F16622);

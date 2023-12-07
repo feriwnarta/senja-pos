@@ -19,4 +19,6 @@ interface CompositionService
 
     public function getPlacement(string $identifier, bool $isOutlet): ?array;
 
+    public function saveItem(string $route, string $routeProduce, string $inStock, string $minimumStock, $thumbnail, bool $isOutlet, ?string $placement, string $code, string $name, string $unit, string $description, string $category, string $url): string;
+
 }

@@ -12,6 +12,7 @@ class Item extends Component
 
     public array $outletCentralKitchenDropdown;
     public string $selected = '';
+    public bool $notSelected = false;
 
     public function render()
     {
@@ -46,6 +47,12 @@ class Item extends Component
 
     public function addItem()
     {
+        if ($this->selected == '') {
+            $this->notSelected = true;
+            notify()->warning('Pilih outlet atau central kitchen terlebih dahulu', 'Peringatan');
+            return;
+        }
+        $this->reset('notSelected');
         $this->redirect("/composition/item/create-item/?qId={$this->selected}", true);
     }
 }
