@@ -89,7 +89,7 @@ class TestCompositionService extends TestCase
         $category = Category::create(['code' => fake()->currencyCode(), 'name' => fake()->name()]);
         $central = CentralKitchen::create(['code' => fake()->currencyCode(), 'name' => fake()->name(), 'address' => fake()->address(), 'phone' => fake()->phoneNumber(), 'email' => fake()->email()]);
 
-        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $central->id);
+        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $central->id, '12.000', '15.000');
 
         self::assertEquals('success', $result);
 
@@ -99,6 +99,12 @@ class TestCompositionService extends TestCase
         // Assertion: Pastikan entitas Item telah disimpan
         $this->assertDatabaseHas('items', [
             'route' => $route,
+            // Sesuaikan field lainnya sesuai kebutuhan Anda
+        ]);
+
+        // Assertion: Pastikan entitas Item telah disimpan
+        $this->assertDatabaseHas('stock_items', [
+            'init_avg_cost' => '12.000',
             // Sesuaikan field lainnya sesuai kebutuhan Anda
         ]);
 
@@ -122,7 +128,70 @@ class TestCompositionService extends TestCase
         $category = Category::create(['code' => fake()->currencyCode(), 'name' => fake()->name()]);
         $central = CentralKitchen::create(['code' => fake()->currencyCode(), 'name' => fake()->name(), 'address' => fake()->address(), 'phone' => fake()->phoneNumber(), 'email' => fake()->email()]);
 
-        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $central->id);
+        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $central->id, '12500', '15.000');
+
+        self::assertEquals('success', $result);
+
+        $this->expectsDatabaseQueryCount(1);
+
+
+        // Assertion: Pastikan entitas Item telah disimpan
+        $this->assertDatabaseHas('items', [
+            'route' => $routeProduce,
+            // Sesuaikan field lainnya sesuai kebutuhan Anda
+        ]);
+
+    }
+
+    public function testSaveItemAvgCostZero()
+    {
+
+        $route = 'PRODUCE';
+        $routeProduce = 'PRODUCECENTRALKITCHEN';
+        $inStock = '0';
+        $minimumStock = '10';
+        Storage::fake('public');
+        $file = UploadedFile::fake()->create('document.pdf');
+        $isOutlet = false;
+
+        $unit = Unit::create(['code' => fake()->currencyCode(), 'name' => fake()->name()]);
+
+        $category = Category::create(['code' => fake()->currencyCode(), 'name' => fake()->name()]);
+        $central = CentralKitchen::create(['code' => fake()->currencyCode(), 'name' => fake()->name(), 'address' => fake()->address(), 'phone' => fake()->phoneNumber(), 'email' => fake()->email()]);
+
+        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $central->id, '0', '0');
+
+        self::assertEquals('success', $result);
+
+        $this->expectsDatabaseQueryCount(1);
+
+
+        // Assertion: Pastikan entitas Item telah disimpan
+        $this->assertDatabaseHas('items', [
+            'route' => $routeProduce,
+            // Sesuaikan field lainnya sesuai kebutuhan Anda
+        ]);
+
+    }
+
+
+    public function testSaveItemRouteProduceAvgZero()
+    {
+
+        $route = 'PRODUCE';
+        $routeProduce = 'PRODUCECENTRALKITCHEN';
+        $inStock = '0';
+        $minimumStock = '10';
+        Storage::fake('public');
+        $file = UploadedFile::fake()->create('document.pdf');
+        $isOutlet = false;
+
+        $unit = Unit::create(['code' => fake()->currencyCode(), 'name' => fake()->name()]);
+
+        $category = Category::create(['code' => fake()->currencyCode(), 'name' => fake()->name()]);
+        $central = CentralKitchen::create(['code' => fake()->currencyCode(), 'name' => fake()->name(), 'address' => fake()->address(), 'phone' => fake()->phoneNumber(), 'email' => fake()->email()]);
+
+        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $central->id, '0', '0');
 
         self::assertEquals('success', $result);
 
@@ -158,7 +227,7 @@ class TestCompositionService extends TestCase
         assertNotNull($outlet);
 
 
-        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $outlet->id);
+        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $outlet->id, '12.000', '15.000');
 
         self::assertEquals('success', $result);
 
@@ -193,7 +262,7 @@ class TestCompositionService extends TestCase
         assertNotNull($outlet);
 
 
-        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $outlet->id);
+        $result = $this->compositionService->saveItem($route, $routeProduce, $inStock, $minimumStock, $file, $isOutlet, null, fake()->currencyCode(), fake()->name(), $unit->id, '', $category->id, $outlet->id, '12000', '15000');
 
         self::assertEquals('Rute diluar yang ditentukan', $result);
 

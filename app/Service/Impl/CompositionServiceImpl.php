@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\CentralKitchen;
 use App\Models\Item;
 use App\Models\Outlet;
+use App\Models\StockItem;
 use App\Models\Unit;
 use App\Service\CompositionService;
 use Exception;
@@ -122,38 +123,40 @@ class CompositionServiceImpl implements CompositionService
         ];
     }
 
-    public function saveItem(string $route, string $routeProduce, string $inStock, string $minimumStock, $thumbnail, bool $isOutlet, ?string $placement, string $code, string $name, string $unit, string $description, string $category, string $url): string
+    public function saveItem(string $route, string $routeProduce, string $inStock, string $minimumStock, $thumbnail, bool $isOutlet, ?string $placement, string $code, string $name, string $unit, string $description, string $category, string $url, string $avgCost, string $lastCost): string
     {
+
+
         try {
             DB::beginTransaction();
 
-            if ($route != 'BUY' && $route != 'PRODUCE') {
+            $allowedRoutes = ['BUY', 'PRODUCE'];
+            $allowedProduceRoutes = ['PRODUCEOUTLET', 'PRODUCECENTRALKITCHEN'];
+
+            if (!in_array($route, $allowedRoutes)) {
                 return 'Rute diluar yang ditentukan';
             }
 
-            if ($routeProduce != 'PRODUCEOUTLET' && $routeProduce != 'PRODUCECENTRALKITCHEN') {
+            if ($route == 'PRODUCE' && !in_array($routeProduce, $allowedProduceRoutes)) {
                 return 'Rute produksi diluar yang ditentukan';
             }
 
             $result = null;
 
-            if ($thumbnail != null) {
+            if ($thumbnail !== null) {
                 $result = $thumbnail->store('public/item-image');
             }
 
             $item = Item::create([
                 'code' => $code,
                 'thumbnail' => $result,
-                'racks_id' => ($placement == '') ? null : $placement,
+                'racks_id' => $placement ?: null,
                 'name' => $name,
-                'description' => ($description == '') ? null : $description,
+                'description' => $description ?: null,
                 'units_id' => $unit,
                 'categories_id' => $category,
                 'route' => ($route == 'BUY') ? $route : $routeProduce,
             ]);
-
-            Log::debug($item);
-
 
             if ($isOutlet) {
                 $item->outlet()->syncWithoutDetaching($url);
@@ -162,6 +165,24 @@ class CompositionServiceImpl implements CompositionService
             }
 
             DB::commit();
+
+            if (!is_numeric($avgCost) || !is_numeric($lastCost) || intval($avgCost) < 0 || intval($lastCost) < 0) {
+                Log::error('Gagal validasi nilai avg cost dan last cost sebagai numeric atau kurang dari 0 saat membuat item baru');
+                return 'failed validate';
+            }
+            
+
+            $stock = StockItem::create([
+                'items_id' => $item->id,
+                'minimum_stock' => $minimumStock,
+                'stock' => $inStock,
+                'init_avg_cost' => filter_var($avgCost, FILTER_SANITIZE_NUMBER_INT),
+                'init_last_cost' => filter_var($lastCost, FILTER_SANITIZE_NUMBER_INT),
+            ]);
+
+            Log::debug($item);
+            Log::debug('save');
+            Log::debug($stock);
 
             return 'success';
 
@@ -172,5 +193,7 @@ class CompositionServiceImpl implements CompositionService
             Log::error($exception->getTraceAsString());
             return 'failed';
         }
+
     }
+
 }

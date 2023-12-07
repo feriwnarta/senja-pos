@@ -151,6 +151,32 @@
                         </div>
 
                         <div class="margin-top-20">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="container-input-default">
+                                        <label for="warehouseInput" class="form-label input-label">Harga
+                                            rata-rata</label>
+                                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                        <input type="text" class="form-control input-default" id="warehouseInput"
+                                               x-mask:dynamic="$money($input, ',')"
+                                               placeholder="12.000" wire:model.live.debounce.600ms="avgCost">
+                                        @error('avgCost') <span class="error">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="container-input-default">
+                                        <label for="warehouseInput" class="form-label input-label">Harga akhir</label>
+                                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                        <input type="text" class="form-control input-default" id="warehouseInput"
+                                               x-mask:dynamic="$money($input, ',')"
+                                               placeholder="12.000" wire:model.live.debounce.600ms="lastCost">
+                                        @error('lastCost') <span class="error">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="margin-top-20">
                             <div class="container-input-default">
                                 <label for="description" class="form-label">Kategori item</label>
                                 <div id="divider" class="margin-symmetric-vertical-6"></div>

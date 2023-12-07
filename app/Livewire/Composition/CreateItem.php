@@ -4,10 +4,8 @@ namespace App\Livewire\Composition;
 
 use App\Service\CompositionService;
 use App\Service\Impl\CompositionServiceImpl;
-use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
@@ -26,8 +24,7 @@ class CreateItem extends Component
     public string $description = '';
     #[Rule('required')]
     public string $unit = '';
-    #[Rule('numeric|min:0')]
-    public string $inStock = '';
+
     #[Rule('numeric|min:0')]
     public string $minimumStock = '';
     #[Rule('required')]
@@ -35,6 +32,12 @@ class CreateItem extends Component
     public string $placement = '';
     #[Rule('required|min:0')]
     public string $route = 'BUY';
+    #[Rule('numeric|min:0')]
+    public string $inStock = '';
+    #[Rule('exclude_if:inStock,""|required|min:0')]
+    public string $avgCost = '';
+    #[Rule('exclude_if:inStock,""|required|min:0')]
+    public string $lastCost = '';
 
     public bool $isEmpty = false;
     public bool $isOutlet = true;
@@ -51,9 +54,6 @@ class CreateItem extends Component
     public $thumbnail;
 
     public string $routeProduce = 'PRODUCECENTRALKITCHEN';
-
-
-    // ambil id url
     private CompositionService $compositionService;
 
     public function mount()
@@ -141,73 +141,59 @@ class CreateItem extends Component
 
     private function store()
     {
-        try {
-            DB::beginTransaction();
 
-            if ($this->route != 'BUY' && $this->route != 'PRODUCE') {
-                notify()->error('Rutediluar yang ditentukan', 'Gagal');
-                return;
-            }
+        $this->compositionService = app()->make(CompositionServiceImpl::class);
 
-
-            if ($this->routeProduce != 'PRODUCEOUTLET' && $this->routeProduce != 'PRODUCECENTRALKITCHEN') {
-                Log::info($this->routeProduce);
-                notify()->error('Rute produksi diluar yang ditentukan', 'Gagal');
-                return;
-            }
-
-
-            if ($this->inStock == '' || $this->minimumStock) {
-                $this->inStock = '0';
-                $this->minimumStock = '0';
-            }
-
-            $result = null;
-
-            if ($this->thumbnail != null) {
-                $result = $this->thumbnail->store('public/item-image');
-            }
-
-
-            $item = \App\Models\Item::create([
-                'code' => $this->code,
-                'thumbnail' => $result,
-                'racks_id' => ($this->placement == '') ? null : $this->placement,
-                'name' => $this->name,
-                'description' => ($this->description == '') ? null : $this->description,
-                'units_id' => $this->unit,
-                'categories_id' => $this->category,
-                'route' => ($this->route == 'BUY') ? $this->route : $this->routeProduce,
-            ]);
-
-            if ($this->isOutlet) {
-                $item->outlet()->syncWithoutDetaching();
-            } else {
-                $item->centralKitchen()->syncWithoutDetaching($this->url);
-            }
-
-
-            DB::commit();
-
-            if ($item) {
-                notify()->success('Berhasil buat item', 'Sukses');
-                $this->reset();
-                return;
-            }
-
-            notify()->error('Gagal buat item', 'Gagal');
-            $this->reset();
-
-            return;
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error('gagal membuat item baru');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-            notify()->error('Gagal buat item', 'Gagal');
+        if ($this->route != 'BUY' && $this->route != 'PRODUCE') {
+            notify()->error('Rutediluar yang ditentukan', 'Gagal');
             return;
         }
+
+
+        if ($this->routeProduce != 'PRODUCEOUTLET' && $this->routeProduce != 'PRODUCECENTRALKITCHEN') {
+            Log::info($this->routeProduce);
+            notify()->error('Rute produksi diluar yang ditentukan', 'Gagal');
+            return;
+        }
+
+
+        if ($this->inStock == '') {
+            $this->inStock = '0';
+        }
+
+        if ($this->minimumStock == '') {
+            $this->minimumStock = '0';
+        }
+
+        if ($this->avgCost == '') {
+            $this->avgCost = '0';
+        }
+
+        if ($this->lastCost == '') {
+            $this->lastCost = '0';
+        }
+
+        $result = null;
+
+        if ($this->thumbnail != null) {
+            $result = $this->thumbnail->store('public/item-image');
+        }
+
+
+        $item = $this->compositionService->saveItem($this->route, $this->routeProduce, $this->inStock, $this->minimumStock, $this->thumbnail, $this->isOutlet, $this->placement, $this->code, $this->name, $this->unit, $this->description, $this->category, $this->url, $this->avgCost, $this->lastCost);
+
+        Log::debug($item);
+
+        if ($item == 'success') {
+            notify()->success('Berhasil buat item', 'Sukses');
+
+            $this->reset();
+            return;
+        }
+
+        notify()->error('Gagal buat item', 'Gagal');
+        $this->reset();
+
     }
 
     public function updateUnitName()

@@ -13,10 +13,12 @@ return new class extends Migration {
         Schema::create('stock_items', function (Blueprint $table) {
             $table->uuid('id')->nullable(false)->primary();
             $table->uuid('items_id')->nullable(false);
-            $table->bigInteger('minimum_qty')->nullable(true)->default(0);
-            $table->bigInteger('qty')->nullable(false)->default(0);
+            $table->bigInteger('minimum_stock')->nullable(true)->default(0);
+            $table->bigInteger('stock')->nullable(false)->default(0);
             $table->decimal('init_avg_cost', 15, 2)->default(0.00);
             $table->decimal('init_last_cost', 15, 2)->default(0.00);
+            $table->uuid('created_by')->nullable(true);
+            $table->uuid('updated_by')->nullable(true);
             $table->timestamps();
         });
     }
