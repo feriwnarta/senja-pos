@@ -15,7 +15,7 @@ class StockItem extends Model
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $fillable = ['items_id', 'minimum_stock', 'stock', 'init_avg_cost', 'init_last_cost', 'init_last_cost', 'created_by', 'updated_by'];
+    protected $guarded = [];
 
     protected static function boot()
     {

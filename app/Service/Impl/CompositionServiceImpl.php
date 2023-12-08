@@ -170,14 +170,16 @@ class CompositionServiceImpl implements CompositionService
                 Log::error('Gagal validasi nilai avg cost dan last cost sebagai numeric atau kurang dari 0 saat membuat item baru');
                 return 'failed validate';
             }
-            
+
 
             $stock = StockItem::create([
                 'items_id' => $item->id,
                 'minimum_stock' => $minimumStock,
-                'stock' => $inStock,
-                'init_avg_cost' => filter_var($avgCost, FILTER_SANITIZE_NUMBER_INT),
-                'init_last_cost' => filter_var($lastCost, FILTER_SANITIZE_NUMBER_INT),
+                'incoming_qty' => $inStock,
+                
+                'qty_on_hand' => $inStock,
+                'avg_cost' => filter_var($avgCost, FILTER_SANITIZE_NUMBER_INT),
+                'last_cost' => filter_var($lastCost, FILTER_SANITIZE_NUMBER_INT),
             ]);
 
             Log::debug($item);
