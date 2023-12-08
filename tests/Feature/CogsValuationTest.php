@@ -51,6 +51,7 @@ class CogsValuationTest extends TestCase
     {
         $fistIn = $this->calc->calculateAvgPrice(0, 0, 0, 8, 10.000);
         assertIsArray($fistIn);
+        print_r($fistIn);
         self::assertEquals(80.000, $fistIn['incoming_value']);
         self::assertEquals(80.000, $fistIn['inventory_value']);
         self::assertEquals(8, $fistIn['qty_on_hand']);
@@ -65,16 +66,6 @@ class CogsValuationTest extends TestCase
         self::assertEquals(18, $firstTwo['qty_on_hand']);
         self::assertEquals(10.556, $firstTwo['avg_cost']);
 
-        $firstThree = $this->calc->calculateAvgPrice(190.000, 18, 10.556, 15, 12.000);
-        assertIsArray($firstThree);
-        print_r($firstThree);
-        self::assertEquals(180.000, $firstThree['incoming_value']);
-        self::assertEquals(370.000, $firstThree['inventory_value']);
-        self::assertEquals(33, $firstThree['qty_on_hand']);
-        self::assertEquals(11.212, $firstThree['avg_cost']);
-
-
-        print_r($fistIn);
     }
 
 

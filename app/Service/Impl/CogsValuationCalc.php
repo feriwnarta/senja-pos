@@ -3,6 +3,7 @@
 namespace App\Service\Impl;
 
 use App\Service\InventoryValuationCalc;
+use Illuminate\Support\Facades\Log;
 
 class CogsValuationCalc extends InventoryValuationCalc
 {
@@ -26,33 +27,33 @@ class CogsValuationCalc extends InventoryValuationCalc
     public function calculateAvgPrice(float $inventoryValue, float $oldQty, float $oldAvgCost, float $incomingQty, float $purchasePrice): array
     {
         // Formula: (old qty * old avg cost) + (incoming qty * purchase price) / total qty
-        $incomingValue = $incomingQty * $purchasePrice;
-        $inventoryValue = $inventoryValue + $incomingValue;
-        $qtyOnHand = $oldQty + $incomingQty;
+
+        $incomingValue = number_format($incomingQty * $purchasePrice, 3);
+        $inventoryValue = number_format($inventoryValue + $incomingValue, 3);
+        $qtyOnHand = number_format($oldQty + $incomingQty, 3);
+
+        Log::debug('incoming value : ' . $incomingValue);
+        Log::debug("inventory value : $inventoryValue");
+        Log::debug("onhand  : $qtyOnHand");
 
         // Calculate the new average cost
         $avgCost = ($oldQty * $oldAvgCost + $incomingQty * $purchasePrice) / $qtyOnHand;
+        $avgCost = number_format($avgCost, 3);
+
+        Log::debug("AVG " . $avgCost);
+
 
         // Calculate the difference between the new average cost and the purchase price
         $priceDiff = $avgCost - $purchasePrice;
-
-        // Calculate last_cost based on accounting rules
-        if ($incomingQty >= 0) {
-            // Jika incomingQty >= 0 (pemasukan), set last_cost sesuai dengan avg_cost
-            $lastCost = $avgCost;
-        } else {
-            // Jika incomingQty < 0 (pengeluaran), last_cost tetap sesuai dengan last_cost sebelumnya
-            $lastCost = $oldAvgCost; // Anda mungkin perlu menyesuaikan ini sesuai dengan logika bisnis yang tepat
-        }
 
         return [
             'incoming_qty' => $incomingQty,
             'incoming_value' => number_format($incomingValue, 3),
             'price_diff' => number_format($priceDiff, 3),
             'inventory_value' => number_format($inventoryValue, 3),
-            'qty_on_hand' => number_format($qtyOnHand, 3),
+            'qty_on_hand' => $qtyOnHand,
             'avg_cost' => number_format($avgCost, 3),
-            'last_cost' => number_format($lastCost, 3),
+            'last_cost' => number_format($purchasePrice, 3),
         ];
     }
 
