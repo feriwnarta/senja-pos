@@ -150,7 +150,7 @@
                             </div>
                         </div>
 
-                        <div class="margin-top-20">
+                        <div class="margin-top-20" x-show="$wire.inStock != ''">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="container-input-default">

@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -42,36 +43,37 @@
     <div id="content-loaded">
         <x-notify::notify/>
         <div class="row">
-            {{-- Tamabah kategori baru --}}
-            <div class="col-sm-4 offset-1">
-                {{-- Kode kategori --}}
-                <div class="container-input-default">
-                    <label for="warehouseInput"
-                           class="form-label input-label">Kode resep</label>
-
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
-
-                    <input type="name" class="form-control input-default"
-                           id="warehouseInput" placeholder="RBSJ0001"
-                           wire:model.live.debounce.600ms="code">
-                    @error('code') <span class="error">{{ $message }}</span> @enderror
-
-                </div>
 
 
-                {{-- PILIH MENU --}}
-                <div class="margin-top-20">
+            @if($type == 'recipeMenu')
+                {{-- Tambah kategori baru --}}
+                <div class="col-sm-4 offset-1">
+                    {{-- Kode kategori --}}
                     <div class="container-input-default">
-                        <label for="description" class="form-label">Pilih menu</label>
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
-                        <select class="form-select input-default" wire:model="selectItem"
-                                wire:change="selectItem">
-                            <option value="" selected disabled>Pilih menu</option>
-                        </select>
-                    </div>
-                </div>
+                        <label for="warehouseInput"
+                               class="form-label input-label">Kode resep</label>
 
-                @if($type == 'recipeMenu')
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput" placeholder="RBSJ0001"
+                               wire:model.live.debounce.600ms="code">
+                        @error('code') <span class="error">{{ $message }}</span> @enderror
+
+                    </div>
+
+
+                    {{-- PILIH MENU --}}
+                    <div class="margin-top-20">
+                        <div class="container-input-default">
+                            <label for="description" class="form-label">Pilih menu</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                            <select class="form-select input-default" wire:model="selectItem"
+                                    wire:change="selectItem">
+                                <option value="" selected disabled>Pilih menu</option>
+                            </select>
+                        </div>
+                    </div>
 
                     {{-- PILIH VARIASI --}}
                     <div class="margin-top-20">
@@ -84,10 +86,39 @@
                             </select>
                         </div>
                     </div>
-                @endif
+                </div>
+            @else
+                {{-- Tambah kategori baru --}}
+                <div class="col-sm-4 offset-1">
+                    {{-- Kode kategori --}}
+                    <div class="container-input-default">
+                        <label for="warehouseInput"
+                               class="form-label input-label">Kode resep</label>
+
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput" placeholder="RBSJ0001"
+                               wire:model.live.debounce.600ms="code">
+                        @error('code') <span class="error">{{ $message }}</span> @enderror
+
+                    </div>
 
 
-            </div>
+                    {{-- PILIH MENU --}}
+                    <div class="margin-top-20">
+                        <div class="container-input-default">
+                            <label for="description" class="form-label">Pilih bahan</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                            <select class="form-select input-default" wire:model="selectItem"
+                                    wire:change="selectItem">
+                                <option value="" selected disabled>Pilih bahan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            @endif
         </div>
 
         <div class="row margin-top-32">
@@ -110,50 +141,61 @@
                             </thead>
                             <tbody>
 
-                            {{--                            <tr class="row-recipe">--}}
-                            {{--                                <td>--}}
-                            {{--                                    <div class="">--}}
-                            {{--                                        <select class="form-select create-recipes-select"--}}
-                            {{--                                        >--}}
-                            {{--                                            <option disabled selected>Select</option>--}}
-                            {{--                                            <option href="#">Action</option>--}}
-                            {{--                                            <option href="#">Another action</option>--}}
-                            {{--                                            <option href="#">Something else here</option>--}}
-                            {{--                                        </select>--}}
-                            {{--                                    </div>--}}
-                            {{--                                </td>--}}
+                            @foreach($ingredients as $key => $ingredient)
+                                <tr class="row-recipe" wire:key="{{ $ingredient['id'] }}">
+                                    <td>
 
-                            {{--                                <td>--}}
-                            {{--                                    <input type="number" class="form-control no-border"--}}
-                            {{--                                           id="exampleFormControlInput1"--}}
-                            {{--                                           placeholder="0">--}}
-                            {{--                                </td>--}}
+                                        <select class="form-select create-recipes-select"
+                                                wire:model="ingredients.{{ $key }}.id"
+                                                wire:change="itemSelected('{{ $key }}', $event.target.value)"
+                                        >
+                                            <option disabled selected value="">Pilih ingredients</option>
 
-                            {{--                                <td class="disabled col-avg-cost">--}}
-                            {{--                                    <input type="text" disabled class="form-control input-disabled-recipes"--}}
-                            {{--                                           id="avgCost" value="Kilogram"--}}
-                            {{--                                    >--}}
-                            {{--                                </td>--}}
+                                            @if($items != null)
+                                                @foreach($items as $item)
+                                                    <option value="{{ $item->id }}"
+                                                            data-name="{{ $item->name }}">{{ $item->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
 
 
-                            {{--                                <td class="disabled col-avg-cost">--}}
-                            {{--                                    <input type="text" disabled class="form-control input-disabled-recipes"--}}
-                            {{--                                           id="avgCost" value="Rp. 15.000">--}}
-                            {{--                                </td>--}}
-                            {{--                                <td class="disabled col-last-cost">--}}
-                            {{--                                    <input type="text" disabled class="form-control input-disabled-recipes"--}}
-                            {{--                                           id="lastCost" value="Rp. 15.000">--}}
-                            {{--                                </td>--}}
-                            {{--                                <td class="delete-recipes">--}}
-                            {{--                                    <i class="x-icon" onclick="deleteRow(this)"></i>--}}
-                            {{--                                </td>--}}
-                            {{--                            </tr>--}}
+                                    </td>
+
+                                    <td>
+                                        <input type="number" class="form-control no-border"
+                                               id="exampleFormControlInput1"
+                                               placeholder="0">
+                                    </td>
+
+                                    <td class="disabled col-avg-cost">
+                                        <input type="text" disabled class="form-control input-disabled-recipes"
+                                               id="avgCost" wire:model="ingredients.{{ $key }}.unit.name"
+                                        >
+                                    </td>
+
+
+                                    <td class="disabled col-avg-cost">
+                                        <input type="text" disabled class="form-control input-disabled-recipes"
+                                               id="avgCost" value="Rp. 15.000">
+                                    </td>
+                                    <td class="disabled col-last-cost">
+                                        <input type="text" disabled class="form-control input-disabled-recipes"
+                                               id="lastCost" value="Rp. 15.000">
+                                    </td>
+                                    <td class="delete-recipes">
+                                        <i class="x-icon" onclick="deleteRow(this)"></i>
+                                    </td>
+                                </tr>
+
+                            @endforeach
 
 
                             <tr id="divideContent">
                                 <td colspan="6" class="span-all-columns"
                                     style="padding-bottom: 5px; padding-top: 5px;">
-                                    <button class="btn icon-text" type="button" id="addIngredients">
+                                    <button class="btn icon-text" type="button" id="addIngredients"
+                                            wire:click="addIngredient">
                                         + Add ingredients
                                     </button>
                                 </td>
@@ -175,6 +217,12 @@
                             </tbody>
                         </table>
 
+                        <select class="js-example-basic-single" name="state">
+                            <option value="AL">Alabama</option>
+                            ...
+                            <option value="WY">Wyoming</option>
+                        </select>
+
                     </div>
                 </div>
             </div>
@@ -183,6 +231,5 @@
 </x-page-layout>
 
 @section('footer-script')
-
 @endsection
 

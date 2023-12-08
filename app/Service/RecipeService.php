@@ -2,12 +2,14 @@
 
 namespace App\Service;
 
-use Ramsey\Collection\Collection;
+
+use Illuminate\Database\Eloquent\Collection;
 
 interface RecipeService
 {
 
 
-    public function getAllItem(): Collection;
+    public function getAllItem(): ?Collection;
+
 
 }

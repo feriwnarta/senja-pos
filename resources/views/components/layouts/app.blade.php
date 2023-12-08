@@ -41,7 +41,7 @@
 
 @livewireScripts
 
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
         crossorigin="anonymous"></script>
@@ -51,7 +51,7 @@
 <script src="{{ asset('js/toast.js') }}"></script>
 <script src="{{ asset('js/popup.js') }}"></script>
 <script data-navigate-once src="{{ asset('js/script.js') }}"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 @yield('footer-script')
 </body>

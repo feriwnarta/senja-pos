@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\Item;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotNull;
@@ -21,7 +19,7 @@ class TestItemModel extends TestCase
 
     public function testSelect()
     {
-        $item = Item::first();
+        $item = Item::first()->unit;
 
         Log::info($item);
 
@@ -31,25 +29,7 @@ class TestItemModel extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        DB::table('items')->delete();
-        Cache::forget('add-warehouse-first-cursor');
 
-        Item::insert(
-            [
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-                ['name' => fake()->name(), 'id' => fake()->uuid(), 'item_code' => fake()->currencyCode()],
-    
-
-            ]
-        );
     }
 
 

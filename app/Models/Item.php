@@ -26,17 +26,17 @@ class Item extends Model
 
     public function racks(): BelongsTo
     {
-        return $this->belongsTo(Rack::class);
+        return $this->belongsTo(Rack::class, 'racks_id');
     }
 
-    public function warehouse(): BelongsTo
+    public function unit(): BelongsTo
     {
-        return $this->belongsTo(Warehouse::class);
+        return $this->belongsTo(Unit::class, 'units_id');
     }
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'categories_id');
     }
 
     public function stockItem(): HasMany

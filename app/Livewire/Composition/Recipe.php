@@ -12,7 +12,7 @@ class Recipe extends Component
     public function createRecipe()
     {
 
-        if ($this->typeRecipe != 'recipeMenu' && $this->typeRecipe != 'recipeSemu') {
+        if ($this->typeRecipe != 'recipeMenu' && $this->typeRecipe != 'recipeSemi') {
             return;
         }
 
