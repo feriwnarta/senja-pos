@@ -26,7 +26,6 @@ class CogsValuationCalc extends InventoryValuationCalc
     public function calculateAvgPrice(float $inventoryValue, float $oldQty, float $oldAvgCost, float $incomingQty, float $purchasePrice): array
     {
         // Formula: (old qty * old avg cost) + (incoming qty * purchase price) / total qty
-
         $incomingValue = $incomingQty * $purchasePrice;
         $inventoryValue = $inventoryValue + $incomingValue;
         $qtyOnHand = $oldQty + $incomingQty;
