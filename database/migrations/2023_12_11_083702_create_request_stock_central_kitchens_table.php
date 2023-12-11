@@ -12,7 +12,9 @@ return new class extends Migration {
     {
         Schema::create('request_stocks_ck', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->string('code', 255)->nullable(false)->unique();
             $table->bigInteger('increment');
+
             $table->enum('type', ['PO', 'PROUCE'])->nullable(false);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(false);
@@ -25,6 +27,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('request_stock_central_kitchens');
+        Schema::dropIfExists('request_stocks_ck');
     }
 };

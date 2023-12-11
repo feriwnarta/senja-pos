@@ -29,7 +29,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('request_stock_central_kitchen_details');
+        Schema::dropIfExists('request_stocks_ck');
     }
 };
 
