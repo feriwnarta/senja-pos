@@ -17,7 +17,7 @@ class CogsValuationTest extends TestCase
     public function testStockAwal()
     {
         $stockAwal = 10;
-        $avgCost = 12.000;
+        $avgCost = 12.500;
 
         $result = $this->calc->initialAvg($stockAwal, $avgCost);
         assertNotNull($result);
@@ -35,7 +35,7 @@ class CogsValuationTest extends TestCase
         assertNotNull($result);
         assertIsArray($result);
         self::assertArrayHasKey('incoming_qty', $result);
-        self::assertEquals('226.000', $result['inventory_value']);
+        self::assertEquals('226000', $result['inventory_value']);
         print_r($result);
     }
 
@@ -52,19 +52,19 @@ class CogsValuationTest extends TestCase
         $fistIn = $this->calc->calculateAvgPrice(0, 0, 0, 8, 10.000);
         assertIsArray($fistIn);
         print_r($fistIn);
-        self::assertEquals(80.000, $fistIn['incoming_value']);
-        self::assertEquals(80.000, $fistIn['inventory_value']);
+        self::assertEquals(80000, $fistIn['incoming_value']);
+        self::assertEquals(80000, $fistIn['inventory_value']);
         self::assertEquals(8, $fistIn['qty_on_hand']);
-        self::assertEquals(10.000, $fistIn['avg_cost']);
+        self::assertEquals(10000, $fistIn['avg_cost']);
 
 
         $firstTwo = $this->calc->calculateAvgPrice(80.000, 8, 10.000, 10, 11.000);
         assertIsArray($firstTwo);
         print_r($firstTwo);
-        self::assertEquals(110.000, $firstTwo['incoming_value']);
-        self::assertEquals(190.000, $firstTwo['inventory_value']);
+        self::assertEquals(110000, $firstTwo['incoming_value']);
+        self::assertEquals(190000, $firstTwo['inventory_value']);
         self::assertEquals(18, $firstTwo['qty_on_hand']);
-        self::assertEquals(10.556, $firstTwo['avg_cost']);
+        self::assertEquals(10556, $firstTwo['avg_cost']);
 
     }
 

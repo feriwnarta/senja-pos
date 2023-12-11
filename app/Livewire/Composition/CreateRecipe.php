@@ -4,6 +4,7 @@ namespace App\Livewire\Composition;
 
 use App\Service\Impl\RecipeServiceImpl;
 use App\Service\RecipeService;
+use App\Utils\IndonesiaCurrency;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
@@ -16,7 +17,10 @@ class CreateRecipe extends Component
     public string $code;
     public array $ingredients;
     public Collection $items;
-    public string $selectItem = '';
+    public Collection $menuOrMaterial;
+    public string $selectMenuOrMaterial = '';
+    public string $totalAvg;
+    public string $totalLastCost;
     private RecipeService $recipeService;
 
     public function mount()
@@ -38,6 +42,11 @@ class CreateRecipe extends Component
         return $url;
     }
 
+
+    /**
+     * dapatkan semua item komponen yang akan digunakan untuk dijadikan komponen resep
+     * @return void
+     */
     private function getAllItem()
     {
         $items = $this->recipeService->getAllItem();
@@ -46,8 +55,17 @@ class CreateRecipe extends Component
         if ($items == null) {
             return;
         }
-
         $this->items = $items;
+
+        // dapatkan data bahan atau menu
+        $menuOrMaterial = $this->recipeService->selectMenuOrMaterial(!(($this->type == 'recipeSemi')));
+
+        if ($menuOrMaterial == null) {
+            return;
+        }
+        $this->menuOrMaterial = $menuOrMaterial;
+
+
     }
 
     public function render()
@@ -70,11 +88,18 @@ class CreateRecipe extends Component
                 'id' => '',
                 'name' => '',
             ],
+            'initAvgCost' => '',
+            'initLastCost' => '',
             'avgCost' => '',
             'lastCost' => '',
         ];
     }
 
+    /**
+     *  jika item ingredients sudah ditentukan maka isi usage, unit, avg cost dan last costnya
+     * @param $index
+     * @return void
+     */
     public function itemSelected($index)
     {
 
@@ -87,12 +112,58 @@ class CreateRecipe extends Component
             return;
         }
 
+        $avg = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->avg_cost);
+        $last = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->last_cost);
+
+        $this->ingredients[$index]['usage'] = 1;
         $this->ingredients[$index]['unit']['id'] = $result->unit->id;
         $this->ingredients[$index]['unit']['name'] = $result->unit->name;
+        $this->ingredients[$index]['initAvgCost'] = $avg;
+        $this->ingredients[$index]['initLastCost'] = $last;
+        $this->ingredients[$index]['avgCost'] = $avg;
+        $this->ingredients[$index]['lastCost'] = $last;
+
+        $this->calculateTotalAvgAndLastCost();
+    }
+
+    private function calculateTotalAvgAndLastCost()
+    {
+        $totalAvg = 0;
+        $totalLastCost = 0;
+        foreach ($this->ingredients as $ingredient) {
+            $avg = str_replace('Rp ', '', $ingredient['avgCost']);
+            $lastCost = str_replace('Rp ', '', $ingredient['lastCost']);
+
+            $totalAvg += $avg;
+            $totalLastCost += $lastCost;
+        }
 
 
-        Log::debug($this->ingredients);
+        $this->totalAvg = IndonesiaCurrency::formatToRupiah(number_format($totalAvg, 3, '', ''));
+        $this->totalLastCost = IndonesiaCurrency::formatToRupiah(number_format($totalLastCost, 3, '', ''));
 
     }
 
+    /**
+     * fungsi ini digunakan untuk menghitung avg cost dan last cost saat unit terupdate
+     * @param $index
+     * @return void
+     */
+    public function updateUsage($index)
+    {
+
+        $initAvgCost = $this->ingredients[$index]['initAvgCost'];
+        $initAvgCost = str_replace('Rp ', '', $initAvgCost);
+        $initLastCost = $this->ingredients[$index]['initLastCost'];
+        $initLastCost = str_replace('Rp ', '', $initLastCost);
+        $usage = $this->ingredients[$index]['usage'];
+
+
+        $this->ingredients[$index]['avgCost'] = IndonesiaCurrency::formatToRupiah(number_format(floatval($usage) * floatval($initAvgCost), 3, '', ''));
+        $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah(number_format(floatval($usage) * floatval($initLastCost), 3, '', ''));
+
+        $this->calculateTotalAvgAndLastCost();
+    }
+
 }
+

@@ -24,4 +24,25 @@ class RecipeServiceImpl implements RecipeService
             return null;
         }
     }
+
+    // dapatkan bahan berdasarkan is menu, jika true maka dapatkan data data menu,
+    public function selectMenuOrMaterial(bool $isMenu): ?Collection
+    {
+        try {
+
+            // jika is menu tidak true maka ambilkan bahan yang dapat diproduksi untuk keperluan produksi setengah jadi
+            if (!$isMenu) {
+                $items = Item::whereIn('route', ['PRODUCECENTRALKITCHEN', 'PRODUCEOUTLET'])->select('id', 'name')->get();
+                Log::debug("data item yang dipilih $items");
+                return $items;
+            }
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan menu atau bahan yang digunakan untuk membuat resep menu atau item');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            return null;
+        }
+
+    }
 }

@@ -68,8 +68,8 @@
                         <div class="container-input-default">
                             <label for="description" class="form-label">Pilih menu</label>
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
-                            <select class="form-select input-default" wire:model="selectItem"
-                                    wire:change="selectItem">
+                            <select class="form-select input-default" wire:model="selectMenuOrMaterial"
+                            >
                                 <option value="" selected disabled>Pilih menu</option>
                             </select>
                         </div>
@@ -80,8 +80,9 @@
                         <div class="container-input-default">
                             <label for="description" class="form-label">Pilih variasi menu</label>
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
-                            <select class="form-select input-default" wire:model="selectMenu"
-                                    wire:change="updateUnitName">
+                            {{-- TODO: Perbaiki wire model variasi dibawah ini --}}
+                            <select class="form-select input-default" wire:model="selectMenuOrMaterial"
+                            >
                                 <option value="" selected disabled>Pilih variasi menu</option>
                             </select>
                         </div>
@@ -110,9 +111,17 @@
                         <div class="container-input-default">
                             <label for="description" class="form-label">Pilih bahan</label>
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
-                            <select class="form-select input-default" wire:model="selectItem"
-                                    wire:change="selectItem">
+                            <select class="form-select input-default" wire:model="selectMenuOrMaterial">
                                 <option value="" selected disabled>Pilih bahan</option>
+
+                                @if(!empty($menuOrMaterial))
+
+                                    @foreach($menuOrMaterial as $component)
+                                        <option value="{{ $component->id }}">{{ $component->name }}</option>
+                                    @endforeach
+
+                                @endif
+
                             </select>
                         </div>
                     </div>
@@ -165,7 +174,8 @@
                                     <td>
                                         <input type="number" class="form-control no-border"
                                                id="exampleFormControlInput1"
-                                               placeholder="0">
+                                               wire:model="ingredients.{{ $key }}.usage"
+                                               wire:change="updateUsage('{{ $key }}')">
                                     </td>
 
                                     <td class="disabled col-avg-cost">
@@ -177,11 +187,11 @@
 
                                     <td class="disabled col-avg-cost">
                                         <input type="text" disabled class="form-control input-disabled-recipes"
-                                               id="avgCost" value="Rp. 15.000">
+                                               id="avgCost" wire:model="ingredients.{{$key}}.avgCost">
                                     </td>
                                     <td class="disabled col-last-cost">
                                         <input type="text" disabled class="form-control input-disabled-recipes"
-                                               id="lastCost" value="Rp. 15.000">
+                                               id="lastCost" wire:model="ingredients.{{$key}}.lastCost">
                                     </td>
                                     <td class="delete-recipes">
                                         <i class="x-icon" onclick="deleteRow(this)"></i>
@@ -207,21 +217,15 @@
                                     <div>Total Average & Last Cost</div>
                                 </td>
                                 <td colspan="1" style="border-right: none;">
-                                    <p class="body-text-bold" id="totalAvgCost">Rp.</p>
+                                    <p class="body-text-bold" id="totalAvgCost">{{ $totalAvg }}</p>
                                 </td>
                                 <td colspan="1" style="border-right: none;">
-                                    <p class="body-text-bold" id="totalLastCost">Rp.</p>
+                                    <p class="body-text-bold" id="totalLastCost">{{ $totalLastCost }}</p>
                                 </td>
                                 <td></td>
                             </tr>
                             </tbody>
                         </table>
-
-                        <select class="js-example-basic-single" name="state">
-                            <option value="AL">Alabama</option>
-                            ...
-                            <option value="WY">Wyoming</option>
-                        </select>
 
                     </div>
                 </div>
@@ -231,5 +235,6 @@
 </x-page-layout>
 
 @section('footer-script')
+
 @endsection
 

@@ -11,5 +11,7 @@ interface RecipeService
 
     public function getAllItem(): ?Collection;
 
+    public function selectMenuOrMaterial(bool $isMenu): ?Collection;
+
 
 }
