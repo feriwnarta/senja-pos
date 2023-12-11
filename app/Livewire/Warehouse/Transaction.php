@@ -97,7 +97,7 @@ class Transaction extends Component
 
         // jika toggle berupa request
         if ($this->urlQuery == 'request') {
-            $this->redirect("/warehouse/transaction/add-transaction?option=request&{$this->type}={$this->id}", true);
+            $this->redirect("/warehouse/transaction/add-transaction?option=request&type={$this->type}&id={$this->id}", true);
         }
 
     }
