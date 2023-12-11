@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->uuid('areas_id')->nullable(false);
             $table->string('name', 100)->nullable(false);
             $table->string('category_inventory', 100)->nullable(false);
-            $table->foreign('areas_id')->references('id')->on('areas');
+            $table->foreign('areas_id')->references('id')->on('areas')->onDelete('cascade');
             $table->timestamps();
         });
     }

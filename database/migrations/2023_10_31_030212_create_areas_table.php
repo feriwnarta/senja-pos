@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->nullable(false)->primary();
             $table->uuid('warehouses_id')->nullable(false);
             $table->string('name', 100)->nullable(false);
-            $table->foreign('warehouses_id')->references('id')->on('warehouses');
+            $table->foreign('warehouses_id')->references('id')->on('warehouses')->onDelete('cascade');
             $table->timestamps();
         });
     }

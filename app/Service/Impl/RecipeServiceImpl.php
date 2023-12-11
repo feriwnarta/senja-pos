@@ -3,9 +3,11 @@
 namespace App\Service\Impl;
 
 use App\Models\Item;
+use App\Models\RecipeItem;
 use App\Service\RecipeService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class RecipeServiceImpl implements RecipeService
@@ -44,5 +46,23 @@ class RecipeServiceImpl implements RecipeService
             return null;
         }
 
+    }
+
+    public function saveRecipeItem(string $code, string $itemsId, array $recipes): bool
+    {
+        try {
+            DB::beginTransaction();
+            $recipe = RecipeItem::create(['code' => $code, 'items_id' => $itemsId]);
+            $recipe->recipeDetail()->createMany($recipes);
+            DB::commit();
+
+            return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('gagal menyimpan resep item');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            return false;
+        }
     }
 }

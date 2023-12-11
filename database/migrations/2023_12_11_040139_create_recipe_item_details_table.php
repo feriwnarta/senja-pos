@@ -13,13 +13,15 @@ return new class extends Migration {
         Schema::create('recipe_item_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('recipe_items_id')->nullable(false);
+            $table->uuid('items_id')->nullable(false);
             $table->uuid('units_id')->nullable(false);
             $table->decimal('usage', 10, 2)->nullable(false);
             $table->uuid('created_by')->nullable(true);
             $table->uuid('updated_by')->nullable(true);
 
-            $table->foreign('recipe_items_id')->references('id')->on('recipe_items');
-            $table->foreign('units_id')->references('id')->on('units');
+            $table->foreign('recipe_items_id')->references('id')->on('recipe_items')->onDelete('cascade');
+            $table->foreign('items_id')->references('id')->on('items')->onDelete('cascade');
+            $table->foreign('units_id')->references('id')->on('units')->onDelete('cascade');
             $table->timestamps();
         });
     }

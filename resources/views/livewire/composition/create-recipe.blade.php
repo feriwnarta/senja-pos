@@ -27,7 +27,7 @@
 
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
-                            @click="$dispatch('save-category')"
+                            wire:click="save"
                     >Simpan
                     </button>
 
@@ -123,6 +123,7 @@
                                 @endif
 
                             </select>
+                            @error('selectMenuOrMaterial') <span class="error">{{ $message }}</span> @enderror
                         </div>
                     </div>
 
@@ -137,6 +138,7 @@
                     <label class="form-label input-label">Resep</label>
 
                     <div id="divider" class="margin-top-8"></div>
+                    @error('ingredients') <span class="error">{{ $message }}</span> @enderror
                     <div class="margin-top-8">
                         <table class="table table-bordered only-underline table-create-recipes body-text-regular">
                             <thead>

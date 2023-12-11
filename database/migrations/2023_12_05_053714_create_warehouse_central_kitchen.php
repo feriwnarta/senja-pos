@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('warehouses_id')->nullable(false);
             $table->uuid('central_kitchens_id')->nullable(false);
-            $table->foreign('warehouses_id')->references('id')->on('warehouses');
-            $table->foreign('central_kitchens_id')->references('id')->on('central_kitchens');
+            $table->foreign('warehouses_id')->references('id')->on('warehouses')->onDelete('cascade');
+            $table->foreign('central_kitchens_id')->references('id')->on('central_kitchens')->onDelete('cascade');
             $table->timestamps();
         });
     }

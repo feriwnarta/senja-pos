@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class RecipeItem extends Model
@@ -29,4 +31,16 @@ class RecipeItem extends Model
             $model->updated_by = $userId;
         });
     }
+
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'items_id');
+    }
+
+    public function recipeDetail(): HasMany
+    {
+        return $this->hasMany(RecipeItemDetail::class, 'recipe_items_id');
+    }
+
+
 }

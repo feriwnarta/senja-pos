@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->uuid('created_by')->nullable(true);
             $table->uuid('updated_by')->nullable(true);
 
-            $table->foreign('items_id')->references('id')->on('items');
+            $table->foreign('items_id')->references('id')->on('items')->onDelete('cascade');
             $table->timestamps();
         });
     }

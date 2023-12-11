@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->decimal('avg_cost', 10, 2)->default(0.00);
             $table->decimal('last_cost', 10, 2)->default(0.00);
             $table->decimal('minimum_stock', 10, 2)->nullable(true)->default(0.00);
+            $table->foreign('items_id')->references('id')->on('items')->onDelete('cascade');
             $table->uuid('created_by')->nullable(true);
             $table->uuid('updated_by')->nullable(true);
             $table->timestamps();

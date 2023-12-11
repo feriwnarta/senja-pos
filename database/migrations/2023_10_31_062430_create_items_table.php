@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->nullable(false)->unique();
             $table->uuid('racks_id')->nullable(true);
             $table->string('name', 150)->nullable(false)->unique();
-            $table->foreign('racks_id')->references('id')->on('racks');
+            $table->foreign('racks_id')->references('id')->on('racks')->onDelete('cascade');
             $table->text('description')->nullable();
 
 

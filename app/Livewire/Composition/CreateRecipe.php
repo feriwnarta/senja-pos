@@ -7,6 +7,7 @@ use App\Service\RecipeService;
 use App\Utils\IndonesiaCurrency;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -14,10 +15,16 @@ class CreateRecipe extends Component
 {
     #[Url(as: 'type', keep: true)]
     public string $type = '';
+
+    #[Rule('required|min:5|unique:recipe_items,code')]
     public string $code;
+    #[Rule('required|array|min:1')]
     public array $ingredients;
     public Collection $items;
+
     public Collection $menuOrMaterial;
+
+    #[Rule('required|min:5')]
     public string $selectMenuOrMaterial = '';
     public string $totalAvg;
     public string $totalLastCost;
@@ -163,6 +170,19 @@ class CreateRecipe extends Component
         $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah(number_format(floatval($usage) * floatval($initLastCost), 3, '', ''));
 
         $this->calculateTotalAvgAndLastCost();
+    }
+
+
+    public function save()
+    {
+
+        $this->validate();
+
+        Log::debug($this->ingredients);
+
+        if ($this->type == 'recipeSem') {
+//            $this->recipeService->saveRecipeItem($this->code, $this->selectMenuOrMaterial);
+        }
     }
 
 }

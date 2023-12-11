@@ -14,4 +14,7 @@ interface RecipeService
     public function selectMenuOrMaterial(bool $isMenu): ?Collection;
 
 
+    public function saveRecipeItem(string $code, string $itemsId, array $recipes);
+
+
 }

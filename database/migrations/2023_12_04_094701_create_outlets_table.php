@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->uuid('updated_by')->nullable(true);
             $table->timestamps();
 
-            $table->foreign('central_kitchens_id')->on('central_kitchens')->references('id');
+            $table->foreign('central_kitchens_id')->on('central_kitchens')->references('id')->onDelete('cascade');
         });
     }
 

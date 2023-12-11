@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->uuid('categories_id')->nullable(false);
             $table->enum('route', ['BUY', 'PRODUCECENTRALKITCHEN', 'PRODUCEOUTLET'])->default('BUY');
 
-            $table->foreign('units_id')->references('id')->on('units');
-            $table->foreign('categories_id')->references('id')->on('categories');
+            $table->foreign('units_id')->references('id')->on('units')->onDelete('cascade');
+            $table->foreign('categories_id')->references('id')->on('categories')->onDelete('cascade');
 
         });
     }
