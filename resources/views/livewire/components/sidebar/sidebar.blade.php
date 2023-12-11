@@ -88,7 +88,7 @@
 
 
                 @php
-                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse']);
+                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'detail-warehouse', 'warehouse-transaction', 'warehouse-add-transaction']);
                 @endphp
 
                 <div class="accordion-item">
@@ -110,6 +110,23 @@
                          class="accordion-collapse collapse {{ $collapseInv ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
+                            <a href="" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium"
+                                    type="button"
+                                    id="">
+                                    Stok item
+                                </button>
+                            </a>
+
+                            <a href="" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium"
+                                    type="button"
+                                    id="">
+                                    Stok opname
+                                </button>
+                            </a>
 
                             <a href="/warehouse/list-warehouse" wire:navigate>
                                 <button
@@ -119,36 +136,15 @@
                                     {{ __('sidebar_locale.gudang.daftarGudang') }}
                                 </button>
                             </a>
+                            <a href="/warehouse/transaction" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('warehouse-transaction') || Route::is('warehouse-add-transaction') ? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
+                                    Transaksi
+                                </button>
+                            </a>
 
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    {{ __('sidebar_locale.gudang.itemKeluar') }}
-                                </button>
-                            </a>
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text" type="button" id="">
-                                    {{ __('sidebar_locale.gudang.itemMasuk') }}
-                                </button>
-                            </a>
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    {{ __('sidebar_locale.gudang.permintaanPembelian') }}
-                                </button>
-                            </a>
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    {{ __('sidebar_locale.gudang.permintaanProduksi') }}
-                                </button>
-                            </a>
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    {{ __('sidebar_locale.gudang.laporanGudang') }}
-                                </button>
-                            </a>
                         </div>
                     </div>
                 </div>
