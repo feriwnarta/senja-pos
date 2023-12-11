@@ -139,6 +139,7 @@
 
                     <div id="divider" class="margin-top-8"></div>
                     @error('ingredients') <span class="error">{{ $message }}</span> @enderror
+                    @error('ingredients.*') <span class="error">{{ $message }}</span> @enderror
                     <div class="margin-top-8">
                         <table class="table table-bordered only-underline table-create-recipes body-text-regular">
                             <thead>

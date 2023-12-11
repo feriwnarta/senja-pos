@@ -32,13 +32,11 @@ class CreateRecipe extends Component
 
     public function mount()
     {
-        $this->recipeService = app()->make(RecipeServiceImpl::class);
         $result = $this->extractUrl($this->type);
         $this->type = $result;
         $this->getAllItem();
 
     }
-
 
     public function extractUrl(string $url)
     {
@@ -48,7 +46,6 @@ class CreateRecipe extends Component
 
         return $url;
     }
-
 
     /**
      * dapatkan semua item komponen yang akan digunakan untuk dijadikan komponen resep
@@ -73,6 +70,11 @@ class CreateRecipe extends Component
         $this->menuOrMaterial = $menuOrMaterial;
 
 
+    }
+
+    public function boot()
+    {
+        $this->recipeService = app()->make(RecipeServiceImpl::class);
     }
 
     public function render()
@@ -118,6 +120,7 @@ class CreateRecipe extends Component
             Log::error('gagal mendapatkan data item yang dipilih saat buat resep setengah jadi');
             return;
         }
+
 
         $avg = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->avg_cost);
         $last = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->last_cost);
@@ -176,12 +179,39 @@ class CreateRecipe extends Component
     public function save()
     {
 
-        $this->validate();
-
         Log::debug($this->ingredients);
 
-        if ($this->type == 'recipeSem') {
-//            $this->recipeService->saveRecipeItem($this->code, $this->selectMenuOrMaterial);
+        $this->validate([
+            'code' => 'required|min:5|unique:recipe_items,code',
+            'ingredients' => 'required|array|min:1',
+            'selectMenuOrMaterial' => 'required|min:5',
+            'ingredients.*.id' => 'required',
+        ]);
+
+
+        foreach ($this->ingredients as $ingredient) {
+            $recipes[] = [
+                'items_id' => $ingredient['id'],
+                'usage' => $ingredient['usage'],
+                'units_id' => $ingredient['unit']['id'],
+            ];
+        }
+
+        Log::debug($recipes);
+
+
+        if ($this->type == 'recipeSemi') {
+            $result = $this->recipeService->saveRecipeItem($this->code, $this->selectMenuOrMaterial, $recipes);
+
+            if ($result) {
+                notify()->success('Berhasil buat resep', 'Sukses');
+                $this->reset('code', 'ingredients', 'selectMenuOrMaterial', 'totalAvg', 'totalLastCost');
+                return;
+            }
+
+            notify()->error('Gagal buat resep', 'Gagal');
+            $this->reset('code', 'ingredients', 'selectMenuOrMaterial', 'totalAvg', 'totalLastCost');
+            return;
         }
     }
 
