@@ -14,6 +14,10 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('items_id')->nullable(false);
             $table->string('code', 150)->nullable(false)->unique(true);
+            $table->uuid('created_by')->nullable(true);
+            $table->uuid('updated_by')->nullable(true);
+
+            $table->foreign('items_id')->references('id')->on('items');
             $table->timestamps();
         });
     }
