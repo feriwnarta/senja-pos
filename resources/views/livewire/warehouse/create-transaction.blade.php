@@ -111,8 +111,15 @@
                                         <td>{{ $item->category->name }}</td>
                                         <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
                                         <td>
-                                            <input type="number" class="form-control input-default"
-                                                   x-mask="999999999" placeholder="0">
+
+                                            @if(!empty($selected))
+                                                @foreach($selected as $select)
+                                                    @if($select == $item->id)
+                                                        <input type="number" class="form-control input-default"
+                                                               x-mask="999999999" placeholder="0">
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         </td>
                                     </tr>
 

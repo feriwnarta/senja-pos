@@ -33,11 +33,11 @@ class CreateTransaction extends Component
     public string $note = '';
     public bool $isCreate = false;
     public Collection $items;
+    public array $selected;
     private Cursor|null $nextCursor = null;
     private bool $isOutlet = false;
     private WarehouseTransactionService $warehouseTransactionService;
     private Warehouse $warehouse;
-    private array $selected;
 
     public function render()
     {
@@ -159,8 +159,16 @@ class CreateTransaction extends Component
      */
     public function selectItem(string $id)
     {
-        $this->selected[] = $id;
+        // Periksa apakah $id sudah ada di dalam array $selected
+        $index = array_search($id, $this->selected);
 
+        // Jika $id sudah ada, hapus dari array
+        if ($index !== false) {
+            unset($this->selected[$index]);
+        } else {
+            // Jika $id belum ada, tambahkan ke array
+            $this->selected[] = $id;
+        }
     }
 
     /**
