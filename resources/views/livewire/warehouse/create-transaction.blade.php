@@ -103,7 +103,7 @@
                             @if(!empty($items))
                                 @foreach($items as $item)
 
-                                    <tr wire:key="{{ $item->id }}" wire:ignore>
+                                    <tr wire:key="{{ $item->id }}">
                                         <td>
                                             <input class="form-check-input" type="checkbox"
                                                    wire:change="selectItem('{{ $item->id }}')"
