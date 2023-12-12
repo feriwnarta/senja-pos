@@ -9,8 +9,9 @@ use App\Service\WarehouseTransactionService;
 use DateTime;
 use Exception;
 use Illuminate\Contracts\Cache\LockTimeoutException;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\Cursor;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -32,8 +33,10 @@ class CreateTransaction extends Component
     public string $note = '';
     public bool $isCreate = false;
     public Collection $items;
+    private Cursor|null $nextCursor = null;
     private bool $isOutlet = false;
     private WarehouseTransactionService $warehouseTransactionService;
+    private Warehouse $warehouse;
 
     public function render()
     {
@@ -117,15 +120,24 @@ class CreateTransaction extends Component
             if ($this->type == 'centralKitchen') {
 
                 // cari warehouse berdasarkan id
-                $warehouse = Warehouse::find($this->id);
+                $this->warehouse = Warehouse::find($this->id);
 
-                if ($warehouse != null && $warehouse->centralKitchen->isNotEmpty()) {
-                    $result = $warehouse->centralKitchen()->cursorPaginate(10)->each(function ($central) {
-                        Log::debug($central);
-                        if ($central->item->isNotEmpty()) {
-                            $this->items = $central->item;
-                        }
+                if ($this->warehouse != null && $this->warehouse->centralKitchen->isNotEmpty()) {
+                    $result = $this->warehouse->centralKitchen->each(function ($central) {
+                        $items = $central->item()->cursorPaginate(10);
+
+                        $allItems = collect();
+                        $items->each(function ($item) use ($allItems) {
+                            $allItems->push($item);
+                        });
+
+                        $this->items = $allItems;
+
+                        $this->nextCursor = $items->nextCursor();
+
                     });
+
+
                 }
             }
 
@@ -136,6 +148,27 @@ class CreateTransaction extends Component
 
         }
 
+    }
+
+    public function loadMoreItem()
+    {
+
+        if ($this->nextCursor != null) {
+            if ($this->warehouse->centralKitchen->isNotEmpty()) {
+                $result = $this->warehouse->centralKitchen->each(function ($central) {
+                    $items = $central->item()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
+                    $allItems = collect();
+                    $items->each(function ($item) use ($allItems) {
+                        $allItems->push($item);
+                    });
+
+                    // Menggabungkan koleksi existing dengan koleksi baru
+                    $this->items = $this->items->merge($allItems);
+
+                    $this->nextCursor = $items->nextCursor();
+                });
+            }
+        }
     }
 
     /**

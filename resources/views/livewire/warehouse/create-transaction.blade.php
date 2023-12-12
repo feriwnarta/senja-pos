@@ -75,14 +75,15 @@
                     </div>
 
 
-                    <div class="col-sm-9 offset-1 margin-top-16">
+
+                    <div class="col-sm-9 offset-1 margin-top-16 set-height-item-request">
                         <div id="divider"></div>
 
                         {{-- TODO: FILTER ITEM BELAKANGAN --}}
-
                         {{-- TABLE ITEM --}}
-                        <table class="table-component table table-hover margin-top-16">
-                            <thead>
+
+                        <table class="table-component table table-hover margin-top-16" id="tableItemRequest">
+                            <thead class="sticky-top">
                             <tr>
                                 <th>
                                     <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
@@ -115,7 +116,15 @@
                                     </tr>
 
                                 @endforeach
+                                <tr>
+                                    <td>
+                                        <div x-intersect.full="$wire.loadMoreItem()">
+                                        </div>
+                                    </td>
+                                </tr>
+
                             @endif
+
 
                             </tbody>
                         </table>

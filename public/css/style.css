@@ -24,10 +24,7 @@ html, body {
 
 
 #content-loaded {
-    margin-top: 2.75rem;
-    margin-left: 1.25rem;
-    margin-right: 3rem;
-
+    margin: 2.75rem 3rem 0 1.25rem;
 }
 
 
@@ -258,6 +255,11 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .table-component tbody td {
     padding: 14px 16px;
+}
+
+.set-height-item-request {
+    height: 500px;
+    overflow: auto;
 }
 
 
