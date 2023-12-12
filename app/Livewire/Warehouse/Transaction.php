@@ -2,16 +2,16 @@
 
 namespace App\Livewire\Warehouse;
 
-use App\Models\CentralKitchen;
-use App\Models\Outlet;
+use App\Models\Warehouse;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class Transaction extends Component
 {
-    public array $outletCentralKitchenDropdown;
+    public Collection $warehouses;
 
     public string $toggle = 'request';
 
@@ -39,14 +39,10 @@ class Transaction extends Component
     {
         try {
 
-            // Ambil semua outlet dengan kolom id dan name
-            $outlets = Outlet::all(['id', 'name']);
-
-            // Ambil semua central kitchen dengan kolom id dan name
-            $centralKitchens = CentralKitchen::all(['id', 'name']);
+            $warehouses = Warehouse::all(['id', 'name']);
 
             // Gabungkan kedua koleksi menjadi satu collection
-            $this->outletCentralKitchenDropdown = $outlets->merge($centralKitchens)->all();
+            $this->warehouses = $warehouses;
 
 
         } catch (Exception $exception) {
@@ -58,26 +54,26 @@ class Transaction extends Component
 
     public function boot()
     {
-        $this->selectOutletOrCentral();
+        $this->selectWarehouse();
     }
 
-    public function selectOutletOrCentral()
+    public function selectWarehouse()
     {
         try {
-            $outlet = Outlet::find($this->selected);
+            $warehouse = Warehouse::findOrFail($this->selected);
 
-            if ($outlet != null) {
-                $this->id = $outlet->id;
+
+            if (!$warehouse->outlet->isEmpty()) {
+                $this->id = $warehouse->id;
                 return;
             }
 
-            $ck = CentralKitchen::find($this->selected);
-
-            if ($ck != null) {
-                $this->id = $ck->id;
+            if (!$warehouse->centralKitchen->isEmpty()) {
+                $this->id = $warehouse->id;
                 $this->type = 'centralKitchen';
                 return;
             }
+
 
             // TODO: validasi error id tidak ketemu di ck atau outlet
         } catch (Exception $exception) {
@@ -94,6 +90,7 @@ class Transaction extends Component
             return;
         }
 
+        Log::debug($this->type);
 
         // jika toggle berupa request
         if ($this->urlQuery == 'request') {

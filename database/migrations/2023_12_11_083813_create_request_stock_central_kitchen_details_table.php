@@ -10,15 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('request_stock_ck_details', function (Blueprint $table) {
+        Schema::create('request_stock_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('request_stocks_ck_id')->nullable(false);
+            $table->uuid('request_stocks_id')->nullable(false);
             $table->uuid('items_id')->nullable(false);
             $table->decimal('qty', 15, 2)->nullable(false)->default(0.00);
-            $table->uuid('created_by')->nullable(false);
-            $table->uuid('updated_by')->nullable(false);
-
-            $table->foreign('request_stocks_ck_id')->references('id')->on('request_stocks_ck')->onDelete('cascade');
+            $table->enum('type', ['PO', 'PROUCE'])->nullable(false);
+            $table->uuid('created_by')->nullable(true);
+            $table->uuid('updated_by')->nullable(true);
+            $table->foreign('request_stocks_id')->references('id')->on('request_stocks')->onDelete('cascade');
             $table->foreign('items_id')->references('id')->on('items')->onDelete('cascade');
             $table->timestamps();
         });
@@ -29,7 +29,7 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('request_stocks_ck');
+        Schema::dropIfExists('request_stock_details');
     }
 };
 

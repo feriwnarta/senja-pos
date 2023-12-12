@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class RequestStockCentralKitchenDetail extends Model
+class RequestStockDetail extends Model
 {
     use HasFactory, HasUuids;
 
     public $incrementing = false;
-    protected $table = 'request_stock_ck_details';
+    protected $table = 'request_stocks_detail';
     protected $keyType = 'string';
 
     protected $guarded = [];

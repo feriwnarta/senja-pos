@@ -24,12 +24,12 @@
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default"
-                                id="resupplyOutlet" wire:model="selected" wire:change="selectOutletOrCentral">
+                                id="resupplyOutlet" wire:model="selected" wire:change="selectWarehouse">
                             <option value="all" selected disabled>Semua gudang</option>
-                            @if(!empty($outletCentralKitchenDropdown))
+                            @if(!empty($warehouses))
 
-                                @foreach($outletCentralKitchenDropdown as $outletCk)
-                                    <option value="{{ $outletCk['id'] }}">{{ $outletCk['name'] }}</option>
+                                @foreach($warehouses as $warehouse)
+                                    <option value="{{ $warehouse['id'] }}">{{ $warehouse['name'] }}</option>
                                 @endforeach
 
                             @endif

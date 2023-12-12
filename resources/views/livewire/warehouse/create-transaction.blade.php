@@ -37,44 +37,48 @@
             @if($error != '')
                 <h1 class="subtitle-3-medium">{{ $error }}</h1>
             @else
-                <div class="col-sm-4 offset-1">
-                    {{-- Kode permintaan stock --}}
-                    <div class="container-input-default">
-                        <label for="warehouseInput"
-                               class="form-label input-label">Kode permintaan stok</label>
 
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                @if(!$isCreate)
+                    <div class="col-sm-4 offset-1">
+                        {{-- Tanggal --}}
+                        <div class="container-input-default">
+                            <label for="warehouseInput"
+                                   class="form-label input-label">Tanggal</label>
 
-                        <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="RBSJ0001"
-                               wire:model="code" disabled>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                            <input type="date" class="form-control input-default"
+                                   id="warehouseInput" placeholder="RBSJ0001" disabled
+                                   wire:model="date">
+                        </div>
+
+
+                        {{-- DESKRIPSI --}}
+                        <div class="margin-top-24">
+                            <label for="description" class="form-label">Catatan</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                            <textarea class="form-control textarea" id="description" rows="5"
+                                      placeholder="Permintaan stok"
+                                      wire:model.blur="note"></textarea>
+                        </div>
+
                     </div>
 
-                    {{-- Tanggal --}}
-                    <div class="container-input-default margin-top-24">
-                        <label for="warehouseInput"
-                               class="form-label input-label">Tanggal</label>
+                @else
 
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                    <div class="col-sm-4 offset-1">
 
-                        <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="RBSJ0001" disabled
-                               wire:model="code">
+                        <p class="subtitle-3-regular">Permintaan stok #{{ $code }}</p>
+                        <p class="subtitle-3-regular margin-top-16">Tanggal: {{ $date }}</p>
+                        <p class="subtitle-3-regular margin-top-16">Catatan : {{ $note }}</p>
+
                     </div>
 
+                @endif
 
-                    {{-- DESKRIPSI --}}
-                    <div class="margin-top-24">
-                        <label for="description" class="form-label">Deskripsi item</label>
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
-                        <textarea class="form-control textarea" id="description" rows="5"
-                                  placeholder="Permintaan stok"
-                                  wire:model.blur="description"></textarea>
-                    </div>
-
-                </div>
             @endif
         </div>
+    </div>
 
 
 </x-page-layout>

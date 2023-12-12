@@ -10,14 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('request_stocks_ck', function (Blueprint $table) {
+        Schema::create('request_stocks', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('warehouses_id')->nullable(false);
             $table->string('code', 255)->nullable(false)->unique();
             $table->bigInteger('increment');
-
-            $table->enum('type', ['PO', 'PROUCE'])->nullable(false);
-            $table->uuid('created_by')->nullable(false);
-            $table->uuid('updated_by')->nullable(false);
+            $table->text('note')->nullable(true);
+            $table->uuid('created_by')->nullable(true);
+            $table->uuid('updated_by')->nullable(true);
+            $table->foreign('warehouses_id')->references('id')->on('warehouses')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('request_stocks_ck');
+        Schema::dropIfExists('request_stocks');
     }
 };
