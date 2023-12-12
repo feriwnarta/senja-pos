@@ -54,7 +54,10 @@ class Transaction extends Component
 
     public function boot()
     {
-        $this->selectWarehouse();
+        if ($this->selected != 'all') {
+            $this->selectWarehouse();
+        }
+
     }
 
     public function selectWarehouse()

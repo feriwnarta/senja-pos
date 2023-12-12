@@ -9,5 +9,5 @@ interface WarehouseTransactionService
 
     public function generateCodeRequest(bool $isOutlet, string $id): ?array;
 
-    public function createRequest(bool $isOutlet, string $id): RequestStock;
+    public function createRequest(bool $isOutlet, string $id, string $note = null): RequestStock;
 }

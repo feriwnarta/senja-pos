@@ -76,16 +76,26 @@ class CreateTransaction extends Component
 
             if ($result != null) {
                 $this->isCreate = true;
-                $this->code = $result->code;
-                $date = $result->created_at;
-                $dateTime = new DateTime($date);
-                $dateTime = $dateTime->format('d F Y');
-
-
-                $this->date = $dateTime;
-                $this->note = ($result->note == null) ? 'Tanpa catatan' : $result->note;
+                $this->setFieldNextReq($result);
             }
         }
+    }
+
+    /**
+     * @param RequestStock $result
+     * @return void
+     * @throws Exception
+     */
+    private function setFieldNextReq(RequestStock $result): void
+    {
+        $this->code = $result->code;
+        $date = $result->created_at;
+        $dateTime = new DateTime($date);
+        $dateTime = $dateTime->format('d F Y');
+
+
+        $this->date = $dateTime;
+        $this->note = ($result->note == null) ? 'Tanpa catatan' : $result->note;
     }
 
     /**
@@ -96,10 +106,10 @@ class CreateTransaction extends Component
     public function create()
     {
         try {
-            $result = $this->warehouseTransactionService->createRequest($this->isOutlet, $this->id);
+            $result = $this->warehouseTransactionService->createRequest($this->isOutlet, $this->id, ($this->note == '') ? null : $this->note);
             $this->isCreate = true;
             $this->requestId = $result->id;
-            $this->code = $result->code;
+            $this->setFieldNextReq($result);
             notify()->success('Permintaan berhasil dibuat', 'Sukses');
             return;
         } catch (Exception $exception) {

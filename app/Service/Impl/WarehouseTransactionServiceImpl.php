@@ -14,15 +14,15 @@ use Illuminate\Support\Facades\Log;
 class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 {
 
-    public function createRequest(bool $isOutlet, string $id): RequestStock
+    public function createRequest(bool $isOutlet, string $id, string $note = null): RequestStock
     {
         // Jika central kitchen
         if (!$isOutlet) {
             try {
-                return Cache::lock('createRequestWarehouse', 10)->block(5, function () use ($isOutlet, $id) {
+                return Cache::lock('createRequestWarehouse', 10)->block(5, function () use ($isOutlet, $id, $note) {
 
                     Log::debug('Mulai lock');
-                    
+
                     try {
                         DB::beginTransaction();
                         // Generate code
@@ -39,6 +39,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             'warehouses_id' => $id,
                             'code' => $code['code'],
                             'increment' => $code['increment'],
+                            'note' => $note,
                         ]);
 
                         DB::commit();
