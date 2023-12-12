@@ -37,6 +37,7 @@ class CreateTransaction extends Component
     private bool $isOutlet = false;
     private WarehouseTransactionService $warehouseTransactionService;
     private Warehouse $warehouse;
+    private array $selected;
 
     public function render()
     {
@@ -150,6 +151,22 @@ class CreateTransaction extends Component
 
     }
 
+
+    /**
+     * tambahkan ke array selected item mana saja yang dipilih
+     * @param string $id
+     * @return void
+     */
+    public function selectItem(string $id)
+    {
+        $this->selected[] = $id;
+
+    }
+
+    /**
+     * load more item saat membuat permintaan produksi
+     * @return void
+     */
     public function loadMoreItem()
     {
 

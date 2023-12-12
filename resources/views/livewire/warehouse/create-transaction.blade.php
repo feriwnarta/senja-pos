@@ -102,7 +102,8 @@
                                 @foreach($items as $item)
                                     <tr wire:key="{{ $item->id }}">
                                         <td>
-                                            <input class="form-check-input" type="checkbox" value="" id="itemCheckbox1">
+                                            <input class="form-check-input" type="checkbox"
+                                                   wire:change="selectItem('{{ $item->id }}')">
                                         </td>
                                         {{--  TODO : Perlu lebih spesifik ke item --}}
                                         <td> {{ $item->name }}</td>
