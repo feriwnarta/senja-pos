@@ -10,7 +10,6 @@ use DateTime;
 use Exception;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Pagination\Cursor;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
@@ -34,10 +33,10 @@ class CreateTransaction extends Component
     public bool $isCreate = false;
     public Collection $items;
     public array $selected;
-    private Cursor|null $nextCursor = null;
+    public Warehouse $warehouse;
+    public ?string $nextCursor = null;
     private bool $isOutlet = false;
     private WarehouseTransactionService $warehouseTransactionService;
-    private Warehouse $warehouse;
 
     public function render()
     {
@@ -50,6 +49,7 @@ class CreateTransaction extends Component
         $this->date = date('Y-m-d');
         $this->warehouseTransactionService = app()->make(WarehouseTransactionServiceImpl::class);
         $this->findRequestCreated();
+
     }
 
     private function extractUrl()
@@ -120,26 +120,33 @@ class CreateTransaction extends Component
 
             if ($this->type == 'centralKitchen') {
 
-                // cari warehouse berdasarkan id
-                $this->warehouse = Warehouse::find($this->id);
 
-                if ($this->warehouse != null && $this->warehouse->centralKitchen->isNotEmpty()) {
-                    $result = $this->warehouse->centralKitchen->each(function ($central) {
-                        $items = $central->item()->cursorPaginate(10);
+                if ($this->nextCursor == null && empty($this->warehouse)) {
 
-                        $allItems = collect();
-                        $items->each(function ($item) use ($allItems) {
-                            $allItems->push($item);
+
+                    // cari warehouse berdasarkan id
+                    $this->warehouse = Warehouse::find($this->id);
+
+                    if ($this->warehouse != null && $this->warehouse->centralKitchen->isNotEmpty()) {
+                        $result = $this->warehouse->centralKitchen->each(function ($central) {
+                            $items = $central->item()->cursorPaginate(10);
+
+                            $allItems = collect();
+                            $items->each(function ($item) use ($allItems) {
+                                $allItems->push($item);
+                            });
+
+                            $this->items = $allItems;
+
+                            $this->nextCursor = $items->toArray()['next_cursor'];
+
                         });
 
-                        $this->items = $allItems;
 
-                        $this->nextCursor = $items->nextCursor();
-
-                    });
-
-
+                    }
                 }
+
+
             }
 
 
@@ -151,6 +158,32 @@ class CreateTransaction extends Component
 
     }
 
+    /**
+     * load more item saat membuat permintaan produksi
+     * @return void
+     */
+    public function loadMoreItem()
+    {
+
+        Log::debug($this->nextCursor);
+
+        if ($this->nextCursor != null) {
+            if ($this->warehouse->centralKitchen->isNotEmpty()) {
+                $result = $this->warehouse->centralKitchen->each(function ($central) {
+                    $items = $central->item()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
+                    $allItems = collect();
+                    $items->each(function ($item) use ($allItems) {
+                        $allItems->push($item);
+                    });
+
+                    // Menggabungkan koleksi existing dengan koleksi baru
+                    $this->items = $this->items->merge($allItems);
+
+                    $this->nextCursor = $items->nextCursor();
+                });
+            }
+        }
+    }
 
     /**
      * tambahkan ke array selected item mana saja yang dipilih
@@ -168,31 +201,6 @@ class CreateTransaction extends Component
         } else {
             // Jika $id belum ada, tambahkan ke array
             $this->selected[] = $id;
-        }
-    }
-
-    /**
-     * load more item saat membuat permintaan produksi
-     * @return void
-     */
-    public function loadMoreItem()
-    {
-
-        if ($this->nextCursor != null) {
-            if ($this->warehouse->centralKitchen->isNotEmpty()) {
-                $result = $this->warehouse->centralKitchen->each(function ($central) {
-                    $items = $central->item()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
-                    $allItems = collect();
-                    $items->each(function ($item) use ($allItems) {
-                        $allItems->push($item);
-                    });
-
-                    // Menggabungkan koleksi existing dengan koleksi baru
-                    $this->items = $this->items->merge($allItems);
-
-                    $this->nextCursor = $items->nextCursor();
-                });
-            }
         }
     }
 
