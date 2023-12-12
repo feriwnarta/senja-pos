@@ -74,6 +74,55 @@
 
                     </div>
 
+
+                    <div class="col-sm-9 offset-1 margin-top-16">
+                        <div id="divider"></div>
+
+                        {{-- TODO: FILTER ITEM BELAKANGAN --}}
+
+                        {{-- TABLE ITEM --}}
+                        <table class="table-component table table-hover margin-top-16">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
+                                </th>
+                                <th>Item</th>
+                                <th>SKU</th>
+                                <th>Kategori</th>
+                                <th>Stok Aktual</th>
+                                <th>Stok Tambahan</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            @if(!empty($items))
+                                @foreach($items as $item)
+                                    <tr wire:key="{{ $item->id }}">
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" value="" id="itemCheckbox1">
+                                        </td>
+                                        {{--  TODO : Perlu lebih spesifik ke item --}}
+                                        <td> {{ $item->name }}</td>
+                                        <td>{{ ($item->sku) ?? '-' }}</td>
+                                        <td>{{ $item->category->name }}</td>
+                                        <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
+                                        <td>
+                                            <input type="number" class="form-control input-default"
+                                                   x-mask="999999999" placeholder="0">
+                                        </td>
+                                    </tr>
+
+                                @endforeach
+                            @endif
+
+                            </tbody>
+                        </table>
+
+
+                    </div>
+
                 @endif
 
             @endif

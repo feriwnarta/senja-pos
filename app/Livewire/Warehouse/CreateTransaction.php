@@ -3,11 +3,14 @@
 namespace App\Livewire\Warehouse;
 
 use App\Models\RequestStock;
+use App\Models\Warehouse;
 use App\Service\Impl\WarehouseTransactionServiceImpl;
 use App\Service\WarehouseTransactionService;
 use DateTime;
 use Exception;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -28,6 +31,7 @@ class CreateTransaction extends Component
     public string $date = '';
     public string $note = '';
     public bool $isCreate = false;
+    public Collection $items;
     private bool $isOutlet = false;
     private WarehouseTransactionService $warehouseTransactionService;
 
@@ -77,6 +81,7 @@ class CreateTransaction extends Component
             if ($result != null) {
                 $this->isCreate = true;
                 $this->setFieldNextReq($result);
+                $this->getAllItemByWarehouseId();
             }
         }
     }
@@ -96,6 +101,41 @@ class CreateTransaction extends Component
 
         $this->date = $dateTime;
         $this->note = ($result->note == null) ? 'Tanpa catatan' : $result->note;
+    }
+
+    /**
+     * setelah berhasil membuat permintaan pengisian ulang stock
+     * maka ambil data item berdasarkan id warehouse yang sudah dipilih
+     * @return void
+     */
+    private function getAllItemByWarehouseId()
+    {
+
+
+        try {
+
+            if ($this->type == 'centralKitchen') {
+
+                // cari warehouse berdasarkan id
+                $warehouse = Warehouse::find($this->id);
+
+                if ($warehouse != null && $warehouse->centralKitchen->isNotEmpty()) {
+                    $result = $warehouse->centralKitchen()->cursorPaginate(10)->each(function ($central) {
+                        Log::debug($central);
+                        if ($central->item->isNotEmpty()) {
+                            $this->items = $central->item;
+                        }
+                    });
+                }
+            }
+
+
+        } catch (ModelNotFoundException $modelNotFoundException) {
+
+        } catch (Exception $exception) {
+
+        }
+
     }
 
     /**

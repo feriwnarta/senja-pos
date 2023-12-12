@@ -232,12 +232,7 @@ input[type="search"]::-webkit-search-results-decoration {
     margin-left: 18px;
 }
 
-
-.table-component > thead {
-    background-color: #FFF7F2;
-
-    color: var(--neutral-100, #0A0A0A);
-
+.table-component {
     /* Body Text/Regular */
     font-family: var(--font-family);
     font-size: 14px;
@@ -245,12 +240,19 @@ input[type="search"]::-webkit-search-results-decoration {
     font-weight: 400;
     line-height: 20px; /* 142.857% */
 
+    color: var(--neutral-100, #0A0A0A);
     vertical-align: middle !important;
 }
 
 
+.table-component > thead {
+    background-color: #FFF7F2;
+
+}
+
+
 .table-component thead th {
-    padding: 14px 28px;
+    padding: 14px 16px;
     border-bottom: none;
 }
 
@@ -370,7 +372,7 @@ input[type="search"]::-webkit-search-results-decoration {
 
 .select2-selection--single {
     border: none !important;
-    
+
 }
 
 /* DATA TABLE */
