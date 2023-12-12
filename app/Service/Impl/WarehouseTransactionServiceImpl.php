@@ -5,6 +5,7 @@ namespace App\Service\Impl;
 use App\Models\RequestStock;
 use App\Models\Warehouse;
 use App\Service\WarehouseTransactionService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
@@ -76,8 +77,20 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                 // dapatkan data increment code selanjutnya
                 $latestRequest = RequestStock::where('warehouses_id', $warehouse->id)->latest()->first();
-                if ($latestRequest != null) {
-                    $nextCode = ++$latestRequest->increment;
+                if ($latestRequest !== null) {
+                    $latestDate = Carbon::parse($latestRequest->created_at);
+
+                    // Cek apakah bulan saat ini berbeda dengan bulan dari waktu terakhir diambil
+                    if ($latestDate->format('Y-m') !== Carbon::now()->format('Y-m')) {
+                        // Bulan berbeda, atur $nextCode kembali ke nol
+                        $nextCode = 0;
+                    } else {
+                        // Bulan sama, increment $nextCode
+                        $nextCode = ++$latestRequest->increment;
+                    }
+                } else {
+                    // Jika tidak ada data sebelumnya, mulai dari nol
+                    $nextCode = 0;
                 }
 
                 return [
