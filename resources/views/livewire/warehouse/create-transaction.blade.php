@@ -116,11 +116,18 @@
                                         <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
                                         <td>{{ $item->unit->name }}</td>
                                         <td style="width: 200px;">
-                                            @if(in_array($item->id, $selected))
-                                                <input type="text" class="form-control input-default"
-                                                       x-mask:dynamic="$money($input, '.')"
-                                                       placeholder=" 0">
+
+                                            @if(!empty($selected))
+                                                @foreach($selected as $key =>  $select)
+                                                    @if($select['id'] == $item->id)
+                                                        <input type="text" class="form-control input-default"
+                                                               x-mask:dynamic="$money($input, '.')"
+                                                               wire:model="selected.{{ $key }}.itemReq"
+                                                               placeholder=" 0">
+                                                    @endif
+                                                @endforeach
                                             @endif
+
                                         </td>
                                     </tr>
                                 @endforeach

@@ -118,6 +118,7 @@ class CreateTransaction extends Component
 
         try {
 
+            // proses permintaan dari gudang pusat
             if ($this->type == 'centralKitchen') {
 
 
@@ -125,7 +126,7 @@ class CreateTransaction extends Component
 
 
                     // cari warehouse berdasarkan id
-                    $this->warehouse = Warehouse::find($this->id);
+                    $this->warehouse = Warehouse::findOrFail($this->id);
 
                     if ($this->warehouse != null && $this->warehouse->centralKitchen->isNotEmpty()) {
                         $result = $this->warehouse->centralKitchen->each(function ($central) {
@@ -149,11 +150,16 @@ class CreateTransaction extends Component
 
             }
 
+            // TODO: Proses permintaan dari outlet
+
 
         } catch (ModelNotFoundException $modelNotFoundException) {
-
+            Log::error('warehouse tidak ketemu');
+            Log::error($modelNotFoundException->getMessage());
+            Log::error($modelNotFoundException->getTraceAsString());
         } catch (Exception $exception) {
-
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
         }
 
     }
@@ -192,16 +198,27 @@ class CreateTransaction extends Component
      */
     public function selectItem(string $id)
     {
-        // Periksa apakah $id sudah ada di dalam array $selected
-        $index = array_search($id, $this->selected);
+        // Pastikan $id adalah nilai yang valid
+        if (!empty($id)) {
+            // Cari indeks elemen dengan ID yang ditentukan
+            $index = array_search($id, array_column($this->selected, 'id'));
 
-        // Jika $id sudah ada, hapus dari array
-        if ($index !== false) {
-            unset($this->selected[$index]);
+            // Jika $id sudah ada, hapus elemen dari array
+            if ($index !== false) {
+                unset($this->selected[$index]);
+            } else {
+                // Jika $id belum ada, tambahkan ke array
+                $this->selected[] = [
+                    'id' => $id,
+                    'itemReq' => ''
+                ];
+            }
         } else {
-            // Jika $id belum ada, tambahkan ke array
-            $this->selected[] = $id;
+            Log::error('Id tidak ditemukan saat memilih item permintaan stock');
+            notify()->error('ada sesuatu yang salah silahkan muat ulang', 'Gagal');
+            return;
         }
+
     }
 
     /**
@@ -210,6 +227,18 @@ class CreateTransaction extends Component
      * @return void
      */
     public function create()
+    {
+
+        // jika is create false maka jalankan proses pembuatan stok pertama kali
+        if ($this->isCreate == false) {
+            $this->storeRequest();
+            return;
+        }
+
+        // selesaikan pembuatan request
+    }
+
+    private function storeRequest()
     {
         try {
             $result = $this->warehouseTransactionService->createRequest($this->isOutlet, $this->id, ($this->note == '') ? null : $this->note);
@@ -227,7 +256,22 @@ class CreateTransaction extends Component
             notify()->warning('Sedang ada proses permintaan yang sedang terjadi juga, silahkan tunggu sebentar lalu coba lagi', 'Gagal');
             return;
         }
+    }
 
+    /**
+     * selesaikan pembuatan permintaan stok dari warehouse pusat ke central kitchen
+     * validasi item yang dipilih
+     * @return void
+     */
+    private function finishCreateRequest()
+    {
+        // jika item belum dipilih
+        if (empty($this->selected)) {
+            notify()->warning('Harap pilih item sebelum melanjutkan', 'Peringatan');
+            return;
+        }
+
+        // proses simpan detail permintaan
 
     }
 

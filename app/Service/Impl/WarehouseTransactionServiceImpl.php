@@ -2,6 +2,7 @@
 
 namespace App\Service\Impl;
 
+use App\Models\Item;
 use App\Models\RequestStock;
 use App\Models\Warehouse;
 use App\Service\WarehouseTransactionService;
@@ -105,5 +106,56 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             return [];
         }
 
+    }
+
+    /**
+     * simpan item req yang dipilih ke items detail
+     * pilah mana item yang dibeli mana item yang diproduksi
+     * TODO: Proses untuk gudang pusat atau permintaan dari outlet
+     * @param string $reqId
+     * @param array $itemReq
+     * @return void
+     */
+    public function finishRequest(string $reqId, array $itemReq): string
+    {
+        if (empty($reqId) && empty($itemReq)) {
+            throw new Exception('Parameter kosong');
+        }
+
+        $itemIds = array_column($itemReq, 'id');
+        $items = Item::whereIn('id', $itemIds)->get()->keyBy('id');
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($itemReq as $item) {
+                $itemId = $item['id'];
+
+                if (!$items->has($itemId)) {
+                    throw new Exception('Item dengan ID ' . $itemId . ' tidak ditemukan');
+                }
+
+                $itemModel = $items[$itemId];
+
+                RequestStockDetail::updateOrInsert(
+                    [
+                        'request_stock_id' => $reqId,
+                        'items_id' => $itemModel->id,
+                    ],
+                    [
+                        'qty' => $item['itemReq'],
+                        'type' => ($itemModel->route == 'BUY') ? 'PO' : (($itemModel->route == 'PRODUCECENTRAL') ? 'PRODUCE' : 'ERROR'),
+                    ]
+                );
+            }
+
+            DB::commit();
+            return 'success';
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            throw new Exception('Gagal menyimpan item detail');
+        }
     }
 }
