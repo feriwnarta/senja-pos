@@ -5,6 +5,7 @@ namespace App\Service\Impl;
 use App\Models\Category;
 use App\Models\CentralKitchen;
 use App\Models\Item;
+use App\Models\ItemPlacement;
 use App\Models\Outlet;
 use App\Models\StockItem;
 use App\Models\Unit;
@@ -151,13 +152,21 @@ class CompositionServiceImpl implements CompositionService
             $item = Item::create([
                 'code' => $code,
                 'thumbnail' => $result,
-                'racks_id' => $placement ?: null,
                 'name' => $name,
                 'description' => $description ?: null,
                 'units_id' => $unit,
                 'categories_id' => $category,
                 'route' => ($route == 'BUY') ? $route : $routeProduce,
             ]);
+
+            if ($placement != null) {
+                ItemPlacement::create(
+                    [
+                        'racks_id' => $placement,
+                        'items_id' => $item->id,
+                    ]
+                );
+            }
 
             if ($isOutlet) {
                 $item->outlet()->syncWithoutDetaching($url);

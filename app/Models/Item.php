@@ -24,10 +24,10 @@ class Item extends Model
     protected $guarded = [];
 
 
-    public function racks(): BelongsTo
-    {
-        return $this->belongsTo(Rack::class, 'racks_id');
-    }
+//    public function racks(): BelongsTo
+//    {
+//        return $this->belongsTo(Rack::class, 'racks_id');
+//    }
 
     public function unit(): BelongsTo
     {
@@ -42,6 +42,11 @@ class Item extends Model
     public function stockItem(): HasMany
     {
         return $this->hasMany(StockItem::class, 'items_id');
+    }
+
+    public function placement(): HasMany
+    {
+        return $this->hasMany(ItemPlacement::class, 'items_id');
     }
 
     public function recipeDetail(): HasMany

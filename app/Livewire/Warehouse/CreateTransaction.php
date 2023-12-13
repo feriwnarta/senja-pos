@@ -114,8 +114,6 @@ class CreateTransaction extends Component
      */
     private function getAllItemByWarehouseId()
     {
-
-
         try {
 
             // proses permintaan dari gudang pusat
@@ -129,18 +127,37 @@ class CreateTransaction extends Component
                     $this->warehouse = Warehouse::findOrFail($this->id);
 
                     if ($this->warehouse != null && $this->warehouse->centralKitchen->isNotEmpty()) {
-                        $result = $this->warehouse->centralKitchen->each(function ($central) {
-                            $items = $central->item()->cursorPaginate(10);
+                        // all central warehouse
+//                        $result = $this->warehouse->centralKitchen->each(function ($central) {
+//                            $items = $central->item()->cursorPaginate(10);
+//
+//                            $allItems = collect();
+//                            $items->each(function ($item) use ($allItems) {
+//                                $allItems->push($item);
+//                            });
+//
+//                            $this->items = $allItems;
+//
+//                            $this->nextCursor = $items->toArray()['next_cursor'];
+//
+//                        });
 
-                            $allItems = collect();
-                            $items->each(function ($item) use ($allItems) {
-                                $allItems->push($item);
+                        $this->warehouse->areas->contains(function ($area) {
+                            $area->racks->each(function ($rack) {
+                                $rack->itemPlacement->each(function ($item) {
+                                    $items = $item->items()->cursorPaginate(10);
+
+                                    $allItems = collect();
+                                    $items->each(function ($item) use ($allItems) {
+                                        $allItems->push($item);
+                                    });
+
+                                    $this->items = $allItems;
+
+                                    $this->nextCursor = $items->toArray()['next_cursor'];
+                                });
+
                             });
-
-                            $this->items = $allItems;
-
-                            $this->nextCursor = $items->toArray()['next_cursor'];
-
                         });
 
 
@@ -174,20 +191,40 @@ class CreateTransaction extends Component
         Log::debug($this->nextCursor);
 
         if ($this->nextCursor != null) {
-            if ($this->warehouse->centralKitchen->isNotEmpty()) {
-                $result = $this->warehouse->centralKitchen->each(function ($central) {
-                    $items = $central->item()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
-                    $allItems = collect();
-                    $items->each(function ($item) use ($allItems) {
-                        $allItems->push($item);
+
+            $this->warehouse->areas->contains(function ($area) {
+                $area->racks->each(function ($rack) {
+                    $rack->itemPlacement->each(function ($item) {
+                        $items = $item->items()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
+
+                        $allItems = collect();
+                        $items->each(function ($item) use ($allItems) {
+                            $allItems->push($item);
+                        });
+
+                        $this->items = $this->items->merge($allItems);
+
+                        $this->nextCursor = $items->toArray()['next_cursor'];
                     });
 
-                    // Menggabungkan koleksi existing dengan koleksi baru
-                    $this->items = $this->items->merge($allItems);
-
-                    $this->nextCursor = $items->nextCursor();
                 });
-            }
+            });
+
+//            OPSI TANPA GUDANG
+
+//            $result = $this->warehouse->centralKitchen->each(function ($central) {
+//                $items = $central->item()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
+//                $allItems = collect();
+//                $items->each(function ($item) use ($allItems) {
+//                    $allItems->push($item);
+//                });
+//
+//                // Menggabungkan koleksi existing dengan koleksi baru
+//                $this->items = $this->items->merge($allItems);
+//
+//                $this->nextCursor = $items->toArray()['next_cursor'];
+//            });
+
         }
     }
 
@@ -231,31 +268,64 @@ class CreateTransaction extends Component
 
         // jika is create false maka jalankan proses pembuatan stok pertama kali
         if ($this->isCreate == false) {
-            $this->storeRequest();
-            $this->findRequestCreated();
-            return;
+            $result = $this->storeRequest();
+
+            if ($result) {
+                $this->findRequestCreated();
+                notify()->success('Permintaan berhasil dibuat', 'Sukses');
+                return;
+            }
         }
 
         $this->finishCreateRequest();
     }
 
-    private function storeRequest()
+    private function storeRequest(): bool
     {
         try {
+            // lakukan pengecekan apakah ada item didalam gudang
+            $isExistItem = $this->checkItemOnWarehouse();
+
+            if (!$isExistItem) {
+                notify()->warning('Item didalam gudang kosong, harap tentukan lokasi penyimpanan item', 'Peringatan');
+                return false;
+            }
+
+
+            // proses pembuatan permintaan stock
             $result = $this->warehouseTransactionService->createRequest($this->isOutlet, $this->id, ($this->note == '') ? null : $this->note);
             $this->isCreate = true;
             $this->requestId = $result->id;
             $this->setFieldNextReq($result);
-            notify()->success('Permintaan berhasil dibuat', 'Sukses');
-            return;
+
+            return true;
+
         } catch (Exception $exception) {
             Log::debug('gagal membuat request');
             Log::error($exception->getMessage());
+            return false;
         } catch (LockTimeoutException $exception) {
             Log::debug('gagal membuat request karena sedang ada lock');
             Log::error($exception->getMessage());
             notify()->warning('Sedang ada proses permintaan yang sedang terjadi juga, silahkan tunggu sebentar lalu coba lagi', 'Gagal');
-            return;
+            return false;
+        }
+    }
+
+    private function checkItemOnWarehouse()
+    {
+        try {
+
+            return Warehouse::findOrFail($this->id)->areas->contains(function ($area) {
+                return $area->racks->contains(function ($rack) {
+                    return $rack->itemPlacement->isNotEmpty();
+                });
+            });
+
+
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
         }
     }
 

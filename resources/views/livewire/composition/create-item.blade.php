@@ -101,6 +101,7 @@
                                         @endforeach
                                     @endif
                                 </select>
+                                @error('unit') <span class="error">{{ $message }}</span> @enderror
                             </div>
                         </div>
 
@@ -222,6 +223,7 @@
                                     @endif
 
                                 </select>
+                                @error('placement') <span class="error">{{ $message }}</span> @enderror
                             </div>
                         </div>
 

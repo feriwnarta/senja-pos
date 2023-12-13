@@ -12,10 +12,12 @@ return new class extends Migration {
     {
         Schema::create('item_placements', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->uuid('items_id')->nullable(false);
             $table->uuid('racks_id')->nullable(false);
             $table->uuid('created_by')->nullable(true);
             $table->uuid('updated_by')->nullable(true);
 
+            $table->foreign('items_id')->on('items')->references('id')->onDelete('cascade');
             $table->foreign('racks_id')->on('racks')->references('id')->onDelete('cascade');
             $table->timestamps();
         });

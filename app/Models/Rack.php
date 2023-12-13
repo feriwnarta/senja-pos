@@ -23,8 +23,8 @@ class Rack extends Model
         return $this->belongsTo(Area::class);
     }
 
-    public function item(): HasMany
+    public function itemPlacement(): HasMany
     {
-        return $this->hasMany(Item::class, 'racks_id');
+        return $this->hasMany(ItemPlacement::class, 'racks_id');
     }
 }

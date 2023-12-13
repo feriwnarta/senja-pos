@@ -29,6 +29,7 @@ class CreateItem extends Component
     public string $minimumStock = '';
     #[Rule('required')]
     public string $category = '';
+    #[Rule('required')]
     public string $placement = '';
     #[Rule('required|min:0')]
     public string $route = 'BUY';
@@ -178,7 +179,6 @@ class CreateItem extends Component
         }
 
         notify()->error('Gagal buat item', 'Gagal');
-        $this->reset('code', 'name', 'description', 'unit', 'inStock', 'minimumStock', 'avgCost', 'lastCost', 'placement', 'category', 'thumbnail');
     }
 
     private function validateRoute()

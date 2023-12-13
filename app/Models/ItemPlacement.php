@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
 class ItemPlacement extends Model
@@ -28,5 +29,16 @@ class ItemPlacement extends Model
             $userId = Auth::check() ? Auth::id() : 'USER NOT LOGIN';
             $model->updated_by = $userId;
         });
+    }
+
+    public function racks(): BelongsTo
+    {
+        return $this->belongsTo(Rack::class, 'racks_id');
+    }
+
+
+    public function items(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'items_id');
     }
 }
