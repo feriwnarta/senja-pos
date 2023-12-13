@@ -102,34 +102,95 @@
                             <tbody>
                             @if(!empty($items))
                                 @foreach($items as $item)
+                                    @if($item->route != 'BUY')
+                                        @if($item->recipe->isEmpty())
+                                            <tr wire:key="{{ $item->id }}" class="item-disabled">
+                                                <td>
+                                                    <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
+                                                       data-bs-title="Resep belum dibuat" data-bs-placement="right"></i>
+                                                </td>
+                                                {{--  TODO : Perlu lebih spesifik ke item --}}
+                                                <td> {{ $item->name }}</td>
+                                                <td>{{ ($item->sku) ?? '-' }}</td>
+                                                <td>{{ $item->category->name }}</td>
+                                                <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
+                                                <td>{{ $item->unit->name }}</td>
+                                                <td style="width: 200px;">
 
-                                    <tr wire:key="{{ $item->id }}">
-                                        <td>
-                                            <input class="form-check-input" type="checkbox"
-                                                   wire:change="selectItem('{{ $item->id }}')"
-                                                   id="checkbox_{{ $loop->iteration }}">
-                                        </td>
-                                        {{--  TODO : Perlu lebih spesifik ke item --}}
-                                        <td> {{ $item->name }}</td>
-                                        <td>{{ ($item->sku) ?? '-' }}</td>
-                                        <td>{{ $item->category->name }}</td>
-                                        <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
-                                        <td>{{ $item->unit->name }}</td>
-                                        <td style="width: 200px;">
-
-                                            @if(!empty($selected))
-                                                @foreach($selected as $key =>  $select)
-                                                    @if($select['id'] == $item->id)
-                                                        <input type="text" class="form-control input-default"
-                                                               x-mask:dynamic="$money($input, '.')"
-                                                               wire:model="selected.{{ $key }}.itemReq"
-                                                               placeholder=" 0">
+                                                    @if(!empty($selected))
+                                                        @foreach($selected as $key =>  $select)
+                                                            @if($select['id'] == $item->id)
+                                                                <input type="text" class="form-control input-default"
+                                                                       x-mask:dynamic="$money($input, '.')"
+                                                                       wire:model="selected.{{ $key }}.itemReq"
+                                                                       placeholder=" 0">
+                                                            @endif
+                                                        @endforeach
                                                     @endif
-                                                @endforeach
-                                            @endif
 
-                                        </td>
-                                    </tr>
+                                                </td>
+                                            </tr>
+
+                                        @else
+                                            <tr wire:key="{{ $item->id }}">
+                                                <td>
+                                                    <input class="form-check-input" type="checkbox"
+                                                           wire:change="selectItem('{{ $item->id }}')"
+                                                           id="checkbox_{{ $loop->iteration }}">
+                                                </td>
+                                                {{--  TODO : Perlu lebih spesifik ke item --}}
+                                                <td> {{ $item->name }}</td>
+                                                <td>{{ ($item->sku) ?? '-' }}</td>
+                                                <td>{{ $item->category->name }}</td>
+                                                <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
+                                                <td>{{ $item->unit->name }}</td>
+                                                <td style="width: 200px;">
+
+                                                    @if(!empty($selected))
+                                                        @foreach($selected as $key =>  $select)
+                                                            @if($select['id'] == $item->id)
+                                                                <input type="text" class="form-control input-default"
+                                                                       x-mask:dynamic="$money($input, '.')"
+                                                                       wire:model="selected.{{ $key }}.itemReq"
+                                                                       placeholder=" 0">
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+
+                                                </td>
+                                            </tr>
+                                        @endif
+
+                                    @else
+                                        <tr wire:key="{{ $item->id }}">
+                                            <td>
+
+                                                <input class="form-check-input" type="checkbox"
+                                                       wire:change="selectItem('{{ $item->id }}')"
+                                                       id="checkbox_{{ $loop->iteration }}">
+                                            </td>
+                                            {{--  TODO : Perlu lebih spesifik ke item --}}
+                                            <td> {{ $item->name }}</td>
+                                            <td>{{ ($item->sku) ?? '-' }}</td>
+                                            <td>{{ $item->category->name }}</td>
+                                            <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
+                                            <td>{{ $item->unit->name }}</td>
+                                            <td style="width: 200px;">
+
+                                                @if(!empty($selected))
+                                                    @foreach($selected as $key =>  $select)
+                                                        @if($select['id'] == $item->id)
+                                                            <input type="text" class="form-control input-default"
+                                                                   x-mask:dynamic="$money($input, '.')"
+                                                                   wire:model="selected.{{ $key }}.itemReq"
+                                                                   placeholder=" 0">
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+
+                                            </td>
+                                        </tr>
+                                    @endif
                                 @endforeach
                                 <tr wire:key="loadMoreRow">
                                     <td colspan="7">
@@ -150,3 +211,11 @@
 
 
 </x-page-layout>
+
+@section('footer-script')
+
+    <script>
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+@endsection

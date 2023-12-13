@@ -173,3 +173,14 @@
     vertical-align: middle;
 }
 
+.danger-exclamation-icon {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../img/icons/exclamation-circle.png);
+    vertical-align: middle;
+}
+
+

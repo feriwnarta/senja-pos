@@ -54,6 +54,11 @@ class Item extends Model
         return $this->hasMany(RecipeItemDetail::class, 'items_id');
     }
 
+    public function recipe(): HasMany
+    {
+        return $this->hasMany(RecipeItem::class, 'items_id');
+    }
+
     public function outlet(): BelongsToMany
     {
         return $this->belongsToMany(Outlet::class, 'items_outlets', 'items_id', 'outlets_id')->using(new class extends Pivot {

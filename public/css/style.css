@@ -262,6 +262,10 @@ input[type="search"]::-webkit-search-results-decoration {
     overflow: auto;
 }
 
+.item-disabled {
+    background-color: var(--primary-surface, #FFF7F2);;
+}
+
 
 /*#tableMenu th {*/
 /*    border-top: 1px solid white;*/
