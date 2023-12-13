@@ -232,10 +232,11 @@ class CreateTransaction extends Component
         // jika is create false maka jalankan proses pembuatan stok pertama kali
         if ($this->isCreate == false) {
             $this->storeRequest();
+            $this->findRequestCreated();
             return;
         }
 
-        // TODO: selesaikan pembuatan request outlet
+        $this->finishCreateRequest();
     }
 
     private function storeRequest()
@@ -274,8 +275,16 @@ class CreateTransaction extends Component
         // proses simpan detail permintaan
         try {
             $result = $this->warehouseTransactionService->finishRequest($this->requestId, $this->selected);
-        } catch (Exception $exception) {
 
+            if ($result == 'success') {
+                notify()->success('Berhasil menyelesaikan permintaan stock');
+                $this->reset('requestId', 'code', 'error', 'note', 'isCreate', 'items', 'selected', 'nextCursor');
+                $this->date = date('Y-m-d');
+                return;
+            }
+        } catch (Exception $exception) {
+            notify()->error('Gagal menyelesaikan permintaan stok', 'Gagal');
+            return;
         }
     }
 
