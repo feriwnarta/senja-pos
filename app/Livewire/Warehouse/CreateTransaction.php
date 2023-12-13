@@ -142,23 +142,15 @@ class CreateTransaction extends Component
 //
 //                        });
 
-                        $this->warehouse->areas->contains(function ($area) {
-                            $area->racks->each(function ($rack) {
-                                $rack->itemPlacement->each(function ($item) {
-                                    $items = $item->items()->cursorPaginate(10);
+                        $allItems = collect(); // Inisialisasi koleksi di luar fungsi each
+                        $result = $this->warehouse->itemPlacement()->cursorPaginate(10);
 
-                                    $allItems = collect();
-                                    $items->each(function ($item) use ($allItems) {
-                                        $allItems->push($item);
-                                    });
-
-                                    $this->items = $allItems;
-
-                                    $this->nextCursor = $items->toArray()['next_cursor'];
-                                });
-
-                            });
+                        $result->each(function ($item) use ($allItems) {
+                            $allItems->push($item->item);
                         });
+
+                        $this->items = $allItems;
+                        $this->nextCursor = $result->toArray()['next_cursor'];
 
 
                     }
@@ -192,24 +184,6 @@ class CreateTransaction extends Component
 
         if ($this->nextCursor != null) {
 
-            $this->warehouse->areas->contains(function ($area) {
-                $area->racks->each(function ($rack) {
-                    $rack->itemPlacement->each(function ($item) {
-                        $items = $item->items()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
-
-                        $allItems = collect();
-                        $items->each(function ($item) use ($allItems) {
-                            $allItems->push($item);
-                        });
-
-                        $this->items = $this->items->merge($allItems);
-
-                        $this->nextCursor = $items->toArray()['next_cursor'];
-                    });
-
-                });
-            });
-
 //            OPSI TANPA GUDANG
 
 //            $result = $this->warehouse->centralKitchen->each(function ($central) {
@@ -224,6 +198,17 @@ class CreateTransaction extends Component
 //
 //                $this->nextCursor = $items->toArray()['next_cursor'];
 //            });
+
+            $allItems = collect(); // Inisialisasi koleksi di luar fungsi each
+            $result = $this->warehouse->itemPlacement()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
+
+            $result->each(function ($item) use ($allItems) {
+                $allItems->push($item->item);
+            });
+
+            $this->items = $this->items->merge($allItems);
+            $this->nextCursor = $result->toArray()['next_cursor'];
+
 
         }
     }

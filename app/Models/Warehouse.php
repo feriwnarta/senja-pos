@@ -42,4 +42,10 @@ class Warehouse extends Model
             use  HasUuids;
         })->withTimestamps();
     }
+
+    public function itemPlacement(): HasMany
+    {
+        return $this->hasMany(ItemPlacement::class, 'warehouses_id');
+    }
+
 }

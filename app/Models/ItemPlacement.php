@@ -36,8 +36,13 @@ class ItemPlacement extends Model
         return $this->belongsTo(Rack::class, 'racks_id');
     }
 
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouses_id');
+    }
 
-    public function items(): BelongsTo
+
+    public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class, 'items_id');
     }

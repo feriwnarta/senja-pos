@@ -20,7 +20,7 @@ class Rack extends Model
 
     public function area(): BelongsTo
     {
-        return $this->belongsTo(Area::class);
+        return $this->belongsTo(Area::class, 'areas_id');
     }
 
     public function itemPlacement(): HasMany

@@ -7,6 +7,7 @@ use App\Models\CentralKitchen;
 use App\Models\Item;
 use App\Models\ItemPlacement;
 use App\Models\Outlet;
+use App\Models\Rack;
 use App\Models\StockItem;
 use App\Models\Unit;
 use App\Service\CompositionService;
@@ -159,11 +160,14 @@ class CompositionServiceImpl implements CompositionService
                 'route' => ($route == 'BUY') ? $route : $routeProduce,
             ]);
 
+            $rack = Rack::findOrFail($placement);
+
             if ($placement != null) {
                 ItemPlacement::create(
                     [
                         'racks_id' => $placement,
                         'items_id' => $item->id,
+                        'warehouses_id' => $rack->area->warehouse->id,
                     ]
                 );
             }

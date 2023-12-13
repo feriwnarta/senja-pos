@@ -4,9 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Area;
 use App\Models\Rack;
-use App\Models\Warehouse;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotNull;
 
@@ -26,6 +24,15 @@ class TestRackModel extends TestCase
         ]);
 
         self::assertNotNull($rack);
+
+    }
+
+    public function testGetRack()
+    {
+
+        $rack = Rack::find('9ad64673-915f-46ee-9c46-affb78db1da1')->area->warehouse->id;
+        print_r($rack);
+        assertNotNull($rack);
 
     }
 
@@ -53,7 +60,7 @@ class TestRackModel extends TestCase
     public function testInsertSameName()
     {
         $this->expectException(QueryException::class);
-        
+
         $rack1 = Rack::create([
             'area_id' => $this->areaA->id,
             'name' => 'Rack A2',
@@ -72,23 +79,23 @@ class TestRackModel extends TestCase
     {
         parent::setUp();
 
-        DB::table('racks')->delete();
-
-        $warehouse = Warehouse::create([
-            'warehouse_code' => fake()->uuid(),
-            'name' => fake()->name(),
-            'address' => fake()->address(),
-        ]);
-
-        $this->areaA = Area::create([
-            'warehouse_id' => $warehouse->id,
-            'name' => 'Area A',
-        ]);
-
-        $this->areaB = Area::create([
-            'warehouse_id' => $warehouse->id,
-            'name' => 'Area A',
-        ]);
+//        DB::table('racks')->delete();
+//
+//        $warehouse = Warehouse::create([
+//            'warehouse_code' => fake()->uuid(),
+//            'name' => fake()->name(),
+//            'address' => fake()->address(),
+//        ]);
+//
+//        $this->areaA = Area::create([
+//            'warehouse_id' => $warehouse->id,
+//            'name' => 'Area A',
+//        ]);
+//
+//        $this->areaB = Area::create([
+//            'warehouse_id' => $warehouse->id,
+//            'name' => 'Area A',
+//        ]);
 
     }
 
