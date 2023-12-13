@@ -3,6 +3,7 @@
 use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Livewire\CentralKitchen\AddCentralKitchen;
 use App\Livewire\CentralKitchen\ListCentralKitchen;
+use App\Livewire\CentralKitchen\Production;
 use App\Livewire\Composition\CreateItem;
 use App\Livewire\Composition\CreateRecipe;
 use App\Livewire\Composition\Item;
@@ -64,6 +65,7 @@ Route::controller(WarehouseController::class)->group(function () {
 
 Route::get('central-kitchen/list-central-kitchen', ListCentralKitchen::class)->name('list-central-kitchen');
 Route::get('central-kitchen/list-central-kitchen/add-central-kitchen', AddCentralKitchen::class)->name('add-central-kitchen');
+Route::get('central-kitchen/production', Production::class)->name('central-kitchen-production');
 
 Route::get('outlet/list-outlet', ListOutlet::class)->name('list-outlet');
 Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet');

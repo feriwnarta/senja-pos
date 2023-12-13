@@ -77,7 +77,7 @@ class CompositionServiceImpl implements CompositionService
 
             foreach ($warehouses as $warehouse) {
                 foreach ($warehouse->areas()->get() as $area) {
-                    $result[] = $this->formatAreaData($area);
+                    $result[] = $this->formatAreaData($warehouse->name, $area);
                 }
             }
 
@@ -109,9 +109,10 @@ class CompositionServiceImpl implements CompositionService
         return CentralKitchen::find($identifier)->warehouse()->get();
     }
 
-    private function formatAreaData($area)
+    private function formatAreaData($warehouseName, $area)
     {
         return [
+            'warehouseName' => $warehouseName,
             'areaId' => $area->id,
             'areaName' => $area->name,
             'rack' => $area->racks()->get()->map(function ($rack) {

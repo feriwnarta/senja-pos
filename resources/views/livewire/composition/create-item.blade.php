@@ -213,9 +213,10 @@
                                         @foreach($warehousePlacement as $placement)
 
                                             @foreach($placement['rack'] as $rack)
-                                                <option value="{{ $rack['rackId'] }}">Area
-                                                    - {{ $placement['areaName'] }}
-                                                    / Rak - {{ $rack['rackName'] }}</option>
+                                                <option value="{{ $rack['rackId'] }}">Gudang
+                                                    : {{ $placement['warehouseName'] }} / Area
+                                                    : {{ $placement['areaName'] }}
+                                                    : Rak - {{ $rack['rackName'] }}</option>
                                             @endforeach
                                         @endforeach
                                     @endif

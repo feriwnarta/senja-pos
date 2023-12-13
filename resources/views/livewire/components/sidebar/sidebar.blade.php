@@ -151,7 +151,7 @@
 
 
                 @php
-                    $collapseCk = Route::is(['list-central-kitchen', 'add-central-kitchen']);
+                    $collapseCk = Route::is(['list-central-kitchen', 'add-central-kitchen', 'central-kitchen-production']);
                 @endphp
 
                 <div class="accordion-item">
@@ -179,40 +179,15 @@
                                 </button>
                             </a>
 
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    Stok
-                                </button>
-                            </a>
-
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
+                            <a href="/central-kitchen/production"
+                               wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('central-kitchen-production') ? 'inner-menu-active' : '' }}"
+                                    type="button">
                                     Produksi
                                 </button>
                             </a>
 
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    Resep
-                                </button>
-                            </a>
-
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    Permintaan Item
-                                </button>
-                            </a>
-
-                            <a href="#" wire:navigate>
-                                <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
-                                        id="">
-                                    Laporan
-                                </button>
-                            </a>
                         </div>
                     </div>
                 </div>
