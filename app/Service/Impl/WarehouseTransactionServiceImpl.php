@@ -140,14 +140,15 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             'type' => ($resultItem->route == 'BUY') ? 'PO' : (($resultItem->route == 'PRODUCECENTRALKITCHEN') ? 'PRODUCE' : 'ERROR'),
                         ]);
 
-                        RequestStockHistory::create([
-                            'request_stocks_id' => $reqId,
-                            'desc' => 'Permintaan stok dibuat',
-                            'status' => 'Baru',
-                        ]);
 
                         Log::info('Permintaan stok dibuat dengan nomor request ' . $reqId);
                     }
+                    
+                    RequestStockHistory::create([
+                        'request_stocks_id' => $reqId,
+                        'desc' => 'Permintaan stok dibuat',
+                        'status' => 'Baru',
+                    ]);
 
                     DB::commit();
                     return 'success';
