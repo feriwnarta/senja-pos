@@ -42,6 +42,23 @@ class TestTransactionWarehouse extends TestCase
         assertIsString($result->id);
     }
 
+    public function testFinishCreateRequestCk()
+    {
+        $result = $this->warehouseTransactionService->finishRequest('9ad5d471-41a6-4c9a-addf-9508ed0da3a8', [
+            [
+                'id' => '9ad1ee71-1db7-46aa-a1f8-9901f1ac6a96',
+                'itemReq' => '10',
+            ],
+            [
+                'id' => '9ad4198b-e125-4f42-9b06-7b35ee44f40f',
+                'itemReq' => '20',
+            ]
+        ]);
+
+        assertIsString($result);
+
+    }
+
 
     protected function setUp(): void
     {

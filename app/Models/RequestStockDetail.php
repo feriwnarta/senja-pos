@@ -12,7 +12,7 @@ class RequestStockDetail extends Model
     use HasFactory, HasUuids;
 
     public $incrementing = false;
-    protected $table = 'request_stocks_detail';
+    protected $table = 'request_stock_details';
     protected $keyType = 'string';
 
     protected $guarded = [];

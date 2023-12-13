@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('request_stock_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('request_stocks_id')->nullable(false);
-            $table->uuid('items_id')->nullable(false);
+            $table->uuid('items_id')->nullable(false)->unique();
             $table->decimal('qty', 15, 2)->nullable(false)->default(0.00);
             $table->enum('type', ['PO', 'PRODUCE'])->nullable(false);
             $table->uuid('created_by')->nullable(true);

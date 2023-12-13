@@ -235,7 +235,7 @@ class CreateTransaction extends Component
             return;
         }
 
-        // selesaikan pembuatan request
+        // TODO: selesaikan pembuatan request outlet
     }
 
     private function storeRequest()
@@ -272,7 +272,11 @@ class CreateTransaction extends Component
         }
 
         // proses simpan detail permintaan
+        try {
+            $result = $this->warehouseTransactionService->finishRequest($this->requestId, $this->selected);
+        } catch (Exception $exception) {
 
+        }
     }
 
 

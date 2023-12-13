@@ -4,6 +4,8 @@ namespace App\Service\Impl;
 
 use App\Models\Item;
 use App\Models\RequestStock;
+use App\Models\RequestStockDetail;
+use App\Models\RequestStockHistory;
 use App\Models\Warehouse;
 use App\Service\WarehouseTransactionService;
 use Carbon\Carbon;
@@ -43,6 +45,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             'increment' => $code['increment'],
                             'note' => $note,
                         ]);
+
 
                         DB::commit();
 
@@ -118,44 +121,48 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
      */
     public function finishRequest(string $reqId, array $itemReq): string
     {
-        if (empty($reqId) && empty($itemReq)) {
+        if (empty($reqId) || empty($itemReq)) {
             throw new Exception('Parameter kosong');
         }
 
-        $itemIds = array_column($itemReq, 'id');
-        $items = Item::whereIn('id', $itemIds)->get()->keyBy('id');
-
         try {
-            DB::beginTransaction();
+            return Cache::lock('createRequestWarehouseFinish', 10)->block(5, function () use ($reqId, $itemReq) {
+                DB::beginTransaction();
 
-            foreach ($itemReq as $item) {
-                $itemId = $item['id'];
+                try {
+                    foreach ($itemReq as $item) {
+                        $resultItem = Item::findOrFail($item['id']);
 
-                if (!$items->has($itemId)) {
-                    throw new Exception('Item dengan ID ' . $itemId . ' tidak ditemukan');
+                        RequestStockDetail::create([
+                            'request_stocks_id' => $reqId,
+                            'items_id' => $item['id'],
+                            'qty' => $item['itemReq'],
+                            'type' => ($resultItem->route == 'BUY') ? 'PO' : (($resultItem->route == 'PRODUCECENTRALKITCHEN') ? 'PRODUCE' : 'ERROR'),
+                        ]);
+
+                        RequestStockHistory::create([
+                            'request_stocks_id' => $reqId,
+                            'desc' => 'Permintaan stok dibuat',
+                            'status' => 'Baru',
+                        ]);
+
+                        Log::info('Permintaan stok dibuat dengan nomor request ' . $reqId);
+                    }
+
+                    DB::commit();
+                    return 'success';
+                } catch (Exception $exception) {
+                    DB::rollBack();
+                    Log::error($exception->getMessage());
+                    Log::error($exception->getTraceAsString());
+                    throw new Exception('Gagal menyimpan item detail');
                 }
-
-                $itemModel = $items[$itemId];
-
-                RequestStockDetail::updateOrInsert(
-                    [
-                        'request_stock_id' => $reqId,
-                        'items_id' => $itemModel->id,
-                    ],
-                    [
-                        'qty' => $item['itemReq'],
-                        'type' => ($itemModel->route == 'BUY') ? 'PO' : (($itemModel->route == 'PRODUCECENTRAL') ? 'PRODUCE' : 'ERROR'),
-                    ]
-                );
-            }
-
-            DB::commit();
-            return 'success';
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-            throw new Exception('Gagal menyimpan item detail');
+            });
+        } catch (LockTimeoutException $e) {
+            // Handle jika lock tidak dapat diperoleh dalam 5 detik
+            Log::error('Lock tidak didapatkan selama 5 detik: ' . $e->getMessage());
+            // Atau throw kembali exception atau lakukan tindakan sesuai kebutuhan
+            throw new Exception('Lock tidak didapatkan selama 5 detik');
         }
     }
 }
