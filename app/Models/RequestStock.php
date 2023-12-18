@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class RequestStock extends Model
@@ -29,5 +30,15 @@ class RequestStock extends Model
             $userId = Auth::check() ? Auth::id() : 'USER NOT LOGIN';
             $model->updated_by = $userId;
         });
+    }
+
+    public function requestStockDetail(): HasMany
+    {
+        return $this->hasMany(RequestStockDetail::class, 'request_stocks_id');
+    }
+
+    public function requestStockHistory(): HasMany
+    {
+        return $this->hasMany(RequestStockHistory::class, 'request_stocks_id');
     }
 }

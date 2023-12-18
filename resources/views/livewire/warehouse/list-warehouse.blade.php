@@ -34,6 +34,7 @@
 
                     <button type="btn"
                             wire:click="addWarehouse"
+                            wire:loading.attr="disabled"
                             class="btn btn-text-only-primary btn-nav margin-left-10">{{ __('app_locale.button.tambahGudang') }}</button>
 
 

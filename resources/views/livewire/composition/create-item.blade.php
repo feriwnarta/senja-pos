@@ -19,7 +19,7 @@
                     <div class="dropdown margin-left-10">
                         <button type="btn"
                                 class="btn btn-text-only-secondary btn-nav margin-left-10"
-                                @click="$dispatch('cancel-edit-warehouse')">
+                                @click="$dispatch('cancel-edit-warehouse')" wire:loading.attr="disabled">
                             Batal
                         </button>
                     </div>
@@ -28,6 +28,7 @@
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
                             wire:click="save"
+                            wire:loading.attr="disabled"
                     >Simpan
                     </button>
 

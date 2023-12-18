@@ -139,7 +139,7 @@
                                 <tr id="addWarehouseAction">
                                     <td>
                                         <button class="btn icon-text caption-medium" type="button" id="addArea"
-                                                wire:click.prevent="addArea">
+                                                wire:click.prevent="addArea" wire:loading.attr="disabled">
                                             + Area
                                         </button>
                                     </td>
@@ -147,6 +147,7 @@
 
                                         <button class="btn icon-text caption-medium" type="button" id="addRack"
                                                 wire:click="addRack"
+                                                wire:loading.attr="disabled"
                                                 style="display: {{ ($isAddedArea) ? 'block' : 'none' }}">
                                             + Rak
                                         </button>
@@ -451,7 +452,7 @@
                                         wire:click="cancelNewItem">Batal
                                 </button>
                                 <button class="btn btn-text-only-primary margin-left-10"
-                                        wire:click="saveNewItem">Simpan
+                                        wire:click="saveNewItem" wire:loading.attr="disabled">Simpan
                                 </button>
                             </div>
                         </div>

@@ -151,7 +151,7 @@
 
 
                 @php
-                    $collapseCk = Route::is(['list-central-kitchen', 'add-central-kitchen', 'central-kitchen-production']);
+                    $collapseCk = Route::is(['list-central-kitchen', 'add-central-kitchen', 'central-kitchen-production', 'central-kitchen-production-detail']);
                 @endphp
 
                 <div class="accordion-item">
@@ -182,7 +182,7 @@
                             <a href="/central-kitchen/production"
                                wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('central-kitchen-production') ? 'inner-menu-active' : '' }}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('central-kitchen-production') || Route::is('central-kitchen-production-detail')  ? 'inner-menu-active' : '' }}"
                                     type="button">
                                     Produksi
                                 </button>
@@ -242,11 +242,11 @@
                         <div class="accordion-body">
                             <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
                                     id="">
-                                Supplier
+                                Pemasok
                             </button>
                             <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
                                     id="">
-                                Purchase Order
+                                Pembelian
                             </button>
                         </div>
                     </div>

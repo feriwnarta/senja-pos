@@ -24,7 +24,8 @@
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default"
-                                id="resupplyOutlet" wire:model="selected" wire:change="selectWarehouse">
+                                id="resupplyOutlet" wire:model="selected" wire:change="selectWarehouse"
+                                wire:loading.attr="disabled">
                             <option value="all" selected disabled>Semua gudang</option>
                             @if(!empty($warehouses))
 
@@ -33,14 +34,13 @@
                                 @endforeach
 
                             @endif
-
-
                         </select>
                     </div>
 
 
                     <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create">Buat
+                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
+                            wire:loading.attr="disabled">Buat
                         permintaan stok
                     </button>
 
@@ -58,15 +58,15 @@
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio1" autocomplete="off"
                    value="request"
-                   checked wire:change="toggleChange">
+                   checked wire:change="toggleChange" wire:loading.attr="disabled">
             <label class="btn btn-outline-primary" for="btnradio1">Permintaan stok</label>
 
             <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio2" autocomplete="off"
-                   value="stockIn" wire:change="toggleChange">
+                   value="stockIn" wire:change="toggleChange" wire:loading.attr="disabled">
             <label class="btn btn-outline-primary" for="btnradio2">Stok masuk</label>
 
             <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio3" autocomplete="off"
-                   value="stockOut" wire:change="toggleChange">
+                   value="stockOut" wire:change="toggleChange" wire:loading.attr="disabled">
             <label class="btn btn-outline-primary" for="btnradio3">Stok keluar</label>
         </div>
     </div>

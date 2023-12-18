@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
     <x-slot name="appBar">
@@ -18,6 +19,7 @@
                                placeholder="{{ __('app_locale.input.cari') }}"
                                aria-label="Search" wire:model.live.debounce.600ms="search">
                     </form>
+
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default" id="resupplyOutlet"
@@ -44,7 +46,36 @@
 
     <div id="content-loaded">
 
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="" class="table borderless table-hover">
+                    <thead class="table-head-color">
+                    <tr>
+                        <th scope="col">Kode referensi</th>
+                        <th scope="col">Tanggal</th>
+                        <th scope="col">Catatan</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody id="listPurchaseOrder">
+                    @foreach($requestStock as $request)
+                        <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                            wire:click="detailProduction('{{ $request->id }}')">
+                            <td>{{ $request->code }}</td>
+                            <td>{{ $request->created_at }}</td>
+                            <td>{{ ($request->note == null) ? 'tanpa catatan' : $request->note }}</td>
+                            <td>{{ optional($request->requestStockHistory->last())->status }}</td>
 
+                        </tr>
+                    @endforeach
+
+
+                    </tbody>
+                </table>
+                {{ $requestStock->links() }}
+
+            </div>
+        </div>
     </div>
 
 

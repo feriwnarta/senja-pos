@@ -87,14 +87,10 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                     // Cek apakah bulan saat ini berbeda dengan bulan dari waktu terakhir diambil
                     if ($latestDate->format('Y-m') !== Carbon::now()->format('Y-m')) {
                         // Bulan berbeda, atur $nextCode kembali ke nol
-                        $nextCode = 0;
                     } else {
                         // Bulan sama, increment $nextCode
                         $nextCode = ++$latestRequest->increment;
                     }
-                } else {
-                    // Jika tidak ada data sebelumnya, mulai dari nol
-                    $nextCode = 0;
                 }
 
                 return [
@@ -143,7 +139,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                         Log::info('Permintaan stok dibuat dengan nomor request ' . $reqId);
                     }
-                    
+
                     RequestStockHistory::create([
                         'request_stocks_id' => $reqId,
                         'desc' => 'Permintaan stok dibuat',

@@ -35,7 +35,7 @@
     font-family: 'Poppins Regular';
     font-size: 1rem;
     line-height: 1.5rem;
-    color: #404040;
+    color: var(--Neutral-80, #616161);
 }
 
 .subtitle-3-bold {
