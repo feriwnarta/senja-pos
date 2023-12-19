@@ -63,6 +63,20 @@ class CategoryItemServiceTest extends TestCase
     }
 
 
+    public function test_get_item_cursor_returns_items_not_associated_with_category()
+    {
+        // Arrange
+        $categoryItemService = new CategoryItemServiceImpl();
+        $expectedItems = [];
+
+        // Act
+        $actualItems = $categoryItemService->getItemCursor([]);
+
+        // Assert
+        $this->assertEquals($expectedItems, $actualItems);
+    }
+
+
     protected function setUp(): void
     {
         parent::setUp();

@@ -1,4 +1,4 @@
-@php use Illuminate\Support\Facades\Log; @endphp
+@php use Illuminate\Support\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
     <x-slot name="appBar">
@@ -62,7 +62,7 @@
                         <tr class="items-table-head-color" id="po1" style="cursor: pointer"
                             wire:click="detailProduction('{{ $request->id }}')">
                             <td>{{ $request->code }}</td>
-                            <td>{{ $request->created_at }}</td>
+                            <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
                             <td>{{ ($request->note == null) ? 'tanpa catatan' : $request->note }}</td>
                             <td>{{ optional($request->requestStockHistory->last())->status }}</td>
 

@@ -227,23 +227,33 @@
                 </div>
 
 
+                @php
+                    $collapseSupplier = Route::is(['supplier', 'create-supplier']);
+                @endphp
+
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button button-icon-text description-1-medium collapsed"
-                                type="button"
-                                data-bs-toggle="collapse" aria-expanded="false"
-                                data-bs-target="#collapsePurchasing">
+                        <button
+                            class="accordion-button button-icon-text description-1-medium {{ $collapseSupplier ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse" aria-expanded="{{ $collapseSupplier ? 'true': 'false' }}"
+                            data-bs-target="#collapsePurchasing">
                             <i class="purchasing-icon"></i>
                             {{ __('sidebar_locale.pembelian.name') }}
                         </button>
                     </h2>
-                    <div id="collapsePurchasing" class="accordion-collapse collapse"
+                    <div id="collapsePurchasing"
+                         class="accordion-collapse collapse {{ $collapseSupplier ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
-                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                            <a href="/supplier" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('supplier') || Route::is('create-supplier') ? 'inner-menu-active' : ''}}"
+                                    type="button"
                                     id="">
-                                Pemasok
-                            </button>
+                                    Pemasok
+                                </button>
+                            </a>
                             <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
                                     id="">
                                 Pembelian

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Warehouse\WarehouseController;
 use App\Livewire\CentralKitchen\AddCentralKitchen;
 use App\Livewire\CentralKitchen\ListCentralKitchen;
 use App\Livewire\CentralKitchen\Production;
@@ -11,6 +10,8 @@ use App\Livewire\Composition\Item;
 use App\Livewire\Composition\Recipe;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
+use App\Livewire\Purchase\CreateSupplier;
+use App\Livewire\Purchase\Supplier;
 use App\Livewire\Warehouse\AddCategory;
 use App\Livewire\Warehouse\AddUnit;
 use App\Livewire\Warehouse\AddWarehouse;
@@ -52,17 +53,12 @@ Route::get("composition/recipe", Recipe::class)->name('recipe');
 Route::get("composition/recipe/create-recipe", CreateRecipe::class)->name('create-recipe');
 
 // Warehouse
-
-Route::controller(WarehouseController::class)->group(function () {
-    Route::get("warehouse/stock", StockItem::class)->name('stock');
-
-    Route::get("warehouse/list-warehouse", ListWarehouse::class)->name('list-warehouse');
-    Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class)->name('add-warehouse');
-    Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class)->name('detail-warehouse');
-
-    Route::get("warehouse/transaction", Transaction::class)->name('warehouse-transaction');
-    Route::get("warehouse/transaction/add-transaction", CreateTransaction::class)->name('warehouse-add-transaction');
-});
+Route::get("warehouse/stock", StockItem::class)->name('stock');
+Route::get("warehouse/list-warehouse", ListWarehouse::class)->name('list-warehouse');
+Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class)->name('add-warehouse');
+Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class)->name('detail-warehouse');
+Route::get("warehouse/transaction", Transaction::class)->name('warehouse-transaction');
+Route::get("warehouse/transaction/add-transaction", CreateTransaction::class)->name('warehouse-add-transaction');
 
 Route::get('central-kitchen/list-central-kitchen', ListCentralKitchen::class)->name('list-central-kitchen');
 Route::get('central-kitchen/list-central-kitchen/add-central-kitchen', AddCentralKitchen::class)->name('add-central-kitchen');
@@ -71,4 +67,7 @@ Route::get('central-kitchen/production/detail-production', ProductionDetail::cla
 
 Route::get('outlet/list-outlet', ListOutlet::class)->name('list-outlet');
 Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet');
+
+Route::get('supplier', Supplier::class)->name('supplier');
+Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
 

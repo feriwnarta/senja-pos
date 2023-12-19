@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Models\RequestStock;
 use App\Models\Warehouse;
-use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
@@ -21,18 +21,17 @@ class Transaction extends Component
     public string $id = '';
     private string $type = 'outlet';
 
-    public function render()
-    {
-        return view('livewire.warehouse.transaction');
-    }
-
     public function mount()
     {
+
         $this->getOutletCentralKitchen();
+
 
         if ($this->urlQuery != 'request' && $this->urlQuery != 'stockIn' && $this->urlQuery != 'stockOut') {
             $this->urlQuery = 'request';
         }
+
+        $this->getRequestStock();
     }
 
     private function getOutletCentralKitchen()
@@ -52,12 +51,24 @@ class Transaction extends Component
         }
     }
 
+    private function getRequestStock()
+    {
+        try {
+
+            return RequestStock::paginate(10);
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan request stock di transaksi gudang');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+    }
+
     public function boot()
     {
         if ($this->selected != 'all') {
             $this->selectWarehouse();
         }
-
     }
 
     public function selectWarehouse()
@@ -105,5 +116,12 @@ class Transaction extends Component
     public function toggleChange()
     {
         $this->urlQuery = $this->toggle;
+    }
+
+    public function render()
+    {
+        return view('livewire.warehouse.transaction', ['requestStock' => RequestStock::when($this->id, function ($query) {
+            return $query->where('warehouses_id', $this->id);
+        })->paginate(10)]);
     }
 }
