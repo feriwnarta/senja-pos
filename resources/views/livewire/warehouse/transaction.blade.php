@@ -87,7 +87,7 @@
                     </tr>
                     </thead>
                     <tbody id="listPurchaseOrder">
-                    {{ $requestStock }}
+
                     @foreach($requestStock as $request)
                         <tr class="items-table-head-color" id="po1" style="cursor: pointer"
                             wire:click="">
@@ -98,10 +98,10 @@
 
                         </tr>
                     @endforeach
-
-
                     </tbody>
                 </table>
+                </table>
+                {{ $requestStock->links() }}
             </div>
 
         </div>

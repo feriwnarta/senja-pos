@@ -71,3 +71,4 @@ Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet'
 Route::get('supplier', Supplier::class)->name('supplier');
 Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
 
+

@@ -175,7 +175,7 @@
                                     class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-central-kitchen') || Route::is('add-central-kitchen') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
-                                    Daftar central kitchen
+                                    Daftar dapur sentral
                                 </button>
                             </a>
 

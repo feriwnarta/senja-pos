@@ -297,9 +297,14 @@ input[type="search"]::-webkit-search-results-decoration {
 /*.table-input:hover {*/
 /*    border-color: #e0e0e0;*/
 /*}*/
-table.borderless td,
+/*table.borderless td,*/
+/*table.borderless th {*/
+/*    border: none !important;*/
+/*}*/
+
 table.borderless th {
-    border: none !important;
+    color: var(--Primary-Main, #F16622);
+    border-bottom: 1px solid #F2C6AF;
 }
 
 .table-head-color {
