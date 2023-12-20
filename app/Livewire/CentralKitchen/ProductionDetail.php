@@ -49,5 +49,14 @@ class ProductionDetail extends Component
 
     }
 
+    /**
+     * terima produksi dan lanjutkan, generate nomor produksi
+     * @return void
+     */
+    public function acceptAndNext()
+    {
+
+    }
+
 
 }

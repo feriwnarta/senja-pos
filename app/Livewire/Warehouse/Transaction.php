@@ -122,6 +122,6 @@ class Transaction extends Component
     {
         return view('livewire.warehouse.transaction', ['requestStock' => RequestStock::when($this->id, function ($query) {
             return $query->where('warehouses_id', $this->id);
-        })->paginate(10)]);
+        })->orderBy('id', 'DESC')->paginate(10)]);
     }
 }

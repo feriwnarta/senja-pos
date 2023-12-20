@@ -44,6 +44,11 @@ class Item extends Model
         return $this->hasMany(StockItem::class, 'items_id');
     }
 
+    public function requestDetail(): HasMany
+    {
+        return $this->hasMany(RequestStockDetail::class, 'items_id');
+    }
+
     public function placement(): HasMany
     {
         return $this->hasMany(ItemPlacement::class, 'items_id');

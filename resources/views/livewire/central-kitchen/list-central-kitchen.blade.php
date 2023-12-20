@@ -63,7 +63,8 @@
                     @foreach($centralKitchens as $centralKitchen)
                         <tr class="items-table-head-color" id="po1" style="cursor: pointer"
                             wire:click="">
-                            <td>{{ $centralKitchen->code }}</td>
+                            <td class="code">
+                                {{ $centralKitchen->code }}</td>
                             <td>{{ $centralKitchen->name }}</td>
                             <td>{{ $centralKitchen->phone }}</td>
                             <td>{{ $centralKitchen->email }}</td>

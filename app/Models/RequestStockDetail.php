@@ -36,4 +36,9 @@ class RequestStockDetail extends Model
     {
         return $this->belongsTo(RequestStock::class, 'request_stocks_id');
     }
+
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'items_id');
+    }
 }

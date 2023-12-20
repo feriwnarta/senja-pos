@@ -23,7 +23,7 @@
 
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
-                            wire:click="save"
+                            wire:click="acceptAndNext"
                     >Terima dan lanjutkan
                     </button>
 
@@ -52,10 +52,37 @@
                     <p class="margin-top-6 subtitle-3-medium">
                         {{ Carbon::createFromFormat('Y-m-d H:i:s', $requestStock->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}
                     </p>
-
                 </div>
 
-                
+                <div class="margin-top-24">
+                    <p class="subtitle-3-regular">Item produksi</p>
+                    <div id="divider" class="margin-top-6"></div>
+                    <table id="" class="table borderless table-hover margin-top-6">
+                        <thead class="table-head-color">
+                        <tr>
+                            <th scope="col">Item</th>
+                            <th scope="col">Jumlah</th>
+                            <th scope="col">Unit</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {{-- Gunakan eager loading untuk mengambil item terkait secara efisien --}}
+                        @php
+                            $requestStock->load('requestStockDetail.item');
+                        @endphp
+                        @foreach ($requestStock->requestStockDetail as $requestDetail)
+                            <tr class="items-table-head-color" id="po1" style="cursor: pointer">
+                                <td>{{ $requestDetail->item->name }}</td>
+                                <td>{{ $requestDetail->qty }}</td>
+                                <td>{{ $requestDetail->item->unit->name }}</td>
+                            </tr>
+
+                        @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

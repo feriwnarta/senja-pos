@@ -315,6 +315,10 @@ table.borderless th {
     background-color: #fff7f2;
 }
 
+.code {
+    color: var(--Primary-Main, #F16622);
+}
+
 .items-table-head-color {
     font-family: "Poppins Regular";
     font-size: 0.875rem;

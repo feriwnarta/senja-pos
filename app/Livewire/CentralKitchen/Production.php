@@ -71,7 +71,9 @@ class Production extends Component
             })
             ->with(['requestStockDetail' => function ($query) {
                 $query->where('type', 'PRODUCE');
-            }])
+            }])->orderBy('id', 'DESC')
             ->paginate(10)]);
+
+
     }
 }
