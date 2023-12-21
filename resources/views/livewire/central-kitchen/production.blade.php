@@ -23,11 +23,10 @@
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default" id="resupplyOutlet"
-                                wire:model="selected">
-                            <option value="" disabled selected>Semua central kitchen</option>
+                                wire:model="selected" wire:change="centralKitchenChange">
+                            <option value="all" disabled selected>Semua central kitchen</option>
 
                             @if(!empty($centralKitchens))
-
                                 @foreach($centralKitchens as $centralKitchen)
                                     <option value="{{ $centralKitchen->id }}">{{ $centralKitchen->name }}</option>
                                 @endforeach

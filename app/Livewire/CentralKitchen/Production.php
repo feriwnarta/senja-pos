@@ -16,6 +16,9 @@ class Production extends Component
 
     public Collection $centralKitchens;
 
+    public string $selected = 'all';
+
+
     public function boot()
     {
         $this->loadCentralKitchen();
@@ -64,16 +67,41 @@ class Production extends Component
 
     public function render()
     {
+        Log::debug($this->selected);
         // paginasi request stock yang hanya memiliki item produksi didalamnya
-        return view('livewire.central-kitchen.production', ['requestStock' => RequestStock::has('requestStockDetail', '>=', 1)
-            ->whereHas('requestStockDetail', function ($query) {
-                $query->where('type', 'PRODUCE');
+        return
+            view('livewire.central-kitchen.production', ['requestStock' => RequestStock::whereHas('warehouse', function ($query) {
+                $query->whereHas('centralKitchen', function ($query) {
+                    $query->where('central_kitchens.id', $this->selected);
+                });
             })
-            ->with(['requestStockDetail' => function ($query) {
-                $query->where('type', 'PRODUCE');
-            }])->orderBy('id', 'DESC')
-            ->paginate(10)]);
+                ->with(['requestStockDetail' => function ($query) {
+                    $query->where('type', 'PRODUCE');
+                }])->orderBy('id', 'DESC')
+                ->paginate(10)]);
 
+    }
 
+    /**
+     * tampilkan data berdasarkan central kitchen
+     * @return void
+     */
+    public function centralKitchenChange()
+    {
+        // jika status dropdown saat ini bukanlah all
+        if ($this->selected != 'all') {
+
+            // cari central kitchen
+            try {
+
+                $centralKitchen = CentralKitchen::findOrFail($this->selected);
+
+            } catch (Exception $exception) {
+                Log::error('gagal dapatkan data central kitchen dari dropdown produksi');
+                Log::error($exception->getMessage());
+                Log::error($exception->getTraceAsString());
+            }
+
+        }
     }
 }

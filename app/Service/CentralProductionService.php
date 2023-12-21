@@ -5,6 +5,6 @@ namespace App\Service;
 interface CentralProductionService
 {
 
-    public function generateCode();
+    public function generateCode(string $centralId);
 
 }
