@@ -106,26 +106,24 @@
                     @if(isset($components) && !empty($components))
                         {{ Log::info($components) }}
 
-                        @foreach($components as $key => $component)
-                            {{-- Looping item produksi yang diminta --}}
-                            <div class="accordion" id="accordionExample" wire:key="{{ $key }}">
-
+                        <div class="accordion" id="accordionExample">
+                            @foreach($components as $key => $component)
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne{{ $component['item']['id'] }}">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="accordion{{ $component['item']['id'] }}"
-                                                aria-expanded="true"
+                                        <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#accordion{{ $component['item']['id'] }}"
+                                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
                                                 aria-controls="accordion{{ $component['item']['id'] }}">
                                             {{ $component['item']['name'] }}
-
                                         </button>
                                     </h2>
                                     <div id="accordion{{ $component['item']['id'] }}"
-                                         class="accordion-collapse collapse show"
-                                         aria-labelledby="headingOne"
-                                         data-bs-parent="#accordionExample">
+                                         class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
+                                         aria-labelledby="headingOne{{ $component['item']['id'] }}"
+                                         data-bs-parent="#accordionExample"> {{-- Use the same data-bs-parent for all accordion items --}}
                                         <div class="accordion-body">
-
                                             <table class="table-component table table-hover margin-top-16"
                                                    id="tableItemRequest"
                                             >
@@ -146,7 +144,7 @@
 
                                                 <tbody>
 
-                                                {{-- Looping isi resep dari item yang diminta --}}
+                                                {{--  Looping isi resep dari item yang diminta--}}
 
                                                 @if(isset($component['recipe']) && !empty($component['recipe']))
 
@@ -177,11 +175,8 @@
                                         </div>
                                     </div>
                                 </div>
-
-
-                            </div>
-
-                        @endforeach
+                            @endforeach
+                        </div>
 
                     @endif
 
