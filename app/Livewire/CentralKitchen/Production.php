@@ -54,7 +54,7 @@ class Production extends Component
         try {
             Log::info("akses detail production $id");
             $request = RequestStock::findOrFail($id);
-            $this->redirect("/central-kitchen/production/detail-production?productionId=$id", true);
+            $this->redirect("/central-kitchen/production/detail-production?reqId=$id", true);
         } catch (Exception $exception) {
 
             notify()->error('Ada kesalahan saat mendapatkan detail production', 'Error');
@@ -71,21 +71,17 @@ class Production extends Component
         // paginasi request stock yang hanya memiliki item produksi didalamnya
         return
             view('livewire.central-kitchen.production', [
-                'requestStock' => RequestStock::with(['warehouse.centralKitchen', 'requestStockDetail' => function ($query) {
-                    $query->where('type', 'PRODUCE');
-                }])
+                'requestStock' => RequestStock::query()
                     ->whereHas('requestStockDetail', function ($query) {
                         $query->where('type', 'PRODUCE'); // Filter pada kueri utama
                     })
                     ->whereHas('warehouse', function ($query) {
                         $query->whereHas('centralKitchen', function ($query) {
-
                             if ($this->selected == 'all') {
                                 $query->orWhereNull('central_kitchens.id');
                             } else {
                                 $query->where('central_kitchens.id', $this->selected);
                             }
-
                         });
                     })
                     ->orderBy('id', 'DESC')

@@ -35,7 +35,7 @@
     </x-slot>
 
     <div id="content-loaded">
-
+        <x-notify::notify/>
         <div class="row">
             <div class="col-sm-5 offset-1">
                 {{-- KODE REFERENSI --}}
