@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class CentralProduction extends Model
 {
     use HasFactory, HasUuids;
-    
+
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -34,6 +35,11 @@ class CentralProduction extends Model
     public function requestStock(): BelongsTo
     {
         return $this->belongsTo(RequestStock::class, 'request_stocks_id');
+    }
+
+    public function history(): HasMany
+    {
+        return $this->hasMany(CentralProductionHistory::class, 'central_productions_id');
     }
 
 

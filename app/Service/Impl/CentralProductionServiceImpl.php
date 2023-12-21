@@ -4,6 +4,7 @@ namespace App\Service\Impl;
 
 use App\Models\CentralProduction;
 use App\Models\RequestStock;
+use App\Models\RequestStockHistory;
 use App\Service\CentralProductionService;
 use Carbon\Carbon;
 use Exception;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 class CentralProductionServiceImpl implements CentralProductionService
 {
 
-    public function createProduction(string $requestStockId, string $centralKitchenId): string
+    public function createProduction(string $requestStockId, string $centralKitchenId): ?CentralProduction
     {
         try {
             return Cache::lock('createProduction', 10)->block(5, function () use ($requestStockId, $centralKitchenId) {
@@ -32,10 +33,17 @@ class CentralProductionServiceImpl implements CentralProductionService
                             'increment' => $result['increment'],
                         ]);
 
+
+                        RequestStockHistory::create([
+                            'request_stocks_id' => $requestStockId,
+                            'desc' => 'Produksi diterima',
+                            'status' => 'Produksi diterima',
+                        ]);
+
                         DB::commit();
-                        return $production->id; // Return the model instance on success
+                        return $production; // Return the model instance on success
                     } else {
-                        return 'failed';
+                        return null;
                     }
                 } catch (Exception $exception) {
                     DB::rollBack();
@@ -57,6 +65,8 @@ class CentralProductionServiceImpl implements CentralProductionService
             ]);
             throw $exception; // Re-throw for further handling
         }
+
+
     }
 
 

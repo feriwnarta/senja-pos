@@ -2,7 +2,9 @@
 
 namespace App\Livewire\CentralKitchen;
 
+use App\Models\CentralProduction;
 use App\Models\RequestStock;
+use App\Models\RequestStockHistory;
 use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use Exception;
@@ -16,14 +18,91 @@ class ProductionDetail extends Component
     #[Url(as: 'reqId')]
     public string $requestId;
 
-    #[Url(as: 'prodId')]
-    public string $productionId;
+    #[Url(as: 'prodId', keep: true)]
+    public string $productionId = '';
 
     public string $error = '';
 
     public RequestStock $requestStock;
 
+    public string $status = 'Baru';
+    public string $code;
     private CentralProductionService $productionService;
+
+    public function boot()
+    {
+        // dapatkan status
+        $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
+
+        $this->delegateProcess($this->status);
+    }
+
+    /**
+     * lakukan pengecekan apakah produksi sudah diterima
+     * jika sudah diterima lakukan pengecekan untuk mendapatkan status nya
+     * jika hanya sampa diterima maka lakukan proses permintaan bahan terlebih dahulu
+     * @return void
+     */
+    private function findRequestStatus()
+    {
+        if ($this->requestId != '') {
+
+            // cek history
+            try {
+                return RequestStockHistory::where('request_stocks_id', $this->requestId)->latest()->firstOrFail()->status;
+
+            } catch (Exception $exception) {
+                Log::error($exception->getMessage());
+                Log::error($exception->getTraceAsString());
+                return null;
+            }
+        }
+    }
+
+    private function delegateProcess($status)
+    {
+
+
+        switch ($status) {
+            case 'Produksi diterima' :
+                
+                $this->setProductionIdAndCode();
+                $this->createRequestMaterial($this->requestId);
+                break;
+
+        }
+    }
+
+    private function setProductionIdAndCode()
+    {
+        $production = $this->findProductionById($this->requestId);
+        $this->productionId = ($production != null) ? $production->id : '';
+        $this->code = ($production != null) ? $production->code : '';
+    }
+
+    private function findProductionById($id)
+    {
+        try {
+            return CentralProduction::where('request_stocks_id', $id)->firstOrFail();
+
+        } catch (Exception $exception) {
+            notify()->error('Ada sesuatu yang salah', 'Error');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            return null;
+        }
+
+    }
+
+    /**
+     * buat request material ke gudang jika statusnya adalah permintaan diterima
+     * @return void
+     */
+    private function createRequestMaterial($requestId)
+    {
+
+
+    }
 
     public function render()
     {
@@ -80,7 +159,12 @@ class ProductionDetail extends Component
 
 
             notify()->success('Berhasil membuat produksi', 'sukses');
-            $this->productionId = $result;
+            $this->productionId = $result->id;
+
+            // dapatkan status
+            $status = $this->findRequestStatus();
+            $this->status = $status;
+
 
         } catch (Exception $exception) {
             Log::error('Error saat membuat produksi:', [
