@@ -18,15 +18,13 @@ class ProductionDetail extends Component
     #[Url(as: 'reqId')]
     public string $requestId;
 
-    #[Url(as: 'prodId', keep: true)]
-    public string $productionId = '';
-
     public string $error = '';
 
     public RequestStock $requestStock;
 
     public string $status = 'Baru';
-    public string $code;
+    public ?CentralProduction $production;
+    public array $components;
     private CentralProductionService $productionService;
 
     public function boot()
@@ -65,7 +63,7 @@ class ProductionDetail extends Component
 
         switch ($status) {
             case 'Produksi diterima' :
-                
+
                 $this->setProductionIdAndCode();
                 $this->createRequestMaterial($this->requestId);
                 break;
@@ -75,9 +73,17 @@ class ProductionDetail extends Component
 
     private function setProductionIdAndCode()
     {
-        $production = $this->findProductionById($this->requestId);
-        $this->productionId = ($production != null) ? $production->id : '';
-        $this->code = ($production != null) ? $production->code : '';
+        $this->production = $this->findProductionById($this->requestId);
+
+        if ($this->production != null) {
+
+        }
+
+        if ($this->production == null) {
+            notify()->warning('Tidak bisa mendapatkan data produksi, harap ulangi permintaan', 'Peringatan');
+            return;
+        }
+
     }
 
     private function findProductionById($id)
@@ -100,7 +106,65 @@ class ProductionDetail extends Component
      */
     private function createRequestMaterial($requestId)
     {
+        if ($requestId != '') {
 
+            try {
+
+                // jika request stock kosong maka isi request stock
+                if (!isset($this->requestStock)) {
+                    $this->requestStock = RequestStock::findOrFail($requestId);
+                }
+
+                if (isset($this->requestStock) && $this->requestStock != null && $this->requestStock->requestStockDetail->isNotEmpty()) {
+
+                    $components = $this->requestStock->requestStockDetail
+                        ->lazy(10)
+                        ->map(function ($detail) {
+                            $detail->load([
+                                'item.recipe.recipeDetail', // Load all recipe details
+                            ]);
+
+                            $recipes = [];
+                            foreach ($detail->item->recipe as $recipe) {
+                                foreach ($recipe->recipeDetail as $recipeDetail) {
+                                    $recipes[] = [
+                                        'checked' => false, // Initialize as boolean
+                                        'id' => $recipeDetail->id,
+                                        'item_component_id' => $recipeDetail->item->id,
+                                        'item_component_name' => $recipeDetail->item->name,
+                                        'item_component_unit' => $recipeDetail->item->unit->name,
+                                        'item_component_usage' => $recipeDetail->usage,
+                                        'qty_request' => 0, // Initialize as integer
+                                    ];
+                                }
+                            }
+
+                            return [
+                                'item' => [
+                                    'id' => $detail->item->id,
+                                    'name' => $detail->item->name,
+                                ],
+                                'recipe' => $recipes,
+                            ];
+                        })
+                        ->toArray(); // Convert to array if needed
+
+                    if (!empty($components)) {
+                        $this->components = $components;
+                        return;
+                    }
+
+                    notify()->error('Gagal mendapatkan resep', 'error');
+                }
+
+
+            } catch (Exception $exception) {
+                Log::error('gagal dapatkan item yang dibutuhkan untuk produksi dari request material central production');
+                $exception->getMessage();
+                $exception->getTraceAsString();
+            }
+
+        }
 
     }
 

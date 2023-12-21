@@ -1,4 +1,4 @@
-@php use Carbon\Carbon; @endphp
+@php use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
     <x-slot name="appBar">
@@ -97,8 +97,95 @@
 
                         <input type="name" class="form-control input-default"
                                id="warehouseInput"
-                               value="{{ $code }}" disabled>
+                               value="{{ $production->code }}" disabled>
                     </div>
+                </div>
+
+                <div class="col-sm-9 offset-1 margin-top-16 set-height-item-request">
+
+                    @if(isset($components) && !empty($components))
+                        {{ Log::info($components) }}
+
+                        @foreach($components as $key => $component)
+                            {{-- Looping item produksi yang diminta --}}
+                            <div class="accordion" id="accordionExample" wire:key="{{ $key }}">
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne{{ $component['item']['id'] }}">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="accordion{{ $component['item']['id'] }}"
+                                                aria-expanded="true"
+                                                aria-controls="accordion{{ $component['item']['id'] }}">
+                                            {{ $component['item']['name'] }}
+
+                                        </button>
+                                    </h2>
+                                    <div id="accordion{{ $component['item']['id'] }}"
+                                         class="accordion-collapse collapse show"
+                                         aria-labelledby="headingOne"
+                                         data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+
+                                            <table class="table-component table table-hover margin-top-16"
+                                                   id="tableItemRequest"
+                                            >
+                                                <thead class="sticky-top">
+                                                <tr>
+                                                    <th>
+                                                        <input class="form-check-input" type="checkbox" value=""
+                                                               id="selectAllCheckbox"
+                                                               wire:model="selectAll">
+                                                    </th>
+                                                    <th>Item</th>
+                                                    <th>Jumlah Resep</th>
+                                                    <th>Unit</th>
+                                                    <th>Jumlah Diminta</th>
+                                                    <th>Unit</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                {{-- Looping isi resep dari item yang diminta --}}
+
+                                                @if(isset($component['recipe']) && !empty($component['recipe']))
+
+                                                    @foreach($component['recipe'] as $key =>  $recipe)
+                                                        <tr wire:key="{{ $key }}">
+                                                            <td>
+                                                                <input class="form-check-input" type="checkbox"
+                                                                       id="checkbox_{{ $loop->iteration }}">
+                                                            </td>
+                                                            <td>{{ $recipe['item_component_name'] }}</td>
+                                                            <td>{{ $recipe['item_component_usage'] }}</td>
+                                                            <td>{{ $recipe['item_component_unit'] }}</td>
+                                                            <td>
+                                                                <input type="text" class="form-control input-default"
+                                                                       x-mask:dynamic="$money($input, '.')"
+                                                                       value="{{ $recipe['item_component_usage'] }}">
+                                                            </td>
+                                                            <td>{{ $recipe['item_component_unit'] }}</td>
+                                                        </tr>
+
+                                                    @endforeach
+
+                                                @endif
+
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        @endforeach
+
+                    @endif
+
+
                 </div>
             @endif
         </div>
