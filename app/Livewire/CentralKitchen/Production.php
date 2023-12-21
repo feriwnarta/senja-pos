@@ -70,15 +70,27 @@ class Production extends Component
         Log::debug($this->selected);
         // paginasi request stock yang hanya memiliki item produksi didalamnya
         return
-            view('livewire.central-kitchen.production', ['requestStock' => RequestStock::whereHas('warehouse', function ($query) {
-                $query->whereHas('centralKitchen', function ($query) {
-                    $query->where('central_kitchens.id', $this->selected);
-                });
-            })
-                ->with(['requestStockDetail' => function ($query) {
+            view('livewire.central-kitchen.production', [
+                'requestStock' => RequestStock::with(['warehouse.centralKitchen', 'requestStockDetail' => function ($query) {
                     $query->where('type', 'PRODUCE');
-                }])->orderBy('id', 'DESC')
-                ->paginate(10)]);
+                }])
+                    ->whereHas('requestStockDetail', function ($query) {
+                        $query->where('type', 'PRODUCE'); // Filter pada kueri utama
+                    })
+                    ->whereHas('warehouse', function ($query) {
+                        $query->whereHas('centralKitchen', function ($query) {
+
+                            if ($this->selected == 'all') {
+                                $query->orWhereNull('central_kitchens.id');
+                            } else {
+                                $query->where('central_kitchens.id', $this->selected);
+                            }
+
+                        });
+                    })
+                    ->orderBy('id', 'DESC')
+                    ->paginate(10)
+            ]);
 
     }
 
