@@ -104,7 +104,6 @@
                 <div class="col-sm-9 offset-1 margin-top-16 set-height-item-request">
 
                     @if(isset($components) && !empty($components))
-                        {{ Log::info($components) }}
 
                         <div class="accordion" id="accordionExample">
                             @foreach($components as $key => $component)
@@ -127,7 +126,7 @@
                                             <table class="table-component table table-hover margin-top-16"
                                                    id="tableItemRequest"
                                             >
-                                                <thead class="sticky-top">
+                                                <thead class="sticky-topphp">
                                                 <tr>
                                                     <th>
                                                         <input class="form-check-input" type="checkbox" value=""

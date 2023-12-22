@@ -57,6 +57,12 @@ class ProductionDetail extends Component
         }
     }
 
+    /**
+     * tentukan flow dari produksi yang diklik, apakah sedang dalam
+     * permintaan bahan, sedang dalam proses produksi, ataupun penyelesaian produksi
+     * @param $status
+     * @return void
+     */
     private function delegateProcess($status)
     {
 
@@ -64,20 +70,27 @@ class ProductionDetail extends Component
         switch ($status) {
             case 'Produksi diterima' :
 
-                $this->setProductionIdAndCode();
+                $this->setProduction();
                 $this->createRequestMaterial($this->requestId);
                 break;
 
         }
     }
 
-    private function setProductionIdAndCode()
+    /**
+     *  inisialisasi model production melalui fungsi ini
+     * @return void
+     */
+    private function setProduction()
     {
-        $this->production = $this->findProductionById($this->requestId);
+        // handling error request id kosong
+        if ($this->requestId == '') {
 
-        if ($this->production != null) {
-
+            return;
         }
+
+        // cari produksi dari request id
+        $this->production = $this->findProductionById($this->requestId);
 
         if ($this->production == null) {
             notify()->warning('Tidak bisa mendapatkan data produksi, harap ulangi permintaan', 'Peringatan');
@@ -86,6 +99,11 @@ class ProductionDetail extends Component
 
     }
 
+    /**
+     * cari produksi berdasarkan id
+     * @param $id
+     * @return null
+     */
     private function findProductionById($id)
     {
         try {
@@ -117,6 +135,7 @@ class ProductionDetail extends Component
 
                 if (isset($this->requestStock) && $this->requestStock != null && $this->requestStock->requestStockDetail->isNotEmpty()) {
 
+                    // mapping isi request stock detail
                     $components = $this->requestStock->requestStockDetail
                         ->lazy(10)
                         ->map(function ($detail) {
@@ -125,15 +144,19 @@ class ProductionDetail extends Component
                             ]);
 
                             $recipes = [];
+
+
                             foreach ($detail->item->recipe as $recipe) {
+
                                 foreach ($recipe->recipeDetail as $recipeDetail) {
+
                                     $recipes[] = [
                                         'checked' => false, // Initialize as boolean
                                         'id' => $recipeDetail->id,
                                         'item_component_id' => $recipeDetail->item->id,
                                         'item_component_name' => $recipeDetail->item->name,
                                         'item_component_unit' => $recipeDetail->item->unit->name,
-                                        'item_component_usage' => $recipeDetail->usage,
+                                        'item_component_usage' => number_format($detail->qty * $recipeDetail->usage, 2, '.', '.'),
                                         'qty_request' => 0, // Initialize as integer
                                     ];
                                 }
@@ -178,6 +201,11 @@ class ProductionDetail extends Component
         $this->checkProductionId(id: $this->requestId);
     }
 
+    /**
+     * funsi ini digunakan untuk mencari request stock berdasarkan request stock id url parameter
+     * @param string $id
+     * @return void
+     */
     private function checkProductionId(string $id)
     {
 
@@ -228,6 +256,14 @@ class ProductionDetail extends Component
             // dapatkan status
             $status = $this->findRequestStatus();
             $this->status = $status;
+
+            // proses pesan error bahwa status tidak bisa didapatkan
+            if (!isset($status) && $status == null) {
+                return;
+            }
+            
+            // panggil delegate process, untuk menentukan flow dari produksi saat ini
+            $this->delegateProcess($status);
 
 
         } catch (Exception $exception) {
