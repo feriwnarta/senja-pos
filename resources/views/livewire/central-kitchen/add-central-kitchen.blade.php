@@ -51,7 +51,7 @@
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="CKCHS01"
                                wire:model.live.debounce.600ms="code">
-                        @error('code') <span class="error">{{ $message }}</span> @enderror
+                        @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -65,7 +65,7 @@
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="Central kitchen poris"
                                wire:model.live.debounce.600ms="name">
-                        @error('name') <span class="error">{{ $message }}</span> @enderror
+                        @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -79,7 +79,7 @@
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="Jl poris indah"
                                wire:model.live.debounce.600ms="address">
-                        @error('address') <span class="error">{{ $message }}</span> @enderror
+                        @error('address') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -93,7 +93,7 @@
                         <input type="number" class="form-control input-default"
                                id="warehouseInput" placeholder="08xxxxxxxxx"
                                wire:model.live.debounce.600ms="phone">
-                        @error('phone') <span class="error">{{ $message }}</span> @enderror
+                        @error('phone') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -107,7 +107,7 @@
                         <input type="email" class="form-control input-default"
                                id="warehouseInput" placeholder="cahayasenja.bandung@gmail.com"
                                wire:model.live.debounce.600ms="email">
-                        @error('email') <span class="error">{{ $message }}</span> @enderror
+                        @error('email') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 

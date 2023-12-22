@@ -58,7 +58,7 @@
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="RBSJ0001"
                                wire:model.live.debounce.600ms="code">
-                        @error('code') <span class="error">{{ $message }}</span> @enderror
+                        @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -101,7 +101,7 @@
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="RBSJ0001"
                                wire:model.live.debounce.600ms="code">
-                        @error('code') <span class="error">{{ $message }}</span> @enderror
+                        @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -123,7 +123,7 @@
                                 @endif
 
                             </select>
-                            @error('selectMenuOrMaterial') <span class="error">{{ $message }}</span> @enderror
+                            @error('selectMenuOrMaterial') <span text-xs text-red-600>{{ $message }}</span> @enderror
                         </div>
                     </div>
 
@@ -138,8 +138,8 @@
                     <label class="form-label input-label">Resep</label>
 
                     <div id="divider" class="margin-top-8"></div>
-                    @error('ingredients') <span class="error">{{ $message }}</span> @enderror
-                    @error('ingredients.*') <span class="error">{{ $message }}</span> @enderror
+                    @error('ingredients') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                    @error('ingredients.*') <span text-xs text-red-600>{{ $message }}</span> @enderror
                     <div class="margin-top-8">
                         <table class="table table-bordered only-underline table-create-recipes body-text-regular">
                             <thead>

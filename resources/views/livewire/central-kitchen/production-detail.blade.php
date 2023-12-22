@@ -5,29 +5,57 @@
         <div class="navbar-app">
             <div class="content-navbar d-flex flex-row justify-content-between">
 
-                <div id="nav-leading" class="d-flex flex-row align-items-center">
-                    <div class="navbar-title">
-                        Detail produksi
-                    </div>
-                </div>
+                @if($status == 'Baru')
 
-                <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                    <div class="dropdown margin-left-10">
+                    <div id="nav-leading" class="d-flex flex-row align-items-center">
+                        <div class="navbar-title">
+                            Detail produksi
+                        </div>
+                    </div>
+
+                    <div id="nav-action-button" class="d-flex flex-row align-items-center">
+                        <div class="dropdown margin-left-10">
+                            <button type="btn"
+                                    class="btn btn-text-only-danger btn-nav margin-left-10"
+                                    @click="$dispatch('cancel-edit-warehouse')">
+                                Batal
+                            </button>
+                        </div>
+
+
                         <button type="btn"
-                                class="btn btn-text-only-danger btn-nav margin-left-10"
-                                @click="$dispatch('cancel-edit-warehouse')">
-                            Batal
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:click="acceptAndNext"
+                        >Terima dan lanjutkan
                         </button>
+
                     </div>
 
+                @elseif($status == 'Produksi diterima')
+                    <div id="nav-leading" class="d-flex flex-row align-items-center">
+                        <div class="navbar-title">
+                            Komponen resep
+                        </div>
+                    </div>
 
-                    <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10"
-                            wire:click="acceptAndNext"
-                    >Terima dan lanjutkan
-                    </button>
+                    <div id="nav-action-button" class="d-flex flex-row align-items-center">
+                        <div class="dropdown margin-left-10">
+                            <button type="btn"
+                                    class="btn btn-text-only-danger btn-nav margin-left-10">
+                                Batal
+                            </button>
+                        </div>
 
-                </div>
+
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:click="saveRequest"
+                        >Simpan permintaan
+                        </button>
+
+                    </div>
+
+                @endif
             </div>
             <div id="title-divider"></div>
             <div id="divider"></div>
@@ -103,10 +131,15 @@
 
                 <div class="col-sm-9 offset-1 margin-top-16 set-height-item-request">
 
+                    @if ($errors->has('components.*.recipe.*.isChecked'))
+                        <span
+                            class="text-xs text-red-600">{{ $errors->first("components.*.recipe.*.isChecked") }}</span>
+                    @endif
+
                     @if(isset($components) && !empty($components))
 
                         <div class="accordion" id="accordionExample">
-                            @foreach($components as $key => $component)
+                            @foreach($components as $subKey => $component)
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne{{ $component['item']['id'] }}">
                                         <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
@@ -148,22 +181,24 @@
                                                 @if(isset($component['recipe']) && !empty($component['recipe']))
 
                                                     @foreach($component['recipe'] as $key =>  $recipe)
-                                                        <tr wire:key="{{ $key }}">
+                                                        <tr wire:key="{{ $loop->iteration }}">
                                                             <td>
                                                                 <input class="form-check-input" type="checkbox"
-                                                                       id="checkbox_{{ $loop->iteration }}">
+                                                                       id="checkbox_{{ $loop->iteration }}"
+                                                                       wire:model="components.{{ $subKey }}.recipe.{{ $key }}.isChecked">
                                                             </td>
                                                             <td>{{ $recipe['item_component_name'] }}</td>
                                                             <td>{{ $recipe['item_component_usage'] }}</td>
                                                             <td>{{ $recipe['item_component_unit'] }}</td>
                                                             <td>
-                                                                <input type="text" class="form-control input-default"
-                                                                       x-mask:dynamic="$money($input, '.')"
-                                                                       value="{{ $recipe['item_component_usage'] }}">
+                                                                <input x-mask:dynamic="$money($input, '.')"
+                                                                       type="text"
+                                                                       class="form-control input-default"
+
+                                                                       wire:model="components.{{ $subKey }}.recipe.{{ $key }}.item_component_usage">
                                                             </td>
                                                             <td>{{ $recipe['item_component_unit'] }}</td>
                                                         </tr>
-
                                                     @endforeach
 
                                                 @endif

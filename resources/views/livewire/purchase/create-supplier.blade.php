@@ -48,7 +48,7 @@
                     <input type="name" class="form-control input-default"
                            id="warehouseInput" placeholder="Masukan nama pemasok"
                            wire:model.live.debounce.600ms="name">
-                    @error('name') <span class="error">{{ $message }}</span> @enderror
+                    @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                 </div>
 
@@ -63,7 +63,7 @@
                     <input type="name" class="form-control input-default"
                            id="warehouseInput" placeholder="Masukan nomor telepon"
                            wire:model.live.debounce.600ms="name">
-                    @error('name') <span class="error">{{ $message }}</span> @enderror
+                    @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                 </div>
 
@@ -78,7 +78,7 @@
                     <input type="name" class="form-control input-default"
                            id="warehouseInput" placeholder="Masukan email pemasok"
                            wire:model.live.debounce.600ms="name">
-                    @error('name') <span class="error">{{ $message }}</span> @enderror
+                    @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                 </div>
 
@@ -92,7 +92,7 @@
                     <input type="name" class="form-control input-default"
                            id="warehouseInput" placeholder="Masukan kota pemasok"
                            wire:model.live.debounce.600ms="name">
-                    @error('name') <span class="error">{{ $message }}</span> @enderror
+                    @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                 </div>
 
@@ -106,7 +106,7 @@
                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
                                 <input type="number" class="form-control input-default" id="warehouseInput"
                                        placeholder="0" wire:model.live.debounce.600ms="inStock">
-                                @error('inStock') <span class="error">{{ $message }}</span> @enderror
+                                @error('inStock') <span text-xs text-red-600>{{ $message }}</span> @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -128,7 +128,7 @@
                     <textarea class="form-control textarea" id="addressWarehouse" rows="5"
                               placeholder="Jln. Ki Hajar Dewantoro"
                               wire:model.blur="addressWarehouse"></textarea>
-                    @error('addressWarehouse') <span class="error">{{ $message }}</span> @enderror
+                    @error('addressWarehouse') <span text-xs text-red-600>{{ $message }}</span> @enderror
                 </div>
             </div>
         </div>

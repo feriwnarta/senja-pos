@@ -14,7 +14,7 @@
                                id="warehouseInput" placeholder="KU004"
 
                                wire:model.live.debounce.600ms="code">
-                        @error('code') <span class="error">{{ $message }}</span> @enderror
+                        @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -29,7 +29,7 @@
                                id="warehouseInput" placeholder="Btl (Botol)"
 
                                wire:model.live.debounce.600ms="name">
-                        @error('name') <span class="error">{{ $message }}</span> @enderror
+                        @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
                 @else

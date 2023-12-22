@@ -55,7 +55,7 @@
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="KTUH01"
                                wire:model.live.debounce.600ms="code">
-                        @error('code') <span class="error">{{ $message }}</span> @enderror
+                        @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                     </div>
 
@@ -69,7 +69,7 @@
                         <input type="name" class="form-control input-default"
                                id="warehouseInput" placeholder="Unggas"
                                wire:model.live.debounce.600ms="name">
-                        @error('name') <span class="error">{{ $message }}</span> @enderror
+                        @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
                     </div>
 
 
@@ -89,7 +89,7 @@
                     {{--                            + Tambah item ke kategori--}}
                     {{--                        </button>--}}
                     {{--                    </div>--}}
-                    {{--                    @error('selectedItem') <span class="error">{{ $message }}</span> @enderror--}}
+                    {{--                    @error('selectedItem') <span text-xs text-red-600>{{ $message }}</span> @enderror--}}
 
                     {{--                    <div id="divider" class="margin-symmetric-vertical-6"></div>--}}
 
@@ -154,7 +154,7 @@
                     {{--                                </div>--}}
                     {{--                            </ul>--}}
                     {{--                        </div>--}}
-                    {{--                        @error('unit') <span class="error">{{ $message }}</span> @enderror--}}
+                    {{--                        @error('unit') <span text-xs text-red-600>{{ $message }}</span> @enderror--}}
                     {{--                    </div>--}}
 
 

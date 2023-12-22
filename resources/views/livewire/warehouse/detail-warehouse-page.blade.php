@@ -171,7 +171,7 @@
                         <input type="name" class="form-control input-default" id="warehouseInput"
                                value="{{ $warehouse->name }}" wire:model.live.debounce.600ms="warehouseName">
 
-                        @error('warehouseName') <span class="error">{{ $message }}</span> @enderror
+                        @error('warehouseName') <span text-xs text-red-600>{{ $message }}</span> @enderror
                     </div>
 
 

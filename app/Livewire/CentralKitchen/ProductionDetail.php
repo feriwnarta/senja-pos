@@ -151,13 +151,13 @@ class ProductionDetail extends Component
                                 foreach ($recipe->recipeDetail as $recipeDetail) {
 
                                     $recipes[] = [
-                                        'checked' => false, // Initialize as boolean
+                                        'isChecked' => false,
                                         'id' => $recipeDetail->id,
                                         'item_component_id' => $recipeDetail->item->id,
                                         'item_component_name' => $recipeDetail->item->name,
                                         'item_component_unit' => $recipeDetail->item->unit->name,
                                         'item_component_usage' => number_format($detail->qty * $recipeDetail->usage, 2, '.', '.'),
-                                        'qty_request' => 0, // Initialize as integer
+                                        'qty_request' => 0,
                                     ];
                                 }
                             }
@@ -189,6 +189,11 @@ class ProductionDetail extends Component
 
         }
 
+    }
+
+    public function test()
+    {
+        Log::info($this->components);
     }
 
     public function render()
@@ -261,7 +266,7 @@ class ProductionDetail extends Component
             if (!isset($status) && $status == null) {
                 return;
             }
-            
+
             // panggil delegate process, untuk menentukan flow dari produksi saat ini
             $this->delegateProcess($status);
 
@@ -276,5 +281,27 @@ class ProductionDetail extends Component
 
     }
 
+    /***
+     * proses menyimpan permintaan bahan yang dibutuhkan oleh central kitchen ke gudang
+     * @return void
+     */
+    public function saveRequest()
+    {
 
+        // validasi item yang dipilih
+        $this->validate([
+            'components.*.recipe.*.isChecked' => function ($attribute, $value, $fail) {
+                // Periksa apakah ada salah satu isChecked dalam array yang bernilai true
+                if (!collect($this->components)->pluck('recipe')->flatten(1)->pluck('isChecked')->contains(true)) {
+                    $fail('Minimal salah satu component harus dicentang.');
+
+                }
+            },
+        ]);
+
+
+        // proses simpan permintaan dari production service
+
+        // next step
+    }
 }

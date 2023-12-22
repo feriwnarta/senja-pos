@@ -12,7 +12,7 @@
                 <input type="name" class="form-control input-default"
                        id="warehouseInput" placeholder="OCS002"
                        wire:model.live.debounce.600ms="code">
-                @error('code') <span class="error">{{ $message }}</span> @enderror
+                @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
             </div>
 
@@ -26,7 +26,7 @@
                 <input type="name" class="form-control input-default"
                        id="warehouseInput" placeholder="Cahaya Senja Bandung"
                        wire:model.live.debounce.600ms="name">
-                @error('name') <span class="error">{{ $message }}</span> @enderror
+                @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
             </div>
 
@@ -40,7 +40,7 @@
                 <input type="name" class="form-control input-default"
                        id="warehouseInput" placeholder="Jl Braga Bandung Asia Afrika"
                        wire:model.live.debounce.600ms="address">
-                @error('address') <span class="error">{{ $message }}</span> @enderror
+                @error('address') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
             </div>
 
@@ -54,7 +54,7 @@
                 <input type="number" class="form-control input-default"
                        id="warehouseInput" placeholder="08xxxxxxxxx"
                        wire:model.live.debounce.600ms="phone">
-                @error('phone') <span class="error">{{ $message }}</span> @enderror
+                @error('phone') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
             </div>
 
@@ -68,7 +68,7 @@
                 <input type="email" class="form-control input-default"
                        id="warehouseInput" placeholder="cahayasenja.bandung@gmail.com"
                        wire:model.live.debounce.600ms="email">
-                @error('email') <span class="error">{{ $message }}</span> @enderror
+                @error('email') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
             </div>
 
@@ -85,7 +85,7 @@
                     @endforeach
                 </select>
 
-                @error('selectedCentralKitchen') <span class="error">{{ $message }}</span> @enderror
+                @error('selectedCentralKitchen') <span text-xs text-red-600>{{ $message }}</span> @enderror
             </div>
 
 

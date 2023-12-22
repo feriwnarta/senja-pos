@@ -59,7 +59,7 @@
                             <input type="name" class="form-control input-default"
                                    id="warehouseInput" placeholder="KU004"
                                    wire:model.live.debounce.600ms="code">
-                            @error('code') <span class="error">{{ $message }}</span> @enderror
+                            @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                         </div>
 
@@ -73,7 +73,7 @@
                             <input type="name" class="form-control input-default"
                                    id="warehouseInput" placeholder="Daging ayam"
                                    wire:model.live.debounce.600ms="name">
-                            @error('name') <span class="error">{{ $message }}</span> @enderror
+                            @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                         </div>
 
@@ -102,7 +102,7 @@
                                         @endforeach
                                     @endif
                                 </select>
-                                @error('unit') <span class="error">{{ $message }}</span> @enderror
+                                @error('unit') <span text-xs text-red-600>{{ $message }}</span> @enderror
                             </div>
                         </div>
 
@@ -115,7 +115,7 @@
                                         <div id="divider" class="margin-symmetric-vertical-6"></div>
                                         <input type="number" class="form-control input-default" id="warehouseInput"
                                                placeholder="0" wire:model.live.debounce.600ms="inStock">
-                                        @error('inStock') <span class="error">{{ $message }}</span> @enderror
+                                        @error('inStock') <span text-xs text-red-600>{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -138,7 +138,8 @@
                                         <div id="divider" class="margin-symmetric-vertical-6"></div>
                                         <input type="number" class="form-control input-default" id="warehouseInput"
                                                placeholder="0" wire:model.live.debounce.600ms="minimumStock">
-                                        @error('minimumStock') <span class="error">{{ $message }}</span> @enderror
+                                        @error('minimumStock') <span text-xs
+                                                                     text-red-600>{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -162,7 +163,7 @@
                                         <input type="text" class="form-control input-default" id="warehouseInput"
                                                x-mask:dynamic="$money($input, ',')"
                                                placeholder="12.000" wire:model.live.debounce.600ms="avgCost">
-                                        @error('avgCost') <span class="error">{{ $message }}</span> @enderror
+                                        @error('avgCost') <span text-xs text-red-600>{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -172,7 +173,7 @@
                                         <input type="text" class="form-control input-default" id="warehouseInput"
                                                x-mask:dynamic="$money($input, ',')"
                                                placeholder="12.000" wire:model.live.debounce.600ms="lastCost">
-                                        @error('lastCost') <span class="error">{{ $message }}</span> @enderror
+                                        @error('lastCost') <span text-xs text-red-600>{{ $message }}</span> @enderror
                                     </div>
                                 </div>
                             </div>
@@ -198,7 +199,7 @@
                                     @endif
 
                                 </select>
-                                @error('category') <span class="error">{{ $message }}</span> @enderror
+                                @error('category') <span text-xs text-red-600>{{ $message }}</span> @enderror
                             </div>
                         </div>
 
@@ -224,7 +225,7 @@
                                     @endif
 
                                 </select>
-                                @error('placement') <span class="error">{{ $message }}</span> @enderror
+                                @error('placement') <span text-xs text-red-600>{{ $message }}</span> @enderror
                             </div>
                         </div>
 
@@ -289,7 +290,7 @@
                                     alt="" srcset="" width="140" @click="document.getElementById('fileInput').click()">
                             @endif
                             <div wire:loading wire:target.prevent="thumbnail">Uploading...</div>
-                            @error('thumbnail') <span class="error">{{ $message }}</span> @enderror
+                            @error('thumbnail') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
 
                             <input type="file" id="fileInput" wire:model="thumbnail"

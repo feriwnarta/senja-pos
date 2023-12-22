@@ -45,7 +45,7 @@
                             <input type="name" class="form-control input-default"
                                    id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plKodeGudang') }}"
                                    wire:model.live.debounce.600ms="codeWarehouse">
-                            @error('codeWarehouse') <span class="error">{{ $message }}</span> @enderror
+                            @error('codeWarehouse') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
 
                         </div>
 
@@ -59,7 +59,7 @@
                             <input type="name" class="form-control input-default"
                                    id="warehouseInput" placeholder="{{ __('app_locale.placeholder.plNamaGudang') }}"
                                    wire:model.live.debounce.600ms="nameWarehouse">
-                            @error('nameWarehouse') <span class="error">{{ $message }}</span> @enderror
+                            @error('nameWarehouse') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
 
                         </div>
 
@@ -165,7 +165,7 @@
                                 <textarea class="form-control textarea" id="addressWarehouse" rows="5"
                                           placeholder="Jln. Ki Hajar Dewantoro"
                                           wire:model.blur="addressWarehouse"></textarea>
-                                @error('addressWarehouse') <span class="error">{{ $message }}</span> @enderror
+                                @error('addressWarehouse') <span text-xs text-red-600>{{ $message }}</span> @enderror
                             </div>
 
 
@@ -339,7 +339,7 @@
                                     alt="" srcset="" width="140">
                             @endif
                             <div wire:loading wire:target.prevent="photoNewItem">Uploading...</div>
-                            @error('photoNewItem') <span class="error">{{ $message }}</span> @enderror
+                            @error('photoNewItem') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                             <div>
                                 <button type="button" class="btn btn-icon-text-outlined margin-top-16"
@@ -363,7 +363,7 @@
                             <input type="name" class="form-control input-default"
                                    id="codeItem" placeholder="BMDGSP01" wire:model.blur="codeItem"
                             >
-                            @error('codeItem') <span class="error">{{ $message }}</span> @enderror
+                            @error('codeItem') <span text-xs text-red-600>{{ $message }}</span> @enderror
 
                         </div>
 
@@ -377,7 +377,7 @@
                             <input type="name" class="form-control input-default"
                                    id="nameItem" placeholder="Daging sapi" wire:model.blur="nameItem"
                             >
-                            @error('nameItem') <span class="error">{{ $message }}</span> @enderror
+                            @error('nameItem') <span text-xs text-red-600>{{ $message }}</span> @enderror
                         </div>
 
                         <div id="divider" class="margin-top-20"></div>
@@ -420,7 +420,7 @@
 
                                 </ul>
                             </div>
-                            @error('categoryName') <span class="error">{{ $message }}</span> @enderror
+                            @error('categoryName') <span text-xs text-red-600>{{ $message }}</span> @enderror
                         </div>
 
 
