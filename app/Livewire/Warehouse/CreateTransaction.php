@@ -327,6 +327,14 @@ class CreateTransaction extends Component
             return;
         }
 
+        $this->validate([
+            'selected.*.itemReq' => 'required|min:1',
+        ], [
+            'selected.*.itemReq.required' => 'Harap memberikan nilai stok tambahan ke item yang dipilih',
+            'selected.*.itemReq.min' => 'Harap memberikan nilai stok tambahan ke item yang dipilih',
+        ]);
+
+
         // proses simpan detail permintaan
         try {
             $result = $this->warehouseTransactionService->finishRequest($this->requestId, $this->selected);

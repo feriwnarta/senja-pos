@@ -72,7 +72,11 @@
                         <p class="subtitle-3-regular">Permintaan stok #{{ $code }}</p>
                         <p class="subtitle-3-regular margin-top-16">Tanggal: {{ $date }}</p>
                         <p class="subtitle-3-regular margin-top-16">Catatan : {{ $note }}</p>
-
+                        @if($errors->has('selected.*.itemReq'))
+                            <span class=" text-xs text-red-600">
+                                {{ $errors->first('selected.*.itemReq') }}
+                            </span>
+                        @endif
                     </div>
 
 

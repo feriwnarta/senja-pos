@@ -104,7 +104,6 @@ class Transaction extends Component
             return;
         }
 
-        Log::debug($this->type);
 
         // jika toggle berupa request
         if ($this->urlQuery == 'request') {

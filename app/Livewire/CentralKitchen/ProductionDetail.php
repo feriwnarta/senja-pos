@@ -208,7 +208,7 @@ class ProductionDetail extends Component
                 $targetItem = $groupedItems->first()->targetItem;
 
                 $components = $groupedItems->map(function ($resultProduction) {
-                    
+
                     return [
                         'id' => $resultProduction->component->id,
                         'name' => $resultProduction->component->name,
@@ -247,14 +247,18 @@ class ProductionDetail extends Component
 
         // validasi item yang dipilih
         $this->validate([
-            'components.*.recipe.*.isChecked' => function ($attribute, $value, $fail) {
-                // Periksa apakah ada salah satu isChecked dalam array yang bernilai true
-                if (!collect($this->components)->pluck('recipe')->flatten(1)->pluck('isChecked')->contains(true)) {
-                    $fail('Harap pilih bahan yang ingin diminta');
-
-                }
-            },
+            'components.*.recipe' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    // Periksa apakah ada setidaknya satu isChecked dalam semua recipe yang bernilai true
+                    if (!collect($value)->pluck('isChecked')->contains(true)) {
+                        $fail('Harap pilih bahan yang ingin diminta');
+                    }
+                },
+            ],
         ]);
+
+
         // proses simpan permintaan dari production service
         $componentChecked = $this->filterCheckedItems($this->components);
 
