@@ -138,7 +138,7 @@
 
                     @if(isset($components) && !empty($components))
 
-                        <div class="accordion" id="accordionExample">
+                        <div class="accordion" id="accordionExample" wire:ignore>
                             @foreach($components as $subKey => $component)
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne{{ $component['item']['id'] }}">

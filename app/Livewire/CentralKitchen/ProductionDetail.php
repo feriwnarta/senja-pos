@@ -293,15 +293,37 @@ class ProductionDetail extends Component
             'components.*.recipe.*.isChecked' => function ($attribute, $value, $fail) {
                 // Periksa apakah ada salah satu isChecked dalam array yang bernilai true
                 if (!collect($this->components)->pluck('recipe')->flatten(1)->pluck('isChecked')->contains(true)) {
-                    $fail('Minimal salah satu component harus dicentang.');
+                    $fail('Harap pilih bahan yang ingin diambil');
 
                 }
             },
         ]);
-
-
         // proses simpan permintaan dari production service
+        $result = $this->filterCheckedItems($this->components);
+
+        Log::debug($result);
+
 
         // next step
+    }
+
+    private function filterCheckedItems($data)
+    {
+        $result = [];
+
+        foreach ($data as $category) {
+            $filteredRecipe = array_filter($category['recipe'], function ($recipe) {
+                return $recipe['isChecked'];
+            });
+
+            if (!empty($filteredRecipe)) {
+                $result[] = [
+                    'item' => $category['item'],
+                    'recipe' => array_values($filteredRecipe) // Mengatur ulang indeks array
+                ];
+            }
+        }
+
+        return $result;
     }
 }
