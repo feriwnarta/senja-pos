@@ -50,6 +50,7 @@
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
                                 wire:click="saveRequest"
+                                wire:confirm="Anda akan menyimpan permintaan bahan sebelum mengirim permintaan ini ke gudang. Anda yakin untuk membuatnya ?"
                         >Simpan permintaan
                         </button>
 
@@ -216,14 +217,88 @@
 
 
                 </div>
-            @endif
+            @elseif($status == 'Komponen produksi disimpan')
+                <div class="col-sm-5 offset-1">
+                    <div class="container-input-default  margin-top-16">
+                        <label for="warehouseInput"
+                               class="form-label input-label">Kode produksi</label>
+
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput"
+                               value="{{ $production->code }}" disabled>
+                    </div>
+
+                    @if(isset($productionComponentSave) && !empty($productionComponentSave))
+
+                        <div class="accordion margin-top-24" id="accordionExample" wire:ignore>
+                            @foreach($productionComponentSave as $subKey => $component)
+
+                                {{ Log::info($component) }}
+
+                                <div class="accordion-item" wire:key="{{ $loop->iteration}}">
+                                    <h2 class="accordion-header" id="headingOne{{ $component['targetItem']['id'] }}">
+                                        <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#accordion{{ $component['targetItem']['id'] }}"
+                                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
+                                                aria-controls="accordion{{ $component['targetItem']['id'] }}">
+                                            {{ $component['targetItem']['name'] }}
+                                        </button>
+                                    </h2>
+                                    <div id="accordion{{ $component['targetItem']['id']}}"
+                                         class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
+                                         aria-labelledby="headingOne{{ $component['targetItem']['id'] }}"
+                                         data-bs-parent="#accordionExample">
+
+                                        <div class="accordion-body">
+                                            <table class="table-component table table-hover margin-top-16"
+                                                   id="tableItemRequest"
+                                            >
+                                                <thead class="sticky-topphp">
+                                                <tr>
+                                                    <th>Item</th>
+                                                    <th>Jumlah permintaan</th>
+                                                    <th>Unit</th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+
+                                                @if(isset($component['components']) && !empty($component['components']))
+                                                    @foreach($component['components'] as $recipe)
+                                                        <tr wire:key="{{ $loop->iteration }}">
+                                                            <td>{{ $recipe['name'] }}</td>
+                                                            <td>{{ $recipe['target_qty'] }}</td>
+                                                            <td>{{ $recipe['unit'] }}</td>
+                                                        </tr>
+
+                                                    @endforeach
+                                                @endif
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @endforeach
+                        </div>
+
+                    @endif
+
+                    @endif
+                </div>
+
+
         </div>
-    </div>
 
 
-    <script>
+        <script>
 
-    </script>
+        </script>
 
 
 </x-page-layout>

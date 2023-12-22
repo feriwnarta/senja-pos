@@ -25,6 +25,7 @@ class ProductionDetail extends Component
     public string $status = 'Baru';
     public ?CentralProduction $production;
     public array $components;
+    public array $productionComponentSave;
     private CentralProductionService $productionService;
 
     public function boot()
@@ -65,8 +66,6 @@ class ProductionDetail extends Component
      */
     private function delegateProcess($status)
     {
-
-
         switch ($status) {
             case 'Produksi diterima' :
 
@@ -74,7 +73,13 @@ class ProductionDetail extends Component
                 $this->createRequestMaterial($this->requestId);
                 break;
 
+            case 'Komponen produksi disimpan' :
+                $this->setProduction();
+                $this->detailComponentSaved($this->production);
+                break;
+
         }
+
     }
 
     /**
@@ -174,6 +179,7 @@ class ProductionDetail extends Component
 
                     if (!empty($components)) {
                         $this->components = $components;
+                        Log::debug($components);
                         return;
                     }
 
@@ -189,6 +195,111 @@ class ProductionDetail extends Component
 
         }
 
+    }
+
+    /**
+     * tampilkan detail komponen yang sudah disimpan saat proses produksi
+     * @return void
+     */
+    private function detailComponentSaved($production)
+    {
+        try {
+            $productionComponentSave = $production->result->load('targetItem', 'component')->groupBy('targetItem.id')->map(function ($groupedItems) {
+                $targetItem = $groupedItems->first()->targetItem;
+
+                $components = $groupedItems->map(function ($resultProduction) {
+                    
+                    return [
+                        'id' => $resultProduction->component->id,
+                        'name' => $resultProduction->component->name,
+                        'target_qty' => $resultProduction->qty_target,
+                        'unit' => $resultProduction->component->unit->name,
+                    ];
+                });
+
+                return [
+                    'targetItem' => [
+                        'id' => $targetItem->id,
+                        'name' => $targetItem->name,
+                    ],
+                    'components' => $components->all(),
+                ];
+            })->toArray();
+
+            if (isset($productionComponentSave) && !empty($productionComponentSave)) {
+                $this->productionComponentSave = $productionComponentSave;
+            }
+
+
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+
+        }
+    }
+
+    /***
+     * proses menyimpan permintaan bahan yang dibutuhkan oleh central kitchen ke gudang
+     * @return void
+     */
+    public function saveRequest()
+    {
+
+        // validasi item yang dipilih
+        $this->validate([
+            'components.*.recipe.*.isChecked' => function ($attribute, $value, $fail) {
+                // Periksa apakah ada salah satu isChecked dalam array yang bernilai true
+                if (!collect($this->components)->pluck('recipe')->flatten(1)->pluck('isChecked')->contains(true)) {
+                    $fail('Harap pilih bahan yang ingin diminta');
+
+                }
+            },
+        ]);
+        // proses simpan permintaan dari production service
+        $componentChecked = $this->filterCheckedItems($this->components);
+
+        // next step
+        try {
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+            // lakukan pencarian central kitchen id
+
+            if (isset($this->production) && $this->production != null) {
+                $result = $this->productionService->saveComponent($this->production->id, $componentChecked);
+
+                if ($result) {
+                    notify()->success('Berhasil simpan komponen resep', 'Sukses');
+
+                    // proses detail komponen setelah disimpan
+                }
+            }
+
+
+        } catch (Exception $exception) {
+            notify()->error('Ada sesuatu yang salah', 'Error');
+            return;
+        }
+
+
+    }
+
+    private function filterCheckedItems($data)
+    {
+        $result = [];
+
+        foreach ($data as $category) {
+            $filteredRecipe = array_filter($category['recipe'], function ($recipe) {
+                return $recipe['isChecked'];
+            });
+
+            if (!empty($filteredRecipe)) {
+                $result[] = [
+                    'item' => $category['item'],
+                    'recipe' => array_values($filteredRecipe) // Mengatur ulang indeks array
+                ];
+            }
+        }
+
+        return $result;
     }
 
     public function test()
@@ -279,51 +390,5 @@ class ProductionDetail extends Component
             notify()->error('Gagal membuat produksi, ', 'Error'); // Gunakan pesan yang sama untuk konsistensi
         }
 
-    }
-
-    /***
-     * proses menyimpan permintaan bahan yang dibutuhkan oleh central kitchen ke gudang
-     * @return void
-     */
-    public function saveRequest()
-    {
-
-        // validasi item yang dipilih
-        $this->validate([
-            'components.*.recipe.*.isChecked' => function ($attribute, $value, $fail) {
-                // Periksa apakah ada salah satu isChecked dalam array yang bernilai true
-                if (!collect($this->components)->pluck('recipe')->flatten(1)->pluck('isChecked')->contains(true)) {
-                    $fail('Harap pilih bahan yang ingin diambil');
-
-                }
-            },
-        ]);
-        // proses simpan permintaan dari production service
-        $result = $this->filterCheckedItems($this->components);
-
-        Log::debug($result);
-
-
-        // next step
-    }
-
-    private function filterCheckedItems($data)
-    {
-        $result = [];
-
-        foreach ($data as $category) {
-            $filteredRecipe = array_filter($category['recipe'], function ($recipe) {
-                return $recipe['isChecked'];
-            });
-
-            if (!empty($filteredRecipe)) {
-                $result[] = [
-                    'item' => $category['item'],
-                    'recipe' => array_values($filteredRecipe) // Mengatur ulang indeks array
-                ];
-            }
-        }
-
-        return $result;
     }
 }

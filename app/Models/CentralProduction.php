@@ -37,9 +37,10 @@ class CentralProduction extends Model
         return $this->belongsTo(RequestStock::class, 'request_stocks_id');
     }
 
-    public function history(): HasMany
+
+    public function result(): HasMany
     {
-        return $this->hasMany(CentralProductionHistory::class, 'central_productions_id');
+        return $this->hasMany(CentralProductionResult::class, 'central_productions_id');
     }
 
 

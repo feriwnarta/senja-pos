@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
-class CentralProductionHistory extends Model
+class CentralProductionResult extends Model
 {
     use HasFactory, HasUuids;
 
@@ -34,5 +34,15 @@ class CentralProductionHistory extends Model
     public function production(): BelongsTo
     {
         return $this->belongsTo(CentralProduction::class, 'central_productions_id');
+    }
+
+    public function targetItem(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'target_items_id');
+    }
+
+    public function component(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'items_id');
     }
 }

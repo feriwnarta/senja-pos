@@ -103,4 +103,51 @@ class CentralProductionServiceImpl implements CentralProductionService
             throw $exception;
         }
     }
+
+    public function saveComponent(string $productionId, array $component)
+    {
+        try {
+            DB::beginTransaction();
+
+            $production = CentralProduction::findOrFail($productionId);
+            $resultArray = [];
+
+            foreach ($component as $element) {
+                foreach ($element['recipe'] as $recipe) {
+                    $resultArray[] = [
+                        'target_items_id' => $element['item']['id'],
+                        'central_productions_id' => $productionId,
+                        'items_id' => $recipe['item_component_id'],
+                        'qty_target' => $recipe['item_component_usage'],
+                    ];
+                }
+
+                Log::debug($element);
+            }
+
+            // simpan production result
+            $production->result()->createMany($resultArray);
+
+            // update status request stock
+
+            $production->requestStock->requestStockHistory()->createMany([
+                [
+                    'desc' => 'Komponen untuk produksi disimpan',
+                    'status' => 'Komponen produksi disimpan'
+                ],
+
+            ]);
+
+            DB::commit();
+            return true;
+
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('gagal menyimpan komponen produksi');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            throw $exception;
+        }
+    }
 }

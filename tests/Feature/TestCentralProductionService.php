@@ -9,6 +9,7 @@ use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotNull;
@@ -109,12 +110,63 @@ class TestCentralProductionService extends TestCase
 
     }
 
+    public function testSaveComponentRequest()
+    {
+
+        $component = [
+            [
+                'item' => [
+                    'id' => '9ae48c16-be27-4dca-a209-85f6339f82fb',
+                    'name' => 'Ayam giling',
+                ],
+                'recipe' => [
+                    [
+                        'isChecked' => true,
+                        'id' => '9ae48c6a-0801-4c31-8b11-e446e9d27b98',
+                        'item_component_id' => '9ad7dbdd-b4b2-46e6-85e6-2c9ff19551b3',
+                        'item_component_name' => 'Paha ayam',
+                        'item_component_unit' => 'GR',
+                        'item_component_usage' => '150.00',
+                        'qty_request' => 0,
+                    ],
+                ],
+            ],
+            [
+                'item' => [
+                    'id' => '9ad7dca8-15c8-4f58-8ab8-c696191328dd',
+                    'name' => 'Bawang goreng',
+                ],
+                'recipe' => [
+                    [
+                        'isChecked' => true,
+                        'id' => '9ad7dd55-7e48-4d31-85f2-4f3fb0e997db',
+                        'item_component_id' => '9ad7dd21-4cc8-4554-97a8-8fc06ebdc689',
+                        'item_component_name' => 'Garam',
+                        'item_component_unit' => 'KG',
+                        'item_component_usage' => '10.00',
+                        'qty_request' => 0,
+                    ],
+                ],
+            ],
+        ];
+
+        $prodId = CentralProduction::first()->id;
+
+        $rs = $this->centralService->saveComponent($prodId, $component);
+        assertNotNull($rs);
+        self::assertTrue($rs);
+        print_r($rs);
+
+
+    }
+
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->centralService = app()->make(CentralProductionServiceImpl::class);
+        DB::table('central_production_results')->delete();
 //        DB::table('central_productions')->delete();
     }
 

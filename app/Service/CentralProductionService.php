@@ -13,4 +13,7 @@ interface CentralProductionService
     public function createProduction(string $requestStockId, string $centralKitchenId): ?CentralProduction;
 
 
+    public function saveComponent(string $productionId, array $component);
+
+
 }

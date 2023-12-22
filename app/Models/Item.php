@@ -79,6 +79,18 @@ class Item extends Model
     }
 
 
+    public function target(): HasMany
+    {
+        return $this->hasMany(Item::class, 'target_items_id');
+    }
+
+
+    public function component(): HasMany
+    {
+        return $this->hasMany(Item::class, 'items_id');
+    }
+
+
 
 //    // Relasi many to many ke category
 //    public function categories(): BelongsToMany
