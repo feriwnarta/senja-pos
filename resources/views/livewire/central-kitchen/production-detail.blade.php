@@ -268,7 +268,7 @@
 
                         <div class="accordion margin-top-24" id="accordionExample" wire:ignore>
                             @foreach($productionComponentSave as $subKey => $component)
-                                
+
                                 <div class="accordion-item" wire:key="{{ $loop->iteration}}">
                                     <h2 class="accordion-header" id="headingOne{{ $component['targetItem']['id'] }}">
                                         <button class="accordion-button"
@@ -314,6 +314,8 @@
 
                     @endif
 
+                    @elseif($status == 'Membuat permintaan bahan')
+                        <h1>Validasi kiriman dari gudang</h1>
                     @endif
                 </div>
 

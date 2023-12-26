@@ -26,6 +26,7 @@ class ProductionDetail extends Component
     public ?CentralProduction $production;
     public array $components;
     public array $productionComponentSave;
+    public string $productionId;
     private CentralProductionService $productionService;
 
     public function boot()
@@ -96,6 +97,8 @@ class ProductionDetail extends Component
 
         // cari produksi dari request id
         $this->production = $this->findProductionById($this->requestId);
+
+        Log::info('set production' . $this->production);
 
         if ($this->production == null) {
             notify()->warning('Tidak bisa mendapatkan data produksi, harap ulangi permintaan', 'Peringatan');
@@ -400,10 +403,32 @@ class ProductionDetail extends Component
     public function requestMaterialToWarehouse()
     {
 
-        if (isset($this->productionComponentSave) && !empty($this->productionComponentSave)) {
-            Log::info(json_encode($this->productionComponentSave, JSON_PRETTY_PRINT));
+        // tampikan pesan error produski save kosong
+        if (!isset($this->productionComponentSave) && empty($this->productionComponentSave)) {
+            notify()->error('Gagal mendapatkan komponen', 'Error');
+            Log::error('gagal mendapatkan data komponen yang disimpan di produksi modul');
+            return;
         }
 
+        if (!isset($this->requestStock) && $this->requestStock == null) {
+            $this->requestStock = $this->checkProductionId($this->production->id);
+        }
+
+        try {
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+            $result = $this->productionService->requestMaterialToWarehouse(materials: $this->productionComponentSave, warehouseId: $this->requestStock->warehouses_id, productionId: $this->production->id, requestId: $this->requestId);
+
+            if ($result) {
+                notify()->success('Berhasil membuat permintaan bahan', 'Sukses');
+                return;
+            }
+
+            notify()->error('Gagal melakukan permintaan bahan', 'Error');
+        } catch (Exception $exception) {
+            notify()->error('Gagal melakukan permintaan bahan', 'Error');
+            Log::error('gagal meminta bahan');
+            return;
+        }
 
     }
 }

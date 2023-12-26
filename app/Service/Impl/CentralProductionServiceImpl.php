@@ -159,7 +159,7 @@ class CentralProductionServiceImpl implements CentralProductionService
      * @param array $materials
      * @return void
      */
-    public function requestMaterialToWarehouse(array $materials, string $warehouseId, string $productionId)
+    public function requestMaterialToWarehouse(array $materials, string $warehouseId, string $productionId, string $requestId)
     {
 
         try {
@@ -179,7 +179,7 @@ class CentralProductionServiceImpl implements CentralProductionService
 
 
             // atomic lock
-            return Cache::lock('createItemOut', 10)->block(5, function () use ($materials, $warehouseId, $productionId, $resultMaterial) {
+            return Cache::lock('createItemOut', 10)->block(5, function () use ($materials, $warehouseId, $productionId, $resultMaterial, $requestId) {
 
                 // proses simpan item keluar untuk gudang
                 DB::beginTransaction();
@@ -202,6 +202,14 @@ class CentralProductionServiceImpl implements CentralProductionService
                     ]);
 
                     $outbound->outboundItem()->createMany($resultMaterial);
+
+                    RequestStockHistory::
+                    create([
+                        'request_stocks_id' => $requestId,
+                        'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen',
+                        'status' => 'Membuat permintaan bahan'
+                    ]);
+
 
                     DB::commit();
                     return $outbound;

@@ -10,17 +10,16 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('warehouse_outbound_items', function (Blueprint $table) {
+        Schema::create('warehouse_outbound_histories', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('warehouse_outbounds_id')->nullable(false);
-            $table->uuid('items_id')->nullable(false);
-            $table->decimal('qty', 10, 2)->nullable(false);
-            $table->decimal('qty_send', 10, 2)->default(0.00);
+            $table->string('desc', 150)->nullable(false);
+            $table->string('status', 50)->nullable(true);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
+            $table->timestamps();
 
             $table->foreign('warehouse_outbounds_id')->references('id')->on('warehouse_outbounds')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('warehouse_outbound_items');
+        Schema::dropIfExists('warehouse_outbound_histories');
     }
 };

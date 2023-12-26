@@ -4,6 +4,7 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\RequestStock;
 use App\Models\Warehouse;
+use App\Models\WarehouseOutbound;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
@@ -119,8 +120,21 @@ class Transaction extends Component
 
     public function render()
     {
-        return view('livewire.warehouse.transaction', ['requestStock' => RequestStock::when($this->id, function ($query) {
-            return $query->where('warehouses_id', $this->id);
-        })->orderBy('id', 'DESC')->paginate(10)]);
+
+        $validUrl = ['request', 'stockIn', 'stockOut'];
+
+        if ($this->urlQuery == '' && !in_array($validUrl)) {
+            return 'Pastikan url valid';
+        }
+        return view('livewire.warehouse.transaction', [
+            'requestStock' => ($this->urlQuery == 'request')
+                ? RequestStock::when($this->id, function ($query) {
+                    return $query->where('warehouses_id', $this->id);
+                })->orderBy('id', 'DESC')->paginate(10)
+                : WarehouseOutbound::when($this->id, function ($query) {
+                    return $query->where('warehouses_id', $this->id); // Perbaikan pada nama kolom 'warehouses_id'
+                })->orderBy('id', 'DESC')->paginate(10)
+        ]);
+
     }
 }

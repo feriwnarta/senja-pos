@@ -21,8 +21,8 @@ return new class extends Migration {
             $table->uuid('updated_by')->nullable(true);
             $table->timestamps();
 
-            $table->foreign('warehouses_id')->references('id')->on('warehouses');
-            $table->foreign('central_productions_id')->references('id')->on('central_productions');
+            $table->foreign('warehouses_id')->references('id')->on('warehouses')->onDelete('cascade');
+            $table->foreign('central_productions_id')->references('id')->on('central_productions')->onDelete('cascade');
         });
     }
 
