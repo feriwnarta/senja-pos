@@ -150,4 +150,53 @@ class CentralProductionServiceImpl implements CentralProductionService
             throw $exception;
         }
     }
+
+    /**
+     * fungsi ini digunakan untuk menyimpan permintaan bahan yang dibutuhkan untuk produksi
+     * dari central kitchen ke gudang
+     * @param array $materials
+     * @return void
+     */
+    public function requestMaterialToWarehouse(array $materials)
+    {
+
+        try {
+
+            if (empty($materials)) {
+                throw new Exception('material kosong');
+            }
+
+
+        } catch (Exception $exception) {
+            Log::error('gagal menyimpan permintaan bahan dari central kitchen ke gudang');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
+
+    }
+
+    public function joinSameItemRequestMaterial(array $materials)
+    {
+        $mergedComponents = [];
+
+        // Loop melalui data untuk menggabungkan nilai target_qty
+        foreach ($materials as $item) {
+            foreach ($item['components'] as $component) {
+                $key = $component['id'] . '_' . $component['name'];
+
+                if (!isset($mergedComponents[$key])) {
+                    // Jika belum ada data untuk id dan name tersebut, tambahkan ke array
+                    $mergedComponents[$key] = $component;
+                } else {
+                    // Jika sudah ada, tambahkan nilai target_qty
+                    $mergedComponents[$key]['target_qty'] += $component['target_qty'];
+                }
+            }
+        }
+
+        Log::info(array_values($mergedComponents));
+
+        return array_values($mergedComponents);
+    }
 }

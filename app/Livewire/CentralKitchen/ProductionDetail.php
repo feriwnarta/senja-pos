@@ -306,10 +306,6 @@ class ProductionDetail extends Component
         return $result;
     }
 
-    public function test()
-    {
-        Log::info($this->components);
-    }
 
     public function render()
     {
@@ -393,6 +389,21 @@ class ProductionDetail extends Component
             ]);
             notify()->error('Gagal membuat produksi, ', 'Error'); // Gunakan pesan yang sama untuk konsistensi
         }
+
+    }
+
+
+    /**
+     * lakukan permintaan ke gudang untuk bahan yang sudah ditentukan oleh central kitchen
+     * @return void
+     */
+    public function requestMaterialToWarehouse()
+    {
+
+        if (isset($this->productionComponentSave) && !empty($this->productionComponentSave)) {
+            Log::info(json_encode($this->productionComponentSave, JSON_PRETTY_PRINT));
+        }
+
 
     }
 }

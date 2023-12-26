@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -10,7 +9,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('item_outbounds', function (Blueprint $table) {
+        Schema::create('warehouse_outbounds', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('warehouses_id')->nullable(false);
             $table->uuid('central_kitchens_id')->nullable(false);
@@ -30,6 +29,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_outbounds');
+        Schema::dropIfExists('warehouse_outbounds');
     }
 };

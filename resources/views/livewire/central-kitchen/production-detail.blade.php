@@ -80,7 +80,7 @@
 
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
-                                wire:click="requestMaterial"
+                                wire:click="requestMaterialToWarehouse"
                                 wire:confirm="Anda akan membuat permintaan bahan dan mengirim permintaan ini ke gudang. Anda yakin untuk membuatnya ?"
                         >Kirim permintaan
                         </button>
@@ -268,7 +268,7 @@
 
                         <div class="accordion margin-top-24" id="accordionExample" wire:ignore>
                             @foreach($productionComponentSave as $subKey => $component)
-                                {{ Log::info($component) }}
+                                
                                 <div class="accordion-item" wire:key="{{ $loop->iteration}}">
                                     <h2 class="accordion-header" id="headingOne{{ $component['targetItem']['id'] }}">
                                         <button class="accordion-button"

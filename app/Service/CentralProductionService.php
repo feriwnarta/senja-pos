@@ -15,5 +15,9 @@ interface CentralProductionService
 
     public function saveComponent(string $productionId, array $component);
 
+    public function joinSameItemRequestMaterial(array $materials);
+
+    public function requestMaterialToWarehouse(array $materials);
+
 
 }
