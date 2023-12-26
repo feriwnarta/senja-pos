@@ -97,6 +97,7 @@
         <x-notify::notify/>
         <div class="row">
 
+            {{-- PRODUKSI BARU --}}
             @if($status == 'Baru')
                 <div class="col-sm-5 offset-1">
                     {{-- KODE REFERENSI --}}
@@ -145,7 +146,7 @@
                         </table>
                     </div>
                 </div>
-
+                {{-- PRODUKSI DITERIMA --}}
             @elseif($status == 'Produksi diterima')
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default  margin-top-16">
@@ -161,7 +162,7 @@
                 </div>
 
                 <div class="col-sm-9 offset-1 margin-top-16 set-height-item-request">
-                    
+
                     @if($errors->has('components.*.recipe'))
                         <span class="text-xs text-red-600">
                             {{ $errors->first('components.*.recipe') }}
@@ -248,6 +249,8 @@
 
 
                 </div>
+
+                {{-- PRODUKSI DISIMPAN --}}
             @elseif($status == 'Komponen produksi disimpan')
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default  margin-top-16">
@@ -280,15 +283,15 @@
                                     <div id="accordion{{ $component['targetItem']['id']}}"
                                          class="accordion-collapse collapse show"
                                          aria-labelledby="headingOne{{ $component['targetItem']['id'] }}"
-                                         data-bs-parent="#accordionExample">
+                                    >
                                         <div class="accordion-body">
                                             <table class="table-component table table-hover margin-top-16"
                                                    id="tableItemRequest">
                                                 <thead class="sticky-topphp">
                                                 <tr>
-                                                    <th>Item</th>
-                                                    <th>Jumlah permintaan</th>
-                                                    <th>Unit</th>
+                                                    <th style="width: 33%;">Item</th>
+                                                    <th style="width: 33%;">Jumlah permintaan</th>
+                                                    <th style="width: 33%;">Unit</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
