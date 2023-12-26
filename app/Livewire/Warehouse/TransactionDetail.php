@@ -133,4 +133,17 @@ class TransactionDetail extends Component
 
         }
     }
+
+
+    /**
+     * kirim item dari gudang ke central produksi / outlet
+     * validasi bahwa stoknya sesuai dan stok aktual tidak lebih besar dari nilai dikirim
+     * hitung nilai cogsnya
+     * update status menjadi dikirim
+     * @return void
+     */
+    public function sendItem()
+    {
+
+    }
 }
