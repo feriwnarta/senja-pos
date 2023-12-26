@@ -159,7 +159,7 @@ class CentralProductionServiceImpl implements CentralProductionService
      * @param array $materials
      * @return void
      */
-    public function requestMaterialToWarehouse(array $materials, string $productionId)
+    public function requestMaterialToWarehouse(array $materials, string $warehouseId, string $productionId)
     {
 
         try {
@@ -178,18 +178,54 @@ class CentralProductionServiceImpl implements CentralProductionService
             }
 
 
-            // proses simpan item keluar untuk gudang
-            DB::beginTransaction();
+            // atomic lock
+            return Cache::lock('createItemOut', 10)->block(5, function () use ($materials, $warehouseId, $productionId, $resultMaterial) {
 
-            $outbound = WarehouseOutbound::create([
-                'central_production_id' => $productionId,
-                'note' => null,
-            ]);
+                // proses simpan item keluar untuk gudang
+                DB::beginTransaction();
+                try {
+
+                    // generate code
+
+                    $code = $this->genereateCodeItemOut($warehouseId);
+
+                    if (empty($code)) {
+                        throw new Exception('gagal mengenarate code item keluar');
+                    }
+
+
+                    $outbound = WarehouseOutbound::create([
+                        'warehouses_id' => $warehouseId,
+                        'central_productions_id' => $productionId,
+                        'code' => $code['code'],
+                        'increment' => $code['increment'],
+                    ]);
+
+                    $outbound->outboundItem()->createMany($resultMaterial);
+
+                    DB::commit();
+                    return $outbound;
+
+                } catch (Exception $exception) {
+                    DB::rollBack();
+                    Log::error('gagal membuat item keluar');
+                    Log::error($exception->getMessage());
+                    Log::error($exception->getTraceAsString());
+                    throw $exception; // Re-throw for further handling
+                }
+            });
+
+        } catch (LockTimeoutException $timeoutException) {
+            Log::error('lock tidak didapatkan');
+            Log::error($timeoutException->getMessage());
+            Log::error($timeoutException->getTraceAsString());
+            throw  $timeoutException;
 
         } catch (Exception $exception) {
             Log::error('gagal menyimpan permintaan bahan dari central kitchen ke gudang');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
+            throw $exception;
         }
 
 
@@ -202,14 +238,17 @@ class CentralProductionServiceImpl implements CentralProductionService
         // Loop melalui data untuk menggabungkan nilai target_qty
         foreach ($materials as $item) {
             foreach ($item['components'] as $component) {
-                $key = $component['id'] . '_' . $component['name'];
+                $key = $component['id'];
 
                 if (!isset($mergedComponents[$key])) {
-                    // Jika belum ada data untuk id dan name tersebut, tambahkan ke array
-                    $mergedComponents[$key] = $component;
+                    // Jika belum ada data untuk id tersebut, tambahkan ke array
+                    $mergedComponents[$key] = [
+                        'items_id' => $component['id'],
+                        'qty' => $component['target_qty'],
+                    ];
                 } else {
                     // Jika sudah ada, tambahkan nilai target_qty
-                    $mergedComponents[$key]['target_qty'] += $component['target_qty'];
+                    $mergedComponents[$key]['qty'] += $component['target_qty'];
                 }
             }
         }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class WarehouseOutbound extends Model
@@ -40,5 +41,10 @@ class WarehouseOutbound extends Model
     public function production(): BelongsTo
     {
         return $this->belongsTo(CentralProduction::class, 'central_productions_id');
+    }
+
+    public function outboundItem(): HasMany
+    {
+        return $this->hasMany(WarehouseOutboundItem::class, 'warehouse_outbounds_id');
     }
 }

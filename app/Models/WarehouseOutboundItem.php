@@ -30,12 +30,7 @@ class WarehouseOutboundItem extends Model
             $model->updated_by = $userId;
         });
     }
-
-    public function item(): BelongsTo
-    {
-        return $this->belongsTo(Item::class, 'items_id');
-    }
-
+    
 
     public function outbound(): BelongsTo
     {

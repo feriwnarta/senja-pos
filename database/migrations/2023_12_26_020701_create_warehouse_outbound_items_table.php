@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->uuid('warehouse_outbounds_id')->nullable(false);
             $table->uuid('items_id')->nullable(false);
             $table->decimal('qty', 10, 2)->nullable(false);
-            $table->decimal('qty_send', 10, 2)->nullable(false);
+            $table->decimal('qty_send', 10, 2)->default(0.00);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
             $table->timestamps();

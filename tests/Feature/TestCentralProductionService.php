@@ -10,6 +10,7 @@ use App\Models\WarehouseOutbound;
 use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -230,7 +231,8 @@ class TestCentralProductionService extends TestCase
 
         $result = $this->centralService->joinSameItemRequestMaterial($data);
         self::assertIsArray($result);
-        self::assertEquals(272.0, $result[1]['target_qty']);
+        print_r($result);
+        self::assertEquals(272.0, $result[1]['qty']);
     }
 
     public function testJoinSameItemMaterialNoSameItem()
@@ -295,8 +297,8 @@ class TestCentralProductionService extends TestCase
 
         $result = $this->centralService->joinSameItemRequestMaterial($data);
         self::assertIsArray($result);
-        self::assertNotEquals(272.0, $result[1]['target_qty']);
-        self::assertEquals(200.0, $result[1]['target_qty']);
+        self::assertNotEquals(272.0, $result[1]['qty']);
+        self::assertEquals(200.0, $result[1]['qty']);
     }
 
     public function testJoinSameItemRequestMaterialSameItem()
@@ -367,7 +369,7 @@ class TestCentralProductionService extends TestCase
 
         $result = $this->centralService->joinSameItemRequestMaterial($data);
         self::assertIsArray($result);
-        self::assertNotEquals(25.00, $result[2]['target_qty']);
+        self::assertNotEquals(25.00, $result[2]['qty']);
 
     }
 
@@ -451,6 +453,161 @@ class TestCentralProductionService extends TestCase
 
         print_r($rs);
 
+
+    }
+
+    public function testSaveRequest()
+    {
+
+        $data = [
+            "9ad7dca8-15c8-4f58-8ab8-c696191328dd" => [
+                "targetItem" => [
+                    "id" => "9ad7dca8-15c8-4f58-8ab8-c696191328dd",
+                    "name" => "Bawang goreng"
+                ],
+                "components" => [
+                    [
+                        "id" => "9ad7dd21-4cc8-4554-97a8-8fc06ebdc689",
+                        "name" => "Garam",
+                        "target_qty" => "5.00",
+                        "unit" => "KG"
+                    ],
+                    [
+                        "id" => "9ad7dbdd-b4b2-46e6-85e6-2c9ff19551b3",
+                        "name" => "Paha ayam",
+                        "target_qty" => "72.00",
+                        "unit" => "GR"
+                    ]
+                ]
+            ],
+            "9ae48c16-be27-4dca-a209-85f6339f82fb" => [
+                "targetItem" => [
+                    "id" => "9ae48c16-be27-4dca-a209-85f6339f82fb",
+                    "name" => "Ayam giling"
+                ],
+                "components" => [
+                    [
+                        "id" => "9ad7dbdd-b4b2-46e6-85e6-2c9ff19551b3",
+                        "name" => "Paha ayam",
+                        "target_qty" => "200.00",
+                        "unit" => "GR"
+                    ],
+                    [
+                        "id" => "9ad7dc13-6cc7-42ee-af14-6040aa775d6c",
+                        "name" => "Telur",
+                        "target_qty" => "320.00",
+                        "unit" => "Butir"
+                    ]
+                ]
+            ],
+            "9ae6955d-e3ca-4dcc-9a07-80f48677e93f" => [
+                "targetItem" => [
+                    "id" => "9ae6955d-e3ca-4dcc-9a07-80f48677e93f",
+                    "name" => "Chasio"
+                ],
+                "components" => [
+                    [
+                        "id" => "9ad7dca8-15c8-4f58-8ab8-c696191328dd",
+                        "name" => "Bawang goreng",
+                        "target_qty" => "20.00",
+                        "unit" => "KG"
+                    ],
+                    [
+                        "id" => "9ad7dcfe-cde3-4caf-8e6a-0b545940853b",
+                        "name" => "Bawang merah",
+                        "target_qty" => "20.00",
+                        "unit" => "KG"
+                    ]
+                ]
+            ]
+        ];
+
+        $wh = Warehouse::first();
+        $prod = CentralProduction::first();
+
+        $rs = $this->centralService->requestMaterialToWarehouse(
+            $data, $wh->id, $prod->id
+        );
+
+        assertNotNull($rs);
+
+    }
+
+    public function testSaveRequestComponentEmpty()
+    {
+
+        $data = [
+            "9ad7dca8-15c8-4f58-8ab8-c696191328dd" => [
+                "targetItem" => [
+                    "id" => "9ad7dca8-15c8-4f58-8ab8-c696191328dd",
+                    "name" => "Bawang goreng"
+                ],
+                "components" => [
+                    [
+                        "id" => "9ad7dd21-4cc8-4554-97a8-8fc06ebdc689",
+                        "name" => "Garam",
+                        "target_qty" => "5.00",
+                        "unit" => "KG"
+                    ],
+                    [
+                        "id" => "9ad7dbdd-b4b2-46e6-85e6-2c9ff19551b3",
+                        "name" => "Paha ayam",
+                        "target_qty" => "72.00",
+                        "unit" => "GR"
+                    ]
+                ]
+            ],
+            "9ae48c16-be27-4dca-a209-85f6339f82fb" => [
+                "targetItem" => [
+                    "id" => "9ae48c16-be27-4dca-a209-85f6339f82fb",
+                    "name" => "Ayam giling"
+                ],
+                "components" => [
+                    [
+                        "id" => "9ad7dbdd-b4b2-46e6-85e6-2c9ff19551b3",
+                        "name" => "Paha ayam",
+                        "target_qty" => "200.00",
+                        "unit" => "GR"
+                    ],
+                    [
+                        "id" => "9ad7dc13-6cc7-42ee-af14-6040aa775d6c",
+                        "name" => "Telur",
+                        "target_qty" => "320.00",
+                        "unit" => "Butir"
+                    ]
+                ]
+            ],
+            "9ae6955d-e3ca-4dcc-9a07-80f48677e93f" => [
+                "targetItem" => [
+                    "id" => "9ae6955d-e3ca-4dcc-9a07-80f48677e93f",
+                    "name" => "Chasio"
+                ],
+                "components" => [
+                    [
+                        "id" => "9ad7dca8-15c8-4f58-8ab8-c696191328dd",
+                        "name" => "Bawang goreng",
+                        "target_qty" => "20.00",
+                        "unit" => "KG"
+                    ],
+                    [
+                        "id" => "9ad7dcfe-cde3-4caf-8e6a-0b545940853b",
+                        "name" => "Bawang merah",
+                        "target_qty" => "20.00",
+                        "unit" => "KG"
+                    ]
+                ]
+            ]
+        ];
+
+        $wh = Warehouse::first();
+        $prod = CentralProduction::first();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('material kosong');
+
+        $rs = $this->centralService->requestMaterialToWarehouse(
+            [], $wh->id, $prod->id
+        );
 
     }
 
