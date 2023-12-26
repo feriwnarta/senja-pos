@@ -98,25 +98,26 @@
 
                             @if($warehouseOutbound->outboundItem->isNotEmpty())
                                 @foreach($warehouseOutbound->outboundItem as $key => $item)
-
                                     @php
-                                        // set outbound items
-                                        $outboundItems[] = [
+                                        // Set outbound items
+                                        $this->outboundItems[] = [
                                             'id' => $item->id,
-                                            'qty_send' => 0,
+                                            'qty_send' => $item->qty,
                                         ];
                                     @endphp
 
                                     <tr wire:key="{{ $loop->iteration }}">
                                         <td>{{ $item->item->name }}</td>
-                                        <td class="{{ $item->item->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">{{ $item->item->stockItem->last()->qty_on_hand }}</td>
-                                        <td>{{ $item->qty}}</td>
+                                        <td class="{{ $item->item->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">
+                                            {{ $item->item->stockItem->last()->qty_on_hand }}
+                                        </td>
+                                        <td>{{ $item->qty }}</td>
                                         <td class="d-flex flex-row align-items-center">
+
                                             <input type="text" class="form-control input-default"
-                                                   x-mask:dynamic="$money($input, '.')"
-                                                   {{ $item->item->stockItem->last()->qty_on_hand == 0 || $warehouseOutbound->code == null ? 'disabled' : '' }}
-                                                   placeholder="{{ $item->qty }}"
-                                                   wire:model="outboundItems.{{ $key }}.qty_send"
+                                                   wire:model="outboundItems.{{$key}}.qty_send"
+                                                   value="{{ $this->outboundItems[$key]['qty_send'] }}"
+                                                {{ $item->item->stockItem->last()->qty_on_hand == 0 || $warehouseOutbound->code == null ? 'disabled' : '' }}
                                             >
 
                                             @if($item->item->stockItem->last()->qty_on_hand == 0 )
@@ -124,16 +125,15 @@
                                                    data-bs-title="Stok tidak mencukupi" data-bs-placement="right"></i>
                                             @endif
                                         </td>
-                                        <td>{{ $item->item->unit->name}}</td>
-
+                                        <td>{{ $item->item->unit->name }}</td>
                                     </tr>
-
                                 @endforeach
-
                             @else
-                                <h1>Gagal mendapatkan item yang diminta</h1>
+                                {{-- Handle case when outbound items are empty --}}
+                                <tr>
+                                    <td colspan="5">No outbound items available.</td>
+                                </tr>
                             @endif
-
 
                             </tbody>
                         </table>
