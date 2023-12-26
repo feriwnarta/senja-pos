@@ -17,7 +17,7 @@ class Transaction extends Component
     public string $toggle = '';
 
     public string $selected = 'all';
-    #[Url(keep: true, as: 'option')]
+    #[Url(as: 'option', history: true)]
     public string $urlQuery = 'request';
     public string $id = '';
     private string $type = 'outlet';

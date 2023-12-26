@@ -22,10 +22,17 @@
                         </button>
                     </div>
 
-                    <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10"
-                            wire:loading.attr="disabled" wire:click="acceptAndNext">Terima dan lanjutkan
-                    </button>
+                    @if($warehouseOutbound->code != '')
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:loading.attr="disabled" wire:click="sendItem">Kirim
+                        </button>
+                    @else
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:loading.attr="disabled" wire:click="acceptAndNext">Terima dan lanjutkan
+                        </button>
+                    @endif
 
 
                 </div>
@@ -48,7 +55,7 @@
                         <p class="subtitle-3-regular">Kode item keluar</p>
                         <div id="divider" class="margin-top-6"></div>
                         <p class="margin-top-6 subtitle-3-medium {{  $warehouseOutbound->code == null ? 'text-danger' : ''}}">
-                            * Menunggu diterima</p>
+                            {{ $warehouseOutbound->code == null ? '* Menunggu diterima' : $warehouseOutbound->code }}</p>
                     </div>
 
                     <div class="margin-top-24">
@@ -81,19 +88,42 @@
                             <thead class="sticky-top">
                             <tr>
                                 <th>Item</th>
-                                <th>Jumlah</th>
+                                <th>Stok</th>
+                                <th>Permintaan</th>
+                                <th>Dikirim</th>
                                 <th>Unit</th>
                             </tr>
                             </thead>
                             <tbody>
 
                             @if($warehouseOutbound->outboundItem->isNotEmpty())
+                                @foreach($warehouseOutbound->outboundItem as $key => $item)
 
-                                @foreach($warehouseOutbound->outboundItem as $item)
+                                    @php
+                                        // set outbound items
+                                        $outboundItems[] = [
+                                            'id' => $item->id,
+                                            'qty_send' => 0,
+                                        ];
+                                    @endphp
+
                                     <tr wire:key="{{ $loop->iteration }}">
-
                                         <td>{{ $item->item->name }}</td>
+                                        <td class="{{ $item->item->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">{{ $item->item->stockItem->last()->qty_on_hand }}</td>
                                         <td>{{ $item->qty}}</td>
+                                        <td class="d-flex flex-row align-items-center">
+                                            <input type="text" class="form-control input-default"
+                                                   x-mask:dynamic="$money($input, '.')"
+                                                   {{ $item->item->stockItem->last()->qty_on_hand == 0 || $warehouseOutbound->code == null ? 'disabled' : '' }}
+                                                   placeholder="{{ $item->qty }}"
+                                                   wire:model="outboundItems.{{ $key }}.qty_send"
+                                            >
+
+                                            @if($item->item->stockItem->last()->qty_on_hand == 0 )
+                                                <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
+                                                   data-bs-title="Stok tidak mencukupi" data-bs-placement="right"></i>
+                                            @endif
+                                        </td>
                                         <td>{{ $item->item->unit->name}}</td>
 
                                     </tr>
@@ -117,3 +147,15 @@
     </div>
 
 </x-page-layout>
+
+
+@section('footer-script')
+
+    <script>
+        $(() => {
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        })
+
+    </script>
+@endsection

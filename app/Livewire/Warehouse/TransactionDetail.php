@@ -22,7 +22,7 @@ class TransactionDetail extends Component
     public string $error = '';
 
     public WarehouseOutbound $warehouseOutbound;
-
+    public array $outboundItems;
     private CentralProductionService $productionService;
 
     public function render()
