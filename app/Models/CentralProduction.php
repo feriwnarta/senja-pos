@@ -32,11 +32,15 @@ class CentralProduction extends Model
         });
     }
 
+    public function centralKitchen(): BelongsTo
+    {
+        return $this->belongsTo(CentralKitchen::class, 'central_kitchens_id');
+    }
+
     public function requestStock(): BelongsTo
     {
         return $this->belongsTo(RequestStock::class, 'request_stocks_id');
     }
-
 
     public function result(): HasMany
     {

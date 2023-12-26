@@ -25,10 +25,10 @@ class Transaction extends Component
     public function mount()
     {
         $this->getOutletCentralKitchen();
-        $validQueries = ['request', 'stockIn', 'stockOut'];
+        $validOption = ['request', 'stockIn', 'stockOut'];
 
 
-        if (!in_array($this->urlQuery, $validQueries)) {
+        if (!in_array($this->urlQuery, $validOption)) {
             $this->urlQuery = 'request';
         }
 

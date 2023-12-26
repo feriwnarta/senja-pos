@@ -21,7 +21,7 @@
                             Batal
                         </button>
                     </div>
-                    
+
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
                             wire:loading.attr="disabled">Terima dan lanjutkan
@@ -37,6 +37,42 @@
 
     <div id="content-loaded">
         <x-notify::notify/>
+
+        @if($error != '')
+            <p class="subtitle-3-medium">{{ $error }}</p>
+        @else
+
+            <div class="row">
+                <div class="col-sm-5 offset-1">
+                    <div>
+                        <p class="subtitle-3-regular">Kode referensi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">{{ $warehouseOutbound->production->code }}</p>
+                    </div>
+
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Diminta oleh</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">{{ $warehouseOutbound->production->centralKitchen->name }}</p>
+                    </div>
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Tanggal</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">{{ Carbon::createFromFormat('Y-m-d H:i:s', $warehouseOutbound->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</p>
+                    </div>
+
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Informasi item</p>
+                        <div id="divider" class="margin-top-6"></div>
+
+                    </div>
+
+                </div>
+            </div>
+        @endif
 
 
     </div>

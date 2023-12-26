@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,5 +52,11 @@ class CentralKitchen extends Model
         return $this->belongsToMany(Item::class, 'items_central_kitchens', 'central_kitchens_id', 'items_id')->using(new class extends Pivot {
             use  HasUuids;
         })->withTimestamps();
+    }
+
+
+    public function centralProduction(): HasMany
+    {
+        return $this->hasMany(CentralProduction::class, 'central_kitchens_id');
     }
 }
