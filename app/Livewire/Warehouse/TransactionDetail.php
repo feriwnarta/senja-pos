@@ -72,4 +72,9 @@ class TransactionDetail extends Component
             return null;
         }
     }
+
+    public function acceptAndNext()
+    {
+
+    }
 }

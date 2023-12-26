@@ -90,6 +90,11 @@ class Item extends Model
         return $this->hasMany(Item::class, 'items_id');
     }
 
+    public function outbound(): HasMany
+    {
+        return $this->hasMany(WarehouseOutboundItem::class, 'items_id');
+    }
+
 
 
 //    // Relasi many to many ke category
