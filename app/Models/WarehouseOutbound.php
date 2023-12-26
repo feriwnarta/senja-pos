@@ -47,4 +47,9 @@ class WarehouseOutbound extends Model
     {
         return $this->hasMany(WarehouseOutboundItem::class, 'warehouse_outbounds_id');
     }
+
+    public function history(): HasMany
+    {
+        return $this->hasMany(WarehouseOutboundHistory::class, 'warehouse_outbounds_id');
+    }
 }

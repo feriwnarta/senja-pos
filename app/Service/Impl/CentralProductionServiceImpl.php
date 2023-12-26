@@ -7,6 +7,7 @@ use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
 use App\Models\Warehouse;
 use App\Models\WarehouseOutbound;
+use App\Models\WarehouseOutboundHistory;
 use App\Service\CentralProductionService;
 use Carbon\Carbon;
 use Exception;
@@ -187,18 +188,16 @@ class CentralProductionServiceImpl implements CentralProductionService
 
                     // generate code
 
-                    $code = $this->genereateCodeItemOut($warehouseId);
-
-                    if (empty($code)) {
-                        throw new Exception('gagal mengenarate code item keluar');
-                    }
+//                    $code = $this->genereateCodeItemOut($warehouseId);
+//
+//                    if (empty($code)) {
+//                        throw new Exception('gagal mengenarate code item keluar');
+//                    }
 
 
                     $outbound = WarehouseOutbound::create([
                         'warehouses_id' => $warehouseId,
                         'central_productions_id' => $productionId,
-                        'code' => $code['code'],
-                        'increment' => $code['increment'],
                     ]);
 
                     $outbound->outboundItem()->createMany($resultMaterial);
@@ -208,6 +207,12 @@ class CentralProductionServiceImpl implements CentralProductionService
                         'request_stocks_id' => $requestId,
                         'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen',
                         'status' => 'Membuat permintaan bahan'
+                    ]);
+
+                    WarehouseOutboundHistory::create([
+                        'warehouse_outbounds_id' => $outbound->id,
+                        'desc' => 'Permintaan bahan dibuat dari central kitchen',
+                        'status' => 'Baru'
                     ]);
 
 

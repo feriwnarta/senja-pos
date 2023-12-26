@@ -14,7 +14,7 @@ class Transaction extends Component
 {
     public Collection $warehouses;
 
-    public string $toggle = 'request';
+    public string $toggle = '';
 
     public string $selected = 'all';
     #[Url(keep: true, as: 'option')]
@@ -24,13 +24,16 @@ class Transaction extends Component
 
     public function mount()
     {
-
         $this->getOutletCentralKitchen();
+        $validQueries = ['request', 'stockIn', 'stockOut'];
 
 
-        if ($this->urlQuery != 'request' && $this->urlQuery != 'stockIn' && $this->urlQuery != 'stockOut') {
+        if (!in_array($this->urlQuery, $validQueries)) {
             $this->urlQuery = 'request';
         }
+
+        $this->toggle = $this->urlQuery;
+
 
         $this->getRequestStock();
     }
@@ -136,5 +139,12 @@ class Transaction extends Component
                 })->orderBy('id', 'DESC')->paginate(10)
         ]);
 
+    }
+
+
+    public function detail(string $id)
+    {
+
+        $this->redirect("/warehouse/transaction/detail?option={$this->urlQuery}&wouId=$id", true);
     }
 }

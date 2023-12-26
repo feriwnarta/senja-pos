@@ -1,4 +1,4 @@
-@php use Carbon\Carbon; @endphp
+@php use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -59,48 +59,83 @@
         <div class="row">
 
             <div class="col-sm-12">
+
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                     <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio1"
-                           autocomplete="off"
-                           value="request"
-                           checked wire:change="toggleChange" wire:loading.attr="disabled">
+                           autocomplete="off" value="request" wire:change="toggleChange"
+                           wire:loading.attr="disabled"
+                    >
                     <label class="btn btn-outline-primary" for="btnradio1">Permintaan stok</label>
 
-                    <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio2"
-                           autocomplete="off"
-                           value="stockIn" wire:change="toggleChange" wire:loading.attr="disabled">
+                    <input type="radio" class="btn-check" wire:model="toggle" name="btnradio2" id="btnradio2"
+                           autocomplete="off" value="stockIn" wire:change="toggleChange"
+                           wire:loading.attr="disabled"
+                           checked>
                     <label class="btn btn-outline-primary" for="btnradio2">Stok masuk</label>
 
                     <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio3"
-                           autocomplete="off"
-                           value="stockOut" wire:change="toggleChange" wire:loading.attr="disabled">
+                           autocomplete="off" value="stockOut" wire:change="toggleChange"
+                           wire:loading.attr="disabled">
                     <label class="btn btn-outline-primary" for="btnradio3">Stok keluar</label>
                 </div>
 
-                <table id="" class="table borderless table-hover margin-top-28">
-                    <thead class="table-head-color">
-                    <tr>
-                        <th scope="col">Kode Permintaan stok</th>
-                        <th scope="col">Tanggal</th>
-                        <th scope="col">Catatan</th>
-                        <th scope="col">Status</th>
-                    </tr>
-                    </thead>
-                    <tbody id="listPurchaseOrder">
 
-                    @foreach($requestStock as $request)
-                        <tr class="items-table-head-color" id="po1" style="cursor: pointer"
-                            wire:click="">
-                            <td class="code">{{ $request->code }}</td>
-                            <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
-                            <td>{{ ($request->note == null) ? 'tanpa catatan' : $request->note }}</td>
-                            <td>{{ optional($request->requestStockHistory->last())->status }}</td>
+                @if($urlQuery == 'request')
+                    <table id="" class="table borderless table-hover margin-top-28">
+                        <thead class="table-head-color">
+                        <tr>
+                            <th scope="col">Kode Permintaan stok</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Catatan</th>
+                            <th scope="col">Status</th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-                </table>
-                {{ $requestStock->links() }}
+                        </thead>
+                        <tbody>
+
+                        @foreach($requestStock as $request)
+                            <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                            >
+                                <td class="code">{{ $request->code }}</td>
+                                <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ ($request->note == null) ? 'tanpa catatan' : $request->note }}</td>
+                                <td>{{ optional($request->requestStockHistory->last())->status }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    </table>
+                    {{ $requestStock->links() }}
+
+                @elseif($urlQuery == 'stockOut')
+
+                    <table id="" class="table borderless table-hover margin-top-28">
+                        <thead class="table-head-color">
+                        <tr>
+                            <th scope="col">Kode Stok Keluar</th>
+                            <th scope="col">Kode referensi</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Catatan</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @foreach($requestStock as $request)
+
+                            <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                                wire:click="detail('{{ $request->id }}')">
+
+                                <td class="{{ $request->code == null ? 'text-danger' : 'code' }}">{{ ($request->code == null) ? 'Menunggu diterima' : $request->code }}</td>
+                                <td class="code">{{ $request->production->code }}</td>
+                                <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ ($request->note == null) ? 'tanpa catatan' : $request->note }}</td>
+                                <td>{{ $request->history()->latest()->first()->status }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    </table>
+                @endif
             </div>
 
         </div>
