@@ -36,25 +36,24 @@ class CogsValuationCalc extends InventoryValuationCalc
         $inventoryValue = $inventoryValue + $incomingValue;
         $qtyOnHand = $oldQty + $incomingQty;
 
-
         // Calculate the new average cost
         $avgCost = ($oldQty * $oldAvgCost + $incomingQty * $purchasePrice) / $qtyOnHand;
-        $avgCost = $avgCost;
 
-        Log::debug("AVG " . $avgCost);
-
-
-        // Calculate the difference between the new average cost and the purchase price
-        $priceDiff = $avgCost - $purchasePrice;
+        // Format the values with two decimal places
+        $formattedIncomingValue = number_format($incomingValue, 2, '.', '');
+        $formattedPriceDiff = number_format($avgCost - $purchasePrice, 2, '.', '');
+        $formattedInventoryValue = number_format($inventoryValue, 2, '.', '');
+        $formattedAvgCost = number_format($avgCost, 2, '.', '');
+        $formattedLastCost = number_format($purchasePrice, 2, '.', '');
 
         return [
             'incoming_qty' => $incomingQty,
-            'incoming_value' => number_format($incomingValue, 3, '', ''),
-            'price_diff' => number_format($priceDiff, 3, '', ''),
-            'inventory_value' => number_format($inventoryValue, 3, '', ''),
+            'incoming_value' => $formattedIncomingValue,
+            'price_diff' => $formattedPriceDiff,
+            'inventory_value' => $formattedInventoryValue,
             'qty_on_hand' => $qtyOnHand,
-            'avg_cost' => number_format($avgCost, 3, '', ''),
-            'last_cost' => number_format($purchasePrice, 3, '', ''),
+            'avg_cost' => $formattedAvgCost,
+            'last_cost' => $formattedLastCost,
         ];
     }
 

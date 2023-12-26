@@ -8,6 +8,8 @@ use App\Models\RequestStockDetail;
 use App\Models\RequestStockHistory;
 use App\Models\StockItem;
 use App\Models\Warehouse;
+use App\Models\WarehouseOutboundHistory;
+use App\Models\WarehouseOutboundItem;
 use App\Service\WarehouseTransactionService;
 use Carbon\Carbon;
 use Exception;
@@ -170,7 +172,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
      * @param string $itemId
      * @return array
      */
-    public function reduceStockItemShipping(array $items, string $outboundId): array
+    public function reduceStockItemShipping(array $items, string $outboundId): ?StockItem
     {
         try {
             return Cache::lock('reduceStock', 10)->block(5, function () use ($items, $outboundId) {
@@ -187,7 +189,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                     // lakukan iterasi untuk mengurangi stock item valuation
                     foreach ($items as $item) {
 
-                        $id = $item['id'];
+                        $id = $item['item_id'];
 
                         // dapatkan data terakhir inventory valuation stock item
                         $req = StockItem::where('items_id', $id)->latest()->firstOrFail();
@@ -207,6 +209,36 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             throw new Exception('Gagal menghitung nilai inventory valuation');
                         }
 
+                        Log::debug($result);
+
+                        // update inventory valuation
+                        $stock = StockItem::create([
+                            'items_id' => $id,
+                            'incoming_qty' => $result['incoming_qty'],
+                            'incoming_value' => $result['incoming_value'],
+                            'price_diff' => $result['price_diff'],
+                            'inventory_value' => $result['inventory_value'],
+                            'qty_on_hand' => $result['qty_on_hand'],
+                            'avg_cost' => $result['avg_cost'],
+                            'last_cost' => $result['last_cost'],
+                        ]);
+
+
+                        // update warehouse outbound items send
+                        WarehouseOutboundItem::where('warehouse_outbounds_id', $id)->update([
+                            'qty_send' => $item['qty_send']
+                        ]);
+
+                        // update
+                        WarehouseOutboundHistory::create([
+                            'warehouse_outbounds_id' => $item['outboundId'],
+                            'desc' => 'Permintaan stock selesai, dan dipindahkan keproses pengiriman',
+                            'status' => 'Permintaan dikirim'
+                        ]);
+
+                        DB::commit();
+
+                        return $stock;
                     }
 
 

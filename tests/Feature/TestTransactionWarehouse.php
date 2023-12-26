@@ -6,6 +6,7 @@ use App\Service\Impl\WarehouseTransactionServiceImpl;
 use App\Service\WarehouseTransactionService;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertIsString;
+use function PHPUnit\Framework\assertNotNull;
 
 class TestTransactionWarehouse extends TestCase
 {
@@ -64,14 +65,16 @@ class TestTransactionWarehouse extends TestCase
 
         $data = [
             [
-                'id' => '9af086fd-ab9a-4094-ba01-b824aeee1f2e',
+                'item_id' => '9af086fd-ab9a-4094-ba01-b824aeee1f2e',
+                'outboundId' => '9af08787-f80f-49ac-a429-0dd16bd3f619',
                 'qty_send' => '-5.00',
             ]
         ];
 
         $outBoundId = '9af08787-f80f-49ac-a429-0dd16bd3f619';
 
-        $this->warehouseTransactionService->reduceStockItemShipping($data, $outBoundId);
+        $rs = $this->warehouseTransactionService->reduceStockItemShipping($data, $outBoundId);
+        assertNotNull($rs);
 
     }
 

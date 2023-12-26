@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Models\RequestStock;
+use App\Models\StockItem;
 
 interface WarehouseTransactionService
 {
@@ -13,5 +14,5 @@ interface WarehouseTransactionService
 
     public function finishRequest(string $reqId, array $itemReq): string;
 
-    public function reduceStockItemShipping(array $items, string $outboundId): array;
+    public function reduceStockItemShipping(array $items, string $outboundId): ?StockItem;
 }
