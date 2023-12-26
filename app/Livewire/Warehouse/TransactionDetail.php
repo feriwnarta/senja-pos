@@ -22,7 +22,7 @@ class TransactionDetail extends Component
     public string $error = '';
 
     public WarehouseOutbound $warehouseOutbound;
-    public array $outboundItems;
+    public array $outboundItems = [];
     private CentralProductionService $productionService;
 
     public function render()
@@ -144,6 +144,11 @@ class TransactionDetail extends Component
      */
     public function sendItem()
     {
+
+        $this->validate([
+            'outboundItems.*.qty_send' => 'required|numeric|min:0.01',
+        ]);
+
 
     }
 }

@@ -99,11 +99,19 @@
                             @if($warehouseOutbound->outboundItem->isNotEmpty())
                                 @foreach($warehouseOutbound->outboundItem as $key => $item)
                                     @php
-                                        // Set outbound items
-                                        $this->outboundItems[] = [
-                                            'id' => $item->id,
-                                            'qty_send' => $item->qty,
-                                        ];
+                                        // Temukan item dengan ID yang sama dalam koleksi outboundItems
+                                        $existingItem = collect($this->outboundItems)->firstWhere('id', $item->id);
+
+                                        // Jika item sudah ada, tambahkan jumlah kuantitas
+                                        if ($existingItem) {
+                                            $existingItem['qty_send'] += $item->qty;
+                                        } else {
+                                            // Jika item belum ada, tambahkan item baru
+                                            $this->outboundItems[] = [
+                                                'id' => $item->id,
+                                                'qty_send' => $item->qty,
+                                            ];
+                                        }
                                     @endphp
 
                                     <tr wire:key="{{ $loop->iteration }}">
@@ -118,6 +126,10 @@
                                                    wire:model="outboundItems.{{$key}}.qty_send"
                                                 {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null ? 'disabled' : '' }}
                                             >
+
+                                            @error("outboundItems.{$key}.qty_send")
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
 
                                             @if( $item->item->stockItem->last()->qty_on_hand < $item->qty )
                                                 <i class="danger-exclamation-icon" data-bs-toggle="tooltip"

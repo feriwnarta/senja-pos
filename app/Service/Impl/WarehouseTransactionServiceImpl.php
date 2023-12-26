@@ -162,4 +162,9 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             throw new Exception('Lock tidak didapatkan selama 5 detik');
         }
     }
+
+    public function reduceStockItemShipping(string $itemId): array
+    {
+        // TODO: Implement reduceStockItemShipping() method.
+    }
 }
