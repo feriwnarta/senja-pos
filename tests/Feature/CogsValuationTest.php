@@ -43,7 +43,7 @@ class CogsValuationTest extends TestCase
     public function testCalculateAvgCostOutstock()
     {
 
-        $result = $this->calc->calculateAvgPrice(380.500, 37, 12.000, -10, 10.000);
+        $result = $this->calc->calculateAvgPrice(44000.00, 20.0, 2200.00, -10, 10.000);
         assertIsArray($result);
     }
 

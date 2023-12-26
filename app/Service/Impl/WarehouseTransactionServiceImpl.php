@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\RequestStock;
 use App\Models\RequestStockDetail;
 use App\Models\RequestStockHistory;
+use App\Models\StockItem;
 use App\Models\Warehouse;
 use App\Service\WarehouseTransactionService;
 use Carbon\Carbon;
@@ -163,8 +164,71 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
         }
     }
 
-    public function reduceStockItemShipping(string $itemId): array
+
+    /**
+     * lakukan proses pengurangan stock berdasarkan
+     * @param string $itemId
+     * @return array
+     */
+    public function reduceStockItemShipping(array $items, string $outboundId): array
     {
-        // TODO: Implement reduceStockItemShipping() method.
+        try {
+            return Cache::lock('reduceStock', 10)->block(5, function () use ($items, $outboundId) {
+                DB::beginTransaction();
+
+                try {
+
+                    if (empty($items)) {
+                        throw new Exception('Items kosong');
+                    }
+
+                    $cogsCalc = app()->make(CogsValuationCalc::class);
+
+                    // lakukan iterasi untuk mengurangi stock item valuation
+                    foreach ($items as $item) {
+
+                        $id = $item['id'];
+
+                        // dapatkan data terakhir inventory valuation stock item
+                        $req = StockItem::where('items_id', $id)->latest()->firstOrFail();
+
+                        Log::debug($req);
+
+                        $inventoryValue = $req['inventory_value'];
+                        $oldQty = $req['qty_on_hand'];
+                        $oldAvg = $req['avg_cost'];
+                        $incomingQty = $item['qty_send'];
+                        $purchasePrice = $req['avg_cost'];
+
+
+                        $result = $cogsCalc->calculateAvgPrice($inventoryValue, $oldQty, $oldAvg, $incomingQty, $purchasePrice);
+
+                        if (empty($result)) {
+                            throw new Exception('Gagal menghitung nilai inventory valuation');
+                        }
+
+                    }
+
+
+                } catch (Exception $exception) {
+                    DB::rollBack();
+                    Log::error('Gagal mengurangi stock gudang:', [
+                        'message' => $exception->getMessage(),
+                        'trace' => $exception->getTraceAsString(),
+                    ]);
+                    throw $exception; // Re-throw for further handling
+                }
+            });
+        } catch (LockTimeoutException $e) {
+            Log::error('Gagal mendapatkan lock:', [
+                'message' => $e->getMessage(),
+            ]);
+            throw new Exception('Lock tidak didapatkan selama 5 detik');
+        } catch (Exception $exception) {
+            Log::error('Error saat mengurangi stock gudang:', [
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            throw $exception; // Re-throw for further handling
+        }
     }
 }

@@ -13,5 +13,5 @@ interface WarehouseTransactionService
 
     public function finishRequest(string $reqId, array $itemReq): string;
 
-    public function reduceStockItemShipping(string $itemId): array;
+    public function reduceStockItemShipping(array $items, string $outboundId): array;
 }

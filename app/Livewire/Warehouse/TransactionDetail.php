@@ -149,6 +149,6 @@ class TransactionDetail extends Component
             'outboundItems.*.qty_send' => 'required|numeric|min:0.01',
         ]);
 
-
+        
     }
 }

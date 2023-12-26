@@ -59,6 +59,22 @@ class TestTransactionWarehouse extends TestCase
 
     }
 
+    public function testReduceStockItemShipping()
+    {
+
+        $data = [
+            [
+                'id' => '9af086fd-ab9a-4094-ba01-b824aeee1f2e',
+                'qty_send' => '-5.00',
+            ]
+        ];
+
+        $outBoundId = '9af08787-f80f-49ac-a429-0dd16bd3f619';
+
+        $this->warehouseTransactionService->reduceStockItemShipping($data, $outBoundId);
+
+    }
+
 
     protected function setUp(): void
     {

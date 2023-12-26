@@ -107,8 +107,10 @@
                                             $existingItem['qty_send'] += $item->qty;
                                         } else {
                                             // Jika item belum ada, tambahkan item baru
+
+
                                             $this->outboundItems[] = [
-                                                'id' => $item->id,
+                                                'id' => $item->items_id,
                                                 'qty_send' => $item->qty,
                                             ];
                                         }
@@ -139,6 +141,7 @@
                                         <td>{{ $item->item->unit->name }}</td>
                                     </tr>
                                 @endforeach
+                                
                             @else
                                 {{-- Handle case when outbound items are empty --}}
                                 <tr>
