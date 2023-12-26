@@ -166,6 +166,18 @@ class CentralProductionServiceImpl implements CentralProductionService
                 throw new Exception('material kosong');
             }
 
+            // lakukan proses pengambilan item yang dibutuhkan untuk request ke gudang
+            // dan juga lakukan proses jika item id dan item name nya lebih dari 2
+            // maka gabungkan nilai qty untuk dijadikan satu
+            $resultMaterial = $this->joinSameItemRequestMaterial($materials);
+
+            if (empty($resultMaterial)) {
+                throw new Exception('extract item gagal');
+            }
+
+
+            // proses simpan item keluar untuk gudang
+
 
         } catch (Exception $exception) {
             Log::error('gagal menyimpan permintaan bahan dari central kitchen ke gudang');

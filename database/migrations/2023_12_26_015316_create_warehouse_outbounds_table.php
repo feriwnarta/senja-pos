@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
@@ -12,7 +13,7 @@ return new class extends Migration {
         Schema::create('warehouse_outbounds', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('warehouses_id')->nullable(false);
-            $table->uuid('central_kitchens_id')->nullable(false);
+            $table->uuid('central_productions_id')->nullable(true);
             $table->string('code')->nullable(false)->unique();
             $table->string('note', 255)->nullable(true);
             $table->uuid('created_by')->nullable(false);
@@ -20,7 +21,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->foreign('warehouses_id')->references('id')->on('warehouses');
-            $table->foreign('central_kitchens_id')->references('id')->on('central_kitchens');
+            $table->foreign('central_productions_id')->references('id')->on('central_productions');
         });
     }
 
