@@ -116,11 +116,10 @@
 
                                             <input type="text" class="form-control input-default"
                                                    wire:model="outboundItems.{{$key}}.qty_send"
-                                                   value="{{ $this->outboundItems[$key]['qty_send'] }}"
-                                                {{ $item->item->stockItem->last()->qty_on_hand == 0 || $warehouseOutbound->code == null ? 'disabled' : '' }}
+                                                {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null ? 'disabled' : '' }}
                                             >
 
-                                            @if($item->item->stockItem->last()->qty_on_hand == 0 )
+                                            @if( $item->item->stockItem->last()->qty_on_hand < $item->qty )
                                                 <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
                                                    data-bs-title="Stok tidak mencukupi" data-bs-placement="right"></i>
                                             @endif
