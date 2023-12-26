@@ -5,6 +5,8 @@ namespace App\Service\Impl;
 use App\Models\CentralProduction;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
+use App\Models\Warehouse;
+use App\Models\WarehouseOutbound;
 use App\Service\CentralProductionService;
 use Carbon\Carbon;
 use Exception;
@@ -157,7 +159,7 @@ class CentralProductionServiceImpl implements CentralProductionService
      * @param array $materials
      * @return void
      */
-    public function requestMaterialToWarehouse(array $materials)
+    public function requestMaterialToWarehouse(array $materials, string $productionId)
     {
 
         try {
@@ -177,7 +179,12 @@ class CentralProductionServiceImpl implements CentralProductionService
 
 
             // proses simpan item keluar untuk gudang
+            DB::beginTransaction();
 
+            $outbound = WarehouseOutbound::create([
+                'central_production_id' => $productionId,
+                'note' => null,
+            ]);
 
         } catch (Exception $exception) {
             Log::error('gagal menyimpan permintaan bahan dari central kitchen ke gudang');
@@ -210,5 +217,44 @@ class CentralProductionServiceImpl implements CentralProductionService
         Log::info(array_values($mergedComponents));
 
         return array_values($mergedComponents);
+    }
+
+    /**
+     * generate kode item keluar dari gudang
+     * @param string $warehouseId
+     * @return void
+     */
+    public function genereateCodeItemOut(string $warehouseId)
+    {
+        try {
+
+            $latestOutbound = WarehouseOutbound::where('warehouses_id', $warehouseId)->latest()->first();
+
+            $currentYearMonth = Carbon::now()->format('Ymd');
+
+            $nextCode = 1;
+            if ($latestOutbound) {
+                $latestProductionDate = Carbon::parse($latestOutbound->created_at)->format('Ymd');
+                if ($latestProductionDate === $currentYearMonth) {
+                    $nextCode = $latestOutbound->increment + 1;
+                }
+            }
+
+            $warehosue = Warehouse::findOrFail($warehouseId);
+            $infix = $warehosue->warehouse_code;
+
+            $code = "ITEMOUT{$infix}{$currentYearMonth}{$nextCode}";
+
+            return [
+                'code' => $code,
+                'increment' => $nextCode,
+            ];
+
+        } catch (Exception $exception) {
+            Log::error('gagal menggenarete kode item keluar dari gudang');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            throw $exception;
+        }
     }
 }

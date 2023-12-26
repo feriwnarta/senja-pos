@@ -48,6 +48,11 @@ class Warehouse extends Model
         return $this->hasMany(ItemPlacement::class, 'warehouses_id');
     }
 
+    public function outbound(): HasMany
+    {
+        return $this->hasMany(WarehouseOutbound::class, 'warehouses_id');
+    }
+
     public function requestStock(): HasMany
     {
         return $this->hasMany(RequestStock::class, 'warehouses_id');

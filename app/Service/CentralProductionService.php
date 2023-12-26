@@ -17,7 +17,9 @@ interface CentralProductionService
 
     public function joinSameItemRequestMaterial(array $materials);
 
-    public function requestMaterialToWarehouse(array $materials);
+    public function requestMaterialToWarehouse(array $materials, string $productionId);
+
+    public function genereateCodeItemOut(string $warehouseId);
 
 
 }

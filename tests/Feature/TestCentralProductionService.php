@@ -5,10 +5,13 @@ namespace Tests\Feature;
 use App\Models\CentralKitchen;
 use App\Models\CentralProduction;
 use App\Models\RequestStock;
+use App\Models\Warehouse;
+use App\Models\WarehouseOutbound;
 use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotNull;
@@ -368,12 +371,96 @@ class TestCentralProductionService extends TestCase
 
     }
 
+    public function testGenerateCodeItemOut()
+    {
+
+        $warehouse = Warehouse::first();
+        $rs = $this->centralService->genereateCodeItemOut($warehouse->id);
+
+        assertNotNull($rs);
+        self::assertIsArray($rs);
+        print_r($rs);
+
+    }
+
+    public function testGenerateCodeItemOutNextNumber()
+    {
+
+        $warehouse = Warehouse::first();
+        $rs = $this->centralService->genereateCodeItemOut($warehouse->id);
+
+        $central = CentralProduction::first();
+
+        assertNotNull($rs);
+        self::assertIsArray($rs);
+        print_r($rs);
+
+        $outbound = WarehouseOutbound::create([
+            'warehouses_id' => $warehouse->id,
+            'central_productions_id' => $central->id,
+            'code' => $rs['code'],
+            'increment' => $rs['increment'],
+        ]);
+
+        // next number
+        $rs = $this->centralService->genereateCodeItemOut($warehouse->id);
+
+        self::assertIsArray($rs);
+        self::assertEquals(2, $rs['increment']);
+        self::assertEquals('ITEMOUTGDG01202312262', $rs['code']);
+    }
+
+    public function testGenerateCodeItemOutNextMonth()
+    {
+
+        $warehouse = Warehouse::first();
+        $rs = $this->centralService->genereateCodeItemOut($warehouse->id);
+
+        $central = CentralProduction::first();
+
+        assertNotNull($rs);
+        self::assertIsArray($rs);
+        print_r($rs);
+
+        $outbound = WarehouseOutbound::create([
+            'warehouses_id' => $warehouse->id,
+            'central_productions_id' => $central->id,
+            'code' => $rs['code'],
+            'increment' => $rs['increment'],
+        ]);
+
+        Carbon::setTestNow(Carbon::create(2024, 1, 1));
+
+
+        $rs = $this->centralService->genereateCodeItemOut($warehouse->id);
+        assertNotNull($rs);
+        self::assertIsArray($rs);
+        self::assertEquals('ITEMOUTGDG01202401011', $rs['code']);
+        self::assertEquals(1, $rs['increment']);
+        print_r($rs);
+    }
+
+
+    public function testGenerateCodeItemOutDifferentWh()
+    {
+
+        $warehouse = Warehouse::latest()->first();
+        $rs = $this->centralService->genereateCodeItemOut($warehouse->id);
+
+        self::assertIsArray($rs);
+
+        print_r($rs);
+
+
+    }
+
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->centralService = app()->make(CentralProductionServiceImpl::class);
+        DB::table('warehouse_outbounds')->delete();
 //        DB::table('central_production_results')->delete();
 //        DB::table('central_productions')->delete();
     }

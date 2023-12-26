@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->uuid('warehouses_id')->nullable(false);
             $table->uuid('central_productions_id')->nullable(true);
             $table->string('code')->nullable(false)->unique();
+            $table->bigInteger('increment')->nullable(false);
             $table->string('note', 255)->nullable(true);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
