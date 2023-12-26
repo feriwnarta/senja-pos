@@ -22,4 +22,7 @@ interface CentralProductionService
     public function genereateCodeItemOut(string $warehouseId);
 
 
+    public function saveCodeItemOut(string $outboundId, string $warehouseId);
+
+
 }

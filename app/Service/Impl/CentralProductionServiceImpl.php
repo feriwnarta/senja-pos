@@ -271,6 +271,69 @@ class CentralProductionServiceImpl implements CentralProductionService
         return array_values($mergedComponents);
     }
 
+    public function saveCodeItemOut(string $outboundId, string $warehouseId)
+    {
+        try {
+            // Atomic lock
+            return Cache::lock('updateCodeItemOut', 10)->block(5, function () use ($outboundId, $warehouseId) {
+                try {
+                    // Memulai transaksi database
+                    DB::beginTransaction();
+
+                    // Menghasilkan kode item keluar
+                    $code = $this->genereateCodeItemOut($warehouseId);
+
+                    if (empty($code)) {
+                        throw new Exception('gagal generate code');
+                    }
+
+                    // Menemukan dan mengupdate data WarehouseOutbound berdasarkan central_productions_id
+                    $outbound = WarehouseOutbound::findOrFail($outboundId)
+                        ->update([
+                            'code' => $code['code'],
+                            'increment' => $code['increment']
+                        ]);
+
+
+                    // update history produksi
+                    WarehouseOutboundHistory::create([
+                        'warehouse_outbounds_id' => $outboundId,
+                        'desc' => 'Permintaan produksi diterima',
+                        'status' => 'Permintaan diterima',
+                    ]);
+
+
+                    DB::commit();
+
+                    return $outbound;
+                } catch (Exception $exception) {
+                    // Rollback transaksi jika terjadi kesalahan
+                    DB::rollBack();
+
+                    Log::error('Gagal mengupdate item keluar');
+                    Log::error($exception->getMessage());
+                    Log::error($exception->getTraceAsString());
+
+                    // Melempar kembali untuk penanganan lebih lanjut
+                    throw $exception;
+                }
+            });
+        } catch (LockTimeoutException $timeoutException) {
+            Log::error('Lock tidak didapatkan');
+            Log::error($timeoutException->getMessage());
+            Log::error($timeoutException->getTraceAsString());
+
+            throw $timeoutException;
+        } catch (Exception $exception) {
+            Log::error('Gagal mengupdate code warehouse item keluar');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+
+            throw $exception;
+        }
+    }
+
+
     /**
      * generate kode item keluar dari gudang
      * @param string $warehouseId
@@ -280,7 +343,11 @@ class CentralProductionServiceImpl implements CentralProductionService
     {
         try {
 
-            $latestOutbound = WarehouseOutbound::where('warehouses_id', $warehouseId)->latest()->first();
+            $latestOutbound = WarehouseOutbound::where('warehouses_id', $warehouseId)
+                ->whereNotNull('code')
+                ->latest()
+                ->first();
+
 
             $currentYearMonth = Carbon::now()->format('Ymd');
 

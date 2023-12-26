@@ -12,7 +12,6 @@ use App\Service\Impl\CentralProductionServiceImpl;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertNotNull;
@@ -617,7 +616,7 @@ class TestCentralProductionService extends TestCase
         parent::setUp();
 
         $this->centralService = app()->make(CentralProductionServiceImpl::class);
-        DB::table('warehouse_outbounds')->delete();
+//        DB::table('warehouse_outbounds')->delete();
 //        DB::table('central_production_results')->delete();
 //        DB::table('central_productions')->delete();
     }

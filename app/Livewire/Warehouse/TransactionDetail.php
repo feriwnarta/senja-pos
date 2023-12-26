@@ -3,6 +3,8 @@
 namespace App\Livewire\Warehouse;
 
 use App\Models\WarehouseOutbound;
+use App\Service\CentralProductionService;
+use App\Service\Impl\CentralProductionServiceImpl;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
@@ -20,6 +22,8 @@ class TransactionDetail extends Component
     public string $error = '';
 
     public WarehouseOutbound $warehouseOutbound;
+
+    private CentralProductionService $productionService;
 
     public function render()
     {
@@ -73,8 +77,60 @@ class TransactionDetail extends Component
         }
     }
 
+
+    /**
+     * terima dan lanjutkan proses keluar barang dari gudang
+     * @return void
+     */
     public function acceptAndNext()
     {
 
+        // validasi item harus ada
+        if ($this->warehouseOutbound->outboundItem->isEmpty()) {
+            notify()->error('Item gagal didapatkan', 'Error');
+            return;
+        }
+
+        // generate code produksi
+        $this->saveCodeItemOut();
+
+    }
+
+
+    private function saveCodeItemOut()
+    {
+
+        try {
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+
+            // validasi outbound id dan warehouse id
+            if ($this->outboundId == '') {
+                $this->error = 'Detail stok keluar tidak valid, harap kembali dan muat ulang';
+                return;
+            }
+
+            if ($this->warehouseOutbound == null) {
+                $this->error = 'Detail stok keluar tidak valid, harap kembali dan muat ulang';
+                return;
+            }
+
+
+            // simpan kode generasi baru
+            $result = $this->productionService->saveCodeItemOut($this->outboundId, $this->warehouseOutbound->warehouses_id);
+
+            if ($result) {
+                notify()->success('Berhasil menerima permintaan', 'Sukses');
+                return;
+            }
+            notify()->error('Gagal menerima permintaan', 'Gagal');
+            return;
+
+        } catch (Exception $exception) {
+            Log::error('gagal menyimpan kode item keluar');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            notify()->error('Gagal menerima permintaan', 'Gagal');
+
+        }
     }
 }

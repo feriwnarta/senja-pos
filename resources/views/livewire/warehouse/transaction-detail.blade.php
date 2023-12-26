@@ -23,7 +23,7 @@
                     </div>
 
                     <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
+                            class="btn btn-text-only-primary btn-nav margin-left-10"
                             wire:loading.attr="disabled" wire:click="acceptAndNext">Terima dan lanjutkan
                     </button>
 
