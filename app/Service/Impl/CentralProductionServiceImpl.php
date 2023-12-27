@@ -366,6 +366,8 @@ class CentralProductionServiceImpl implements CentralProductionService
             $warehosue = Warehouse::findOrFail($warehouseId);
             $infix = $warehosue->warehouse_code;
 
+            $currentYearMonth = Carbon::now()->format('Ymd');
+
             $code = "ITEMOUT{$infix}{$currentYearMonth}{$nextCode}";
 
             return [
