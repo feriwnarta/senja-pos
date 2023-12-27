@@ -85,6 +85,10 @@ class ProductionDetail extends Component
                 $this->allItemRequest();
                 break;
 
+            case "Bahan diterima" :
+                $this->setProduction();
+                break;
+
 
         }
 

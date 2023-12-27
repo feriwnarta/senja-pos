@@ -334,7 +334,7 @@
                     @endif
                 </div>
 
-            @elseif($status == 'Membuat permintaan bahan' || 'Bahan dikirim')
+            @elseif($status == 'Membuat permintaan bahan' || $status == 'Bahan dikirim')
 
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default">
@@ -414,6 +414,27 @@
 
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+            @elseif($status == 'Bahan diterima')
+                <div class="col-sm-5 offset-1">
+                    <div class="container-input-default">
+                        <p class="subtitle-3-regular">Kode produksi</p>
+
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput"
+                               value="{{ $production->code }}" disabled>
+                    </div>
+
+                    <div class="container-input-default  margin-top-16">
+                        <p class="subtitle-3-regular">Kode referensi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <input type="name" class="form-control input-default margin-top-6"
+                               id="warehouseInput"
+                               value="{{ $production->requestStock->code }}" disabled>
                     </div>
                 </div>
 
