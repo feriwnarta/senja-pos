@@ -50,23 +50,33 @@ class CogsValuationTest extends TestCase
 
     public function testInsertMultiple()
     {
-        $fistIn = $this->calc->calculateAvgPrice(0, 0, 0, 8, 10.000, false);
+        $fistIn = $this->calc->calculateAvgPrice(0, 0, 0, 8, 10000.00, false);
         assertIsArray($fistIn);
         print_r($fistIn);
-        self::assertEquals(80000, $fistIn['incoming_value']);
-        self::assertEquals(80000, $fistIn['inventory_value']);
+        self::assertEquals(80000.00, $fistIn['incoming_value']);
+        self::assertEquals(80000.00, $fistIn['inventory_value']);
         self::assertEquals(8, $fistIn['qty_on_hand']);
-        self::assertEquals(10000, $fistIn['avg_cost']);
+        self::assertEquals(10000.00, $fistIn['avg_cost']);
 
 
-        $firstTwo = $this->calc->calculateAvgPrice(80000.00, 8, 10.000, 10, 11.000, false);
+        $firstTwo = $this->calc->calculateAvgPrice(80000.00, 8, 10000.00, 10, 11000.00, false);
         assertIsArray($firstTwo);
         print_r($firstTwo);
-        self::assertEquals(110000, $firstTwo['incoming_value']);
-        self::assertEquals(190000, $firstTwo['inventory_value']);
+        self::assertEquals(110000.00, $firstTwo['incoming_value']);
+        self::assertEquals(190000.00, $firstTwo['inventory_value']);
         self::assertEquals(18, $firstTwo['qty_on_hand']);
-        self::assertEquals(10556, $firstTwo['avg_cost']);
+        self::assertEquals(10555.56, $firstTwo['avg_cost']);
 
+    }
+
+    public function testZeroAvgCost()
+    {
+        $rs = $this->calc->calculateAvgPrice(11000.00, 5, 2200.00, 5, 2200.00, true);
+        assertIsArray($rs);
+        self::assertEquals(0.00, $rs['inventory_value']);
+        self::assertEquals(0.00, $rs['qty_on_hand']);
+        self::assertEquals(0.00, $rs['avg_cost']);
+        print_r($rs);
     }
 
 

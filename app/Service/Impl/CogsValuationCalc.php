@@ -35,12 +35,7 @@ class CogsValuationCalc extends InventoryValuationCalc
         if ($isReduce) {
             $incomingQty = -$incomingQty;
         }
-
-        Log::debug($oldQty);
-        Log::debug($oldAvgCost);
-        Log::debug($incomingQty);
-        Log::debug($purchasePrice);
-
+        
 
         $incomingValue = $incomingQty * $purchasePrice;
         $inventoryValue = $inventoryValue + $incomingValue;
