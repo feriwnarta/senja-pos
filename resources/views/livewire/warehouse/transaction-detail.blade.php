@@ -13,29 +13,30 @@
                     </div>
                 </div>
 
-                <div id="nav-action-button" class="d-flex flex-row align-items-center">
+                @if($this->mode == '')
+                    <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
-                    <div class="dropdown margin-left-10">
-                        <button type="btn"
-                                class="btn btn-text-only-danger btn-nav margin-left-10">
-                            Batal
-                        </button>
+                        <div class="dropdown margin-left-10">
+                            <button type="btn"
+                                    class="btn btn-text-only-danger btn-nav margin-left-10">
+                                Batal
+                            </button>
+                        </div>
+
+                        @if($warehouseOutbound->code != '')
+                            <button type="btn"
+                                    class="btn btn-text-only-primary btn-nav margin-left-10"
+                                    wire:loading.attr="disabled" wire:click="sendItem">Kirim
+                            </button>
+                        @else
+                            <button type="btn"
+                                    class="btn btn-text-only-primary btn-nav margin-left-10"
+                                    wire:loading.attr="disabled" wire:click="acceptAndNext">Terima dan lanjutkan
+                            </button>
+                        @endif
+
                     </div>
-
-                    @if($warehouseOutbound->code != '')
-                        <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10"
-                                wire:loading.attr="disabled" wire:click="sendItem">Kirim
-                        </button>
-                    @else
-                        <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10"
-                                wire:loading.attr="disabled" wire:click="acceptAndNext">Terima dan lanjutkan
-                        </button>
-                    @endif
-
-
-                </div>
+                @endif
             </div>
             <div id="title-divider"></div>
             <div id="divider"></div>
@@ -98,6 +99,7 @@
 
                             @if($warehouseOutbound->outboundItem->isNotEmpty())
                                 @foreach($warehouseOutbound->outboundItem as $key => $item)
+                                    {{-- TODO: perbaiki ini untuk dilakukan di service  --}}
                                     @php
                                         // Temukan item dengan ID yang sama dalam koleksi outboundItems
                                         $existingItem = collect($this->outboundItems)->firstWhere('id', $item->id);
@@ -107,10 +109,10 @@
                                             $existingItem['qty_send'] += $item->qty;
                                         } else {
                                             // Jika item belum ada, tambahkan item baru
-
-
                                             $this->outboundItems[] = [
-                                                'id' => $item->items_id,
+                                                'item_id' => $item->items_id,
+                                                'outboundId' => $warehouseOutbound->id,
+                                                'qty_on_hand' => $item->item->stockItem->last()->qty_on_hand,
                                                 'qty_send' => $item->qty,
                                             ];
                                         }
@@ -126,7 +128,7 @@
 
                                             <input type="text" class="form-control input-default"
                                                    wire:model="outboundItems.{{$key}}.qty_send"
-                                                {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null ? 'disabled' : '' }}
+                                                {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null || $this->mode == 'view' ? 'disabled' : '' }}
                                             >
 
                                             @error("outboundItems.{$key}.qty_send")
@@ -141,7 +143,7 @@
                                         <td>{{ $item->item->unit->name }}</td>
                                     </tr>
                                 @endforeach
-                                
+
                             @else
                                 {{-- Handle case when outbound items are empty --}}
                                 <tr>

@@ -204,7 +204,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                         $purchasePrice = $req['avg_cost'];
 
 
-                        $result = $cogsCalc->calculateAvgPrice($inventoryValue, $oldQty, $oldAvg, $incomingQty, $purchasePrice);
+                        $result = $cogsCalc->calculateAvgPrice($inventoryValue, $oldQty, $oldAvg, $incomingQty, $purchasePrice, true);
 
                         if (empty($result)) {
                             throw new Exception('Gagal menghitung nilai inventory valuation');
