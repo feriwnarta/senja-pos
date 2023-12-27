@@ -79,6 +79,9 @@ class ProductionDetail extends Component
                 $this->detailComponentSaved($this->production);
                 break;
 
+            case 'Membuat permintaan bahan' :
+                $this->setProduction();
+                break;
         }
 
     }

@@ -86,6 +86,14 @@
                         </button>
 
                     </div>
+
+                @elseif($status == 'Membuat permintaan bahan')
+                    <div id="nav-leading" class="d-flex flex-row align-items-center">
+                        <div class="navbar-title">
+                            Komponen resep
+                        </div>
+                    </div>
+
                 @endif
             </div>
             <div id="title-divider"></div>
@@ -313,11 +321,58 @@
                         </div>
 
                     @endif
-
-                    @elseif($status == 'Membuat permintaan bahan')
-                        <h1>Validasi kiriman dari gudang</h1>
-                    @endif
                 </div>
+
+            @elseif($status == 'Membuat permintaan bahan')
+
+                <div class="col-sm-5 offset-1">
+                    <div class="container-input-default">
+                        <p class="subtitle-3-regular">Kode produksi</p>
+
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput"
+                               value="{{ $production->code }}" disabled>
+                    </div>
+
+                    <div class="container-input-default  margin-top-16">
+                        <p class="subtitle-3-regular">Kode referensi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <input type="name" class="form-control input-default margin-top-6"
+                               id="warehouseInput"
+                               value="{{ $production->code }}" disabled>
+                    </div>
+                </div>
+
+                <div class="col-sm-7 offset-1 margin-top-24">
+                    <div class="">
+                        <p class="subtitle-3-regular">Informasi item</p>
+                        <div id="divider" class="margin-top-6"></div>
+
+                        <table class="table-component table table-hover margin-top-6"
+                               id="tableItemRequest"
+                        >
+                            <thead class="sticky-top">
+                            <tr>
+                                <th>Item</th>
+                                <th>Permintaan</th>
+                                <th>Dikirim</th>
+                                <th>Diterima</th>
+                                <th>Unit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            @elseif($status == 'Bahan dikirim')
+
+            @endif
 
 
         </div>
