@@ -10,6 +10,7 @@ use App\Models\StockItem;
 use App\Models\Warehouse;
 use App\Models\WarehouseOutboundHistory;
 use App\Models\WarehouseOutboundItem;
+use App\Models\WarehouseShipping;
 use App\Service\WarehouseTransactionService;
 use Carbon\Carbon;
 use Exception;
@@ -168,7 +169,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
 
     /**
-     * lakukan proses pengurangan stock berdasarkan
+     * lakukan proses pengurangan stock berdasarkan item yang ditentukan
      * @param string $itemId
      * @return array
      */
@@ -230,12 +231,20 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                         ]);
 
 
-                        // update
+                        // update history outbound
                         WarehouseOutboundHistory::create([
                             'warehouse_outbounds_id' => $item['outboundId'],
                             'desc' => 'Permintaan stock selesai, dan dipindahkan keproses pengiriman',
                             'status' => 'Bahan dikirim'
                         ]);
+
+                        // update shipping data
+                        WarehouseShipping::create([
+                            'warehouse_outbounds_id' => $item['outboundId'],
+                            'stock_items_id' => $stock->id,
+                            'description' => 'Proses pemotongan stock'
+                        ]);
+
 
                         DB::commit();
 

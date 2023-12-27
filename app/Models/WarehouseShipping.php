@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
 class WarehouseShipping extends Model
@@ -29,4 +30,16 @@ class WarehouseShipping extends Model
             $model->updated_by = $userId;
         });
     }
+
+
+    public function outbound(): BelongsTo
+    {
+        return $this->belongsTo(WarehouseOutbound::class, 'warehouse_outbounds_id');
+    }
+
+    public function stockItem(): BelongsTo
+    {
+        return $this->belongsTo(StockItem::class, 'stock_items_id');
+    }
+    
 }
