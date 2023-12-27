@@ -79,9 +79,13 @@ class ProductionDetail extends Component
                 $this->detailComponentSaved($this->production);
                 break;
 
+            case "Bahan dikirim":
             case 'Membuat permintaan bahan' :
                 $this->setProduction();
+                $this->allItemRequest();
                 break;
+
+
         }
 
     }
@@ -244,6 +248,58 @@ class ProductionDetail extends Component
         }
     }
 
+    /**
+     * dapatkan data item yang diminta dari gudang
+     * @return void
+     */
+    private function allItemRequest()
+    {
+
+        try {
+
+
+            if (isset($this->production) && $this->production != null) {
+
+                $outboundItem = $this->production->outbound()->first()->outboundItem;
+
+                if ($outboundItem != null) {
+
+                    $result = $outboundItem->map(function ($item) {
+                        return [
+                            'id' => $item->item->id,
+                            'name' => $item->item->name,
+                            'request_qty' => $item->qty,
+                            'send_qty' => $item->qty_send,
+                            'accept_qty' => 0,
+                            'unit' => $item->item->unit->name,
+                        ];
+                    });
+
+                    $this->components = $result->toArray();
+                }
+
+            }
+
+        } catch (Exception $exception) {
+
+        }
+
+    }
+
+    /**
+     *  lakukan proses validasi item yang diterima oleh central kitchen dari gudang
+     * @return void
+     */
+    public function validateAndAccept()
+    {
+        // validasi item yang diterima
+        $this->validate([
+            'components.*.accept_qty' => 'required',
+        ]);
+
+
+    }
+
     /***
      * proses menyimpan permintaan bahan yang dibutuhkan oleh central kitchen ke gudang
      * @return void
@@ -313,7 +369,6 @@ class ProductionDetail extends Component
 
         return $result;
     }
-
 
     public function render()
     {
@@ -399,7 +454,6 @@ class ProductionDetail extends Component
         }
 
     }
-
 
     /**
      * lakukan permintaan ke gudang untuk bahan yang sudah ditentukan oleh central kitchen

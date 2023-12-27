@@ -87,11 +87,22 @@
 
                     </div>
 
-                @elseif($status == 'Membuat permintaan bahan')
+                @elseif($status == 'Membuat permintaan bahan' || $status == 'Bahan dikirim')
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
                             Komponen resep
                         </div>
+                    </div>
+
+                    <div id="nav-action-button" class="d-flex flex-row align-items-center">
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                {{ isset($production->requestStock->requestStockHistory) && $production->requestStock->requestStockHistory()->latest()->first()->status != 'Bahan dikirim' ? 'disabled' : '' }}
+                                wire:click="validateAndAccept"
+                                wire:confirm="Anda memvalidasi bahan yang diterima Anda yakin sudah melakukan pengecekan bahan yang diterima ?"
+                        >Validasi dan terima
+                        </button>
+
                     </div>
 
                 @endif
@@ -323,7 +334,7 @@
                     @endif
                 </div>
 
-            @elseif($status == 'Membuat permintaan bahan')
+            @elseif($status == 'Membuat permintaan bahan' || 'Bahan dikirim')
 
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default">
@@ -347,7 +358,20 @@
 
                 <div class="col-sm-7 offset-1 margin-top-24">
                     <div class="">
-                        <p class="subtitle-3-regular">Informasi item</p>
+                        <div class="d-flex flex-row justify-content-between align-items-center">
+                            <p class="subtitle-3-regular">
+                                Informasi item</p>
+                            @if(isset($production->requestStock->requestStockHistory) && $production->requestStock->requestStockHistory()->latest()->first()->status != 'Bahan dikirim')
+                                <p class="text-danger"> * Menunggu kiriman bahan</p>
+                            @endif
+                        </div>
+
+                        @if($errors->has('components.*.accept_qty'))
+                            <span class="text-xs text-red-600">
+                            {{ $errors->first('components.*.accept_qty') }}
+                        </span>
+                        @endif
+
                         <div id="divider" class="margin-top-6"></div>
 
                         <table class="table-component table table-hover margin-top-6"
@@ -364,13 +388,34 @@
                             </thead>
                             <tbody>
 
+                            @if(isset($components))
+
+                                @foreach($components as $key => $component)
+
+                                    <tr wire:key="{{ $loop->iteration }}">
+                                        <td>{{ $component['name'] }}</td>
+                                        <td>{{ $component['request_qty'] }}</td>
+                                        <td>{{ $component['send_qty'] }}</td>
+                                        <td>
+                                            <input type="text" class="form-control input-default"
+                                                   wire:model="components.{{$key}}.accept_qty"
+                                                {{ isset($production->requestStock->requestStockHistory) && $production->requestStock->requestStockHistory()->latest()->first()->status != 'Bahan dikirim' ? 'disabled' : '' }}
+                                            >
+                                        </td>
+                                        <td>{{ $component['unit'] }}</td>
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="5">Gagal mendapatkan item</td>
+                                </tr>
+                            @endif
+
 
                             </tbody>
                         </table>
                     </div>
                 </div>
-
-            @elseif($status == 'Bahan dikirim')
 
             @endif
 
