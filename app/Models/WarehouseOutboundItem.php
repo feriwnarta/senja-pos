@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
 class WarehouseOutboundItem extends Model
@@ -35,6 +36,11 @@ class WarehouseOutboundItem extends Model
     public function outbound(): BelongsTo
     {
         return $this->belongsTo(WarehouseOutbound::class, 'warehouse_outbounds_id');
+    }
+
+    public function receipt(): HasMany
+    {
+        return $this->hasMany(CentralKitchenReceipts::class, 'warehouse_outbounds_id');
     }
 
     public function item(): BelongsTo

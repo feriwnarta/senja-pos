@@ -26,5 +26,7 @@ interface CentralProductionService
 
     public function saveCodeItemOut(string $outboundId, string $warehouseId);
 
+    public function processItemReceiptProduction(array $items, string $outboundId);
+
 
 }

@@ -51,11 +51,6 @@ class CentralProduction extends Model
     {
         return $this->hasMany(WarehouseOutbound::class, 'central_productions_id');
     }
-
-    public function receipt(): HasMany
-    {
-        return $this->belongsTo(HasMany::class, 'central_productions_id');
-    }
-
+    
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Service\Impl;
 
+use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
@@ -381,5 +382,60 @@ class CentralProductionServiceImpl implements CentralProductionService
             Log::error($exception->getTraceAsString());
             throw $exception;
         }
+    }
+
+    /**
+     * proses menyimpan penerimaan item yang dikirim dari gudang ke central kitchen
+     * @param array $items
+     * @param string $outboundId
+     * @return void
+     */
+    public function processItemReceiptProduction(array $items, string $outboundId)
+    {
+        try {
+
+            if (empty($items)) {
+                throw new Exception('item kosong');
+            }
+
+            Log::debug($items);
+
+            DB::beginTransaction();
+            $extractItem = array_map(function ($item) {
+                return [
+                    'items_id' => $item['item_id'],
+                    'qty_accept' => $item['qty_accept'],
+                ];
+            }, $items);
+
+            $outbound = CentralKitchenReceipts::create([
+                'warehouse_outbounds_id' => $outboundId,
+            ]);
+
+            $outbound->detail()->createMany($extractItem);
+
+            // update history request stock
+            $outbound->outbound->history()->create([
+                'desc' => 'Bahan diterima dan divalidasi oleh central kitchen',
+                'status' => 'Bahan diterima'
+            ]);
+
+            $outbound->outbound->production->requestStock->requestStockHistory()->create([
+                'desc' => 'Bahan diterima dan divalidasi oleh central kitchen',
+                'status' => 'Bahan diterima',
+            ]);
+
+            DB::commit();
+            return $outbound;
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('gagal menyimpan item receipt');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            throw $exception;
+
+        }
+
     }
 }

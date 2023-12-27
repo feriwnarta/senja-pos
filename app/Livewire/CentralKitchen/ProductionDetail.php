@@ -266,11 +266,11 @@ class ProductionDetail extends Component
 
                     $result = $outboundItem->map(function ($item) {
                         return [
-                            'id' => $item->item->id,
+                            'item_id' => $item->item->id,
                             'name' => $item->item->name,
                             'request_qty' => $item->qty,
                             'send_qty' => $item->qty_send,
-                            'accept_qty' => 0,
+                            'qty_accept' => 0,
                             'unit' => $item->item->unit->name,
                         ];
                     });
@@ -281,7 +281,7 @@ class ProductionDetail extends Component
             }
 
         } catch (Exception $exception) {
-
+            Log::error($exception->getTraceAsString());
         }
 
     }
@@ -295,11 +295,42 @@ class ProductionDetail extends Component
 
         // validasi item yang diterima
         $this->validate([
-            'components.*.accept_qty' => 'required|numeric|min:0',
+            'components.*.qty_accept' => 'required|numeric|min:0',
         ]);
 
-        Log::debug('proses');
+        // proses menerima item yang dikirim
+        Log::debug($this->components);
 
+        if (!isset($this->production) && $this->production == null) {
+            $this->production = $this->findProductionById($this->requestId);
+        }
+
+        $outboundId = $this->production->outbound()->latest()->first()->id;
+
+        $this->storeItemReceipt($this->components, $outboundId);
+    }
+
+    /**
+     * validasi item receipt
+     * @return void
+     */
+    private function storeItemReceipt(array $items, string $outboundId)
+    {
+        try {
+
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+            $result = $this->productionService->processItemReceiptProduction($items, $outboundId);
+
+            if ($result) {
+                notify()->success('Berhasil validasi dan terima bahan', 'Sukses');
+                return;
+            }
+
+            notify()->error('Gagal validasi dan terima bahan', 'Gagal');
+
+        } catch (Exception $exception) {
+            notify()->error('Gagal menerima bahan', 'Error');
+        }
     }
 
     /***

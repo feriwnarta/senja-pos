@@ -398,7 +398,7 @@
                                         <td>{{ $component['send_qty'] }}</td>
                                         <td>
                                             <input type="number" class="form-control input-default"
-                                                   wire:model="components.{{$key}}.accept_qty"
+                                                   wire:model="components.{{$key}}.qty_accept"
                                                 {{ isset($production->requestStock->requestStockHistory) && $production->requestStock->requestStockHistory()->latest()->first()->status != 'Bahan dikirim' ? 'disabled' : '' }}
                                             >
                                         </td>

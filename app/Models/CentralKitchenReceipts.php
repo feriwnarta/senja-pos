@@ -32,9 +32,9 @@ class CentralKitchenReceipts extends Model
         });
     }
 
-    public function production(): BelongsTo
+    public function outbound(): BelongsTo
     {
-        return $this->belongsTo(CentralProduction::class, 'central_productions_id');
+        return $this->belongsTo(WarehouseOutbound::class, 'warehouse_outbounds_id');
     }
 
     public function detail(): HasMany
