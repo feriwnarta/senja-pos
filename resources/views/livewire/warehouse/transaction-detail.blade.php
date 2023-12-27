@@ -89,7 +89,9 @@
                             <thead class="sticky-top">
                             <tr>
                                 <th>Item</th>
-                                <th>Stok</th>
+                                @if($mode == '')
+                                    <th>Stok</th>
+                                @endif
                                 <th>Permintaan</th>
                                 <th>Dikirim</th>
                                 <th>Unit</th>
@@ -120,9 +122,11 @@
 
                                     <tr wire:key="{{ $loop->iteration }}">
                                         <td>{{ $item->item->name }}</td>
-                                        <td class="{{ $item->item->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">
-                                            {{ $item->item->stockItem->last()->qty_on_hand }}
-                                        </td>
+                                        @if($mode == '')
+                                            <td class="{{ $item->item->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">
+                                                {{ $item->item->stockItem->last()->qty_on_hand }}
+                                            </td>
+                                        @endif
                                         <td>{{ $item->qty }}</td>
                                         <td class="d-flex flex-row align-items-center">
 
@@ -135,7 +139,7 @@
                                             <span class="text-danger">{{ $message }}</span>
                                             @enderror
 
-                                            @if( $item->item->stockItem->last()->qty_on_hand < $item->qty )
+                                            @if( $item->item->stockItem->last()->qty_on_hand < $item->qty && $mode == '' )
                                                 <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
                                                    data-bs-title="Stok tidak mencukupi" data-bs-placement="right"></i>
                                             @endif

@@ -36,12 +36,24 @@ class CogsValuationCalc extends InventoryValuationCalc
             $incomingQty = -$incomingQty;
         }
 
+        Log::debug($oldQty);
+        Log::debug($oldAvgCost);
+        Log::debug($incomingQty);
+        Log::debug($purchasePrice);
+
+
         $incomingValue = $incomingQty * $purchasePrice;
         $inventoryValue = $inventoryValue + $incomingValue;
         $qtyOnHand = $oldQty + $incomingQty;
 
+        if ($qtyOnHand == 0) {
+            $avgCost = 0;
+        } else {
+            $avgCost = ($oldQty * $oldAvgCost + $incomingQty * $purchasePrice) / $qtyOnHand;
+        }
+
         // Calculate the new average cost
-        $avgCost = ($oldQty * $oldAvgCost + $incomingQty * $purchasePrice) / $qtyOnHand;
+
 
         // Format the values with two decimal places
         $formattedIncomingValue = number_format($incomingValue, 2, '.', '');

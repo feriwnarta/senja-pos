@@ -36,6 +36,13 @@ class TransactionDetail extends Component
 
     public function boot()
     {
+        $this->initMode();
+
+        $this->searchOutboundHistory();
+    }
+
+    private function initMode()
+    {
         $this->extractUrl();
         $result = $this->findOutboundById($this->outboundId);
 
@@ -45,8 +52,6 @@ class TransactionDetail extends Component
         }
 
         $this->warehouseOutbound = $result;
-
-        $this->searchOutboundHistory();
     }
 
     /**
@@ -142,6 +147,7 @@ class TransactionDetail extends Component
 
             if ($result) {
                 notify()->success('Berhasil menerima permintaan', 'Sukses');
+                $this->initMode();
                 return;
             }
             notify()->error('Gagal menerima permintaan', 'Gagal');
@@ -217,9 +223,9 @@ class TransactionDetail extends Component
 
                 if ($result) {
                     DB::commit();
+                    $this->mode = 'view';
                     // Pemberitahuan sukses
                     notify()->success('Berhasil kirim barang', 'Sukses');
-                    $this->mode = 'view';
                     return;
                 }
             }

@@ -24,9 +24,10 @@
 
 
                     <div class="dropdown margin-left-10">
-                        <select class="form-select input-default"
-                                id="resupplyOutlet" wire:model="selected" wire:change="selectWarehouse"
-                                wire:loading.attr="disabled">
+                        <select
+                            class="form-select input-default {{ !$isWarehouseSelected ? 'border border-danger text-danger' : '' }}"
+                            id="resupplyOutlet" wire:model="selected" wire:change="selectWarehouse"
+                            wire:loading.attr="disabled">
                             <option value="all" selected disabled>Semua gudang</option>
                             @if(!empty($warehouses))
 

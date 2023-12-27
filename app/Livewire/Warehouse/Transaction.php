@@ -20,6 +20,7 @@ class Transaction extends Component
     #[Url(as: 'option', history: true)]
     public string $urlQuery = 'request';
     public string $id = '';
+    public bool $isWarehouseSelected = true;
     private string $type = 'outlet';
 
     public function mount()
@@ -105,12 +106,14 @@ class Transaction extends Component
 
         // TODO: jika id kosong maka buat pesan error
         if ($this->id == '') {
+            $this->isWarehouseSelected = false;
+            notify()->warning('Harap pilih gudang terlebih dahulu', 'Peringatan');
             return;
         }
 
-
         // jika toggle berupa request
         if ($this->urlQuery == 'request') {
+            $this->isWarehouseSelected = true;
             $this->redirect("/warehouse/transaction/add-transaction?option=request&type={$this->type}&id={$this->id}", true);
         }
 

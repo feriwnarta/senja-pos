@@ -277,6 +277,8 @@ class ProductionDetail extends Component
                     notify()->success('Berhasil simpan komponen resep', 'Sukses');
 
                     // proses detail komponen setelah disimpan
+                    $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
+                    $this->delegateProcess($this->status);
                 }
             }
 
@@ -420,6 +422,8 @@ class ProductionDetail extends Component
 
             if ($result) {
                 notify()->success('Berhasil membuat permintaan bahan', 'Sukses');
+                $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
+                $this->delegateProcess($this->status);
                 return;
             }
 

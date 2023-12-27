@@ -78,11 +78,11 @@ class CentralProductionServiceImpl implements CentralProductionService
         try {
             $latestProduction = CentralProduction::where('central_kitchens_id', $centralKitchenId)->latest()->first();
 
-            $currentYearMonth = Carbon::now()->format('Ymd');
+            $currentYearMonth = Carbon::now()->format('Ym');
 
             $nextCode = 1;
             if ($latestProduction) {
-                $latestProductionDate = Carbon::parse($latestProduction->created_at)->format('Ymd');
+                $latestProductionDate = Carbon::parse($latestProduction->created_at)->format('Ym');
                 if ($latestProductionDate === $currentYearMonth) {
                     $nextCode = $latestProduction->increment + 1;
                 }
@@ -92,6 +92,8 @@ class CentralProductionServiceImpl implements CentralProductionService
                 ->warehouse->first()
                 ->centralKitchen->first()
                 ->code;
+
+            $currentYearMonth = Carbon::now()->format('Ymd');
 
             $code = "PRD{$infix}{$currentYearMonth}{$nextCode}";
 
@@ -283,6 +285,8 @@ class CentralProductionServiceImpl implements CentralProductionService
                     // Menghasilkan kode item keluar
                     $code = $this->genereateCodeItemOut($warehouseId);
 
+                    Log::debug($code);
+
                     if (empty($code)) {
                         throw new Exception('gagal generate code');
                     }
@@ -349,11 +353,11 @@ class CentralProductionServiceImpl implements CentralProductionService
                 ->first();
 
 
-            $currentYearMonth = Carbon::now()->format('Ymd');
+            $currentYearMonth = Carbon::now()->format('Ym');
 
             $nextCode = 1;
             if ($latestOutbound) {
-                $latestProductionDate = Carbon::parse($latestOutbound->created_at)->format('Ymd');
+                $latestProductionDate = Carbon::parse($latestOutbound->created_at)->format('Ym');
                 if ($latestProductionDate === $currentYearMonth) {
                     $nextCode = $latestOutbound->increment + 1;
                 }
