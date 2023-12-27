@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
-class CentralKitchenReceipts extends Model
+class CentralKitchenReceiptDetail extends Model
 {
     use HasFactory, HasUuids;
 
@@ -32,13 +31,8 @@ class CentralKitchenReceipts extends Model
         });
     }
 
-    public function production(): BelongsTo
+    public function receipt(): BelongsTo
     {
-        return $this->belongsTo(CentralProduction::class, 'central_productions_id');
-    }
-
-    public function detail(): HasMany
-    {
-        return $this->hasMany(CentralKitchenReceiptDetail::class, 'central_kitchen_receipts_id');
+        return $this->belongsTo(CentralKitchenReceiptDetail::class, 'central_kitchen_receipts_id');
     }
 }

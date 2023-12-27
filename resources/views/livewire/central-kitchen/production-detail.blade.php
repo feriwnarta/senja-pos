@@ -341,7 +341,7 @@
                         <div id="divider" class="margin-top-6"></div>
                         <input type="name" class="form-control input-default margin-top-6"
                                id="warehouseInput"
-                               value="{{ $production->code }}" disabled>
+                               value="{{ $production->requestStock->code }}" disabled>
                     </div>
                 </div>
 
