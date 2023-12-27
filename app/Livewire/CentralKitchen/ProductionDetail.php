@@ -292,11 +292,13 @@ class ProductionDetail extends Component
      */
     public function validateAndAccept()
     {
+
         // validasi item yang diterima
         $this->validate([
-            'components.*.accept_qty' => 'required',
+            'components.*.accept_qty' => 'required|numeric|min:0',
         ]);
 
+        Log::debug('proses');
 
     }
 
