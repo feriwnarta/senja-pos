@@ -27,6 +27,7 @@ class ProductionDetail extends Component
     public array $components;
     public array $productionComponentSave;
     public string $productionId;
+    public string $note = '';
     private CentralProductionService $productionService;
 
     public function boot()
@@ -87,6 +88,7 @@ class ProductionDetail extends Component
 
             case "Bahan diterima" :
                 $this->setProduction();
+                $this->resultProduction();
                 break;
 
 
@@ -291,6 +293,40 @@ class ProductionDetail extends Component
     }
 
     /**
+     * dapatkan hasil produksi
+     * @return void
+     */
+    private function resultProduction()
+    {
+
+        if (!isset($this->production) || $this->production == null) {
+            $this->production = $this->findProductionById($this->requestId);
+        }
+
+        try {
+            $productionComponentSave = $this->production->result->load('targetItem', 'component')->groupBy('targetItem.id')->map(function ($groupedItems) {
+                $targetItem = $groupedItems->first()->targetItem;
+                $targetQty = $groupedItems->first()->qty_target;
+
+
+                return [
+                    'id' => $targetItem->id,
+                    'name' => $targetItem->name,
+                    'target_qty' => $targetQty,
+                    'unit' => $targetItem->unit->name,
+                    'result_qty' => 0,
+                ];
+            })->toArray();
+
+            $this->components = $productionComponentSave;
+
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+    }
+
+    /**
      *  lakukan proses validasi item yang diterima oleh central kitchen dari gudang
      * @return void
      */
@@ -312,6 +348,9 @@ class ProductionDetail extends Component
         $outboundId = $this->production->outbound()->latest()->first()->id;
 
         $this->storeItemReceipt($this->components, $outboundId);
+
+        $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
+        $this->delegateProcess($this->status);
     }
 
     /**

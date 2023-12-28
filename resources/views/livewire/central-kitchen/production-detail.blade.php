@@ -105,6 +105,24 @@
 
                     </div>
 
+                @elseif($status == 'Bahan diterima')
+                    <div id="nav-leading" class="d-flex flex-row align-items-center">
+                        <div class="navbar-title">
+                            Komponen resep
+                        </div>
+                    </div>
+
+                    <div id="nav-action-button" class="d-flex flex-row align-items-center">
+
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:click="finishProduction"
+                                wire:confirm="Konfirmasi produksi telah selesai Anda akan membuat laporan bahwa produksi telah selesai."
+                        >Produksi selesai
+                        </button>
+
+                    </div>
+
                 @endif
             </div>
             <div id="title-divider"></div>
@@ -420,7 +438,7 @@
             @elseif($status == 'Bahan diterima')
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default">
-                        <p class="subtitle-3-regular">Kode produksi</p>
+                        <label class="form-label input-label">Kode produksi</label>
 
                         <div id="divider" class="margin-symmetric-vertical-6"></div>
 
@@ -430,14 +448,96 @@
                     </div>
 
                     <div class="container-input-default  margin-top-16">
-                        <p class="subtitle-3-regular">Kode referensi</p>
+                        <label class="form-label input-label">Kode referensi</label>
                         <div id="divider" class="margin-top-6"></div>
                         <input type="name" class="form-control input-default margin-top-6"
                                id="warehouseInput"
                                value="{{ $production->requestStock->code }}" disabled>
                     </div>
-                </div>
 
+                    <div class="margin-top-24">
+                        <h4 class="subtitle-3-bold">Permintaan produksi</h4>
+
+                        {{-- Looping isi permintaan produksi --}}
+                        @if(isset($components))
+                            @foreach($components as $result)
+
+                                <div class="margin-top-8" wire:key="{{ $loop->iteration }}">
+                                    <div class="row margin-top-16">
+                                        <div class="col-md-6">
+                                            <div class="container-input-default">
+                                                <label
+                                                    class="form-label input-label">{{ $result['name']}}</label>
+                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                                <input type="text" class="form-control input-default"
+                                                       value="{{ number_format($result['target_qty'], 2, '.', '') }}"
+                                                       disabled>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="container-input-default">
+                                                <label class="form-label input-label">Unit</label>
+                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                                <input type="text" class="form-control input-default" disabled
+                                                       value="{{ $result['unit'] }}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @endforeach
+
+                        @endif
+
+
+                    </div>
+
+
+                    <div class="margin-top-24">
+                        <h4 class="subtitle-3-bold">Hasil produksi</h4>
+
+                        {{-- Looping hasil produksi --}}
+                        @if(isset($components))
+                            @foreach($components as $key => $result)
+
+                                <div class="margin-top-8" wire:key="{{ $loop->iteration }}">
+                                    <div class="row margin-top-16">
+                                        <div class="col-md-6">
+                                            <div class="container-input-default">
+                                                <label
+                                                    class="form-label input-label">{{ $result['name'] }}</label>
+                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                                <input type="number" class="form-control input-default"
+                                                       wire:model="components.{{$key}}.result_qty"
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="container-input-default">
+                                                <label class="form-label input-label">Unit</label>
+                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                                <input type="text" class="form-control input-default" disabled
+                                                       value="{{ $result['unit']}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @endforeach
+                        @endif
+                    </div>
+
+                    <div class="margin-top-24">
+                        <label for="description" class="form-label">Catatan</label>
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                        <textarea class="form-control textarea" id="description" rows="5"
+                                  wire:model="note"
+                                  placeholder="Tulis catatan"></textarea>
+                    </div>
+
+
+                </div>
             @endif
 
 
