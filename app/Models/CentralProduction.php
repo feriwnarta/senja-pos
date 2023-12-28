@@ -51,6 +51,11 @@ class CentralProduction extends Model
     {
         return $this->hasMany(WarehouseOutbound::class, 'central_productions_id');
     }
-    
+
+    public function remaining(): HasMany
+    {
+        return $this->hasMany(CentralProductionRemaining::class, 'central_productions_id');
+    }
+
 
 }

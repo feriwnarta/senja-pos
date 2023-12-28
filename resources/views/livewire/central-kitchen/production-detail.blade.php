@@ -680,6 +680,105 @@
 
                 </div>
 
+            @elseif($status == 'Menunggu pengiriman')
+                <div class="col-sm-5 offset-1">
+                    <div>
+                        <p class="subtitle-3-regular">Kode referensi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">{{ $production->requestStock->code }}</p>
+                    </div>
+
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Kode produksi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">
+                            {{ $production->code }}
+                        </p>
+                    </div>
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Diminta oleh</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">
+                            {{ $production->requestStock->warehouse->name }}
+                        </p>
+                    </div>
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Tanggal permintaan</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">
+                            {{ Carbon::createFromFormat('Y-m-d H:i:s', $requestStock->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}
+                        </p>
+                    </div>
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Tanggal selesai produksi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">
+                            {{ Carbon::createFromFormat('Y-m-d H:i:s', $production->remaining->first()->created_at )->locale('id_ID')->isoFormat('D MMMM Y') }}
+                        </p>
+                    </div>
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Hasil produksi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <table class="table-component table table-hover margin-top-16"
+                        >
+                            <thead class="sticky-topphp">
+                            <tr>
+                                <th>Item</th>
+                                <th>Diminta</th>
+                                <th>Hasil</th>
+                                <th>Unit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if(isset($production->result))
+
+                                @foreach($production->result as $resultProduction)
+                                    <tr wire:key="{{ $loop->iteration }}">
+                                        <td>{{ $resultProduction->targetItem->name }}</td>
+                                        <td>{{ $resultProduction->qty_target }}</td>
+                                        <td>{{ $resultProduction->qty_result }}</td>
+                                        <td>{{ $resultProduction->targetItem->unit->name }}</td>
+                                    </tr>
+                                @endforeach
+
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Hasil sisa produksi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <table class="table-component table table-hover margin-top-16"
+                        >
+                            <thead class="sticky-topphp">
+                            <tr>
+                                <th>Item</th>
+                                <th>Jumlah</th>
+                                <th>Unit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @if(isset($production->remaining))
+                                @foreach($production->remaining->first()->detail as $itemRemaining)
+                                    <tr wire:key="{{ $loop->iteration }}">
+                                        <td>{{ $itemRemaining->item->name }}</td>
+                                        <td>{{ $itemRemaining->qty_remaining }}</td>
+                                        <td>{{ $itemRemaining->item->unit->name }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             @endif
 
 
