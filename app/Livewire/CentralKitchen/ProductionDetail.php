@@ -33,10 +33,76 @@ class ProductionDetail extends Component
 
     public function boot()
     {
-        // dapatkan status
-        $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
 
+    }
+
+    /**
+     *  lakukan proses validasi item yang diterima oleh central kitchen dari gudang
+     * @return void
+     */
+    public function validateAndAccept()
+    {
+
+        // validasi item yang diterima
+        $this->validate([
+            'components.*.qty_accept' => 'required|numeric|min:0',
+        ]);
+
+        // proses menerima item yang dikirim
+        Log::debug($this->components);
+
+        if (!isset($this->production) && $this->production == null) {
+            $this->production = $this->findProductionById($this->requestId);
+        }
+
+        $outboundId = $this->production->outbound()->latest()->first()->id;
+
+        $this->storeItemReceipt($this->components, $outboundId);
+
+        $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
         $this->delegateProcess($this->status);
+    }
+
+    /**
+     * cari produksi berdasarkan id
+     * @param $id
+     * @return null
+     */
+    private function findProductionById($id)
+    {
+        try {
+            return CentralProduction::where('request_stocks_id', $id)->firstOrFail();
+
+        } catch (Exception $exception) {
+            notify()->error('Ada sesuatu yang salah', 'Error');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            return null;
+        }
+
+    }
+
+    /**
+     * validasi item receipt
+     * @return void
+     */
+    private function storeItemReceipt(array $items, string $outboundId)
+    {
+        try {
+
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+            $result = $this->productionService->processItemReceiptProduction($items, $outboundId);
+
+            if ($result) {
+                notify()->success('Berhasil validasi dan terima bahan', 'Sukses');
+                return;
+            }
+
+            notify()->error('Gagal validasi dan terima bahan', 'Gagal');
+
+        } catch (Exception $exception) {
+            notify()->error('Gagal menerima bahan', 'Error');
+        }
     }
 
     /**
@@ -122,25 +188,6 @@ class ProductionDetail extends Component
         if ($this->production == null) {
             notify()->warning('Tidak bisa mendapatkan data produksi, harap ulangi permintaan', 'Peringatan');
             return;
-        }
-
-    }
-
-    /**
-     * cari produksi berdasarkan id
-     * @param $id
-     * @return null
-     */
-    private function findProductionById($id)
-    {
-        try {
-            return CentralProduction::where('request_stocks_id', $id)->firstOrFail();
-
-        } catch (Exception $exception) {
-            notify()->error('Ada sesuatu yang salah', 'Error');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-            return null;
         }
 
     }
@@ -361,7 +408,7 @@ class ProductionDetail extends Component
                         'qty_accept' => optional($receiptDetail)->qty_accept,
                         'qty_use' => optional($receiptDetail)->qty_accept,
                         'unit' => optional($item->unit)->name,
-                        'isChecked' => false,
+                        'isChecked' => '',
                     ];
                 });
             })->toArray();
@@ -375,56 +422,6 @@ class ProductionDetail extends Component
             Log::error($exception->getTraceAsString());
         }
 
-    }
-
-    /**
-     *  lakukan proses validasi item yang diterima oleh central kitchen dari gudang
-     * @return void
-     */
-    public function validateAndAccept()
-    {
-
-        // validasi item yang diterima
-        $this->validate([
-            'components.*.qty_accept' => 'required|numeric|min:0',
-        ]);
-
-        // proses menerima item yang dikirim
-        Log::debug($this->components);
-
-        if (!isset($this->production) && $this->production == null) {
-            $this->production = $this->findProductionById($this->requestId);
-        }
-
-        $outboundId = $this->production->outbound()->latest()->first()->id;
-
-        $this->storeItemReceipt($this->components, $outboundId);
-
-        $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
-        $this->delegateProcess($this->status);
-    }
-
-    /**
-     * validasi item receipt
-     * @return void
-     */
-    private function storeItemReceipt(array $items, string $outboundId)
-    {
-        try {
-
-            $this->productionService = app()->make(CentralProductionServiceImpl::class);
-            $result = $this->productionService->processItemReceiptProduction($items, $outboundId);
-
-            if ($result) {
-                notify()->success('Berhasil validasi dan terima bahan', 'Sukses');
-                return;
-            }
-
-            notify()->error('Gagal validasi dan terima bahan', 'Gagal');
-
-        } catch (Exception $exception) {
-            notify()->error('Gagal menerima bahan', 'Error');
-        }
     }
 
     /***
@@ -505,6 +502,10 @@ class ProductionDetail extends Component
     public function mount()
     {
         $this->checkProductionId(id: $this->requestId);
+        // dapatkan status
+        $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
+
+        $this->delegateProcess($this->status);
     }
 
     /**
