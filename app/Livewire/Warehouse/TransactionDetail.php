@@ -223,9 +223,10 @@ class TransactionDetail extends Component
 
                 if ($result) {
                     DB::commit();
+                    notify()->success('Berhasil kirim barang', 'Sukses');
                     $this->mode = 'view';
                     // Pemberitahuan sukses
-                    notify()->success('Berhasil kirim barang', 'Sukses');
+
                     return;
                 }
             }

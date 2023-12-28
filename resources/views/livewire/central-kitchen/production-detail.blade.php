@@ -137,11 +137,34 @@
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
                                 wire:click="validateItemRemaining"
                                 wire:confirm="Anda memvalidasi pengiriman dan sisa bahan produksi Anda yakin dan akan membuat pengiriman ?"
-                        >Validasi
+                        >Proses pengiriman
+                        </button>
+
+                    </div>
+                @elseif($status == 'Menunggu pengiriman')
+                    <div id="nav-leading" class="d-flex flex-row align-items-center">
+                        <div class="navbar-title">
+                            Pengiriman produksi
+                        </div>
+                    </div>
+
+                    <div id="nav-action-button" class="d-flex flex-row align-items-center">
+
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:click="sendItem"
+                                wire:confirm="Anda yakin akan mengirim hasil produksi?"
+                        >Kirim
                         </button>
 
                     </div>
 
+                @elseif($status == 'Selesai produksi')
+                    <div id="nav-leading" class="d-flex flex-row align-items-center">
+                        <div class="navbar-title">
+                            Hasil produksi
+                        </div>
+                    </div>
                 @endif
             </div>
             <div id="title-divider"></div>
@@ -680,7 +703,7 @@
 
                 </div>
 
-            @elseif($status == 'Menunggu pengiriman')
+            @elseif($status == 'Menunggu pengiriman' || $status == 'Selesai produksi')
                 <div class="col-sm-5 offset-1">
                     <div>
                         <p class="subtitle-3-regular">Kode referensi</p>

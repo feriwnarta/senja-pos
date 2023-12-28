@@ -62,8 +62,7 @@ class ProductionDetail extends Component
 
         $this->storeItemReceipt($this->components, $outboundId);
 
-        $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
-        $this->delegateProcess($this->status);
+
     }
 
     /**
@@ -98,6 +97,8 @@ class ProductionDetail extends Component
 
             if ($result) {
                 notify()->success('Berhasil validasi dan terima bahan', 'Sukses');
+                $this->status = $this->findRequestStatus() == null ? 'Baru' : $this->findRequestStatus();
+                $this->delegateProcess($this->status);
                 return;
             }
 
@@ -138,9 +139,9 @@ class ProductionDetail extends Component
      */
     private function delegateProcess($status)
     {
+        $this->status = $status;
         switch ($status) {
             case 'Produksi diterima' :
-
                 $this->setProduction();
                 $this->createRequestMaterial($this->requestId);
                 break;
@@ -168,6 +169,7 @@ class ProductionDetail extends Component
                 break;
 
             case "Menunggu pengiriman" :
+            case "Selesai produksi":
                 $this->setProduction();
                 break;
 
@@ -682,6 +684,9 @@ class ProductionDetail extends Component
 
             if ($result) {
                 notify()->success('Berhasil validasi dan simpan sisa produksi', 'Sukses');
+                // dapatkan status
+                $status = $this->findRequestStatus();
+                $this->delegateProcess($status);
                 return;
             }
 
@@ -698,6 +703,43 @@ class ProductionDetail extends Component
 
     }
 
+    public function sendItem()
+    {
+
+        try {
+            DB::beginTransaction();
+
+            if (!isset($this->requestStock) && $this->requestStock == null) {
+                $this->requestStock = $this->checkProductionId($this->production->id);
+            }
+
+            $result = $this->requestStock->requestStockHistory()->create([
+                'desc' => 'Selesai proses produksi, hasil produksi dikirim',
+                'status' => 'Selesai produksi',
+            ]);
+
+            DB::commit();
+
+            if ($result) {
+                notify()->success('Berhasil menyelesaikan produksi dan mengirim bahan', 'Sukses');
+                // dapatkan status
+                $status = $this->findRequestStatus();
+                $this->delegateProcess($status);
+                return;
+            }
+
+            notify()->error('Berhasil menyelesaikan produksi dan mengirim bahan', 'Gagal');
+
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            notify()->error('Berhasil menyelesaikan produksi dan mengirim bahan', 'Gagal');
+            Log::error('gagal menyelesaikan proses pengiriman hasil produksi');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+    }
+
     /**
      * simpan hasil produksi
      * @return void
@@ -710,6 +752,8 @@ class ProductionDetail extends Component
 
             if ($result) {
                 notify()->success('Berhasil menyelesaikan produksi', 'Sukses');
+                $status = $this->findRequestStatus();
+                $this->delegateProcess($status);
                 return;
             }
 
