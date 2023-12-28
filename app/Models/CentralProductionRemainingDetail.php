@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
-class CentralProductionRemaining extends Model
+class CentralProductionRemainingDetail extends Model
 {
     use HasFactory, HasUuids;
 
@@ -32,14 +31,13 @@ class CentralProductionRemaining extends Model
         });
     }
 
-    public function production(): BelongsTo
+    public function remaining(): BelongsTo
     {
-        return $this->belongsTo(CentralProduction::class, 'central_productions_id');
+        return $this->belongsTo(CentralProductionRemaining::class, 'central_productions_remaining_id');
     }
 
-    public function detail(): HasMany
+    public function item(): BelongsTo
     {
-        return $this->hasMany(CentralProductionRemainingDetail::class, 'central_productions_remaining_id');
+        return $this->belongsTo(Item::class, 'items_id');
     }
-
 }

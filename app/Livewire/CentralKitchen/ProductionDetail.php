@@ -3,11 +3,13 @@
 namespace App\Livewire\CentralKitchen;
 
 use App\Models\CentralProduction;
+use App\Models\CentralProductionRemaining;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
 use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -163,6 +165,10 @@ class ProductionDetail extends Component
                 $this->setProduction();
                 $this->resultProduction();
                 $this->getItemWithRemaining();
+                break;
+
+            case "Menunggu pengiriman" :
+                $this->setProduction();
                 break;
 
         }
@@ -629,7 +635,67 @@ class ProductionDetail extends Component
 
         Log::info('proses validasi pengiriman dan penyimpanan bahan sisa');
 
-        Log::info($this->isSaveOnCentral);
+
+        $this->storeItemProductionRemaining($this->itemRemaining, $this->isSaveOnCentral, $this->production->id);
+
+
+    }
+
+    private function storeItemProductionRemaining(array $items, bool $isSaveOnCentral, string $productionId)
+    {
+
+        try {
+            DB::beginTransaction();
+
+
+            $remaining = CentralProductionRemaining::create([
+                'central_productions_id' => $productionId,
+                'status' => ($this->isSaveOnCentral) ? 'CENTRAL' : 'WAREHOUSE'
+            ]);
+
+            $remaining->production->requestStock->requestStockHistory()->create([
+                'desc' => 'Menyimpan bahan sisa produksi',
+                'status' => 'Menunggu pengiriman',
+            ]);
+
+
+            $itemRemaining = [];
+
+            foreach ($items as $item) {
+
+                $total = $item['qty_accept'] - $item['qty_use'];
+
+                $itemRemaining[] = [
+                    'central_productions_remaining_id' => $remaining->id,
+                    'items_id' => $item['item_id'],
+                    'qty_remaining' => $total,
+                ];
+
+            }
+            Log::debug($itemRemaining);
+
+
+            $result = $remaining->detail()->createMany($itemRemaining);
+
+
+            DB::commit();
+
+            if ($result) {
+                notify()->success('Berhasil validasi dan simpan sisa produksi', 'Sukses');
+                return;
+            }
+
+            notify()->error('Gagal validasi dan simpan sisa produksi', 'Gagal');
+
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            notify()->error('Gagal validasi dan simpan sisa produksi', 'Gagal');
+            Log::error('gagal menyimpan sisa bahan');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
     }
 
     /**
