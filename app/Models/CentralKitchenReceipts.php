@@ -41,4 +41,5 @@ class CentralKitchenReceipts extends Model
     {
         return $this->hasMany(CentralKitchenReceiptDetail::class, 'central_kitchen_receipts_id');
     }
+    
 }

@@ -28,6 +28,7 @@ class ProductionDetail extends Component
     public array $productionComponentSave;
     public string $productionId;
     public string $note = '';
+    public array $itemRemaining = [];
     private CentralProductionService $productionService;
 
     public function boot()
@@ -94,6 +95,7 @@ class ProductionDetail extends Component
             case "Produksi selesai" :
                 $this->setProduction();
                 $this->resultProduction();
+                $this->getItemWithRemaining();
                 break;
 
         }
@@ -330,6 +332,49 @@ class ProductionDetail extends Component
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }
+    }
+
+    /**
+     * dapatkan array item dengan input sisa
+     * @return void
+     */
+    private function getItemWithRemaining()
+    {
+
+        try {
+
+            if (!isset($this->production) || $this->production == null) {
+                $this->production = $this->findProductionById($this->requestId);
+            }
+
+
+            $data = $this->production->outbound->flatMap(function ($outbound) {
+                $outbound->load('receipt.detail.item.unit');
+
+                return $outbound->receipt->map(function ($receipt) {
+                    $receiptDetail = $receipt->detail->first();
+                    $item = $receiptDetail ? $receiptDetail->item : null;
+
+                    return [
+                        'item_id' => optional($item)->id,
+                        'item_name' => optional($item)->name,
+                        'qty_accept' => optional($receiptDetail)->qty_accept,
+                        'qty_use' => optional($receiptDetail)->qty_accept,
+                        'unit' => optional($item->unit)->name,
+                        'isChecked' => false,
+                    ];
+                });
+            })->toArray();
+
+
+            $this->itemRemaining = $data;
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan item untuk ditampilkan di item sisa produksi');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
     }
 
     /**

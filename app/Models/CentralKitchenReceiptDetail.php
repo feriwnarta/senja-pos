@@ -35,4 +35,9 @@ class CentralKitchenReceiptDetail extends Model
     {
         return $this->belongsTo(CentralKitchenReceiptDetail::class, 'central_kitchen_receipts_id');
     }
+
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'items_id');
+    }
 }

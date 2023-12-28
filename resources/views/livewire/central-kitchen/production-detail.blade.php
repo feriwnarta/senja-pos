@@ -628,10 +628,26 @@
                             <th>Unit</th>
                         </tr>
                         </thead>
-
                         <tbody>
 
+                        @if(!empty($itemRemaining))
 
+                            @foreach($itemRemaining as $key => $item)
+                                <tr wire:key="{{ $loop->iteration }}">
+                                    <td><input class="form-check-input" type="checkbox"
+                                               wire:model="itemRemaining.{{ $key }}.isChecked"></td>
+                                    <td>{{ $item['item_name']}}</td>
+                                    <td>{{ $item['qty_accept']}}</td>
+                                    <td>
+                                        <input type="name" class="form-control input-default"
+                                               id="warehouseInput"
+                                               wire:model.live.debounce.600ms="itemRemaining.{{$key}}.qty_use">
+                                    </td>
+                                    <td>{{ ($item['qty_accept'] - $item['qty_use']) }}</td>
+                                    <td>{{ $item['unit']}}</td>
+                                </tr>
+                            @endforeach
+                        @endif
                         </tbody>
                     </table>
 

@@ -52,4 +52,10 @@ class WarehouseOutbound extends Model
     {
         return $this->hasMany(WarehouseOutboundHistory::class, 'warehouse_outbounds_id');
     }
+
+
+    public function receipt(): HasMany
+    {
+        return $this->hasMany(CentralKitchenReceipts::class, 'warehouse_outbounds_id');
+    }
 }
