@@ -91,6 +91,10 @@ class ProductionDetail extends Component
                 $this->resultProduction();
                 break;
 
+            case "Produksi selesai" :
+                $this->setProduction();
+                $this->resultProduction();
+                break;
 
         }
 
@@ -315,7 +319,7 @@ class ProductionDetail extends Component
                     'name' => $targetItem->name,
                     'target_qty' => $targetQty,
                     'unit' => $targetItem->unit->name,
-                    'result_qty' => 0,
+                    'result_qty' => $groupedItems->first()->qty_result,
                 ];
             })->toArray();
 

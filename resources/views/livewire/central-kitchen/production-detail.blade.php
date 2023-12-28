@@ -538,6 +538,106 @@
 
 
                 </div>
+
+            @elseif($status == 'Produksi selesai')
+                <div class="col-sm-5 offset-1">
+                    <div class="container-input-default">
+                        <label class="form-label input-label">Kode produksi</label>
+
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                        <input type="name" class="form-control input-default"
+                               id="warehouseInput"
+                               value="{{ $production->code }}" disabled>
+                    </div>
+
+                    <div class="container-input-default  margin-top-16">
+                        <label class="form-label input-label">Kode referensi</label>
+                        <div id="divider" class="margin-top-6"></div>
+                        <input type="name" class="form-control input-default margin-top-6"
+                               id="warehouseInput"
+                               value="{{ $production->requestStock->code }}" disabled>
+                    </div>
+
+                    <div class="margin-top-24">
+                        <h4 class="subtitle-3-bold">Hasil produksi</h4>
+
+                        {{-- Looping hasil produksi --}}
+                        @if(isset($components))
+                            @foreach($components as $key => $result)
+
+                                <div class="margin-top-8" wire:key="{{ $loop->iteration }}">
+                                    <div class="row margin-top-16">
+                                        <div class="col-md-6">
+                                            <div class="container-input-default">
+                                                <label
+                                                    class="form-label input-label">{{ $result['name'] }}</label>
+                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                                <input type="number" class="form-control input-default"
+                                                       wire:model="components.{{$key}}.result_qty"
+                                                       disabled
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="container-input-default">
+                                                <label class="form-label input-label">Unit</label>
+                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                                <input type="text" class="form-control input-default" disabled
+                                                       value="{{ $result['unit']}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @endforeach
+                        @endif
+                    </div>
+
+                    <div class="margin-top-24">
+                        <div class="title d-flex flex-row justify-content-between align-items-center">
+                            <h4 class="subtitle-3-bold">Item sisa</h4>
+
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                       id="flexSwitchCheckChecked" checked>
+                                <label class="form-check-label" for="flexSwitchCheckChecked">Simpan didapur
+                                    sentral</label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-8 offset-1">
+
+                    <table class="table-component table table-hover margin-top-16"
+                           id="tableItemRequest"
+                    >
+                        <thead class="sticky-topphp">
+                        <tr>
+                            <th>
+                                <input class="form-check-input" type="checkbox" value=""
+                                       id="selectAllCheckbox"
+                                       wire:model="selectAll">
+                            </th>
+                            <th>Item</th>
+                            <th>Diterima</th>
+                            <th>Digunakan</th>
+                            <th>Sisa</th>
+                            <th>Unit</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+
             @endif
 
 

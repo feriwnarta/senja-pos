@@ -478,6 +478,12 @@ class CentralProductionServiceImpl implements CentralProductionService
                 'note' => $note
             ]);
 
+            // update history
+            $production->requestStock->requestStockHistory()->create([
+                'desc' => 'Central kitchen menyelesaikan proses produksi',
+                'status' => 'Produksi selesai',
+            ]);
+
             DB::commit();
             return $results;
 
