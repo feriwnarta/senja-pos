@@ -123,6 +123,25 @@
 
                     </div>
 
+                @elseif($status == 'Produksi selesai')
+
+                    <div id="nav-leading" class="d-flex flex-row align-items-center">
+                        <div class="navbar-title">
+                            Pengiriman produksi
+                        </div>
+                    </div>
+
+                    <div id="nav-action-button" class="d-flex flex-row align-items-center">
+
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:click="validateItemRemaining"
+                                wire:confirm="Anda memvalidasi pengiriman dan sisa bahan produksi Anda yakin dan akan membuat pengiriman ?"
+                        >Validasi
+                        </button>
+
+                    </div>
+
                 @endif
             </div>
             <div id="title-divider"></div>
@@ -600,8 +619,10 @@
 
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" role="switch"
-                                       id="flexSwitchCheckChecked" checked>
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Simpan didapur
+                                       id="flexSwitchCheckChecked" checked wire:model="isSaveOnCentral">
+                                <label class="form-check-label" for="flexSwitchCheckChecked"
+                                >Simpan
+                                    didapur
                                     sentral</label>
                             </div>
                         </div>

@@ -29,6 +29,7 @@ class ProductionDetail extends Component
     public string $productionId;
     public string $note = '';
     public array $itemRemaining = [];
+    public bool $isSaveOnCentral = true;
     private CentralProductionService $productionService;
 
     public function boot()
@@ -619,6 +620,16 @@ class ProductionDetail extends Component
             return;
         }
 
+    }
+
+    public function validateItemRemaining()
+    {
+        $this->validate([
+            'itemRemaining' => 'required']);
+
+        Log::info('proses validasi pengiriman dan penyimpanan bahan sisa');
+
+        Log::info($this->isSaveOnCentral);
     }
 
     /**
