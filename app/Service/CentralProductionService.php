@@ -28,5 +28,6 @@ interface CentralProductionService
 
     public function processItemReceiptProduction(array $items, string $outboundId);
 
+    public function finishProduction(array $items, string $productionId, string $note);
 
 }

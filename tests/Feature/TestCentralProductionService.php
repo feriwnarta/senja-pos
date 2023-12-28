@@ -455,6 +455,29 @@ class TestCentralProductionService extends TestCase
 
     }
 
+    public function testFinishProduction()
+    {
+
+        $data = [
+            '9af085c1-59e4-4390-b42d-90e3fe417b96' => [
+                'result_id' => '9af41805-cb52-4923-9d63-74626ff4e2b5',
+                'id' => '9af085c1-59e4-4390-b42d-90e3fe417b96',
+                'name' => 'Mie',
+                'target_qty' => '5.00',
+                'unit' => 'KG',
+                'result_qty' => 5.00,
+            ],
+        ];
+
+        $productionId = '9af417f8-8937-43b1-88ef-9923eeff15c8';
+        $note = '';
+
+        $result = $this->centralService->finishProduction($data, $productionId, $note);
+
+        assertNotNull($result);
+    }
+
+
     public function testSaveRequest()
     {
 

@@ -4,6 +4,7 @@ namespace App\Service\Impl;
 
 use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
+use App\Models\CentralProductionResult;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
 use App\Models\Warehouse;
@@ -437,5 +438,55 @@ class CentralProductionServiceImpl implements CentralProductionService
 
         }
 
+    }
+
+    public function finishProduction(array $items, string $productionId, string $note)
+    {
+        try {
+
+            DB::beginTransaction();
+
+            if (empty($items)) {
+                throw new Exception('items kosong');
+            }
+
+            Log::debug('finish production');
+
+            // Kumpulkan semua ID yang diperlukan
+            $resultIds = array_column($items, 'result_id');
+
+            // Ambil semua data sekaligus untuk menghindari N+1
+            $results = CentralProductionResult::findMany($resultIds);
+
+            // Loop melalui data dan update
+            foreach ($items as $item) {
+                $centralProductionResultId = $item['result_id'];
+
+                // Temukan hasil yang sesuai dari $results
+                $result = $results->where('id', $centralProductionResultId)->first();
+
+                // update target quantity
+                if ($result) {
+                    $result->update([
+                        'qty_result' => $item['result_qty'],
+                    ]);
+                }
+            }
+
+            $production = CentralProduction::findOrFail($productionId);
+            $production->update([
+                'note' => $note
+            ]);
+
+            DB::commit();
+            return $results;
+
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error("gagal menyelesai proses produksi dengan id $productionId");
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
     }
 }

@@ -310,6 +310,7 @@ class ProductionDetail extends Component
 
 
                 return [
+                    'result_id' => $groupedItems->first()->id,
                     'id' => $targetItem->id,
                     'name' => $targetItem->name,
                     'target_qty' => $targetQty,
@@ -319,6 +320,7 @@ class ProductionDetail extends Component
             })->toArray();
 
             $this->components = $productionComponentSave;
+
 
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
@@ -567,5 +569,55 @@ class ProductionDetail extends Component
             return;
         }
 
+    }
+
+    /**
+     * simpan hasil produksi
+     * @return void
+     */
+    private function storeResultProduction(array $items, string $productionId, string $note)
+    {
+        try {
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+            $result = $this->productionService->finishProduction($items, $productionId, $note);
+
+            if ($result) {
+                notify()->success('Berhasil menyelesaikan produksi', 'Sukses');
+                return;
+            }
+
+            notify()->error('Gagal menyelesaikan produksi', 'Error');
+
+        } catch (Exception $exception) {
+            Log::error('gagak menyimpan hasil produksi dari production detail');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            notify()->error('Gagal menyelesaikan produksi', 'Error');
+        }
+
+    }
+
+    /**
+     * menyelesaikan proses produski,
+     * menyimpan result produksi dan catatan ke central
+     * production result
+     * @return void
+     */
+    public function finishProduction()
+    {
+
+        // validasi result qty
+        $this->validate([
+            'components.*.result_qty' => 'required|numeric|min:0']);
+        Log:
+        info('Proses selesai produksi');
+
+        if (!isset($this->production) && $this->production == null) {
+            $this->production = $this->findProductionById($this->requestId);
+        }
+
+        $productionId = $this->production->id;
+
+        $this->storeResultProduction($this->components, $productionId, $this->note);
     }
 }
