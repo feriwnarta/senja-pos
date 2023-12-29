@@ -251,15 +251,21 @@ class CreateTransaction extends Component
     public function create()
     {
 
+        Log::info('buat permintaan stok dari warehouse');
+
         // jika is create false maka jalankan proses pembuatan stok pertama kali
         if ($this->isCreate == false) {
             $result = $this->storeRequest();
 
+
             if ($result) {
+
                 $this->findRequestCreated();
                 notify()->success('Permintaan berhasil dibuat', 'Sukses');
                 return;
             }
+
+            return;
         }
 
         $this->finishCreateRequest();
@@ -271,8 +277,9 @@ class CreateTransaction extends Component
             // lakukan pengecekan apakah ada item didalam gudang
             $isExistItem = $this->checkItemOnWarehouse();
 
+
             if (!$isExistItem) {
-                notify()->warning('Item didalam gudang kosong, harap tentukan lokasi penyimpanan item', 'Peringatan');
+                notify()->warning('Gudang tidak memiliki item, harap buat item terlebih dahulu', 'Peringatan');
                 return false;
             }
 
