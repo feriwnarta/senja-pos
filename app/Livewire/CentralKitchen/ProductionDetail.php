@@ -16,7 +16,6 @@ use Livewire\Component;
 
 class ProductionDetail extends Component
 {
-
     #[Url(as: 'reqId')]
     public string $requestId;
 
@@ -40,7 +39,7 @@ class ProductionDetail extends Component
     }
 
     /**
-     *  lakukan proses validasi item yang diterima oleh central kitchen dari gudang
+     * lakukan proses validasi item yang diterima oleh central kitchen dari gudang
      * @return void
      */
     public function validateAndAccept()
@@ -61,8 +60,7 @@ class ProductionDetail extends Component
         $outboundId = $this->production->outbound()->latest()->first()->id;
 
         $this->storeItemReceipt($this->components, $outboundId);
-
-
+        
     }
 
     /**
@@ -322,10 +320,7 @@ class ProductionDetail extends Component
      */
     private function allItemRequest()
     {
-
         try {
-
-
             if (isset($this->production) && $this->production != null) {
 
                 $outboundItem = $this->production->outbound()->first()->outboundItem;

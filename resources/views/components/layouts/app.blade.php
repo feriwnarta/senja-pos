@@ -38,7 +38,6 @@
 
 {{ $slot }}
 
-
 @livewireScripts
 
 

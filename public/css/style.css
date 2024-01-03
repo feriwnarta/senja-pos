@@ -90,6 +90,15 @@ option {
 /* ---------------------------------------------------
     NAVBAR STYLE
 ----------------------------------------------------- */
+
+.navbar-app {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    background-color: white;
+}
+
 .content-navbar {
     padding: 2rem 3rem 1.87rem 1.25rem;
 }
