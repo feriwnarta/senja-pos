@@ -132,15 +132,37 @@ class Transaction extends Component
         if ($this->urlQuery == '' && !in_array($validUrl)) {
             return 'Pastikan url valid';
         }
+
+
+        if ($this->urlQuery == 'request') {
+            $data = RequestStock::when($this->id, function ($query) {
+                return $query->where('warehouses_id', $this->id);
+            })->orderBy('id', 'DESC')->paginate(10);
+        }
+
+        if ($this->urlQuery == 'stockIn') {
+            $data = RequestStock::where(function ($query) {
+                $query->whereHas('requestStockHistory', function ($historyQuery) {
+                    $historyQuery->where('status', 'Selesai produksi');
+                });
+
+                if (!empty($this->id)) {
+                    $query->where('warehouses_id', $this->id);
+                }
+            })->orderBy('id', 'DESC')->paginate(10);
+        }
+
+        if ($this->urlQuery == 'stockOut') {
+            $data = WarehouseOutbound::when($this->id, function ($query) {
+                return $query->where('warehouses_id', $this->id);
+            })->orderBy('id', 'DESC')->paginate(10);
+        }
+
+
         return view('livewire.warehouse.transaction', [
-            'requestStock' => ($this->urlQuery == 'request')
-                ? RequestStock::when($this->id, function ($query) {
-                    return $query->where('warehouses_id', $this->id);
-                })->orderBy('id', 'DESC')->paginate(10)
-                : WarehouseOutbound::when($this->id, function ($query) {
-                    return $query->where('warehouses_id', $this->id); // Perbaikan pada nama kolom 'warehouses_id'
-                })->orderBy('id', 'DESC')->paginate(10)
+            'requestStock' => $data
         ]);
+
 
     }
 
