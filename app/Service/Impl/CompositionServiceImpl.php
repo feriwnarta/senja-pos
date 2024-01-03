@@ -144,15 +144,10 @@ class CompositionServiceImpl implements CompositionService
                 return 'Rute produksi diluar yang ditentukan';
             }
 
-            $result = null;
-
-            if ($thumbnail !== null) {
-                $result = $thumbnail->store('public/item-image');
-            }
 
             $item = Item::create([
                 'code' => $code,
-                'thumbnail' => $result,
+                'thumbnail' => $thumbnail,
                 'name' => $name,
                 'description' => $description ?: null,
                 'units_id' => $unit,

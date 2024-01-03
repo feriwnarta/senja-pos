@@ -1,3 +1,4 @@
+@php use Illuminate\Support\Facades\Storage; @endphp
 <x-page-layout>
 
 
@@ -24,7 +25,7 @@
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default {{ ($notSelected) ? 'border border-danger' : '' }}"
-                                id="resupplyOutlet" wire:model="selected">
+                                id="resupplyOutlet" wire:model.live="selected" wire:change="">
                             <option value="" disabled selected>Semua outlet & central kitchen</option>
                             @foreach($outletCentralKitchenDropdown as $result)
                                 <option value="{{ $result->id }}">{{ $result->name }}</option>
@@ -48,8 +49,42 @@
     </x-slot>
 
     <div id="content-loaded">
-        <x-notify::notify/>
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="" class="table borderless table-hover">
+                    <thead class="table-head-color">
+                    <tr>
+                        <th scope="col">Kode</th>
+                        <th scope="col">Nama</th>
+                        <th scope="col">Unit</th>
+                        <th scope="col">Deskripsi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($items as $item)
+                        <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                            wire:click="">
+                            <td>{{ $item->code }}</td>
+                            <td>{{ $item->name }}</td>
+                            {{--                            <td>--}}
+                            {{--                                <img width="70" height="70" src="{{ Storage::url("{$item->thumbnail}") }}" alt=""--}}
+                            {{--                                     srcset="{{ Storage::url("{$item->thumbnail}") }} 70w, {{ Storage::url("{$item->thumbnail}") }} 100w, {{ Storage::url("{$item->thumbnail}") }} 150w"--}}
+                            {{--                                     class="img-thumbnail">--}}
+                            {{--                            </td>--}}
+                            <td>{{ $item->unit->name }}</td>
+                            <td>{{ ($item->description == '' || $item->description == null) ? 'Tanpa deskripsi' : $item->description }}</td>
+                        </tr>
+                    @endforeach
 
+
+                    </tbody>
+                </table>
+
+
+            </div>
+
+
+        </div>
     </div>
 
 

@@ -11,12 +11,24 @@ class Item extends Component
 {
 
     public array $outletCentralKitchenDropdown;
-    public string $selected = '';
+    public string $selected = 'asd';
     public bool $notSelected = false;
 
     public function render()
     {
-        return view('livewire.composition.item');
+
+        Log::debug($this->selected);
+
+        // dapatkan data item berdasarkan outlet atau central kitchen
+        $query = $this->selected
+            ? CentralKitchen::whereId($this->selected)->with('item')
+            : Outlet::whereId($this->selected)->with('item');
+        $items = $query->exists() ? $query->first()->item()->paginate(10) : \App\Models\Item::paginate(10);
+
+        Log::debug('render');
+        return view('livewire.composition.item', [
+            'items' => $items
+        ]);
     }
 
     public function mount()

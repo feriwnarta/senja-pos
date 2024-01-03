@@ -37,8 +37,37 @@
 
     <div id="content-loaded">
 
+        <div class="row">
+            <div class="col-sm-12">
+                <table id="" class="table borderless table-hover">
+                    <thead class="table-head-color">
+                    <tr>
+                        <th scope="col">Nama</th>
+                        <th scope="col">Alamat</th>
+                        <th scope="col">Nomor telpon</th>
+                        <th scope="col">Email</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($suppliers as $supplier)
+                        <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                            wire:click="">
+                            <td>{{ $supplier->name }}</td>
+                            <td>{{ ($supplier->address == '' || $supplier->address == null) ? 'Tanpa alamat' : $supplier->address }}</td>
+                            <td>{{ $supplier->phone }}</td>
+                            <td>{{ $supplier->email }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+
+
+                {{ $suppliers->links() }}
+
+
+            </div>
+        </div>
+
 
     </div>
-
-
 </x-page-layout>

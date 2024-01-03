@@ -152,6 +152,8 @@ class CreateItem extends Component
 
         if ($this->thumbnail != null) {
             $result = $this->thumbnail->store('public/item-image');
+
+
         }
 
         $item = $this->compositionService->saveItem(
@@ -159,7 +161,7 @@ class CreateItem extends Component
             $this->routeProduce,
             $this->inStock,
             $this->minimumStock,
-            $this->thumbnail,
+            $result,
             $this->isOutlet,
             $this->placement,
             $this->code,
