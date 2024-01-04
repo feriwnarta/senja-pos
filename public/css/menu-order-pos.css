@@ -1,0 +1,16 @@
+.menu-content-wrapper {
+    margin: 16px 40px 0px 50px;
+}
+
+.menu-content {
+
+}
+
+.menu-card {
+    box-shadow: 1px 0px 4px lightgrey;
+    background: hsla(0, 0%, 83%, 0.2);
+    border-radius: 6px;
+    max-width: 120px;
+    max-height: 120px;
+    margin-bottom: 30px;
+}

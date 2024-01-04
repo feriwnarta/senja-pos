@@ -21,4 +21,3 @@
     <div id="title-divider"></div>
     <div id="divider"></div>
 </div>
-

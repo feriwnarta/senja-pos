@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class PageLayout extends Component
+class PageLayoutPos extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class PageLayout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('layouts.page');
+        return view('layouts.page-pos');
     }
 }

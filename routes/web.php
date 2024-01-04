@@ -4,12 +4,14 @@ use App\Livewire\CentralKitchen\AddCentralKitchen;
 use App\Livewire\CentralKitchen\ListCentralKitchen;
 use App\Livewire\CentralKitchen\Production;
 use App\Livewire\CentralKitchen\ProductionDetail;
+use App\Livewire\Components\NavbarKasir\NavbarKasir;
 use App\Livewire\Composition\CreateItem;
 use App\Livewire\Composition\CreateRecipe;
 use App\Livewire\Composition\Item;
 use App\Livewire\Composition\Recipe;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
+use App\Livewire\PointOfSalesKasir\MenuOrder;
 use App\Livewire\Purchase\CreateSupplier;
 use App\Livewire\Purchase\Supplier;
 use App\Livewire\Warehouse\AddCategory;
@@ -74,4 +76,5 @@ Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet'
 Route::get('supplier', Supplier::class)->name('supplier');
 Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
 
-
+// Point Of Sales Kasir
+Route::get('/pos/menu', MenuOrder::class);
