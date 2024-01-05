@@ -1,6 +1,6 @@
 <div class="navbar-app">
   <livewire:components.navbar-kasir.sidebar-kasir>
-    <nav class="navbar px-5" style="background-color: #fff;">
+    <nav class="navbar sticky-top px-5" style="background-color: #fff;">
         <div class="sidebar-logo d-flex align-items-center gap-5">
             <button data-bs-toggle="offcanvas" data-bs-target="#offcanvasScrolling" role="button" aria-controls="offcanvasScrolling">
                 <img src="{{ asset('img/icons/menu.png') }}" class="" alt="Notification Bell">
