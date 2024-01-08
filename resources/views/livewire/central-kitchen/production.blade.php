@@ -50,6 +50,7 @@
                 <table id="" class="table borderless table-hover">
                     <thead class="table-head-color">
                     <tr>
+                        <th scope="col">Kode produksi</th>
                         <th scope="col">Kode referensi</th>
                         <th scope="col">Tanggal</th>
                         <th scope="col">Catatan</th>
@@ -60,6 +61,7 @@
                     @foreach($requestStock as $request)
                         <tr class="items-table-head-color" id="po1" style="cursor: pointer"
                             wire:click="detailProduction('{{ $request->id }}')">
+                            <td class="{{ $request->centralProduction->last() == null ? 'text-danger': 'code' }}">{{ ($request->centralProduction->last() == null) ? 'Menunggu produksi diterima' : $request->centralProduction->last()->code }}</td>
                             <td class="code">{{ $request->code }}</td>
                             <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
                             <td>{{ ($request->note == null) ? 'tanpa catatan' : $request->note }}</td>

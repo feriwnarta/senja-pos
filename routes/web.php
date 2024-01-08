@@ -24,6 +24,7 @@ use App\Livewire\Warehouse\ListWarehouse;
 use App\Livewire\Warehouse\StockItem;
 use App\Livewire\Warehouse\Transaction;
 use App\Livewire\Warehouse\TransactionDetail;
+use App\Livewire\Warehouse\TransactionDetailReceipt;
 use App\Livewire\Warehouse\Unit;
 use Illuminate\Support\Facades\Route;
 
@@ -61,7 +62,8 @@ Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class)-
 Route::get("warehouse/transaction", Transaction::class)->name('warehouse-transaction');
 Route::get("warehouse/transaction/add-transaction", CreateTransaction::class)->name('warehouse-add-transaction');
 
-Route::get('warehouse/transaction/detail/', TransactionDetail::class)->name('warehouse-transaction-detail');
+Route::get('warehouse/transaction/detail-out/', TransactionDetail::class)->name('warehouse-transaction-detail');
+Route::get('warehouse/transaction/detail-receipt/', TransactionDetailReceipt::class)->name('warehouse-transaction-detail-receipt');
 
 Route::get('central-kitchen/list-central-kitchen', ListCentralKitchen::class)->name('list-central-kitchen');
 Route::get('central-kitchen/list-central-kitchen/add-central-kitchen', AddCentralKitchen::class)->name('add-central-kitchen');

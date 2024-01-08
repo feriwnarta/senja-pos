@@ -166,10 +166,20 @@ class Transaction extends Component
 
     }
 
+    public function detailReceipt($id)
+    {
+
+        if ($id == '') {
+            notify()->error('Parameter id tidak boleh kosong');
+            return;
+        }
+
+        $this->redirect("/warehouse/transaction/detail-receipt/?stckReqId=$id", true);
+    }
+
 
     public function detail(string $id)
     {
-
-        $this->redirect("/warehouse/transaction/detail?option={$this->urlQuery}&wouId=$id", true);
+        $this->redirect("/warehouse/transaction/detail-out?wouId=$id", true);
     }
 }

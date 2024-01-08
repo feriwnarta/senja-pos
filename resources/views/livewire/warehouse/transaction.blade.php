@@ -112,7 +112,8 @@
                     <table id="" class="table borderless table-hover margin-top-28">
                         <thead class="table-head-color">
                         <tr>
-                            <th scope="col">Kode Permintaan stok</th>
+                            <th scope="col">Kode stok masuk</th>
+                            <th scope="col">Kode referensi</th>
                             <th scope="col">Tanggal</th>
                             <th scope="col">Catatan</th>
                             <th scope="col">Status</th>
@@ -122,7 +123,9 @@
 
                         @foreach($requestStock as $request)
                             <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                                wire:click="detailReceipt('{{ $request->id }}')"
                             >
+                                <td class="code">Menunggu diterima</td>
                                 <td class="code">{{ $request->code }}</td>
                                 <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
                                 <td>{{ ($request->note == null) ? 'tanpa catatan' : $request->note }}</td>
