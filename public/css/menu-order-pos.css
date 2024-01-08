@@ -3,7 +3,9 @@
 }
 
 .menu-content {
-
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18.5px;
 }
 
 .menu-card {
@@ -14,3 +16,7 @@
     max-height: 120px;
     margin-bottom: 30px;
 }
+
+/* ---------------------------------------
+SIDEBAR ORDER DETAIL
+--------------------------------------- */

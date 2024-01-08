@@ -1,0 +1,31 @@
+.header-active-order {
+    margin: 16px 20px;
+}
+
+.active-order-text-wrapper {
+    margin: 0px 0px 24px 32px;
+}
+
+.active-order-text {
+    
+    color: #F16622;
+    /* font-family: "Poppins Regular"; */
+    font-size: 34px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 32px;
+}
+
+.active-order-content-wrapper {
+    margin: 16px 40px 0px 50px;
+}
+
+.table-head {
+    background: #FFF7F2;
+    border-bottom: none;
+}
+
+.table-row-bordered {
+    border-bottom: 1px solid #EDEDED;
+    padding: 14px 16px;
+}

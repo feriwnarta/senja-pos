@@ -11,6 +11,7 @@ use App\Livewire\Composition\Item;
 use App\Livewire\Composition\Recipe;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
+use App\Livewire\PointOfSalesKasir\ActiveOrderPos;
 use App\Livewire\PointOfSalesKasir\MenuOrder;
 use App\Livewire\Purchase\CreateSupplier;
 use App\Livewire\Purchase\Supplier;
@@ -77,4 +78,5 @@ Route::get('supplier', Supplier::class)->name('supplier');
 Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
 
 // Point Of Sales Kasir
-Route::get('/pos/menu', MenuOrder::class);
+Route::get('/pos/menu', MenuOrder::class)->name('menu');
+Route::get('/pos/active-order', ActiveOrderPos::class)->name('active-order');

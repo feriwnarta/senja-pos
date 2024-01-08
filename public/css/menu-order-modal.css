@@ -4,12 +4,12 @@ body::-webkit-scrollbar {
 
 .modal.show .modal-dialog {
     transform: translate(0px, 72px);
+    border-radius: 6px;
 }
 
 .modal-wrapper {
     height: 600px;
     box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.12);
-    border-radius: 6px;
     border: none;
 }
 
@@ -22,10 +22,11 @@ body::-webkit-scrollbar {
 }
 
 .modal-content {
-
+    border-radius: 6px;
 }
 
 .header-body-wrapper {
+    background: #FFF;
     border-bottom: 1px solid var(--Neutral-30, #EDEDED);
     gap: 4px;
     flex-shrink: 0;
@@ -61,6 +62,7 @@ body::-webkit-scrollbar {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: space-between;
     gap: 8px;
 }
 
@@ -106,6 +108,13 @@ body::-webkit-scrollbar {
     gap: 22px;
 }
 
+.content-body-sell-type {
+    width: -webkit-fill-available;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .content-body > div {
     display: flex;
     flex-direction: row;
@@ -133,7 +142,10 @@ body::-webkit-scrollbar {
 }
 
 .modal-variasi-button1 {
-    width: 119px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 115px;
     padding: 6px;
     border-radius: 6px;
     border: 1px solid #F16622;
@@ -143,11 +155,72 @@ body::-webkit-scrollbar {
 }
 
 .modal-variasi-button2 {
-    width: 119px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 115px;
     padding: 6px;
-    border-radius: 6px;
     border-radius: 6px;
     background: #F16622;
     
     box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+}
+
+.modal-variasi-button3 {
+    width: 255px;
+    padding: 6px 16px;
+    border-radius: 6px;
+    background: #FFF;
+    border: 1px solid #E0E0E0;
+    color: #9E9E9E;
+    
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+}
+
+.note-text-area {
+    width: 523px;
+    height: 144px;
+    resize: none;
+    border-radius: 6px;
+    border: 1px solid #C2C2C2;
+    background: #FFF;
+
+    box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.12) inset;
+}
+
+.modal-variasi-footer {
+    display: flex;
+    justify-content: end;
+    gap: 16px;
+    padding: 32px 135px;
+}
+
+.modal-cancel-button {
+    display: flex;
+    width: 120px;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    border-radius: 6px;
+    border: 1px solid #F16622;
+    box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+    color: #F16622;
+}
+
+.modal-save-button {
+    display: flex;
+    width: 120px;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+
+    border-radius: 6px;
+    border: 1px solid #F16622;
+    background: #F16622;
+    
+    box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+    color: #FFF;
 }
