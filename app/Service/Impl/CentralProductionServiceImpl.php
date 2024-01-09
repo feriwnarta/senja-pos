@@ -573,4 +573,9 @@ class CentralProductionServiceImpl implements CentralProductionService
             'increment' => $nextCode,
         ];
     }
+
+    private function createItemReceipt()
+    {
+
+    }
 }
