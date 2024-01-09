@@ -642,6 +642,10 @@ class ProductionDetail extends Component
     {
 
         try {
+
+
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+
             DB::beginTransaction();
 
 
@@ -669,10 +673,13 @@ class ProductionDetail extends Component
                 ];
 
             }
-            Log::debug($itemRemaining);
-
 
             $result = $remaining->detail()->createMany($itemRemaining);
+
+            // buat pengiriman
+            $this->productionService->createProductionShipping($productionId, $this->production->centralKitchen->id, $this->production->centralKitchen->code);
+
+            $this->productionService->createItemReceipt($this->production->outbound->last()->warehouse->id, $this->components, $this->production);
 
 
             DB::commit();

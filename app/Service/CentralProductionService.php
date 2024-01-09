@@ -32,5 +32,8 @@ interface CentralProductionService
 
     public function generateCodeProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode);
 
+    public function createProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode);
+
+    public function createItemReceipt(string $warehouseId, array $itemReceiptDetail, CentralProduction $centralProduction);
 
 }

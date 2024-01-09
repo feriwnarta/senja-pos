@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\CentralProduction;
 use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseItemReceiptRef;
 use Tests\TestCase;
@@ -20,7 +19,6 @@ class TestWarehouseReceiptMorph extends TestCase
             'created_by' => '9ad7d990-82d1-4254-ab82-306a20aba28a',
         ]);
 
-        $cp = CentralProduction::first();
 
         $wh->reference()->save(new WarehouseItemReceiptRef());
 

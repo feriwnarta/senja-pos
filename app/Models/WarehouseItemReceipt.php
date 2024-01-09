@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 
-class WarehouseItemReceiptDetail extends Model
+class WarehouseItemReceipt extends Model
 {
     use HasFactory, HasUuids;
 
@@ -29,10 +30,19 @@ class WarehouseItemReceiptDetail extends Model
             $userId = Auth::check() ? Auth::id() : 'USER NOT LOGIN';
             $model->updated_by = $userId;
         });
+
+
     }
 
-    public function receipt(): BelongsTo
+    public function reference(): MorphMany
     {
-        return $this->belongsTo(WarehouseItemReceipt::class, 'warehouse_items_receipts_id');
+        return $this->morphMany(WarehouseItemReceiptRef::class, 'receivable');
     }
+
+    public function details(): HasMany
+    {
+        return $this->hasMany(WarehouseItemReceiptDetail::class, 'warehouse_items_receipts_id');
+    }
+
+
 }

@@ -9,6 +9,8 @@ use App\Models\CentralProductionShipping;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
 use App\Models\Warehouse;
+use App\Models\WarehouseItemReceipt;
+use App\Models\WarehouseItemReceiptRef;
 use App\Models\WarehouseOutbound;
 use App\Models\WarehouseOutboundHistory;
 use App\Service\CentralProductionService;
@@ -451,6 +453,8 @@ class CentralProductionServiceImpl implements CentralProductionService
                 throw new Exception('items kosong');
             }
 
+            Log::debug($items);
+
             Log::debug('finish production');
 
             // Kumpulkan semua ID yang diperlukan
@@ -471,8 +475,14 @@ class CentralProductionServiceImpl implements CentralProductionService
                     $result->update([
                         'qty_result' => $item['result_qty'],
                     ]);
+
                 }
+
             }
+
+            Log::debug('result ids');
+            Log::debug($resultIds);
+
 
             $production = CentralProduction::findOrFail($productionId);
             $production->update([
@@ -485,8 +495,6 @@ class CentralProductionServiceImpl implements CentralProductionService
                 'status' => 'Produksi selesai',
             ]);
 
-            // buat pengiriman
-            $this->createProductionShipping($productionId, $production->centralKitchen->id, $production->centralKitchen->code);
 
             DB::commit();
             return $results;
@@ -499,35 +507,29 @@ class CentralProductionServiceImpl implements CentralProductionService
         }
     }
 
-    private function createProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode)
+    public function createProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode)
     {
 
         try {
             return Cache::lock('createProductionShipping', 10)->block(5, function () use ($productionId, $centralKitchenId, $centralKitchenCode) {
-                DB::beginTransaction();
 
                 try {
                     $result = $this->generateCodeProductionShipping($productionId, $centralKitchenId, $centralKitchenCode);
 
                     if ($result && isset($result['code'], $result['increment'])) {
                         // buat shipping
-
-                        $result = CentralProductionShipping::create([
+                        CentralProductionShipping::create([
                             'central_productions_id' => $productionId,
                             'central_kitchens_id' => $centralKitchenId,
                             'code' => $result['code'],
                             'increment' => $result['increment'],
                             'description' => 'Membuat pengiriman hasil produksi',
                         ]);
-
-                        DB::commit();
-
-                        return $result;
                     } else {
                         throw new Exception('gagal membuat production shipping');
                     }
                 } catch (Exception $exception) {
-                    DB::rollBack();
+
                     Log::error('Gagal menyimpan item detail:', [
                         'message' => $exception->getMessage(),
                         'trace' => $exception->getTraceAsString(),
@@ -574,8 +576,34 @@ class CentralProductionServiceImpl implements CentralProductionService
         ];
     }
 
-    private function createItemReceipt()
+    public function createItemReceipt(string $warehouseId, array $items, CentralProduction $centralProduction)
     {
+        $warehouseReceipt = WarehouseItemReceipt::create([
+            'warehouses_id' => $warehouseId,
+        ]);
+
+        if (empty($items)) {
+            throw new Exception('parameter items array kosong');
+        }
+
+        if (!isset($centralProduction) || $centralProduction == null) {
+            throw new Exception('parameter central production model kosong atau null');
+        }
+
+        $itemReceiptDetail = [];
+
+        // Loop melalui data dan update
+        foreach ($items as $item) {
+            // tambahakn ke item receipt detail array
+            $itemReceiptDetail[] = [
+                'items_id' => $item['id'],
+                'qty_accept' => $item['result_qty']
+            ];
+        }
+
+        $warehouseReceipt->details()->createMany($itemReceiptDetail);
+
+        $centralProduction->reference()->save(new WarehouseItemReceiptRef());
 
     }
 }
