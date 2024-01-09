@@ -3,6 +3,7 @@ NAVBAR
 --------------------------------------- */
 
 .navbar {
+    padding: 10px 32px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
 }
 
@@ -19,14 +20,31 @@ input[type='search'] {
 
     border: 1px solid var(--Neutral-60, #9E9E9E);
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+
+    color: #757575;
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
 }
 
 /* ---------------------------------------
 SIDEBAR
 --------------------------------------- */
+.sidebar-text {
+    color: #404040;
+
+    font-family: "Poppins 500";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
 
 li .btn-clicked-active {
-    padding: 0px 28px;
+    padding: 0px 24px;
     margin-bottom: 8px;
 }
 

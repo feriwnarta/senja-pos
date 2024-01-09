@@ -1,0 +1,45 @@
+.active-order-wrapper {
+    margin: 16px 35px 0px 32px;
+}
+
+.header-active-order {
+    margin-bottom: 24px;
+}
+
+.active-order-text {
+    color: #F16622;
+
+    font-family: "Poppins 700";
+    font-size: 24px;
+    font-style: normal;
+    line-height: 32px;
+}
+
+.table-head {
+    background: #FFF7F2;
+    border-bottom: none;
+}
+
+.table-row-bordered {
+    border-bottom: 1px solid #EDEDED;
+    padding: 14px 16px;
+}
+
+.table-head th {
+    color: #404040;
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.table-row-bordered td {
+    color: #616161;
+    
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px
+}

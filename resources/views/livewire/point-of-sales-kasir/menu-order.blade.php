@@ -12,10 +12,11 @@
             <div class="card-body">
                 <img src="../img/chicken.png" alt="Test">
             </div>
-            <p class="text-start mt-2 fw-semibold">
+            <p class="menu-title">
                 Bubur Hot Pot
             </p>
         </Button>
         @endfor
     </div>
+    <livewire:point-of-sales-kasir.menu-order-detail>
 </x-page-layout-pos>

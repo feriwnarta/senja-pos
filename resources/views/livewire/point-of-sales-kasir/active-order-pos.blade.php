@@ -1,10 +1,8 @@
 <x-page-layout-pos>
-  <div class="header-active-order">
-    <div class="active-order-text-wrapper">
+  <div class="active-order-wrapper">
+    <div class="header-active-order">
       <h1 class="active-order-text">Pesanan Aktif</h1>
     </div>
-  </div>
-  <div class="active-order-content-wrapper">
     <table class="table table-borderless">
       <thead class="table-head">
         <tr>
@@ -14,21 +12,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="table-row-bordered">
+        @for ($i = 0; $i < 5; $i++) <tr class="table-row-bordered">
           <td>T17</td>
           <td>William</td>
           <td>Dine in</td>
-        </tr>
-        <tr class="table-row-bordered">
-          <td>T17</td>
-          <td>William</td>
-          <td>Dine in</td>
-        </tr>
-        <tr class="table-row-bordered">
-          <td>T17</td>
-          <td>William</td>
-          <td>Dine in</td>
-        </tr>
+          </tr>
+          @endfor
       </tbody>
     </table>
   </div>

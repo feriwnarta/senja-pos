@@ -6,27 +6,30 @@
   <div class="offcanvas-body">
     <ul class="navbar-nav">
       <div class="sidebar-button-container">
-        <button class="btn-clicked-active" type="button" href="#"><i class="cash-icon"></i>Point Of Sales</a>
+        <button class="btn-clicked-active sidebar-text" type="button" href="/pos/menu" wire:navigate><i
+            class="cash-icon"></i>Point Of Sales</button>
       </div>
       <div class="accordion" id="accordionExample">
         <div class="accordion-item">
           <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            <button class="accordion-button collapsed sidebar-text" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
               <i class="clipboard-icon"></i>
               Daftar Pesanan
             </button>
           </h2>
-          <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+          <div id="collapseTwo" class="accordion-collapse collapse sidebar-text" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <li><button class="btn-clicked-active text-decoration-none" href="#">Action</a></li>
-              <li><button class="btn-clicked-active text-decoration-none" href="#">Another action</a></li>
+              <li><button class="btn-clicked-active text-decoration-none sidebar-text" href="/pos/active-order"
+                  wire:navigate>Pesanan Aktif</a></li>
+              <li><button class="btn-clicked-active text-decoration-none sidebar-text" href="#">Riwayat Pesanan</a>
+              </li>
             </div>
           </div>
         </div>
         <div class="accordion-item">
           <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            <button class="accordion-button collapsed sidebar-text" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
               <i class="clock-icon"></i>
               Shift & Transaksi Finansial
@@ -34,14 +37,14 @@
           </h2>
           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <li><button class="btn-clicked-active" href="#">Action</a></li>
-              <li><button class="btn-clicked-active" href="#">Another action</a></li>
-              <li><button class="btn-clicked-active" href="#">Something else here</a></li>
+              <li><button class="btn-clicked-active sidebar-text" href="/pos/active-shift">Shift Aktif</a></li>
+              <li><button class="btn-clicked-active sidebar-text" href="#">Riwayat Shift</a></li>
+              <li><button class="btn-clicked-active sidebar-text" href="#">Mutasi</a></li>
             </div>
           </div>
         </div>
       </div>
-      <div class="sidebar-button-container">
+      <div class="sidebar-button-container sidebar-text">
         <button class="btn-clicked-active" type="button">
           <i class="setting-icon"></i>
           Settings

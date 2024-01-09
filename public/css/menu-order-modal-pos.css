@@ -3,7 +3,7 @@ body::-webkit-scrollbar {
 }
 
 .modal.show .modal-dialog {
-    transform: translate(0px, 72px);
+    transform: translate(0px, 55px);
     border-radius: 6px;
 }
 
@@ -34,19 +34,19 @@ body::-webkit-scrollbar {
 
 .menu-name {
     color: #616161;
-
+    
+    font-family: "Poppins 500";
     font-size: 20px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 28px;
+    line-height: 28px
 }
 
 .menu-price {
     color: #404040;
     
+    font-family: "Poppins 700";
     font-size: 20px;
     font-style: normal;
-    font-weight: 700;
     line-height: 28px;
 }
 
@@ -72,21 +72,22 @@ body::-webkit-scrollbar {
     gap: 8px;
 }
 
+
 .inline-text {
     color: #616161;
 
+    font-family: "Poppins 700";
     font-size: 14px;
     font-style: normal;
-    font-weight: 700;
     line-height: 20px;
 }
 
 .inline-text-2 {
-    color: var(--Neutral-60, #9E9E9E);
+    color: #9E9E9E;
     
+    font-family: "Poppins 400";
     font-size: 12px;
     font-style: normal;
-    font-weight: 400;
     line-height: 16px;
 }
 
@@ -105,6 +106,16 @@ body::-webkit-scrollbar {
 .content-body {
     display: flex;
     align-items: center;
+    gap: 22px;
+}
+
+.content-body-toping {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.choose-multiple-wrapper {
     gap: 22px;
 }
 
@@ -130,6 +141,12 @@ body::-webkit-scrollbar {
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
 
     color: #9E9E9E;
+    text-align: center;
+    /* Button */
+    font-family: "Poppins 500";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
 }
 
 .modal-variasi-input {
@@ -139,6 +156,57 @@ body::-webkit-scrollbar {
     border: 1px solid #C2C2C2;
     background: #FFF;
     box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.12) inset;
+
+    color: #757575;
+
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.choose-multiple {
+    width: 161px;
+
+    border-radius: 6px;
+    border: 1px solid #E0E0E0;
+    background: #FFF;
+
+    /* Shadow 1 */
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+}
+
+.choose-multiple label {
+    width: 161px;
+    text-align: center;
+}
+
+.choose-multiple label input {
+    display: none;
+    width: 161px;
+}
+
+.choose-multiple label span {
+    display: block;
+    padding: 6px 16px;
+
+    color: #9E9E9E;
+
+    font-family: "Poppins 500";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.choose-multiple input:checked + span {
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+    border-radius: 6px;
+    border: 1px solid #F16622;
+    background: #F2C6AF;
+    height: 32px;
+
+    color: #F16622;
 }
 
 .modal-variasi-button1 {
@@ -172,9 +240,15 @@ body::-webkit-scrollbar {
     border-radius: 6px;
     background: #FFF;
     border: 1px solid #E0E0E0;
-    color: #9E9E9E;
     
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+
+    color: #9E9E9E;
+
+    font-family: "Poppins 500";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
 }
 
 .note-text-area {
@@ -206,7 +280,15 @@ body::-webkit-scrollbar {
     border-radius: 6px;
     border: 1px solid #F16622;
     box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+
     color: #F16622;
+
+    font-family: "Poppins 500";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: -0.176px;
 }
 
 .modal-save-button {
@@ -223,4 +305,11 @@ body::-webkit-scrollbar {
     
     box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
     color: #FFF;
+
+    font-family: "Poppins 500";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    letter-spacing: -0.176px;
 }

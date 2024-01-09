@@ -14,12 +14,14 @@
         @notifyCss
         {{--
         <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
-        <link rel="stylesheet" href="{{ asset('css/navbar.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/font-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/navbar-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/header-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/menu-order-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/menu-order-modal.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/menu-order-modal-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/icon-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/active-order.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/active-order-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/sidebar-pos.css') }}">
 
         <script src="{{ asset('js/jquery.js') }}"></script>
         <script src="{{ asset('data-table/datatables.js') }}"></script>

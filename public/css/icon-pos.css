@@ -8,7 +8,6 @@ NAVBAR ICON
     height: 1.5rem;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-right: 0.5em;
     background-image: url(../img/icons/menu.png);
     vertical-align: middle;
 }
@@ -30,7 +29,6 @@ NAVBAR ICON
     height: 1.5rem;
     background-repeat: no-repeat;
     background-size: cover;
-    margin-right: 0.5em;
     background-image: url(../img/icons/bell.png);
     vertical-align: middle;
 }

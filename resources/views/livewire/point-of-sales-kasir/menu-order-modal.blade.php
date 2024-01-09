@@ -2,8 +2,8 @@
     <div class="modal-content">
         <div
             class="modal-header header-body-wrapper d-flex flex-column justify-content-center align-items-center sticky-top">
-            <h1 class="modal-title menu-name fs-5" id="exampleModalLabel">Modal title</h1>
-            <h1 class="modal-title menu-price fs-5" id="exampleModalLabel">Rp. 0</h1>
+            <h1 class="modal-title menu-name" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title menu-price" id="exampleModalLabel">Rp. 0</h1>
         </div>
         <form class="modal-body modal-body-wrapper d-flex flex-column justify-content-center align-items-center">
             <div class="modal-content-wrapper">
@@ -26,17 +26,10 @@
                     <span class="inline-text-2">Pilih Salah Satu</span>
                 </div>
                 <div class="line-divider"></div>
-                <div class="content-body flex-column">
-                    <div>
-                        <button type="button" class="modal-variasi-button">Satu</button>
-                        <button type="button" class="modal-variasi-button">Dua</button>
-                        <button type="button" class="modal-variasi-button">Tiga</button>
-                    </div>
-                    <div>
-                        <button type="button" class="modal-variasi-button">Satu</button>
-                        <button type="button" class="modal-variasi-button">Dua</button>
-                        <button type="button" class="modal-variasi-button">Tiga</button>
-                    </div>
+                <div class="content-body">
+                    <button type="button" class="modal-variasi-button">Satu</button>
+                    <button type="button" class="modal-variasi-button">Dua</button>
+                    <button type="button" class="modal-variasi-button">Tiga</button>
                 </div>
             </div>
             <div class="modal-content-wrapper">
@@ -46,10 +39,41 @@
                     <span class="inline-text-2">Pilih Salah Satu / Lebih Dari Satu</span>
                 </div>
                 <div class="line-divider"></div>
-                <div class="content-body">
-                    <button type="button" class="modal-variasi-button">Satu</button>
-                    <button type="button" class="modal-variasi-button">Dua</button>
-                    <button type="button" class="modal-variasi-button">Tiga</button>
+                <div class="content-body-toping flex-column">
+                    <div class="d-flex flex-row choose-multiple-wrapper">
+                        <div class="choose-multiple">
+                            <label>
+                                <input type="checkbox" value="satu"><span>Satu</span>
+                            </label>
+                        </div>
+                        <div class="choose-multiple">
+                            <label>
+                                <input type="checkbox" value="dua"><span>Dua</span>
+                            </label>
+                        </div>
+                        <div class="choose-multiple">
+                            <label>
+                                <input type="checkbox" value="tiga"><span>Tiga</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row choose-multiple-wrapper">
+                        <div class="choose-multiple">
+                            <label>
+                                <input type="checkbox" value="satu"><span>Satu</span>
+                            </label>
+                        </div>
+                        <div class="choose-multiple">
+                            <label>
+                                <input type="checkbox" value="dua"><span>Dua</span>
+                            </label>
+                        </div>
+                        <div class="choose-multiple">
+                            <label>
+                                <input type="checkbox" value="tiga"><span>Tiga</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-content-wrapper">

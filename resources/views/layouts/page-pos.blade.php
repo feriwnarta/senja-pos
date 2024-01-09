@@ -1,11 +1,8 @@
 <div>
-    <header>
-        <livewire:components.navbar-kasir.navbar-kasir>
-    </header>
+    <livewire:components.navbar-kasir.navbar-kasir>
+        <div class="content">
 
-    <div class="content">
+            {{ $slot }}
 
-        {{ $slot }}
-        
-    </div>
+        </div>
 </div>

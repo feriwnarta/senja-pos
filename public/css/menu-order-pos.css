@@ -1,11 +1,11 @@
 .menu-content-wrapper {
-    margin: 16px 40px 0px 50px;
+    margin: 16px 20px 0px 34px;
 }
 
 .menu-content {
     display: flex;
     flex-wrap: wrap;
-    gap: 18.5px;
+    gap: 21px;
 }
 
 .menu-card {
@@ -17,6 +17,21 @@
     margin-bottom: 30px;
 }
 
+.menu-title {
+    display: flex;
+    align-items: start;
+    margin-top: 6px;
+
+    overflow: hidden;
+    color: #404040;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-family: "Poppins 400";
+    font-size: 12px;
+    font-style: normal;
+    line-height: 16px;
+}
 /* ---------------------------------------
 SIDEBAR ORDER DETAIL
 --------------------------------------- */
