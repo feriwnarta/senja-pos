@@ -644,8 +644,6 @@ class ProductionDetail extends Component
         try {
 
 
-            $this->productionService = app()->make(CentralProductionServiceImpl::class);
-
             DB::beginTransaction();
 
 
@@ -676,12 +674,6 @@ class ProductionDetail extends Component
 
             $result = $remaining->detail()->createMany($itemRemaining);
 
-            // buat pengiriman
-            $this->productionService->createProductionShipping($productionId, $this->production->centralKitchen->id, $this->production->centralKitchen->code);
-
-            $this->productionService->createItemReceipt($this->production->outbound->last()->warehouse->id, $this->components, $this->production);
-
-
             DB::commit();
 
             if ($result) {
@@ -709,6 +701,8 @@ class ProductionDetail extends Component
     {
 
         try {
+            $this->productionService = app()->make(CentralProductionServiceImpl::class);
+
             DB::beginTransaction();
 
             if (!isset($this->requestStock) && $this->requestStock == null) {
@@ -719,6 +713,17 @@ class ProductionDetail extends Component
                 'desc' => 'Selesai proses produksi, hasil produksi dikirim',
                 'status' => 'Selesai produksi',
             ]);
+
+            if (empty($this->components)) {
+                $this->resultProduction();
+            }
+
+
+            // buat pengiriman
+            $this->productionService->createProductionShipping($this->production->id, $this->production->centralKitchen->id, $this->production->centralKitchen->code);
+
+            // buat draft item receipt
+            $this->productionService->createItemReceipt($this->production->outbound->last()->warehouse->id, $this->components, $this->production);
 
             DB::commit();
 
