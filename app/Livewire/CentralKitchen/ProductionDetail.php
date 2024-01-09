@@ -60,7 +60,7 @@ class ProductionDetail extends Component
         $outboundId = $this->production->outbound()->latest()->first()->id;
 
         $this->storeItemReceipt($this->components, $outboundId);
-        
+
     }
 
     /**
@@ -755,7 +755,7 @@ class ProductionDetail extends Component
             notify()->error('Gagal menyelesaikan produksi', 'Error');
 
         } catch (Exception $exception) {
-            Log::error('gagak menyimpan hasil produksi dari production detail');
+            Log::error('gagal menyimpan hasil produksi dari production detail');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
             notify()->error('Gagal menyelesaikan produksi', 'Error');

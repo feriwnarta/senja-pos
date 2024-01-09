@@ -36,6 +36,8 @@ class TransactionDetail extends Component
     public function boot()
     {
         $this->initMode();
+        Log::debug($this->error);
+        return;
 
         $this->searchOutboundHistory();
     }
@@ -45,7 +47,9 @@ class TransactionDetail extends Component
     {
         $result = $this->findOutboundById($this->outboundId);
 
+
         if ($result == null) {
+
             $this->error = 'Detail stok keluar tidak valid, harap kembali dan muat ulang';
             return;
         }

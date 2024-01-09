@@ -34,9 +34,24 @@
 
         <div class="row">
 
-            <div class="col-sm-12">
+            <div class="col-sm-5 offset-1">
 
+                @if($error != '')
+                    <h1 class="subtitle-3-medium"> {{ $error }}</h1>
+                @else
+                    <div>
+                        <p class="subtitle-3-regular">Kode penerimaan</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">-</p>
+                    </div>
 
+                    <div class="margin-top-24">
+                        <p class="subtitle-3-regular">Kode referensi</p>
+                        <div id="divider" class="margin-top-6"></div>
+                        <p class="margin-top-6 subtitle-3-medium">{{ $requestStock->code }}</p>
+                    </div>
+
+                @endif
             </div>
 
         </div>

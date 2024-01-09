@@ -23,18 +23,19 @@
                             </button>
                         </div>
 
-                        @if($warehouseOutbound->code != '')
-                            <button type="btn"
-                                    class="btn btn-text-only-primary btn-nav margin-left-10"
-                                    wire:loading.attr="disabled" wire:click="sendItem">Kirim
-                            </button>
-                        @else
-                            <button type="btn"
-                                    class="btn btn-text-only-primary btn-nav margin-left-10"
-                                    wire:loading.attr="disabled" wire:click="acceptAndNext">Terima dan lanjutkan
-                            </button>
+                        @if($this->error == '' )
+                            @if($warehouseOutbound->code != '')
+                                <button type="btn"
+                                        class="btn btn-text-only-primary btn-nav margin-left-10"
+                                        wire:loading.attr="disabled" wire:click="sendItem">Kirim
+                                </button>
+                            @else
+                                <button type="btn"
+                                        class="btn btn-text-only-primary btn-nav margin-left-10"
+                                        wire:loading.attr="disabled" wire:click="acceptAndNext">Terima dan lanjutkan
+                                </button>
+                            @endif
                         @endif
-
                     </div>
                 @endif
             </div>
@@ -46,7 +47,7 @@
     <div id="content-loaded">
         <x-notify::notify/>
 
-        @if($error != '')
+        @if($this->error != '')
             <p class="subtitle-3-medium">{{ $error }}</p>
         @else
 
