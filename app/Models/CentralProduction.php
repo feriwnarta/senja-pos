@@ -58,4 +58,10 @@ class CentralProduction extends Model
     }
 
 
+    public function shipping(): HasMany
+    {
+        return $this->hasMany(CentralProductionShipping::class, 'central_productions_id');
+    }
+
+
 }

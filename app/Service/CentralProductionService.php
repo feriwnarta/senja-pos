@@ -30,4 +30,7 @@ interface CentralProductionService
 
     public function finishProduction(array $items, string $productionId, string $note);
 
+    public function generateCodeProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode);
+
+
 }

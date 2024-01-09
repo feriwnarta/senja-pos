@@ -141,15 +141,15 @@ class Transaction extends Component
         }
 
         if ($this->urlQuery == 'stockIn') {
-            $data = RequestStock::where(function ($query) {
-                $query->whereHas('requestStockHistory', function ($historyQuery) {
-                    $historyQuery->where('status', 'Selesai produksi');
-                });
-
-                if (!empty($this->id)) {
+            $data = RequestStock::with(['centralProduction.shipping'])
+                ->whereHas('centralProduction', function ($query) {
+                    $query->whereHas('shipping'); // Check for existing shipping record
+                })
+                ->when(!empty($this->id), function ($query) {
                     $query->where('warehouses_id', $this->id);
-                }
-            })->orderBy('id', 'DESC')->paginate(10);
+                })
+                ->orderBy('id', 'DESC')
+                ->paginate(10);
         }
 
         if ($this->urlQuery == 'stockOut') {

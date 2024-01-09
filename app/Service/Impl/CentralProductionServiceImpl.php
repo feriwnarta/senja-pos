@@ -5,6 +5,7 @@ namespace App\Service\Impl;
 use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
 use App\Models\CentralProductionResult;
+use App\Models\CentralProductionShipping;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
 use App\Models\Warehouse;
@@ -484,9 +485,11 @@ class CentralProductionServiceImpl implements CentralProductionService
                 'status' => 'Produksi selesai',
             ]);
 
+            // buat pengiriman
+            $this->createProductionShipping($productionId, $production->centralKitchen->id, $production->centralKitchen->code);
+
             DB::commit();
             return $results;
-
 
         } catch (Exception $exception) {
             DB::rollBack();
@@ -494,5 +497,80 @@ class CentralProductionServiceImpl implements CentralProductionService
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }
+    }
+
+    private function createProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode)
+    {
+
+        try {
+            return Cache::lock('createProductionShipping', 10)->block(5, function () use ($productionId, $centralKitchenId, $centralKitchenCode) {
+                DB::beginTransaction();
+
+                try {
+                    $result = $this->generateCodeProductionShipping($productionId, $centralKitchenId, $centralKitchenCode);
+
+                    if ($result && isset($result['code'], $result['increment'])) {
+                        // buat shipping
+
+                        $result = CentralProductionShipping::create([
+                            'central_productions_id' => $productionId,
+                            'central_kitchens_id' => $centralKitchenId,
+                            'code' => $result['code'],
+                            'increment' => $result['increment'],
+                            'description' => 'Membuat pengiriman hasil produksi',
+                        ]);
+
+                        DB::commit();
+
+                        return $result;
+                    } else {
+                        throw new Exception('gagal membuat production shipping');
+                    }
+                } catch (Exception $exception) {
+                    DB::rollBack();
+                    Log::error('Gagal menyimpan item detail:', [
+                        'message' => $exception->getMessage(),
+                        'trace' => $exception->getTraceAsString(),
+                    ]);
+                    throw $exception; // Re-throw for further handling
+                }
+            });
+        } catch (LockTimeoutException $e) {
+            Log::error('Gagal mendapatkan lock:', [
+                'message' => $e->getMessage(),
+            ]);
+            throw new Exception('Lock tidak didapatkan selama 5 detik');
+        } catch (Exception $exception) {
+            Log::error('Error saat membuat shipping produksi:', [
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            throw $exception; // Re-throw for further handling
+        }
+
+    }
+
+    public function generateCodeProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode)
+    {
+        $latest = CentralProductionShipping::where('central_kitchens_id', $centralKitchenId)->latest()->first();
+
+        $currentYearMonth = Carbon::now()->format('Ym');
+
+        $nextCode = 1;
+        if ($latest) {
+            $latestShippingDate = Carbon::parse($latest->created_at)->format('Ym');
+            if ($latestShippingDate === $currentYearMonth) {
+                $nextCode = $latest->increment + 1;
+            }
+        }
+
+
+        $currentYearMonth = Carbon::now()->format('Ymd');
+
+        $code = "CENTRALSHIPPING{$centralKitchenCode}{$currentYearMonth}{$nextCode}";
+
+        return [
+            'code' => $code,
+            'increment' => $nextCode,
+        ];
     }
 }
