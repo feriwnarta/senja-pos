@@ -30,7 +30,6 @@
                             wire:loading.attr="disabled">
                             <option value="all" selected disabled>Semua gudang</option>
                             @if(!empty($warehouses))
-
                                 @foreach($warehouses as $warehouse)
                                     <option value="{{ $warehouse['id'] }}">{{ $warehouse['name'] }}</option>
                                 @endforeach

@@ -14,12 +14,13 @@
                 </div>
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                    @if($itemReceiptRef->itemReceipt->history->last()->status == 'DRAFT')
-                        <button type="btn"
-                                class="btn btn-text-only-danger btn-nav margin-left-10" wire:click="create"
-                                wire:loading.attr="disabled">Tolak
-                        </button>
+                    <button type="btn"
+                            class="btn btn-text-only-danger btn-nav margin-left-10"
+                            wire:click="reject('{{ $itemReceiptRef->itemReceipt->id }}')"
+                            wire:loading.attr="disabled">Tolak
+                    </button>
 
+                    @if($itemReceiptRef->itemReceipt->history->last()->status == 'Draft' || $itemReceiptRef->itemReceipt->history->last()->status == 'Ditolak')
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
                                 wire:loading.attr="disabled"

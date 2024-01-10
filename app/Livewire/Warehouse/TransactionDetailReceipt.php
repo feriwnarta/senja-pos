@@ -2,10 +2,12 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseItemReceiptRef;
 use App\Service\Impl\WarehouseItemReceiptServiceImpl;
 use App\Service\WarehouseItemReceiptService;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -56,7 +58,6 @@ class TransactionDetailReceipt extends Component
         }
 
         return false;
-
     }
 
     /**
@@ -136,6 +137,50 @@ class TransactionDetailReceipt extends Component
             return;
 
         }
+    }
+
+    public function reject($itemReceiptRefId)
+    {
+
+        // lakukan proses reject
+        try {
+            DB::beginTransaction();
+
+            // Gunakan 'firstOrFail()' untuk mengatasi exception jika tidak ditemukan
+            $warehouseReceipt = WarehouseItemReceipt::with('details')->find($itemReceiptRefId)->firstOrFail();
+
+
+            $warehouseReceipt->history()->create([
+                'desc' => 'Penerimaan barang ditolak',
+                'status' => 'Ditolak'
+            ]);
+
+            // Gunakan 'each' untuk mengiterasi koleksi dan update setiap model
+            $warehouseReceipt->details->each(function ($detail) {
+                $detail->update(['qty_accept' => 0]);
+            });
+
+            DB::commit();
+
+            notify()->success('Berhasil menolak penerimaan barang');
+            $itemReceiptRef = $this->getItemReceiptDetail($this->receiptRefId);
+            $this->itemReceiptRef = $itemReceiptRef;
+
+
+        } catch (ModelNotFoundException $exception) {
+            DB::rollBack();
+            notify()->error('Gagal menolak penerimaan barang: Data tidak ditemukan');
+            Log::error("Gagal menolak item receipt $itemReceiptRefId: Data tidak ditemukan");
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        } catch (Exception $exception) {
+            DB::rollBack();
+            notify()->error('Gagal menolak penerimaan barang');
+            Log::error("Gagal menolak item receipt $itemReceiptRefId");
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
     }
 
 

@@ -610,7 +610,7 @@ class CentralProductionServiceImpl implements CentralProductionService
         // buat history item receipt
         $warehouseReceipt->history()->create([
             'desc' => 'Membuat draft penerimaan barang dari produksi',
-            'status' => 'DRAFT',
+            'status' => 'Draft',
         ]);
 
         // Simpan detail-item penerimaan barang

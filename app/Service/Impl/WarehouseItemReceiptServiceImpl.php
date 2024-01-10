@@ -55,7 +55,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
                     // update history warehouse receipt
                     $warehouseReceipt->history()->create([
                         'desc' => 'Menerima penerimaan barang',
-                        'status' => 'APPROVED',
+                        'status' => 'Diterima',
                     ]);
 
                     DB::commit();
@@ -92,7 +92,10 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 
         // jika sudah tersedia maka lemparkan saja error kode sudah terisi
         if ($warehouseItemReceipt->code !== null) {
-            throw new Exception('Kode sudah ada, gagal men-generate kode baru');
+            return [
+                'code' => $warehouseItemReceipt->code,
+                'increment' => $warehouseItemReceipt->increment,
+            ];
         }
 
         // dapatkan kode terakhir
