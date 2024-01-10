@@ -23,7 +23,7 @@
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
                             wire:loading.attr="disabled"
-                            wire:click="acceptItemReceipt('{{ $itemReceiptRef->itemReceipt->id }}')">
+                            wire:click="acceptItemReceipt('{{ $itemReceiptRef->itemReceipt->id }}', '{{ $itemReceiptRef->itemReceipt->warehouse->id }}', '{{ $itemReceiptRef->itemReceipt->warehouse->warehouse_code }}')">
                         Terima
                     </button>
 
@@ -41,8 +41,6 @@
         <div class="row">
 
             <div class="col-sm-5 offset-1">
-
-                {{ $itemReceiptRef }}
 
                 @if($error != '')
                     <h1 class="subtitle-3-medium"> {{ $error }}</h1>

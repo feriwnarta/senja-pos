@@ -165,6 +165,7 @@ class Transaction extends Component
 
         if ($id == '') {
             notify()->error('Parameter id tidak boleh kosong');
+            Log::error("id detail receipt kosong = $id");
             return;
         }
 

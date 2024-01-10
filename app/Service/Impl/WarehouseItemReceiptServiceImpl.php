@@ -38,7 +38,9 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
                     $code = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
 
                     // update warehouse receipt
-                    $warehouseReceipt = WarehouseItemReceipt::find($itemReceiptId)->update([
+                    $warehouseReceipt = WarehouseItemReceipt::find($itemReceiptId);
+
+                    $warehouseReceipt->update([
                         'code' => $code['code'],
                         'increment' => $code['increment'],
                     ]);
@@ -50,6 +52,11 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
                         ]);
                     }
 
+                    // update history warehouse receipt
+                    $warehouseReceipt->history()->create([
+                        'desc' => 'Menerima penerimaan barang',
+                        'status' => 'APPROVED',
+                    ]);
 
                     DB::commit();
 
