@@ -45,6 +45,11 @@ class WarehouseItemReceipt extends Model
         return $this->hasMany(WarehouseItemReceiptDetail::class, 'warehouse_items_receipts_id');
     }
 
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouses_id');
+    }
+
     public function history(): HasMany
     {
         return $this->hasMany(WarehouseItemReceiptHistory::class, 'warehouse_item_receipts_id');

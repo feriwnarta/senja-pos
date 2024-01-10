@@ -35,4 +35,9 @@ class WarehouseItemReceiptDetail extends Model
     {
         return $this->belongsTo(WarehouseItemReceipt::class, 'warehouse_items_receipts_id');
     }
+
+    public function items(): BelongsTo
+    {
+        return $this->belongsTo(Item::class, 'items_id');
+    }
 }

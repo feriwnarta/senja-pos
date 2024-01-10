@@ -14,11 +14,17 @@
                 </div>
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
+                    <button type="btn"
+                            class="btn btn-text-only-danger btn-nav margin-left-10" wire:click="create"
+                            wire:loading.attr="disabled">Tolak
+                    </button>
 
 
                     <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
-                            wire:loading.attr="disabled">Validasi dan terima
+                            class="btn btn-text-only-primary btn-nav margin-left-10"
+                            wire:loading.attr="disabled"
+                            wire:click="acceptItemReceipt('{{ $itemReceiptRef->itemReceipt->id }}')">
+                        Terima
                     </button>
 
 
@@ -35,6 +41,8 @@
         <div class="row">
 
             <div class="col-sm-5 offset-1">
+
+                {{ $itemReceiptRef }}
 
                 @if($error != '')
                     <h1 class="subtitle-3-medium"> {{ $error }}</h1>
@@ -71,16 +79,27 @@
                             </thead>
                             <tbody>
 
-                            @if($itemReceiptRef->receivable instanceof CentralProduction)
-                                @foreach($itemReceiptRef->receivable->result as $item)
+                            @if ($itemReceiptRef->receivable instanceof CentralProduction && isset($itemReceiptRef->itemReceipt->details))
+                                @foreach ($itemReceiptRef->itemReceipt->details as $key => $item)
+
+                                    @php
+                                        $this->dataItemReceipt[$key] = [
+                                            'id' => $item->id,
+                                            'qty_accept' => $item->qty_accept,
+                                        ];
+                                    @endphp
+
                                     <tr>
-                                        <td>{{ $item->targetItem->name }}</td>
-                                        <td>{{ $item->qty_result }}</td>
-                                        <td>0</td>
-                                        <td>{{ $item->targetItem->unit->name }}</td>
+                                        <td>{{ $item->items->name }}</td>
+                                        <td>{{ $item->qty_send }}</td>
+                                        <td>
+                                            <input type="number" class="form-control input-default"
+                                                   wire:model="dataItemReceipt.{{ $key }}.qty_accept"
+                                            >
+                                        </td>
+                                        <td>{{ $item->items->unit->name }}</td>
                                     </tr>
                                 @endforeach
-
                             @endif
                             </tbody>
                         </table>

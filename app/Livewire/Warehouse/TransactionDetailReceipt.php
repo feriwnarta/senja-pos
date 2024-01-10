@@ -17,6 +17,8 @@ class TransactionDetailReceipt extends Component
 
     public WarehouseItemReceiptRef $itemReceiptRef;
 
+    public array $dataItemReceipt = [];
+
 
     public function render()
     {
@@ -64,7 +66,8 @@ class TransactionDetailReceipt extends Component
             return WarehouseItemReceiptRef::with([
                 'receivable',
                 'itemReceipt.history',
-                'receivable.result.targetItem',
+                'itemReceipt.warehouse',
+                'itemReceipt.details.items',
             ])
                 ->findOrFail($receiptRefId);
         } catch (Exception $exception) {
@@ -72,6 +75,30 @@ class TransactionDetailReceipt extends Component
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }
+
+    }
+
+
+    /**
+     * lakukan proses penerimaan item receipt
+     * @param $itemReceiptRefId
+     * @return void
+     */
+    public function acceptItemReceipt($itemReceiptRefId)
+    {
+
+        if ($itemReceiptRefId == null || !isset($itemReceiptRefId)) {
+            notify()->error('Ada sesuatu yang salah');
+        }
+
+        $this->validate([
+            'dataItemReceipt.*.qty_accept' => 'numeric|min:1'
+        ]);
+
+    }
+
+    public function storeItemReceipt()
+    {
 
     }
 

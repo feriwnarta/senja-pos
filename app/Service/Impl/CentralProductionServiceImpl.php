@@ -594,7 +594,7 @@ class CentralProductionServiceImpl implements CentralProductionService
             // tambahakn ke item receipt detail array
             $itemReceiptDetail[] = [
                 'items_id' => $item['id'],
-                'qty_accept' => $item['result_qty']
+                'qty_send' => $item['result_qty']
             ];
         }
 
