@@ -1,4 +1,4 @@
-@php use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
+@php use App\Models\CentralProduction;use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -56,6 +56,7 @@
                         <div id="divider" class="margin-top-6"></div>
                         <p class="margin-top-6 subtitle-3-medium">{{ Carbon::createFromFormat('Y-m-d H:i:s', $itemReceiptRef->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</p>
                     </div>
+
                     <div class="margin-top-24">
                         <p class="subtitle-3-regular">Item produksi</p>
                         <div id="divider" class="margin-top-6"></div>
@@ -69,15 +70,18 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($itemReceiptRef->receivable->result as $item)
-                                <tr>
-                                    <td>{{ $item->targetItem->name }}</td>
-                                    <td>{{ $item->qty_result }}</td>
-                                    <td>0</td>
-                                    <td>{{ $item->targetItem->unit->name }}</td>
-                                </tr>
 
-                            @endforeach
+                            @if($itemReceiptRef->receivable instanceof CentralProduction)
+                                @foreach($itemReceiptRef->receivable->result as $item)
+                                    <tr>
+                                        <td>{{ $item->targetItem->name }}</td>
+                                        <td>{{ $item->qty_result }}</td>
+                                        <td>0</td>
+                                        <td>{{ $item->targetItem->unit->name }}</td>
+                                    </tr>
+                                @endforeach
+
+                            @endif
                             </tbody>
                         </table>
                     </div>

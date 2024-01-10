@@ -64,10 +64,7 @@ class TransactionDetailReceipt extends Component
             return WarehouseItemReceiptRef::with([
                 'receivable',
                 'itemReceipt.history',
-                'receivable' => fn($query) => $query->when(
-                    request()->route('model') instanceof CentralProduction,
-                    fn($q) => $q->with(['result.targetItem'])
-                )
+                'receivable.result.targetItem',
             ])
                 ->findOrFail($receiptRefId);
         } catch (Exception $exception) {
