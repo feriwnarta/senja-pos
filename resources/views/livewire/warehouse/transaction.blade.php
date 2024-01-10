@@ -1,4 +1,4 @@
-@php use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
+@php use App\Models\CentralProduction;use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -121,16 +121,12 @@
                         <tbody>
 
                         @foreach($requestStock as $request)
+                            <tr class="items-table-head-color" id="po1" style="cursor: pointer">
+                                <td>{{ $request->code ?? ' - ' }}</td>
+                                <td>{{Log::info( ($request->reference)) }}</td>
 
-                            {{ Log::info($request) }}
-                            <tr class="items-table-head-color" id="po1" style="cursor: pointer"
-                                wire:click="detailReceipt('{{ $request->id }}')"
-                            >
-                                <td class="code">Menunggu diterima</td>
-                                <td class="code">{{ $request->centralProduction->last()->shipping->last()->code }}</td>
-                                <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->centralProduction->last()->shipping->last()->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
-                                <td>Menunggu diterima</td>
                             </tr>
+
                         @endforeach
                         </tbody>
                     </table>

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\CentralProduction;
 use App\Models\WarehouseItemReceipt;
-use App\Models\WarehouseItemReceiptRef;
 use Tests\TestCase;
 
 class TestWarehouseReceiptMorph extends TestCase
@@ -20,7 +20,9 @@ class TestWarehouseReceiptMorph extends TestCase
         ]);
 
 
-        $wh->reference()->save(new WarehouseItemReceiptRef());
+        $wh->reference()->save(new CentralProduction());
 
     }
+
+
 }

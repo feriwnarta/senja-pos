@@ -578,9 +578,6 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     public function createItemReceipt(string $warehouseId, array $items, CentralProduction $centralProduction)
     {
-        $warehouseReceipt = WarehouseItemReceipt::create([
-            'warehouses_id' => $warehouseId,
-        ]);
 
         if (empty($items)) {
             throw new Exception('parameter items array kosong');
@@ -601,9 +598,24 @@ class CentralProductionServiceImpl implements CentralProductionService
             ];
         }
 
+        // Simpan referensi terlebih dahulu ke dalam WarehouseItemReceiptRef
+        $itemReceiptRef = $centralProduction->reference()->save(new WarehouseItemReceiptRef());
+
+        // buat item receipt
+        $warehouseReceipt = WarehouseItemReceipt::create([
+            'warehouses_id' => $warehouseId,
+            'warehouse_item_receipt_refs_id' => $itemReceiptRef->id,
+        ]);
+
+        // buat history item receipt
+        $warehouseReceipt->history()->create([
+            'desc' => 'Membuat draft penerimaan barang dari produksi',
+            'status' => 'DRAFT',
+        ]);
+
+        // Simpan detail-item penerimaan barang
         $warehouseReceipt->details()->createMany($itemReceiptDetail);
 
-        $centralProduction->reference()->save(new WarehouseItemReceiptRef());
 
     }
 }

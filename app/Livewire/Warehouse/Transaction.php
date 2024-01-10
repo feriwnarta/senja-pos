@@ -4,6 +4,7 @@ namespace App\Livewire\Warehouse;
 
 use App\Models\RequestStock;
 use App\Models\Warehouse;
+use App\Models\WarehouseItemReceiptRef;
 use App\Models\WarehouseOutbound;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
@@ -141,15 +142,7 @@ class Transaction extends Component
         }
 
         if ($this->urlQuery == 'stockIn') {
-            $data = RequestStock::with(['centralProduction.shipping'])
-                ->whereHas('centralProduction', function ($query) {
-                    $query->whereHas('shipping'); // Check for existing shipping record
-                })
-                ->when(!empty($this->id), function ($query) {
-                    $query->where('warehouses_id', $this->id);
-                })
-                ->orderBy('id', 'DESC')
-                ->paginate(10);
+            $data = WarehouseItemReceiptRef::with('receivable')->paginate(10);
         }
 
         if ($this->urlQuery == 'stockOut') {

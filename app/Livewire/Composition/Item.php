@@ -11,7 +11,7 @@ class Item extends Component
 {
 
     public array $outletCentralKitchenDropdown;
-    public string $selected = 'asd';
+    public string $selected = '';
     public bool $notSelected = false;
 
     public function render()
