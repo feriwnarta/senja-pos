@@ -22,6 +22,7 @@
         <link rel="stylesheet" href="{{ asset('css/icon-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/active-order-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/sidebar-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/active-shift.css') }}">
 
         <script src="{{ asset('js/jquery.js') }}"></script>
         <script src="{{ asset('data-table/datatables.js') }}"></script>
@@ -47,6 +48,8 @@
         <script data-navigate-once src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
                 integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
                 crossorigin="anonymous"></script>
+        <script src="{{ asset('js/select-all.js') }}"></script>
+        <script src="{{ asset('js/counter.js') }}"></script>
         @yield('footer-script')
 </body>
 

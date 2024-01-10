@@ -72,6 +72,52 @@ body::-webkit-scrollbar {
     gap: 8px;
 }
 
+.content-header-toping {
+    display: flex;
+    justify-content: space-between;
+    align-self: stretch;
+    align-items: center;
+    gap: 8px;
+}
+
+.toping-right-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toping-right-content label {
+    color: #9E9E9E;
+
+    font-family: "Poppins 400";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.checkbox[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #C2C2C2;
+    border-radius: 6px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding-top: 5px;
+}
+
+.checkbox[type="checkbox"]::after {
+    content: url("../img/icons/check.png");
+}
+
+.checkbox[type="checkbox"]:checked {
+    background-color: #F16622;
+}
 
 .inline-text {
     color: #616161;
@@ -203,7 +249,7 @@ body::-webkit-scrollbar {
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
     border-radius: 6px;
     border: 1px solid #F16622;
-    background: #F2C6AF;
+    background: #FFF7F2;
     height: 32px;
 
     color: #F16622;

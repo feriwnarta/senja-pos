@@ -33,44 +33,50 @@
                 </div>
             </div>
             <div class="modal-content-wrapper">
-                <div class="content-header">
-                    <span class="inline-text">Toping</span>
-                    <span class="divider"></span>
-                    <span class="inline-text-2">Pilih Salah Satu / Lebih Dari Satu</span>
+                <div class="content-header-toping">
+                    <div class="toping-left-content">
+                        <span class="inline-text">Toping</span>
+                        <span class="divider"></span>
+                        <span class="inline-text-2">Pilih Salah Satu / Lebih Dari Satu</span>
+                    </div>
+                    <div class="toping-right-content">
+                        <input type="checkbox" id="check-all" class="checkbox" onclick="checkAll(this)">
+                        <label for="check-all"> Pilih Semua</label>
+                    </div>
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body-toping flex-column">
                     <div class="d-flex flex-row choose-multiple-wrapper">
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" value="satu"><span>Satu</span>
+                                <input type="checkbox" id="toping" value="satu"><span>Satu</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" value="dua"><span>Dua</span>
+                                <input type="checkbox" id="toping" value="dua"><span>Dua</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" value="tiga"><span>Tiga</span>
+                                <input type="checkbox" id="toping" value="tiga"><span>Tiga</span>
                             </label>
                         </div>
                     </div>
                     <div class="d-flex flex-row choose-multiple-wrapper">
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" value="satu"><span>Satu</span>
+                                <input type="checkbox" id="toping" value="satu"><span>Satu</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" value="dua"><span>Dua</span>
+                                <input type="checkbox" id="toping" value="dua"><span>Dua</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" value="tiga"><span>Tiga</span>
+                                <input type="checkbox" id="toping" value="tiga"><span>Tiga</span>
                             </label>
                         </div>
                     </div>
@@ -84,9 +90,11 @@
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
-                    <input type="text" class="modal-variasi-input text-end" placeholder="0">
-                    <button type="button" class="modal-variasi-button1"><i class="minus-icon"></i></button>
-                    <button type="button" class="modal-variasi-button2"><i class="plus-icon"></i></button>
+                    <input type="number" class="modal-variasi-input text-end" placeholder="1" wire:model.live="count">
+                    <button type="button" class="modal-variasi-button1"><i class="minus-icon"
+                            wire:click="decrement"></i></button>
+                    <button type="button" class="modal-variasi-button2"><i class="plus-icon"
+                            wire:click="increment"></i></button>
                 </div>
             </div>
             <div class="modal-content-wrapper">
