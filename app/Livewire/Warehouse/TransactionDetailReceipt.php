@@ -120,7 +120,10 @@ class TransactionDetailReceipt extends Component
 
             if ($result) {
                 notify()->success('Berhasil melakukan penerimaan');
+                $itemReceiptRef = $this->getItemReceiptDetail($this->receiptRefId);
+                $this->itemReceiptRef = $itemReceiptRef;
                 return;
+
             }
 
             notify()->error('Gagal melakukan penerimaan');
