@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Warehouse;
 
-use App\Models\RequestStock;
+use App\Models\WarehouseItemReceiptRef;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
@@ -10,12 +10,12 @@ use Livewire\Component;
 
 class TransactionDetailReceipt extends Component
 {
-    #[Url(as: 'stckReqId', history: true)]
-    public string $reqId = '';
+    #[Url(as: 'refId', history: true)]
+    public string $receiptRefId = '';
 
     public string $error = '';
 
-    public RequestStock $requestStock;
+    public WarehouseItemReceiptRef $itemReceiptRef;
 
 
     public function render()
@@ -25,15 +25,15 @@ class TransactionDetailReceipt extends Component
 
     public function mount()
     {
-        $urlCondition = $this->urlIsEmpty($this->reqId);
+        $urlCondition = $this->urlIsEmpty($this->receiptRefId);
 
         // jika url condition bernilai true berarti url benar benar kosong dan tidak mengandung id
         if ($urlCondition) {
             return;
         }
 
-        $requestStock = $this->getRequestStockById($this->reqId);
-        $this->requestStock = $requestStock;
+        $itemReceiptRef = $this->getItemReceiptDetail($this->receiptRefId);
+        $this->itemReceiptRef = $itemReceiptRef;
     }
 
     /**
@@ -53,13 +53,23 @@ class TransactionDetailReceipt extends Component
 
     }
 
-    public function getRequestStockById(string $requestId)
+    /**
+     * dapatkan detail data item receipt dari table warehouse item receipt refs
+     * @param string $receiptRefId
+     * @return void
+     */
+    public function getItemReceiptDetail(string $receiptRefId)
     {
-
         try {
-            // dapatkan data request stock berdasarkan request id
-            return RequestStock::findOrFail($requestId);
-
+            return WarehouseItemReceiptRef::with([
+                'receivable',
+                'itemReceipt.history',
+                'receivable' => fn($query) => $query->when(
+                    request()->route('model') instanceof CentralProduction,
+                    fn($q) => $q->with(['result.targetItem'])
+                )
+            ])
+                ->findOrFail($receiptRefId);
         } catch (Exception $exception) {
             Log::error("gagal mendapatkan data request stock di {$exception->getFile()}");
             Log::error($exception->getMessage());

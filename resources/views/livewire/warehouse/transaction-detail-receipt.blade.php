@@ -40,23 +40,22 @@
                     <h1 class="subtitle-3-medium"> {{ $error }}</h1>
                 @else
                     <div>
-                        <p class="subtitle-3-regular">Kode penerimaan</p>
+                        <p class="subtitle-3-regular">Kode stok masuk</p>
                         <div id="divider" class="margin-top-6"></div>
-                        <p class="margin-top-6 subtitle-3-medium">* Menunggu diterima</p>
+                        <p class="margin-top-6 subtitle-3-medium {{ $itemReceiptRef->itemReceipt->code ?? 'text-danger' }}">{{ $itemReceiptRef->itemReceipt->code ?? '* Menunggu diterima' }}</p>
                     </div>
 
                     <div class="margin-top-24">
                         <p class="subtitle-3-regular">Kode referensi</p>
                         <div id="divider" class="margin-top-6"></div>
-                        <p class="margin-top-6 subtitle-3-medium">{{ $requestStock->centralProduction->last()->shipping->last()->code }}</p>
+                        <p class="margin-top-6 subtitle-3-medium">{{ $itemReceiptRef->receivable->code }}</p>
                     </div>
 
                     <div class="margin-top-24">
                         <p class="subtitle-3-regular">Tanggal</p>
                         <div id="divider" class="margin-top-6"></div>
-                        <p class="margin-top-6 subtitle-3-medium">{{ Carbon::createFromFormat('Y-m-d H:i:s', $requestStock->centralProduction->last()->shipping->last()->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</p>
+                        <p class="margin-top-6 subtitle-3-medium">{{ Carbon::createFromFormat('Y-m-d H:i:s', $itemReceiptRef->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</p>
                     </div>
-
                     <div class="margin-top-24">
                         <p class="subtitle-3-regular">Item produksi</p>
                         <div id="divider" class="margin-top-6"></div>
@@ -64,14 +63,21 @@
                             <thead class="table-head-color">
                             <tr>
                                 <th scope="col">Item</th>
-                                <th scope="col">Jumlah Diminta</th>
+                                <th scope="col">Jumlah Dikirim</th>
                                 <th scope="col">Jumlah Diterima</th>
                                 <th scope="col">Unit</th>
                             </tr>
                             </thead>
                             <tbody>
+                            @foreach($itemReceiptRef->receivable->result as $item)
+                                <tr>
+                                    <td>{{ $item->targetItem->name }}</td>
+                                    <td>{{ $item->qty_result }}</td>
+                                    <td>0</td>
+                                    <td>{{ $item->targetItem->unit->name }}</td>
+                                </tr>
 
-                         
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

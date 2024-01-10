@@ -143,6 +143,7 @@ class Transaction extends Component
 
         if ($this->urlQuery == 'stockIn') {
             $data = WarehouseItemReceiptRef::with('receivable')->paginate(10);
+            $data->load('itemReceipt.history');
         }
 
         if ($this->urlQuery == 'stockOut') {
@@ -167,7 +168,7 @@ class Transaction extends Component
             return;
         }
 
-        $this->redirect("/warehouse/transaction/detail-receipt/?stckReqId=$id", true);
+        $this->redirect("/warehouse/transaction/detail-receipt/?refId=$id", true);
     }
 
 
