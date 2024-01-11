@@ -9,19 +9,20 @@
                 <form class="input-pelanggan-baru d-flex flex-column gap-3">
                     <div class="d-flex flex-column gap-1">
                         <label>Nama</label>
-                        <input class="form-control" type="text" placeholder="Nama Pelanggan" aria-label="nama">
+                        <input class="form-control" type="text" aria-label="nama">
                     </div>
                     <div class="d-flex flex-column gap-1">
                         <label>Nomor Telfon</label>
-                        <input class="form-control" type="text" placeholder="081220636388" aria-label="noTelp">
+                        <input class="form-control" type="text" aria-label="noTelp">
                     </div>
                     <div class="d-flex flex-column gap-1">
                         <label>Email</label>
-                        <input class="form-control" type="text" placeholder="testing@gmail.com" aria-label="nama">
+                        <input class="form-control" type="text" aria-label="nama">
                     </div>
                     <div class="button-group-new-customer">
-                        <button class="btn btn-danger" data-bs-dismiss="modal">Keluar</button>
-                        <button class="btn btn-success">Simpan</button>
+                        <button type="button" class="btn btn-danger text-bg-light"
+                            data-bs-dismiss="modal">Keluar</button>
+                        <button type="button" class="btn btn-success text-bg-light">Simpan</button>
                     </div>
                 </form>
             </div>

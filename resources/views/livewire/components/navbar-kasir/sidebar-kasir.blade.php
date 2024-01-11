@@ -37,7 +37,8 @@
           </h2>
           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <li><button class="btn-clicked-active sidebar-text" href="/pos/active-shift">Shift Aktif</a></li>
+              <li><button class="btn-clicked-active sidebar-text" href="/pos/active-shift" wire:navigate>Shift Aktif</a>
+              </li>
               <li><button class="btn-clicked-active sidebar-text" href="#">Riwayat Shift</a></li>
               <li><button class="btn-clicked-active sidebar-text" href="#">Mutasi</a></li>
             </div>

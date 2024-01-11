@@ -1,8 +1,6 @@
 <x-page-layout-pos>
     <livewire:components.navbar-kasir.header-pos-kasir>
         <div class="menu-content-wrapper">
-            <button type="button" class="button-tambah-pelanggan" data-bs-toggle="modal"
-                data-bs-target="#modalPelangganBaru">Pelanggan Baru</button>
             <div class="menu-content">
                 @for ($data = 0; $data < 24; $data++) <div class="modal" id="OrderMenuModal" tabindex="-1"
                     aria-labelledby="OrderMenuModalLabel" aria-hidden="true" data-bs-backdrop="false">

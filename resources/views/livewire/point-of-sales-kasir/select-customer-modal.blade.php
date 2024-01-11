@@ -4,8 +4,8 @@
             class="modal-header header-body-wrapper d-flex flex-row justify-content-between align-items-center sticky-top">
             <button type="button" class="button-keluar-pilih-customer" data-bs-dismiss="modal">Keluar</button>
             <h1 class="jumlah-pelanggan">5 Pelanggan</h1>
-            {{-- <button type="button" class="button-tambah-pelanggan" data-bs-toggle="modal"
-                data-bs-target="#modalPelangganBaru">Pelanggan Baru</button> --}}
+            <button type="button" class="button-tambah-pelanggan" data-bs-toggle="modal"
+                data-bs-target="#modalPelangganBaru">Pelanggan Baru</button>
         </div>
         <div class="modal-body modal-body-wrapper">
             <div class="body-select-pelanggan-wrapper">
@@ -27,8 +27,4 @@
             </div>
         </div>
     </div>
-    {{-- <div class="modal" id="modalPelangganBaru" tabindex="-1" aria-labelledby="modalPelangganBaruLabel"
-        aria-hidden="true" data-bs-backdrop="false">
-        <livewire:point-of-sales-kasir.modal-pelanggan-baru>
-    </div> --}}
 </div>
