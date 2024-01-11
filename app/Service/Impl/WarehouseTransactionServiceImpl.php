@@ -8,6 +8,7 @@ use App\Models\RequestStockDetail;
 use App\Models\RequestStockHistory;
 use App\Models\StockItem;
 use App\Models\Warehouse;
+use App\Models\WarehouseOutbound;
 use App\Models\WarehouseOutboundHistory;
 use App\Models\WarehouseOutboundItem;
 use App\Models\WarehouseShipping;
@@ -238,13 +239,13 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             'status' => 'Bahan dikirim'
                         ]);
 
-                        // update shipping data
-                        WarehouseShipping::create([
-                            'warehouse_outbounds_id' => $item['outboundId'],
-                            'stock_items_id' => $stock->id,
-                            'description' => 'Proses pemotongan stock'
-                        ]);
+                        $outbound = WarehouseOutbound::findOrFail($item['outboundId']);
 
+                        if ($outbound == null) {
+                            throw new Exception('ada sesuatu yang salah saat berusaha mendapatkan data outbound');
+                        }
+
+                        $this->createShipping($item['outboundId'], $stock->id, $outbound->warehouse->id, $outbound->warehouse->warehouse_code);
 
                         DB::commit();
 
@@ -272,5 +273,62 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             ]);
             throw $exception; // Re-throw for further handling
         }
+    }
+
+    /**
+     * buat pengiriman barang dari gudang
+     * generate kode pengiriman yang unique
+     * @return void
+     */
+    private function createShipping(string $outboundId, string $stockId, string $warehouseId, string $warehouseCode)
+    {
+
+        // panggil fungsi generate code
+        $result = $this->generateCodeShipping($warehouseId, $warehouseCode);
+
+
+        if ($result == null || empty($result)) {
+            throw new Exception('gagal meng-generate code warehouse shipping');
+        }
+
+        WarehouseShipping::create([
+            'warehouse_outbounds_id' => $outboundId,
+            'warehouses_id' => $warehouseId,
+            'stock_items_id' => $stockId,
+            'description' => 'Proses pemotongan stock',
+            'increment' => $result['increment'],
+            'code' => $result['code'],
+            'description' => 'Membuat pengiriman dari produksi',
+        ]);
+    }
+
+    /**
+     * generate kode warehouse shipping
+     * pastikan fungsi ini dipanggil didalam atomic lock
+     * @return void
+     */
+    public function generateCodeShipping(string $warehouseId, string $warehouseCode): array
+    {
+
+        $warehouseShipping = WarehouseShipping::where('warehouses_id', $warehouseId)
+            ->latest()->first();
+
+
+        $currentYearMonth = Carbon::now()->format('Ym');
+        $nextCode = 1;
+
+        if ($warehouseShipping) {
+            $latestDate = Carbon::parse($warehouseShipping->created_at)->format('Ym');
+            if ($latestDate === $currentYearMonth) {
+                $nextCode = $warehouseShipping->increment + 1;
+            }
+        }
+
+        $code = "WAREHOUSESHIPPING{$warehouseCode}{$currentYearMonth}{$nextCode}";
+
+        return [
+            'code' => $code,
+            'increment' => $nextCode,
+        ];
     }
 }

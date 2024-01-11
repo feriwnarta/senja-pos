@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Warehouse;
 use App\Service\Impl\WarehouseTransactionServiceImpl;
 use App\Service\WarehouseTransactionService;
 use Tests\TestCase;
@@ -75,6 +76,15 @@ class TestTransactionWarehouse extends TestCase
 
         $rs = $this->warehouseTransactionService->reduceStockItemShipping($data, $outBoundId);
         assertNotNull($rs);
+
+    }
+
+    public function testGenerateCodeShipping()
+    {
+        $warehouse = Warehouse::first();
+        $rs = $this->warehouseTransactionService->generateCodeShipping($warehouse->id, $warehouse->warehouse_code);
+        print_r($rs);
+        self::assertIsArray($rs);
 
     }
 

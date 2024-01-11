@@ -41,5 +41,10 @@ class WarehouseShipping extends Model
     {
         return $this->belongsTo(StockItem::class, 'stock_items_id');
     }
-    
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class, 'warehouses_id');
+    }
+
 }

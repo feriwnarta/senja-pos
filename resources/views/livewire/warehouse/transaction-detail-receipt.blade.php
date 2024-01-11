@@ -94,6 +94,7 @@
                                         <td>
                                             <input type="number" class="form-control input-default"
                                                    wire:model="dataItemReceipt.{{ $key }}.qty_accept"
+                                                {{ $itemReceiptRef->itemReceipt->history->last()->status == 'Diterima' ? 'disabled' : '' }}
                                             >
                                         </td>
                                         <td>{{ $item->items->unit->name }}</td>

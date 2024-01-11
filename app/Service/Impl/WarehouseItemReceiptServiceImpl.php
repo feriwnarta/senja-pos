@@ -90,7 +90,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
     {
         $warehouseItemReceipt = WarehouseItemReceipt::findOrFail($itemReceiptId);
 
-        // jika sudah tersedia maka lemparkan saja error kode sudah terisi
+        // jika sudah tersedia maka balikan kode yang sudah digenerate
         if ($warehouseItemReceipt->code !== null) {
             return [
                 'code' => $warehouseItemReceipt->code,
