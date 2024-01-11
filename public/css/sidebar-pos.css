@@ -1,13 +1,27 @@
 .sidebar-order-detail {
     position: fixed;
+    width: 0;
+    height: 100vh;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    transition: 0.3s;
+}
+
+.sidebar-order-detail.is-opened {
+    position: fixed;
     width: 423px;
     height: 100vh;
     top: 0%;
     right: 0%;
-    z-index: 1;
     background: #FFF;
 
     box-shadow: -1px 0px 2px 0px rgba(10, 10, 10, 0.12);
+    transition: 0.3s;
+}
+
+.sidebar-order-detail.is-opened .content {
+    margin-right: 433px;
 }
 
 .sidebar-order-detail-content {
@@ -21,6 +35,13 @@
     font-size: 20px;
     font-style: normal;
     line-height: 28px;
+}
+
+.order-detail-close {
+    color: #757575;
+
+    font-family: "Poppins 500";
+    font-size: 30px;
 }
 
 .button-order-detail-wrapper {
@@ -201,7 +222,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-self: stretch;
-    margin-top: 52px;
+    margin-top: 32px;
 }
 
 .line-divider-grand-total {
@@ -231,7 +252,7 @@
 .button-order-detail-group {
     display: flex;
     flex-direction: column;
-    margin-top: 68px;
+    margin-top: 60px;
     gap: 16px;
 }
 

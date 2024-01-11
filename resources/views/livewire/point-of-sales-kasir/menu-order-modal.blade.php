@@ -91,10 +91,10 @@
                 <div class="line-divider"></div>
                 <div class="content-body">
                     <input type="number" class="modal-variasi-input text-end" placeholder="1" wire:model.live="count">
-                    <button type="button" class="modal-variasi-button1"><i class="minus-icon"
-                            wire:click="decrement"></i></button>
-                    <button type="button" class="modal-variasi-button2"><i class="plus-icon"
-                            wire:click="increment"></i></button>
+                    <button type="button" class="modal-variasi-button1" wire:click="decrement"><i
+                            class="minus-icon"></i></button>
+                    <button type="button" class="modal-variasi-button2" wire:click="increment"><i
+                            class="plus-icon"></i></button>
                 </div>
             </div>
             <div class="modal-content-wrapper">
@@ -128,8 +128,8 @@
             </div>
         </form>
         <div class="modal-variasi-footer">
-            <button class="modal-cancel-button" type="button">Cancel</button>
-            <button class="modal-save-button" type="button">Save</button>
+            <button class="modal-cancel-button" type="button" data-bs-dismiss="modal">Cancel</button>
+            <button class="modal-save-button" type="button" data-bs-dismiss="modal">Save</button>
         </div>
     </div>
 </div>

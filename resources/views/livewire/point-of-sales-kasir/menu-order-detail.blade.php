@@ -1,9 +1,12 @@
 <div class="sidebar-order-detail">
     <div class="sidebar-order-detail-content">
-        <h1 class="detail-order-text">Rincian Pesanan</h1>
+        <div class="order-detail-header d-flex flex-row justify-content-between align-items-center">
+            <h1 class="detail-order-text">Rincian Pesanan</h1>
+            <a class="order-detail-close">&times;</a>
+        </div>
         <div class="button-order-detail-wrapper">
             <button type="button" class="button-meja">Meja</button>
-            <button type="button" class="button-pelanggan">Pelanggan</button>
+            <button type="button" class="button-pelanggan" data-bs-target="#modalPelanggan">Pelanggan</button>
         </div>
         <div class="line-divider-order-detail"></div>
         <div class="ordered-detail">
@@ -48,7 +51,7 @@
                 <button type="button" class="button-simpan-pesanan">Simpan Pesanan</button>
                 <div class="button-cetak-bayar">
                     <button type="button" class="button-cetak-pesanan">Cetak</button>
-                    <button type="button" class="button-bayar-pesanan">bayar</button>
+                    <button type="button" class="button-bayar-pesanan">Bayar</button>
                 </div>
             </div>
         </div>
