@@ -3,30 +3,30 @@ body::-webkit-scrollbar {
 }
 
 .modal.show .modal-dialog {
-    transform: translate(0px, 55px);
-    border-radius: 6px;
+    transform: translate(0px, 56px);
 }
 
 .modal-wrapper {
-    height: 600px;
-    box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.12);
-    border: none;
+    min-width: 829px;
+    box-shadow: 6px 6px 10px 0px rgba(0, 0, 0, 0.12);
+    overflow-y: scroll;
 }
 
-.modal-dialog {
-    overflow-y: scroll;
+.modal-content {
+    background: #FFF;
+    min-height: 600px;
+    border-radius: 6px;
 }
 
 .modal-dialog::-webkit-scrollbar {
     display: none;
 }
 
-.modal-content {
-    border-radius: 6px;
-}
-
 .header-body-wrapper {
+    height: 96px;
     background: #FFF;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
     border-bottom: 1px solid var(--Neutral-30, #EDEDED);
     gap: 4px;
     flex-shrink: 0;
@@ -55,6 +55,9 @@ body::-webkit-scrollbar {
     padding-top: 16px;
     flex-direction: column;
     justify-content: center;
+
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
     gap: 24px;
 }
 
@@ -112,7 +115,7 @@ body::-webkit-scrollbar {
 }
 
 .checkbox[type="checkbox"]::after {
-    content: url("../img/icons/check.png");
+    content: url("../../img/icons/check.png");
 }
 
 .checkbox[type="checkbox"]:checked {

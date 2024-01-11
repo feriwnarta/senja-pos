@@ -1,0 +1,91 @@
+.body-select-pelanggan-wrapper {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    align-self: center;
+    padding: 24px 0px;
+
+    gap: 40px;
+}
+
+.search-pelanggan-wrapper {
+    width: 559px;
+}
+
+.table-pelanggan-bordered {
+    display: flex;
+    justify-content: space-between;
+
+    border-top: 1px solid #EDEDED;
+    padding: 10px 0px;
+}
+
+.table-pelanggan-bordered td {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+
+    border-bottom-width: 0px;
+    padding: 0;
+
+    color: #616161;
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+}
+
+.button-keluar-pilih-customer {
+    display: flex;
+    width: 119px;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    border: 1px solid #F16622;
+    background: #FFF;
+
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+
+    color:  #F16622;
+    text-align: center;
+
+    font-family: "Poppins 500";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+    letter-spacing: -0.176px;
+}
+
+.jumlah-pelanggan {
+    color: #404040;
+
+    font-family: "Poppins 500";
+    font-size: 20px;
+    font-style: normal;
+    line-height: 28px;
+}
+
+.button-tambah-pelanggan {
+    display: flex;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    background: #F16622;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+
+    color: #FFF;
+    text-align: center;
+
+    font-family: "Poppins 500";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+    letter-spacing: -0.176px;
+}

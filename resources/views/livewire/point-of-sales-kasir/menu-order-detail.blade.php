@@ -6,7 +6,8 @@
         </div>
         <div class="button-order-detail-wrapper">
             <button type="button" class="button-meja">Meja</button>
-            <button type="button" class="button-pelanggan" data-bs-target="#modalPelanggan">Pelanggan</button>
+            <button type="button" class="button-pelanggan" data-bs-toggle="modal"
+                data-bs-target="#modalPelanggan">Pelanggan</button>
         </div>
         <div class="line-divider-order-detail"></div>
         <div class="ordered-detail">
@@ -55,5 +56,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="modal" id="modalPelanggan" tabindex="-1" aria-labelledby="modalPelangganLabel" aria-hidden="true"
+        data-bs-backdrop="false">
+        <livewire:point-of-sales-kasir.select-customer-modal>
     </div>
 </div>

@@ -8,7 +8,7 @@ NAVBAR ICON
     height: 1.5rem;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url(../img/icons/menu.png);
+    background-image: url(../../img/icons/menu.png);
     vertical-align: middle;
 }
 
@@ -19,7 +19,7 @@ NAVBAR ICON
     background-repeat: no-repeat;
     background-size: cover;
     margin-right: 0.5em;
-    background-image: url(../img/icons/x.png);
+    background-image: url(../../img/icons/x.png);
     vertical-align: middle;
 }
 
@@ -29,7 +29,7 @@ NAVBAR ICON
     height: 1.5rem;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url(../img/icons/bell.png);
+    background-image: url(../../img/icons/bell.png);
     vertical-align: middle;
 }
 
@@ -40,7 +40,7 @@ NAVBAR ICON
     background-repeat: no-repeat;
     background-size: cover;
     margin-right: 0.5em;
-    background-image: url(../img/icons/search-bar-icon.png);
+    background-image: url(../../img/icons/search-bar-icon.png);
     vertical-align: middle;
 }
 
@@ -54,7 +54,7 @@ SIDEBAR ICON
     background-repeat: no-repeat;
     background-size: cover;
     margin-right: 0.5em;
-    background-image: url(../img/icons/cash.png);
+    background-image: url(../../img/icons/cash.png);
     vertical-align: middle;
 }
 
@@ -65,7 +65,7 @@ SIDEBAR ICON
     background-repeat: no-repeat;
     background-size: cover;
     margin-right: 0.5em;
-    background-image: url(../img/icons/clipboard-list.png);
+    background-image: url(../../img/icons/clipboard-list.png);
     vertical-align: middle;
 }
 
@@ -76,7 +76,7 @@ SIDEBAR ICON
     background-repeat: no-repeat;
     background-size: cover;
     margin-right: 0.5em;
-    background-image: url(../img/icons/clock.png);
+    background-image: url(../../img/icons/clock.png);
     vertical-align: middle;
 }
 
@@ -87,7 +87,7 @@ SIDEBAR ICON
     background-repeat: no-repeat;
     background-size: cover;
     margin-right: 0.5em;
-    background-image: url(../img/icons/cog.png);
+    background-image: url(../../img/icons/cog.png);
     vertical-align: middle;
 }
 
@@ -100,7 +100,7 @@ MODAL VARIASI MENU ICON
     height: 1.1rem;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url(../img/icons/icon-plus.png);
+    background-image: url(../../img/icons/icon-plus.png);
     vertical-align: middle;
 }
 
@@ -110,6 +110,39 @@ MODAL VARIASI MENU ICON
     height: 1.1rem;
     background-repeat: no-repeat;
     background-size: cover;
-    background-image: url(../img/icons/minus.png);
+    background-image: url(../../img/icons/minus.png);
+    vertical-align: middle;
+}
+
+/* ---------------------------------------
+MODAL PILIH PELANGGAN ICON
+--------------------------------------- */
+.user-icon {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../../img/icons/user.png);
+    vertical-align: middle;
+}
+
+.phone-icon {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../../img/icons/phone.png);
+    vertical-align: middle;
+}
+
+.mail-icon {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../../img/icons/mail.png);
     vertical-align: middle;
 }

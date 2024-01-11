@@ -1,4 +1,4 @@
-<div class="modal-dialog modal-wrapper modal-xl">
+<div class="modal-dialog modal-wrapper">
     <div class="modal-content">
         <div
             class="modal-header header-body-wrapper d-flex flex-column justify-content-center align-items-center sticky-top">

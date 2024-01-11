@@ -14,15 +14,16 @@
         @notifyCss
         {{--
         <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
-        <link rel="stylesheet" href="{{ asset('css/font-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/navbar-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/header-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/menu-order-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/menu-order-modal-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/icon-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/active-order-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/sidebar-pos.css') }}">
-        <link rel="stylesheet" href="{{ asset('css/active-shift.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/font-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/navbar-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/header-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/menu-order-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/menu-order-modal-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/icon-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/active-order-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/sidebar-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/active-shift-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/select-customer-modal-pos.css') }}">
 
         <script src="{{ asset('js/jquery.js') }}"></script>
         <script src="{{ asset('data-table/datatables.js') }}"></script>
