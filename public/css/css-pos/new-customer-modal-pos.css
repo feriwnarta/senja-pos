@@ -1,0 +1,29 @@
+.input-pelanggan-baru {
+    width: 527px;
+}
+
+.input-pelanggan-baru div label {
+    color: #404040;
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px; 
+}
+
+input[type="text"] {
+    color: #757575;
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.button-group-new-customer {
+    display: flex;
+    justify-content: end;
+    gap: 16px;
+
+    margin-top: 24px;
+}
