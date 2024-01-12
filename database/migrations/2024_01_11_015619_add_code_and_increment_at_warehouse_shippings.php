@@ -28,6 +28,7 @@ return new class extends Migration {
             $table->dropColumn('code');
             $table->dropColumn('increment');
             $table->dropConstrainedForeignId('warehouses_id');
+            
         });
     }
 };
