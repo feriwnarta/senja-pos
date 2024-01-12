@@ -186,6 +186,7 @@ class TransactionDetail extends Component
             ],
         ]);
 
+
         // lakukan proses pengurangan stock inventory valuation
         $this->reduceInventory($this->outboundItems, $this->outboundId);
 
@@ -197,29 +198,20 @@ class TransactionDetail extends Component
 
 
         try {
-            DB::beginTransaction();
-            // Lakukan update history request stock
-            $resultUpdate = $this->updateHistoryRequestStock();
+            $resultUpdateRequestStock = $this->updateHistoryRequestStock();
 
-            if ($resultUpdate) {
+            if ($resultUpdateRequestStock) {
                 // Lakukan pengurangan stok item untuk pengiriman
                 $warehouseService = app(WarehouseTransactionServiceImpl::class);
                 $result = $warehouseService->reduceStockItemShipping($items, $outboundId);
 
-                if ($result) {
-                    DB::commit();
-                    notify()->success('Berhasil kirim barang', 'Sukses');
-                    $this->mode = 'view';
-                    // Pemberitahuan sukses
-
-                    return;
-                }
+                notify()->success('Berhasil kirim barang', 'Sukses');
+                $this->mode = 'view';
+                // Pemberitahuan sukses
+                return;
             }
 
-            DB::rollBack();
-            // Pemberitahuan kesalahan saat proses pengiriman
-            notify()->error('Gagal melakukan proses pengiriman', 'Error');
-
+            notify()->error('Gagal kirim barang', 'Gagal');
         } catch (Exception $exception) {
             DB::rollBack();
             // Log dan pemberitahuan kesalahan

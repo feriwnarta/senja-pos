@@ -333,7 +333,7 @@ class ProductionDetail extends Component
                             'name' => $item->item->name,
                             'request_qty' => $item->qty,
                             'send_qty' => $item->qty_send,
-                            'qty_accept' => 0,
+                            'qty_accept' => $item->qty_send,
                             'unit' => $item->item->unit->name,
                         ];
                     });

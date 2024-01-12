@@ -23,8 +23,10 @@
                             </button>
                         </div>
 
-                        @if($this->error == '' )
-                            @if($warehouseOutbound->code != '')
+
+                        @if($this->error == '' && in_array( $warehouseOutbound->history->last()->status , ["Baru", "Permintaan diterima"]))
+                            @if($warehouseOutbound->code != '' )
+
                                 <button type="btn"
                                         class="btn btn-text-only-primary btn-nav margin-left-10"
                                         wire:loading.attr="disabled" wire:click="sendItem">Kirim
@@ -133,7 +135,7 @@
 
                                             <input type="text" class="form-control input-default"
                                                    wire:model="outboundItems.{{$key}}.qty_send"
-                                                {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null || $this->mode == 'view' ? 'disabled' : '' }}
+                                                {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null || $this->mode == 'view' || $warehouseOutbound->history->last()->status == 'Bahan dikirim' ? 'disabled' : '' }}
                                             >
 
                                             @error("outboundItems.{$key}.qty_send")

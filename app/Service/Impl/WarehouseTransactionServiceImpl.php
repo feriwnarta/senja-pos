@@ -12,6 +12,7 @@ use App\Models\WarehouseOutbound;
 use App\Models\WarehouseOutboundHistory;
 use App\Models\WarehouseOutboundItem;
 use App\Models\WarehouseShipping;
+use App\Models\WarehouseShippingItem;
 use App\Service\WarehouseTransactionService;
 use Carbon\Carbon;
 use Exception;
@@ -187,6 +188,8 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                     }
 
                     $cogsCalc = app()->make(CogsValuationCalc::class);
+                    Log::info('proses potong stock warehouse shipping');
+                    Log::debug($items);
 
                     // lakukan iterasi untuk mengurangi stock item valuation
                     foreach ($items as $item) {
@@ -247,12 +250,10 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                         $this->createShipping($item['outboundId'], $stock->id, $outbound->warehouse->id, $outbound->warehouse->warehouse_code);
 
-                        DB::commit();
 
-                        return $stock;
                     }
 
-
+                    DB::commit();
                 } catch (Exception $exception) {
                     DB::rollBack();
                     Log::error('Gagal mengurangi stock gudang:', [
@@ -291,14 +292,19 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             throw new Exception('gagal meng-generate code warehouse shipping');
         }
 
-        WarehouseShipping::create([
+        $warehouseShipping = WarehouseShipping::create([
             'warehouse_outbounds_id' => $outboundId,
             'warehouses_id' => $warehouseId,
-            'stock_items_id' => $stockId,
             'description' => 'Proses pemotongan stock',
             'increment' => $result['increment'],
             'code' => $result['code'],
             'description' => 'Membuat pengiriman dari produksi',
+        ]);
+
+
+        WarehouseShippingItem::create([
+            'warehouse_shippings_id' => $warehouseShipping->id,
+            'stock_items_id' => $stockId,
         ]);
     }
 
@@ -331,4 +337,6 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             'increment' => $nextCode,
         ];
     }
+
+
 }
