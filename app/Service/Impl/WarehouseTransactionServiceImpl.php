@@ -191,68 +191,86 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                     Log::info('proses potong stock warehouse shipping');
                     Log::debug($items);
 
+                    $stockIds = [];
+                    $addedItemIds = [];
+                    $warehouseId = null;
+                    $warehouseCode = null;
+
+
                     // lakukan iterasi untuk mengurangi stock item valuation
                     foreach ($items as $item) {
 
+                        Log::debug('transaction service item');
+                        Log::debug($item);
+
                         $id = $item['item_id'];
 
-                        // dapatkan data terakhir inventory valuation stock item
-                        $req = StockItem::where('items_id', $id)->latest()->firstOrFail();
+                        if (!in_array($id, $addedItemIds)) {
 
-                        Log::debug($req);
+                            $addedItemIds[] = $id;
 
-                        $inventoryValue = $req['inventory_value'];
-                        $oldQty = $req['qty_on_hand'];
-                        $oldAvg = $req['avg_cost'];
-                        $incomingQty = $item['qty_send'];
-                        $purchasePrice = $req['avg_cost'];
+                            // dapatkan data terakhir inventory valuation stock item
+                            $req = StockItem::where('items_id', $id)->latest()->firstOrFail();
+
+                            Log::debug($req);
+
+                            $inventoryValue = $req['inventory_value'];
+                            $oldQty = $req['qty_on_hand'];
+                            $oldAvg = $req['avg_cost'];
+                            $incomingQty = $item['qty_send'];
+                            $purchasePrice = $req['avg_cost'];
 
 
-                        $result = $cogsCalc->calculateAvgPrice($inventoryValue, $oldQty, $oldAvg, $incomingQty, $purchasePrice, true);
+                            $result = $cogsCalc->calculateAvgPrice($inventoryValue, $oldQty, $oldAvg, $incomingQty, $purchasePrice, true);
 
-                        if (empty($result)) {
-                            throw new Exception('Gagal menghitung nilai inventory valuation');
+                            if (empty($result)) {
+                                throw new Exception('Gagal menghitung nilai inventory valuation');
+                            }
+
+                            Log::debug($result);
+
+                            // update inventory valuation
+                            $stock = StockItem::create([
+                                'items_id' => $id,
+                                'incoming_qty' => $result['incoming_qty'],
+                                'incoming_value' => $result['incoming_value'],
+                                'price_diff' => $result['price_diff'],
+                                'inventory_value' => $result['inventory_value'],
+                                'qty_on_hand' => $result['qty_on_hand'],
+                                'avg_cost' => $result['avg_cost'],
+                                'last_cost' => $result['last_cost'],
+                            ]);
+
+                            $stockIds[] = $stock->id;
+
+
+                            // update warehouse outbound items send
+                            WarehouseOutboundItem::where('warehouse_outbounds_id', $item['outboundId'])->update([
+                                'qty_send' => ($item['qty_send'] < 0) ? $item['qty_send'] * -1 : $item['qty_send'],
+                            ]);
+
+                            // update history outbound
+                            WarehouseOutboundHistory::create([
+                                'warehouse_outbounds_id' => $item['outboundId'],
+                                'desc' => 'Permintaan stock selesai, dan dipindahkan keproses pengiriman',
+                                'status' => 'Bahan dikirim'
+                            ]);
+
+                            $outbound = WarehouseOutbound::findOrFail($item['outboundId']);
+
+                            if ($outbound == null) {
+                                throw new Exception('ada sesuatu yang salah saat berusaha mendapatkan data outbound');
+                            }
+
+                            $warehouseId = $outbound->warehouse->id;
+                            $warehouseCode = $outbound->warehouse->warehouse_code;
                         }
-
-                        Log::debug($result);
-
-                        // update inventory valuation
-                        $stock = StockItem::create([
-                            'items_id' => $id,
-                            'incoming_qty' => $result['incoming_qty'],
-                            'incoming_value' => $result['incoming_value'],
-                            'price_diff' => $result['price_diff'],
-                            'inventory_value' => $result['inventory_value'],
-                            'qty_on_hand' => $result['qty_on_hand'],
-                            'avg_cost' => $result['avg_cost'],
-                            'last_cost' => $result['last_cost'],
-                        ]);
-
-
-                        // update warehouse outbound items send
-                        WarehouseOutboundItem::where('warehouse_outbounds_id', $item['outboundId'])->update([
-                            'qty_send' => ($item['qty_send'] < 0) ? $item['qty_send'] * -1 : $item['qty_send'],
-                        ]);
-
-
-                        // update history outbound
-                        WarehouseOutboundHistory::create([
-                            'warehouse_outbounds_id' => $item['outboundId'],
-                            'desc' => 'Permintaan stock selesai, dan dipindahkan keproses pengiriman',
-                            'status' => 'Bahan dikirim'
-                        ]);
-
-                        $outbound = WarehouseOutbound::findOrFail($item['outboundId']);
-
-                        if ($outbound == null) {
-                            throw new Exception('ada sesuatu yang salah saat berusaha mendapatkan data outbound');
-                        }
-
-                        $this->createShipping($item['outboundId'], $stock->id, $outbound->warehouse->id, $outbound->warehouse->warehouse_code);
-
 
                     }
 
+
+                    $this->createShipping($outboundId, $stockIds, $warehouseId, $warehouseCode);
+                    
                     DB::commit();
                 } catch (Exception $exception) {
                     DB::rollBack();
@@ -281,7 +299,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
      * generate kode pengiriman yang unique
      * @return void
      */
-    private function createShipping(string $outboundId, string $stockId, string $warehouseId, string $warehouseCode)
+    private function createShipping(string $outboundId, array $stockIds, string $warehouseId, string $warehouseCode)
     {
 
         // panggil fungsi generate code
@@ -301,11 +319,15 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             'description' => 'Membuat pengiriman dari produksi',
         ]);
 
+        foreach ($stockIds as $stockId) {
+            Log::debug($stockId);
+            WarehouseShippingItem::create([
+                'warehouse_shippings_id' => $warehouseShipping->id,
+                'stock_items_id' => $stockId,
+            ]);
+        }
 
-        WarehouseShippingItem::create([
-            'warehouse_shippings_id' => $warehouseShipping->id,
-            'stock_items_id' => $stockId,
-        ]);
+
     }
 
     /**
