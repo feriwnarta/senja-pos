@@ -19,7 +19,7 @@ class CreateItem extends Component
 
     #[Rule('required|min:5|unique:items,code')]
     public string $code;
-    #[Rule('required|min:1|unique:items,name')]
+    #[Rule('required|min:1')]
     public string $name;
     public string $description = '';
     #[Rule('required')]

@@ -85,7 +85,6 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 
     }
 
-
     public function generateCodeReceipt(string $itemReceiptId, string $warehouseId, string $warehouseCode)
     {
         $warehouseItemReceipt = WarehouseItemReceipt::findOrFail($itemReceiptId);
@@ -123,5 +122,16 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             'code' => $code,
             'increment' => $nextCode,
         ];
+    }
+
+    /**
+     * naikan stok item yang diterima, dan hitung inventoy valuasinya
+     * @param $qtyAccept
+     * @return void
+     */
+    private function increaseStockAndCalculateValuation($itemId, $qtyAccept)
+    {
+
+
     }
 }
