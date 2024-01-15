@@ -13,6 +13,7 @@ use App\Models\WarehouseOutboundHistory;
 use App\Models\WarehouseOutboundItem;
 use App\Models\WarehouseShipping;
 use App\Models\WarehouseShippingItem;
+use App\Models\WarehouseShippingRef;
 use App\Service\WarehouseTransactionService;
 use Carbon\Carbon;
 use Exception;
@@ -321,9 +322,14 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             throw new Exception('gagal meng-generate code warehouse shipping');
         }
 
+        // cari outbound id
+
+        $shipRef = WarehouseOutbound::findOrFail($outboundId)->reference()->save(new WarehouseShippingRef());
+
+
         $warehouseShipping = WarehouseShipping::create([
-            'warehouse_outbounds_id' => $outboundId,
             'warehouses_id' => $warehouseId,
+            'warehouse_shipping_refs_id' => $shipRef->id,
             'description' => 'Proses pemotongan stock',
             'increment' => $result['increment'],
             'code' => $result['code'],

@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('warehouse_item_receipt_refs', function (Blueprint $table) {
+        Schema::create('warehouse_shipping_refs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuidMorphs('receivable');
+            $table->uuidMorphs('shippable');
             $table->timestamps();
         });
     }
@@ -21,8 +21,7 @@ return new class extends Migration {
      * Reverse the migrations.
      */
     public function down(): void
-    
     {
-        Schema::dropIfExists('warehouse_item_receipt_refs');
+        Schema::dropIfExists('warehouse_shipping_refs');
     }
 };
