@@ -7,6 +7,7 @@ use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use App\Service\Impl\WarehouseTransactionServiceImpl;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
@@ -26,6 +27,7 @@ class TransactionDetail extends Component
 
     public WarehouseOutbound $warehouseOutbound;
     public array $outboundItems = [];
+    public Collection $items;
     private CentralProductionService $productionService;
 
     public function render()
@@ -36,14 +38,11 @@ class TransactionDetail extends Component
     public function boot()
     {
         $this->initMode();
-        Log::debug($this->error);
-        return;
-
         $this->searchOutboundHistory();
+        $this->getItems();
     }
 
     private function initMode()
-
     {
         $result = $this->findOutboundById($this->outboundId);
 
@@ -56,7 +55,6 @@ class TransactionDetail extends Component
 
         $this->warehouseOutbound = $result;
     }
-
 
     private function findOutboundById(string $id)
     {
@@ -88,6 +86,47 @@ class TransactionDetail extends Component
         } catch (Exception $exception) {
             Log::error($exception->getTraceAsString());
         }
+
+    }
+
+    private function getItems()
+    {
+
+        try {
+
+            if ($this->warehouseOutbound == null) {
+                $this->initMode();
+            }
+
+            $this->warehouseOutbound->load([
+                'outboundItem' => function ($query) {
+                    $query->with([
+                        'item.warehouseItem' => function ($query) {
+                            $query->with('stockItem');
+                        }
+                    ]);
+                }
+            ]);
+
+            // dapatkan all items
+            $items = $this->warehouseOutbound->outboundItem->map(function ($item) {
+                return $item;
+            });
+
+            if ($items == null) {
+                Log::error('gagal mendapatkan semua item dari outbound items');
+                return;
+            }
+
+            $this->items = $items;
+
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan all item saat keluar barang');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
 
     }
 

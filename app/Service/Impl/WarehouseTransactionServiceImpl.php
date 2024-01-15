@@ -2,12 +2,12 @@
 
 namespace App\Service\Impl;
 
-use App\Models\Item;
 use App\Models\RequestStock;
 use App\Models\RequestStockDetail;
 use App\Models\RequestStockHistory;
 use App\Models\StockItem;
 use App\Models\Warehouse;
+use App\Models\WarehouseItem;
 use App\Models\WarehouseOutbound;
 use App\Models\WarehouseOutboundHistory;
 use App\Models\WarehouseOutboundItem;
@@ -127,17 +127,19 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
             throw new Exception('Parameter kosong');
         }
 
+
         try {
             return Cache::lock('createRequestWarehouseFinish', 10)->block(5, function () use ($reqId, $itemReq) {
                 DB::beginTransaction();
 
                 try {
                     foreach ($itemReq as $item) {
-                        $resultItem = Item::findOrFail($item['id']);
+                        $resultItem = WarehouseItem::findOrFail($item['id'])->items;
+
 
                         RequestStockDetail::create([
                             'request_stocks_id' => $reqId,
-                            'items_id' => $item['id'],
+                            'items_id' => $resultItem->id,
                             'qty' => $item['itemReq'],
                             'type' => ($resultItem->route == 'BUY') ? 'PO' : (($resultItem->route == 'PRODUCECENTRALKITCHEN') ? 'PRODUCE' : 'ERROR'),
                         ]);
@@ -196,6 +198,8 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                     $warehouseId = null;
                     $warehouseCode = null;
 
+                    // dapatkan warehouseId
+                    $warehouseId = WarehouseOutbound::findOrFail($outboundId)->warehouses_id;
 
                     // lakukan iterasi untuk mengurangi stock item valuation
                     foreach ($items as $item) {
@@ -209,11 +213,18 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                             $addedItemIds[] = $id;
 
+                            // cari warehouse item
+                            $warehouseItem = WarehouseItem::with('stockItem')
+                                ->whereHas('warehouse', function ($query) use ($warehouseId) {
+                                    $query->where('id', $warehouseId);
+                                })
+                                ->where('items_id', $id)
+                                ->firstOrFail();
+
+                            $req = $warehouseItem->stockItem->last();
+
+
                             // dapatkan data terakhir inventory valuation stock item
-                            $req = StockItem::where('items_id', $id)->latest()->firstOrFail();
-
-                            Log::debug($req);
-
                             $inventoryValue = $req['inventory_value'];
                             $oldQty = $req['qty_on_hand'];
                             $oldAvg = $req['avg_cost'];
@@ -231,7 +242,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                             // update inventory valuation
                             $stock = StockItem::create([
-                                'items_id' => $id,
+                                'warehouse_items_id' => $warehouseItem->id,
                                 'incoming_qty' => $result['incoming_qty'],
                                 'incoming_value' => $result['incoming_value'],
                                 'price_diff' => $result['price_diff'],
@@ -270,7 +281,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
 
                     $this->createShipping($outboundId, $stockIds, $warehouseId, $warehouseCode);
-                    
+
                     DB::commit();
                 } catch (Exception $exception) {
                     DB::rollBack();

@@ -104,21 +104,24 @@
                             </thead>
 
                             <tbody>
+
                             @if(!empty($items))
                                 @foreach($items as $item)
-                                    @if($item->route != 'BUY')
-                                        @if($item->recipe->isEmpty())
+
+                                    @if($item->items->route != 'BUY')
+                                        @if($item->items->recipe->isEmpty())
+
                                             <tr wire:key="{{ $item->id }}" class="item-disabled">
                                                 <td>
                                                     <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
                                                        data-bs-title="Resep belum dibuat" data-bs-placement="right"></i>
                                                 </td>
                                                 {{--  TODO : Perlu lebih spesifik ke item --}}
-                                                <td> {{ $item->name }}</td>
-                                                <td>{{ ($item->sku) ?? '-' }}</td>
-                                                <td>{{ $item->category->name }}</td>
+                                                <td> {{ $item->items->name }}</td>
+                                                <td>{{ ($item->items->sku) ?? '-' }}</td>
+                                                <td>{{ $item->items->category->name }}</td>
                                                 <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
-                                                <td>{{ $item->unit->name }}</td>
+                                                <td>{{ $item->items->unit->name }}</td>
                                                 <td style="width: 200px;">
 
                                                     @if(!empty($selected))
@@ -143,11 +146,11 @@
                                                            id="checkbox_{{ $loop->iteration }}">
                                                 </td>
                                                 {{--  TODO : Perlu lebih spesifik ke item --}}
-                                                <td> {{ $item->name }}</td>
-                                                <td>{{ ($item->sku) ?? '-' }}</td>
-                                                <td>{{ $item->category->name }}</td>
+                                                <td> {{ $item->items->name }}</td>
+                                                <td>{{ ($item->items->sku) ?? '-' }}</td>
+                                                <td>{{ $item->items->category->name}}</td>
                                                 <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
-                                                <td>{{ $item->unit->name }}</td>
+                                                <td>{{ $item->items->unit->name }}</td>
                                                 <td style="width: 200px;">
 
                                                     @if(!empty($selected))
@@ -174,11 +177,11 @@
                                                        id="checkbox_{{ $loop->iteration }}">
                                             </td>
                                             {{--  TODO : Perlu lebih spesifik ke item --}}
-                                            <td> {{ $item->name }}</td>
-                                            <td>{{ ($item->sku) ?? '-' }}</td>
-                                            <td>{{ $item->category->name }}</td>
+                                            <td> {{ $item->items->name }}</td>
+                                            <td>{{ ($item->items->sku) ?? '-' }}</td>
+                                            <td>{{ $item->items->category->name }}</td>
                                             <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
-                                            <td>{{ $item->unit->name }}</td>
+                                            <td>{{ $item->items->unit->name }}</td>
                                             <td style="width: 200px;">
 
                                                 @if(!empty($selected))

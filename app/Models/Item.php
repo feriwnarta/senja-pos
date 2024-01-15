@@ -95,6 +95,11 @@ class Item extends Model
         return $this->hasMany(WarehouseOutboundItem::class, 'items_id');
     }
 
+    public function warehouseItem(): HasMany
+    {
+        return $this->hasMany(WarehouseItem::class, 'items_id');
+    }
+
 
 
 //    // Relasi many to many ke category

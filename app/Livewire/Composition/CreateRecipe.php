@@ -112,6 +112,7 @@ class CreateRecipe extends Component
     public function itemSelected($index)
     {
 
+
         $itemId = $this->ingredients[$index]['id'];
         $result = $this->items->find($itemId);
 
@@ -122,8 +123,8 @@ class CreateRecipe extends Component
         }
 
 
-        $avg = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->avg_cost);
-        $last = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->last_cost);
+        $avg = IndonesiaCurrency::formatToRupiah($result->warehouseItem->last()->stockItem->last()->avg_cost);
+        $last = IndonesiaCurrency::formatToRupiah($result->warehouseItem->last()->stockItem->last()->last_cost);
 
         $this->ingredients[$index]['usage'] = 1;
         $this->ingredients[$index]['unit']['id'] = $result->unit->id;
@@ -141,8 +142,8 @@ class CreateRecipe extends Component
         $totalAvg = 0;
         $totalLastCost = 0;
         foreach ($this->ingredients as $ingredient) {
-            $avg = str_replace('Rp ', '', $ingredient['avgCost']);
-            $lastCost = str_replace('Rp ', '', $ingredient['lastCost']);
+            $avg = floatval(str_replace('Rp ', '', $ingredient['avgCost']));
+            $lastCost = floatval(str_replace('Rp ', '', $ingredient['lastCost']));
 
             $totalAvg += $avg;
             $totalLastCost += $lastCost;

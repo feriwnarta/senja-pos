@@ -10,6 +10,7 @@ use App\Models\Outlet;
 use App\Models\Rack;
 use App\Models\StockItem;
 use App\Models\Unit;
+use App\Models\WarehouseItem;
 use App\Service\CompositionService;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -156,16 +157,24 @@ class CompositionServiceImpl implements CompositionService
             ]);
 
             $rack = Rack::findOrFail($placement);
+            $warehouseId = $rack->area->warehouse->id;
+            $itemId = $item->id;
 
             if ($placement != null) {
                 ItemPlacement::create(
                     [
                         'racks_id' => $placement,
-                        'items_id' => $item->id,
-                        'warehouses_id' => $rack->area->warehouse->id,
+                        'items_id' => $itemId,
+                        'warehouses_id' => $warehouseId,
                     ]
                 );
             }
+
+            // simpan ke model warheouse items
+            $warehouseItem = WarehouseItem::create([
+                'warehouses_id' => $warehouseId,
+                'items_id' => $itemId,
+            ]);
 
             if ($isOutlet) {
                 $item->outlet()->syncWithoutDetaching($url);
@@ -173,7 +182,6 @@ class CompositionServiceImpl implements CompositionService
                 $item->centralKitchen()->syncWithoutDetaching($url);
             }
 
-            DB::commit();
 
             if (!is_numeric($avgCost) || !is_numeric($lastCost) || intval($avgCost) < 0 || intval($lastCost) < 0) {
                 Log::error('Gagal validasi nilai avg cost dan last cost sebagai numeric atau kurang dari 0 saat membuat item baru');
@@ -191,7 +199,7 @@ class CompositionServiceImpl implements CompositionService
 
 
             $stock = StockItem::create([
-                'items_id' => $item->id,
+                'warehouse_items_id' => $warehouseItem->id,
                 'minimum_stock' => $minimumStock,
                 'incoming_qty' => $result['incoming_qty'],
                 'price_diff' => $result['price_diff'],
@@ -205,6 +213,7 @@ class CompositionServiceImpl implements CompositionService
             Log::debug('save');
             Log::debug($stock);
 
+            DB::commit();
             return 'success';
 
         } catch (Exception $exception) {

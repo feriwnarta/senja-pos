@@ -17,7 +17,7 @@ class RecipeServiceImpl implements RecipeService
     {
         try {
 
-            return Item::all(['id', 'name']);
+            return Item::with('warehouseItem.stockItem')->get();
 
         } catch (Exception $exception) {
             Log::error('gagal mendapatkan all item');

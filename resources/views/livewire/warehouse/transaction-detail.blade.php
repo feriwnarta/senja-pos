@@ -102,61 +102,104 @@
                             </thead>
                             <tbody>
 
-                            @if($warehouseOutbound->outboundItem->isNotEmpty())
-                                @foreach($warehouseOutbound->outboundItem as $key => $item)
-                                    {{-- TODO: perbaiki ini untuk dilakukan di service  --}}
-                                    @php
-                                        // Temukan item dengan ID yang sama dalam koleksi outboundItems
-                                        $existingItem = collect($this->outboundItems)->firstWhere('id', $item->id);
+                            @foreach($items as $key => $item)
 
-                                        // Jika item sudah ada, tambahkan jumlah kuantitas
-                                        if ($existingItem) {
-                                            $existingItem['qty_send'] += $item->qty;
-                                        } else {
-                                            // Jika item belum ada, tambahkan item baru
-                                            $this->outboundItems[] = [
-                                                'item_id' => $item->items_id,
-                                                'outboundId' => $warehouseOutbound->id,
-                                                'qty_on_hand' => $item->item->stockItem->last()->qty_on_hand,
-                                                'qty_send' => $item->qty,
-                                            ];
-                                        }
-                                    @endphp
+                                @php
+                                    $this->outboundItems[] = [
+                                          'item_id' => $item->items_id,
+                                          'outboundId' => $warehouseOutbound->id,
+                                          'qty_on_hand' => $item->item->warehouseItem->last()->stockItem->last()->qty_on_hand,
+                                          'qty_send' => $item->qty
+                                    ]
 
-                                    <tr wire:key="{{ $loop->iteration }}">
-                                        <td>{{ $item->item->name }}</td>
-                                        @if($mode == '')
-                                            <td class="{{ $item->item->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">
-                                                {{ $item->item->stockItem->last()->qty_on_hand }}
-                                            </td>
-                                        @endif
-                                        <td>{{ $item->qty }}</td>
-                                        <td class="d-flex flex-row align-items-center">
+                                @endphp
 
-                                            <input type="text" class="form-control input-default"
-                                                   wire:model="outboundItems.{{$key}}.qty_send"
-                                                {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null || $this->mode == 'view' || $warehouseOutbound->history->last()->status == 'Bahan dikirim' ? 'disabled' : '' }}
-                                            >
-
-                                            @error("outboundItems.{$key}.qty_send")
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-
-                                            @if( $item->item->stockItem->last()->qty_on_hand < $item->qty && $mode == '' )
-                                                <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
-                                                   data-bs-title="Stok tidak mencukupi" data-bs-placement="right"></i>
-                                            @endif
+                                <tr wire:key="{{ $loop->iteration }}">
+                                    <td>{{ $item->item->name }}</td>
+                                    @if($mode == '')
+                                        <td class="{{ $item->item->warehouseItem->last()->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">
+                                            {{ $item->item->warehouseItem->last()->stockItem->last()->qty_on_hand }}
                                         </td>
-                                        <td>{{ $item->item->unit->name }}</td>
-                                    </tr>
-                                @endforeach
+                                    @endif
+                                    <td>{{ $item->qty }}</td>
+                                    <td class="d-flex flex-row align-items-center">
 
-                            @else
-                                {{-- Handle case when outbound items are empty --}}
-                                <tr>
-                                    <td colspan="5">No outbound items available.</td>
+                                        <input type="text" class="form-control input-default"
+                                               wire:model="outboundItems.{{$key}}.qty_send"
+                                            {{ $item->item->warehouseItem->last()->stockItem->last() < $item->qty || $warehouseOutbound->code == null || $this->mode == 'view' || $warehouseOutbound->history->last()->status == 'Bahan dikirim' ? 'disabled' : '' }}
+                                        >
+
+                                        @error("outboundItems.{$key}.qty_send")
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                        @if( $item->item->warehouseItem->last()->stockItem->last()->qty_on_hand < $item->qty && $mode == '' )
+                                            <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
+                                               data-bs-title="Stok tidak mencukupi" data-bs-placement="right"></i>
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->item->unit->name }}</td>
                                 </tr>
-                            @endif
+
+                            @endforeach
+
+
+
+                            {{--                            @if($warehouseOutbound->outboundItem->isNotEmpty())--}}
+                            {{--                                @foreach($warehouseOutbound->outboundItem as $key => $item)--}}
+                            {{--                                    TODO: perbaiki ini untuk dilakukan di service--}}
+                            {{--                                    @php--}}
+                            {{--                                        // Temukan item dengan ID yang sama dalam koleksi outboundItems--}}
+                            {{--                                        $existingItem = collect($this->outboundItems)->firstWhere('id', $item->id);--}}
+
+                            {{--                                        // Jika item sudah ada, tambahkan jumlah kuantitas--}}
+                            {{--                                        if ($existingItem) {--}}
+                            {{--                                            $existingItem['qty_send'] += $item->qty;--}}
+                            {{--                                        } else {--}}
+                            {{--                                            // Jika item belum ada, tambahkan item baru--}}
+                            {{--                                            $this->outboundItems[] = [--}}
+                            {{--                                                'item_id' => $item->items_id,--}}
+                            {{--                                                'outboundId' => $warehouseOutbound->id,--}}
+                            {{--                                                'qty_on_hand' => $item->items->stockItem->last()->qty_on_hand,--}}
+                            {{--                                                'qty_send' => $item->qty,--}}
+                            {{--                                            ];--}}
+                            {{--                                        }--}}
+                            {{--                                    @endphp--}}
+
+                            {{--                                    <tr wire:key="{{ $loop->iteration }}">--}}
+                            {{--                                        <td>{{ $item->item->name }}</td>--}}
+                            {{--                                        @if($mode == '')--}}
+                            {{--                                            <td class="{{ $item->item->stockItem->last()->qty_on_hand == 0 ? 'text-danger' : '' }}">--}}
+                            {{--                                                {{ $item->item->stockItem->last()->qty_on_hand }}--}}
+                            {{--                                            </td>--}}
+                            {{--                                        @endif--}}
+                            {{--                                        <td>{{ $item->qty }}</td>--}}
+                            {{--                                        <td class="d-flex flex-row align-items-center">--}}
+
+                            {{--                                            <input type="text" class="form-control input-default"--}}
+                            {{--                                                   wire:model="outboundItems.{{$key}}.qty_send"--}}
+                            {{--                                                {{ $item->item->stockItem->last()->qty_on_hand < $item->qty || $warehouseOutbound->code == null || $this->mode == 'view' || $warehouseOutbound->history->last()->status == 'Bahan dikirim' ? 'disabled' : '' }}--}}
+                            {{--                                            >--}}
+
+                            {{--                                            @error("outboundItems.{$key}.qty_send")--}}
+                            {{--                                            <span class="text-danger">{{ $message }}</span>--}}
+                            {{--                                            @enderror--}}
+
+                            {{--                                            @if( $item->item->stockItem->last()->qty_on_hand < $item->qty && $mode == '' )--}}
+                            {{--                                                <i class="danger-exclamation-icon" data-bs-toggle="tooltip"--}}
+                            {{--                                                   data-bs-title="Stok tidak mencukupi" data-bs-placement="right"></i>--}}
+                            {{--                                            @endif--}}
+                            {{--                                        </td>--}}
+                            {{--                                        <td>{{ $item->item->unit->name }}</td>--}}
+                            {{--                                    </tr>--}}
+                            {{--                                @endforeach--}}
+
+                            {{--                            @else--}}
+                            {{--                                Handle case when outbound items are empty--}}
+                            {{--                                <tr>--}}
+                            {{--                                    <td colspan="5">No outbound items available.</td>--}}
+                            {{--                                </tr>--}}
+                            {{--                            @endif--}}
 
                             </tbody>
                         </table>

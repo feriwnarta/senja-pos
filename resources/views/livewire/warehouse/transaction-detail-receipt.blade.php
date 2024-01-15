@@ -84,7 +84,7 @@
                                     @php
                                         $this->dataItemReceipt[$key] = [
                                             'id' => $item->id,
-                                            'qty_accept' => $item->qty_accept,
+                                            'qty_accept' => $item->qty_send,
                                         ];
                                     @endphp
 
