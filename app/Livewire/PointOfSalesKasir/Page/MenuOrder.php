@@ -3,8 +3,10 @@
 namespace App\Livewire\PointOfSalesKasir\Page;
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
+#[Title("Point Of Sales")]
 #[Layout('components.layouts.pos')] 
 class MenuOrder extends Component
 {    

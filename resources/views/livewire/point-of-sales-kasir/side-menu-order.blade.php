@@ -7,7 +7,7 @@
         <div class="button-order-detail-wrapper">
             <button type="button" class="button-meja">Meja</button>
             <button type="button" class="button-pelanggan" data-bs-toggle="modal"
-                data-bs-target="#modalPelanggan">Pelanggan</button>
+                data-bs-target="#modalPilihPelanggan">Pelanggan</button>
         </div>
         <div class="line-divider-order-detail"></div>
         <div class="ordered-detail">
