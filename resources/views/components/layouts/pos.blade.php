@@ -27,12 +27,11 @@
         <link rel="stylesheet" href="{{ asset('css/css-pos/new-customer-modal-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/css-pos/active-shift-detail-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/css-pos/akhiri-shift-modal-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/shift-berakhir-modal-pos.css') }}">
 
         <script src="{{ asset('js/jquery.js') }}"></script>
         <script src="{{ asset('data-table/datatables.js') }}"></script>
         {{-- <script src="{{ asset('js/toast.js') }}"></script>--}}
-
-        </script>
 
 
         @livewireStyles

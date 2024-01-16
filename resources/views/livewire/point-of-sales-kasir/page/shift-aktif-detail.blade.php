@@ -169,7 +169,11 @@
         </div>
     </div>
     <div class="modal" id="modalAkhiriShift" tabindex="-1" aria-labelledby="modalAkhiriShiftLabel" aria-hidden="true"
-        data-bs-backdrop="false">
+        data-bs-backdrop="true">
         <livewire:point-of-sales-kasir.modal-akhiri-shift>
+    </div>
+    <div class="modal" id="modalShiftBerakhir" tabindex="-1" aria-labelledby="modalShiftBerakhirLabel" aria-hidden="true" 
+    data-bs-backdrop="true">
+        <livewire:point-of-sales-kasir.modal-shift-berakhir>
     </div>
 </x-page-layout-pos>

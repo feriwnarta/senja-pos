@@ -6,10 +6,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout("components.layouts.pos")]
-class ActiveShiftDetail extends Component
+class ModalShiftBerakhir extends Component
 {
     public function render()
     {
-        return view('livewire.point-of-sales-kasir.active-shift-detail');
+        return view('livewire.point-of-sales-kasir.modal-shift-berakhir');
     }
 }

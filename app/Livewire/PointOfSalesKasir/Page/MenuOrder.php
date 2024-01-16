@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\PointOfSalesKasir;
+namespace App\Livewire\PointOfSalesKasir\Page;
 
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -11,6 +11,6 @@ class MenuOrder extends Component
 
     public function render()
     {
-        return view('livewire.point-of-sales-kasir.menu-order');
+        return view('livewire.point-of-sales-kasir.page.menu-order');
     }
 }

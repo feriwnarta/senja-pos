@@ -1,0 +1,45 @@
+.modal-shift-berakhir-wrapper {
+    min-width: 702px;
+    box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.12) !important;
+    border-radius: 6px !important;
+    border-color: rgba(255, 255, 255, 0) !important;
+
+    overflow-y: scroll;
+    background: #fff;
+
+    --bs-modal-border-color: rgba(255, 255, 255, 0);
+    --bs-modal-border-radius: border-radius: 6px;
+}
+
+.shift-berakhir-wrapper {
+    width: 534px;
+    display: flex;
+    flex-direction: column;
+
+    gap: 24px;
+
+    margin: 0px auto;
+}
+
+.shift-berakhir-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.shift-berakhir-content span:nth-child(1) {
+    color: #404040;
+
+    font-family: "Poppins 500";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+}
+
+.shift-berakhir-content span:nth-child(2) {
+    color: #757575;
+
+    font-family: "Poppins 400";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+}

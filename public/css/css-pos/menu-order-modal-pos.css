@@ -3,8 +3,13 @@ body::-webkit-scrollbar {
 }
 
 .modal.show .modal-dialog {
-    transform: translate(0px, 56px);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     border-radius: 6px;
+
+    margin: 0;
 }
 
 .modal-wrapper {

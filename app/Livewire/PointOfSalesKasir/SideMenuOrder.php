@@ -6,10 +6,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('components.layouts.pos')] 
-class ActiveOrderPos extends Component
+class SideMenuOrder extends Component
 {
     public function render()
     {
-        return view('livewire.point-of-sales-kasir.active-order-pos');
+        return view('livewire.point-of-sales-kasir.side-menu-order');
     }
 }

@@ -4,18 +4,16 @@ use App\Livewire\CentralKitchen\AddCentralKitchen;
 use App\Livewire\CentralKitchen\ListCentralKitchen;
 use App\Livewire\CentralKitchen\Production;
 use App\Livewire\CentralKitchen\ProductionDetail;
-use App\Livewire\Components\NavbarKasir\HeaderKasir;
-use App\Livewire\Components\NavbarKasir\NavbarKasir;
 use App\Livewire\Composition\CreateItem;
 use App\Livewire\Composition\CreateRecipe;
 use App\Livewire\Composition\Item;
 use App\Livewire\Composition\Recipe;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
-use App\Livewire\PointOfSalesKasir\ActiveOrderPos;
-use App\Livewire\PointOfSalesKasir\ActiveShiftDetail;
-use App\Livewire\PointOfSalesKasir\ActiveShiftPos;
-use App\Livewire\PointOfSalesKasir\MenuOrder;
+use App\Livewire\PointOfSalesKasir\Page\AktifOrderPos;
+use App\Livewire\PointOfSalesKasir\Page\MenuOrder;
+use App\Livewire\PointOfSalesKasir\Page\ShiftAktifDetail;
+use App\Livewire\PointOfSalesKasir\Page\ShiftAktifPos;
 use App\Livewire\Purchase\CreateSupplier;
 use App\Livewire\Purchase\Supplier;
 use App\Livewire\Warehouse\AddCategory;
@@ -82,6 +80,6 @@ Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supp
 
 // Point Of Sales Kasir
 Route::get('/pos/menu', MenuOrder::class)->name('menu');
-Route::get('/pos/active-order', ActiveOrderPos::class)->name('active-order');
-Route::get('/pos/active-shift', ActiveShiftPos::class)->name('active-shift');
-Route::get('/pos/active-shift-detail', ActiveShiftDetail::class)->name('active-shift-detail');
+Route::get('/pos/active-order', AktifOrderPos::class)->name('active-order');
+Route::get('/pos/active-shift', ShiftAktifPos::class)->name('active-shift');
+Route::get('/pos/active-shift-detail', ShiftAktifDetail::class)->name('active-shift-detail');

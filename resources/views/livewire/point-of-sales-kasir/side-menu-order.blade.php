@@ -57,8 +57,4 @@
             </div>
         </div>
     </div>
-    <div class="modal" id="modalPelanggan" tabindex="-1" aria-labelledby="modalPelangganLabel" aria-hidden="true"
-        data-bs-backdrop="false">
-        <livewire:point-of-sales-kasir.select-customer-modal>
-    </div>
 </div>

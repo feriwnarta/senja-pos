@@ -6,10 +6,10 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout("components.layout.pos")]
-class SelectCustomerModal extends Component
+class ModalPilihPelanggan extends Component
 {
     public function render()
     {
-        return view('livewire.point-of-sales-kasir.select-customer-modal');
+        return view('livewire.point-of-sales-kasir.modal-pilih-pelanggan');
     }
 }
