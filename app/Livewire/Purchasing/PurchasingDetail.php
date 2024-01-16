@@ -22,7 +22,7 @@ class PurchasingDetail extends Component
     private function getPurchasingDetail(string $purchaseId)
     {
         try {
-            return Purchase::with('reference.purchasable', 'history')->findOrFail($purchaseId);
+            return Purchase::with('reference.purchasable', 'history', 'detail.item')->findOrFail($purchaseId);
         } catch (Exception $exception) {
             Log::error("gagal mendapatkan data detail purchasing {$this->id}");
             Log::error($exception->getMessage());

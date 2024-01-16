@@ -18,13 +18,13 @@
                     <button type="btn"
                             class="btn btn-text-only-danger btn-nav margin-left-10"
                     >
-                        Batal
+                        Tolak
                     </button>
 
                     <button type="btn"
-                            wire:click="createSupplier"
+                            wire:click="validate({{ $purchase->id }})"
                             wire:loading.attr="disabled"
-                            class="btn btn-text-only-primary btn-nav margin-left-10">Simpan
+                            class="btn btn-text-only-primary btn-nav margin-left-10">Validasi
                     </button>
 
 
@@ -44,7 +44,7 @@
                 <div>
                     <p class="subtitle-3-regular">Kode pembelian</p>
                     <div id="divider" class="margin-top-6"></div>
-                    <p class="margin-top-6 subtitle-3-medium">* Menunggu divalidasi</p>
+                    <p class="margin-top-6 subtitle-3-medium">* Menunggu dibuat</p>
                 </div>
 
                 <div class="margin-top-24">
@@ -60,6 +60,8 @@
                     <p class="margin-top-6 subtitle-3-medium">{{ Carbon::createFromFormat('Y-m-d H:i:s', $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</p>
                 </div>
 
+                {{ $purchase->detail }}
+
                 <div class="margin-top-24">
                     <p class="subtitle-3-regular">Item permintaan</p>
                     <div id="divider" class="margin-top-6"></div>
@@ -73,6 +75,13 @@
                         </thead>
                         <tbody>
 
+                        @foreach($purchase->detail as $item)
+                            <tr wire:key="{{ $loop->iteration }}">
+                                <td>{{ $item->item->name }}</td>
+                                <td>{{ $item->qty_buy }}</td>
+                                <td>{{ $item->item->unit->name }}</td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
