@@ -228,22 +228,22 @@
 
 
                 @php
-                    $collapseSupplier = Route::is(['supplier', 'create-supplier']);
+                    $collapsePurchase = Route::is(['supplier', 'create-supplier', 'purchase']);
                 @endphp
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
                         <button
-                            class="accordion-button button-icon-text description-1-medium {{ $collapseSupplier ? '' : 'collapsed' }}"
+                            class="accordion-button button-icon-text description-1-medium {{ $collapsePurchase ? '' : 'collapsed' }}"
                             type="button"
-                            data-bs-toggle="collapse" aria-expanded="{{ $collapseSupplier ? 'true': 'false' }}"
+                            data-bs-toggle="collapse" aria-expanded="{{ $collapsePurchase ? 'true': 'false' }}"
                             data-bs-target="#collapsePurchasing">
                             <i class="purchasing-icon"></i>
                             {{ __('sidebar_locale.pembelian.name') }}
                         </button>
                     </h2>
                     <div id="collapsePurchasing"
-                         class="accordion-collapse collapse {{ $collapseSupplier ? 'show' : '' }} "
+                         class="accordion-collapse collapse {{ $collapsePurchase ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
                             <a href="/supplier" wire:navigate>
@@ -254,10 +254,14 @@
                                     Pemasok
                                 </button>
                             </a>
-                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                            <a href="/purchase" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium  {{ Route::is('purchase') ? 'inner-menu-active' : ''}}"
+                                    type="button"
                                     id="">
-                                Pembelian
-                            </button>
+                                    Pembelian
+                                </button>
+                            </a>
                         </div>
                     </div>
                 </div>
