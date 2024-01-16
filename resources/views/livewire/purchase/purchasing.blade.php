@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 <x-page-layout>
 
 
@@ -37,7 +38,37 @@
     <div id="content-loaded">
         <x-notify::notify/>
         <div class="row">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table id="" class="table borderless table-hover">
+                        <thead class="table-head-color">
+                        <tr>
+                            <th scope="col">Kode</th>
+                            <th scope="col">Kode referensi</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
+                        @foreach($purchases as $purchase)
+                            <tr id="{{ $loop->iteration }}">
+                                <td>{{   $purchase->code == null ? 'Menunggu' : $purchase->code  }}</td>
+                                <td>{{ $purchase->reference->purchasable->code }}</td>
+                                <td>{{ Carbon::createFromFormat('Y-m-d H:i:s', $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ $purchase->history->last()->status }}</td>
+                            </tr>
+
+                        @endforeach
+
+
+                        </tbody>
+                    </table>
+
+                    {{ $purchases->links() }}
+
+                </div>
+            </div>
         </div>
     </div>
 
