@@ -228,7 +228,7 @@
 
 
                 @php
-                    $collapsePurchase = Route::is(['supplier', 'create-supplier', 'purchase']);
+                    $collapsePurchase = Route::is(['supplier', 'create-supplier', 'purchase', 'purchase-detail']);
                 @endphp
 
                 <div class="accordion-item">
@@ -256,7 +256,7 @@
                             </a>
                             <a href="/purchase" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium  {{ Route::is('purchase') ? 'inner-menu-active' : ''}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium  {{ Route::is('purchase') || Route::is('purchase-detail') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     Pembelian

@@ -13,6 +13,7 @@ use App\Livewire\Outlet\ListOutlet;
 use App\Livewire\Purchase\CreateSupplier;
 use App\Livewire\Purchase\Purchasing;
 use App\Livewire\Purchase\Supplier;
+use App\Livewire\Purchasing\PurchasingDetail;
 use App\Livewire\Warehouse\AddCategory;
 use App\Livewire\Warehouse\AddUnit;
 use App\Livewire\Warehouse\AddWarehouse;
@@ -77,5 +78,6 @@ Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet'
 Route::get('supplier', Supplier::class)->name('supplier');
 Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
 Route::get('purchase', Purchasing::class)->name('purchase');
+Route::get('purchase/detail', PurchasingDetail::class)->name('purchase-detail');
 
 

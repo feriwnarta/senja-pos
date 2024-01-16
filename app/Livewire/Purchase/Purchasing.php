@@ -24,12 +24,15 @@ class Purchasing extends Component
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }
-
-
     }
 
-    public function mount()
+    public function detailPurchase($id)
     {
+        if ($id == null || $id == '') {
+            return;
+        }
 
+        $this->redirect("/purchase/detail?pId=$id", true);
     }
+
 }
