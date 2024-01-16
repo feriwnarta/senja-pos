@@ -10,8 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            $table->string('code', 255)->nullable(false)->unique()->change();
+        Schema::table('purchase_details', function (Blueprint $table) {
+            $table->uuid('suppliers_id')->nullable(true)->change();
         });
     }
 
@@ -20,9 +20,8 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            $table->string('code', 255)->nullable(true);
-            $table->dropUnique('purchases_code_unique');
+        Schema::table('purchase_details', function (Blueprint $table) {
+            $table->uuid('suppliers_id')->nullable(false)->change();
         });
     }
 };

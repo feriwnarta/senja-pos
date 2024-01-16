@@ -32,11 +32,10 @@ class Purchase extends Model
         });
     }
 
-    public function master(): BelongsTo
+    public function reference(): BelongsTo
     {
-        return $this->belongsTo(PurchaseMaster::class, 'purchase_masters_id');
+        return $this->belongsTo(PurchaseRef::class, 'purchase_refs_id');
     }
-
 
     public function detail(): HasMany
     {

@@ -11,8 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->uuid('purchase_masters_id')->nullable(false)->after('id');
-            $table->foreign('purchase_masters_id')->references('id')->on('purchase_masters')->onDelete('cascade');
+            $table->string('code', 255)->nullable(true)->unique()->change();
         });
     }
 
@@ -22,7 +21,8 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('purchase_masters_id');
+            $table->string('code', 255)->nullable(true)->change();
+            $table->dropUnique('purchases_code_unique');
         });
     }
 };
