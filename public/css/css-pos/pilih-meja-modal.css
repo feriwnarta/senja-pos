@@ -3,6 +3,10 @@
 
     margin: 0px auto;
     padding-top: 40px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
 }
 
 .radio-group-wrapper {
@@ -59,4 +63,9 @@ input[type="radio"]:checked:before {
     line-height: 20px;
 
     vertical-align: center;
+}
+
+.select-meja {
+    height: 3rem;
+    border: 1px solid red;
 }
