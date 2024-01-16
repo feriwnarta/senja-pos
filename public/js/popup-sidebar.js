@@ -8,7 +8,7 @@ const isOpen = document.querySelector(".is-opened");
 saveButton.addEventListener("click", ()=> {
     sidebarDetail.classList.add("is-opened");
 
-    content.style.marginRight = "430px";
+    content.style.marginRight = "423px";
     content.style.transition = "0.2s";
 });
 

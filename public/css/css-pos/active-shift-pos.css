@@ -1,0 +1,88 @@
+.active-shift-wrapper {
+    margin: 16px 32px;
+}
+
+.header-active-shift {
+    margin-bottom: 92px;
+}
+
+.active-shift-text {
+    color: #F16622;
+
+    font-family: "Poppins 700";
+    font-size: 24px;
+    font-style: normal;
+    line-height: 32px;
+}
+
+.input-shift-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-input-shift {
+    width: 527px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-saldo-shift {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.input-saldo-shift label {
+    color: #404040;
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.input-pin-shift {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.input-pin-shift label {
+    color: #404040;
+
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.button-group-shift {
+    margin-top: 88px;
+
+    display: flex;
+    justify-content: end;
+}
+
+.button-mulai-shift {
+    display: flex;
+    width: 255px;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    background: #F16622;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+
+    color: #FFF;
+    text-align: center;
+
+    font-family: "Poppins 500";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+    letter-spacing: -0.176px;
+}

@@ -25,6 +25,8 @@
         <link rel="stylesheet" href="{{ asset('css/css-pos/active-shift-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/css-pos/select-customer-modal-pos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/css-pos/new-customer-modal-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/active-shift-detail-pos.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/css-pos/akhiri-shift-modal-pos.css') }}">
 
         <script src="{{ asset('js/jquery.js') }}"></script>
         <script src="{{ asset('data-table/datatables.js') }}"></script>
@@ -50,7 +52,7 @@
                 integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
                 crossorigin="anonymous"></script>
         <script src="{{ asset('js/select-all.js') }}"></script>
-        <script src="{{ asset('js/popup-on-save.js') }}"></script>
+        <script src="{{ asset('js/popup-sidebar.js') }}"></script>
         @yield('footer-script')
 </body>
 

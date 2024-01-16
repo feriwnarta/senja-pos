@@ -1,7 +1,7 @@
 <x-page-layout-pos>
   <div class="active-order-wrapper">
     <div class="header-active-order">
-      <h1 class="active-order-text">Pesanan Aktif</h1>
+      <livewire:components.navbar-kasir.header-kasir>
     </div>
     <table class="table table-borderless">
       <thead class="table-head">

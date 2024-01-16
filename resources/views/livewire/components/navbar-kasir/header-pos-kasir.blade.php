@@ -1,6 +1,6 @@
 <div class="header-pos">
     <div class="pos-text-wrapper">
-        <h1 class="pos-text">Point of Sales</h1>
+        <livewire:components.navbar-kasir.header-kasir>
     </div>
     <div class="pos-category-wrapper">
         @foreach ($buttons_category as $category)
