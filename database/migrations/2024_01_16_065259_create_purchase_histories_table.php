@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('purchases_id')->nullable(false);
             $table->string('desc', 255)->nullable(true);
-            $table->enum('status', ['Diminta', 'Dibuat', 'Menunggu', 'Disetujui', 'Ditolak', 'Diproses', 'Dikirim', 'Diterima', 'Ditutup']);
+            $table->enum('status', ['Diminta', 'Divalidas', 'Dibuat', 'Menunggu', 'Disetujui', 'Ditolak', 'Diproses', 'Dikirim', 'Diterima', 'Ditutup']);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
 

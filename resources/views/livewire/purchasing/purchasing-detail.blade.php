@@ -44,7 +44,7 @@
                 <div>
                     <p class="subtitle-3-regular">Kode pembelian</p>
                     <div id="divider" class="margin-top-6"></div>
-                    <p class="margin-top-6 subtitle-3-medium">* Menunggu dibuat</p>
+                    <p class="margin-top-6 subtitle-3-medium">{{ $purchase->code == null ? '* Menunggu dibuat': $purchase->code}}</p>
                 </div>
 
                 <div class="margin-top-24">
@@ -59,9 +59,7 @@
                          class="margin-top-6"></div>
                     <p class="margin-top-6 subtitle-3-medium">{{ Carbon::createFromFormat('Y-m-d H:i:s', $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</p>
                 </div>
-
-                {{ $purchase->detail }}
-
+                
                 <div class="margin-top-24">
                     <p class="subtitle-3-regular">Item permintaan</p>
                     <div id="divider" class="margin-top-6"></div>
