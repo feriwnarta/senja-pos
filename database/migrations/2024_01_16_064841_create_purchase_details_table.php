@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('purchase_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('purchases_id')->nullable(false);
-            $table->uuid('suppliers_id')->nullable(false);
+            $table->uuid('suppliers_id')->nullable(true);
             $table->uuid('items_id')->nullable(false);
             $table->decimal('qty_buy', 15, 2)->default(0.00);
             $table->decimal('qty_accept', 15, 2)->default(0.00);
@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->foreign('purchases_id')->on('purchases')->references('id')->onDelete('cascade');
             $table->foreign('suppliers_id')->on('suppliers')->references('id')->onDelete('cascade');
             $table->foreign('items_id')->on('items')->references('id')->onDelete('cascade');
-
+            $table->timestamps();
 
         });
     }

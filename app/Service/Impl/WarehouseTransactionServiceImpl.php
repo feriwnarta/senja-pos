@@ -2,6 +2,10 @@
 
 namespace App\Service\Impl;
 
+use App\Models\Purchase;
+use App\Models\PurchaseDetail;
+use App\Models\PurchaseHistory;
+use App\Models\PurchaseRef;
 use App\Models\RequestStock;
 use App\Models\RequestStockDetail;
 use App\Models\RequestStockHistory;
@@ -134,10 +138,14 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                 DB::beginTransaction();
 
                 try {
+                    // buat purchase request untuk item yang bertipe po
+
+                    $itemRouteBuy = [];
+
                     foreach ($itemReq as $item) {
                         $resultItem = WarehouseItem::findOrFail($item['id'])->items;
 
-
+                        // buat request stock detail
                         RequestStockDetail::create([
                             'request_stocks_id' => $reqId,
                             'items_id' => $resultItem->id,
@@ -145,15 +153,54 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             'type' => ($resultItem->route == 'BUY') ? 'PO' : (($resultItem->route == 'PRODUCECENTRALKITCHEN') ? 'PRODUCE' : 'ERROR'),
                         ]);
 
+                        if ($resultItem->route == 'BUY') {
+                            $itemRouteBuy[] = [
+                                'items_id' => $resultItem->id,
+                                'qty_buy' => $item['itemReq'],
+                            ];
+                        }
 
                         Log::info('Permintaan stok dibuat dengan nomor request ' . $reqId);
                     }
 
+                    Log::info('buat request stock history');
                     RequestStockHistory::create([
                         'request_stocks_id' => $reqId,
                         'desc' => 'Permintaan stok dibuat',
                         'status' => 'Baru',
                     ]);
+
+                    Log::info('Buat purchase order jika ada item yang ber-route buy');
+                    // buat PO
+                    if (!empty($itemRouteBuy)) {
+
+                        // buat request po referensi dari request stock gudang
+                        $requestStock = RequestStock::findOrFail($reqId);
+                        $purchaseRef = $requestStock->reference()->save(new PurchaseRef());
+
+                        // buat purchase
+                        $purchase = Purchase::create([
+                            'purchase_refs_id' => $purchaseRef->id
+                        ]);
+
+                        // buat purchase history
+                        PurchaseHistory::create([
+                            'purchases_id' => $purchase->id,
+                            'desc' => 'Membuat permintaan pembelian dari request stock',
+                            'status' => 'Diminta',
+                        ]);
+
+                        // buat purchase detail item
+                        foreach ($itemRouteBuy as $item) {
+                            PurchaseDetail::create([
+                                'purchases_id' => $purchase->id,
+                                'items_id' => $item['items_id'],
+                                'qty_buy' => $item['qty_buy']
+                            ]);
+                        }
+
+
+                    }
 
                     DB::commit();
                     return 'success';

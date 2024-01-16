@@ -10,9 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            $table->uuid('purchase_refs_id')->nullable(false)->after('id');
+        Schema::create('purchase_masters', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('purchase_refs_id')->nullable(false);
+            $table->uuid('created_by')->nullable(false);
+            $table->uuid('updated_by')->nullable(true);
+
             $table->foreign('purchase_refs_id')->references('id')->on('purchase_refs');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('purchase_refs_id');
-        });
+        Schema::dropIfExists('purchase_masters');
     }
 };

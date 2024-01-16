@@ -10,9 +10,8 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            $table->uuid('purchase_refs_id')->nullable(false)->after('id');
-            $table->foreign('purchase_refs_id')->references('id')->on('purchase_refs');
+        Schema::table('purchase_details', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('suppliers_id');
         });
     }
 
@@ -21,8 +20,9 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table('purchases', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('purchase_refs_id');
+        Schema::table('purchase_details', function (Blueprint $table) {
+            $table->uuid('suppliers_id')->nullable(false);
+            $table->foreign('suppliers_id')->references('id')->on('supplier')->onDelete('cascade');
         });
     }
 };

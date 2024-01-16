@@ -11,8 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->uuid('purchase_refs_id')->nullable(false)->after('id');
-            $table->foreign('purchase_refs_id')->references('id')->on('purchase_refs');
+            $table->uuid('suppliers_id')->nullable(false)->after('id');
+            $table->foreign('suppliers_id')->references('id')->on('purchases')->onDelete('cascade');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('purchase_refs_id');
+            $table->dropConstrainedForeignId('suppliers_id');
         });
     }
 };

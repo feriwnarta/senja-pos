@@ -36,10 +36,6 @@ class PurchaseDetail extends Model
         return $this->belongsTo(Purchase::class, 'purchases_id');
     }
 
-    public function supplier(): BelongsTo
-    {
-        return $this->belongsTo(PurchaseDetail::class, 'purchases_id');
-    }
 
     public function item(): BelongsTo
     {

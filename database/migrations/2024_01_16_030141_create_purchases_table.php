@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('code', 255)->nullable(true);
             $table->enum('payment_scheme', ['NET', 'PIA'])->default('NET');
-            $table->uuid('created_by')->nullable(true);
-            $table->uuid('updated_by')->nullable(false);
+            $table->uuid('created_by')->nullable(false);
+            $table->uuid('updated_by')->nullable(true);
             $table->timestamps();
         });
     }
