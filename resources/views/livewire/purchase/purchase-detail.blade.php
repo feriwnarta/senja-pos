@@ -40,37 +40,7 @@
     <div id="content-loaded">
         <x-notify::notify/>
         <div class="row">
-            <div class="col-sm-5">
 
-                {{ $purchaseRequest }}
-
-                {{-- Tanggal --}}
-                <div class="container-input-default">
-                    <label for="warehouseInput"
-                           class="form-label input-label">Tanggal</label>
-
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
-
-                    <input type="text" class="form-control input-default"
-                           id="warehouseInput" disabled
-                           value="{{ Carbon::createFromFormat('Y-m-d H:i:s',  $currentDateTime)->locale('id_ID')->isoFormat('D MMMM Y') }}"
-                    >
-                </div>
-
-
-                {{-- Kode referensi --}}
-                <div class="container-input-default">
-                    <label for="warehouseInput"
-                           class="form-label input-label">Referensi</label>
-
-                    <div id="divider" class="margin-symmetric-vertical-6"></div>
-
-                    <input type="text" class="form-control input-default"
-                           id="warehouseInput" disabled
-                           value="{{ $purchaseRequest->reference->requestable->code  }}"
-                    >
-                </div>
-            </div>
         </div>
     </div>
 
@@ -78,3 +48,4 @@
 
 
 </x-page-layout>
+

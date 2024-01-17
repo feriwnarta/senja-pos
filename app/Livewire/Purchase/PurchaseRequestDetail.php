@@ -3,6 +3,7 @@
 namespace App\Livewire\Purchase;
 
 use App\Models\PurchaseRequest;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -18,15 +19,31 @@ class PurchaseRequestDetail extends Component
     #[Url(as: 'status', keep: true)]
     public string $status = '';
 
-    public function render()
+    public string $currentDateTime = '';
+    public array $suppliers;
+    private PurchaseRequest $purchaseRequestDetail;
+
+
+    public function mount()
+    {
+        $this->currentDateTime = Carbon::now();
+        // ambil data supplier jika statusnya adalah diproses
+
+        // lakukan inisialisasi data yang dibutuhkan untuk proses ini
+        $this->initData();
+
+    }
+
+    private function initData()
     {
         $purchaseRequestDetail = $this->getPurchasingDetail($this->requestId);
-
-        if (isset($purchaseRequestDetail->history->last()->status)) {
-            $this->setStatus($purchaseRequestDetail->history->last()->status);
+        if ($purchaseRequestDetail != null) {
+            $this->purchaseRequestDetail = $purchaseRequestDetail;
+            if (isset($purchaseRequestDetail->history->last()->status)) {
+                $this->setStatus($purchaseRequestDetail->history->last()->status);
+                $this->proccessGetSupplier();
+            }
         }
-
-        return view('livewire.purchase.purchase-request-detail', ['purchaseRequests' => $purchaseRequestDetail]);
     }
 
     private function getPurchasingDetail(string $requestId)
@@ -43,6 +60,38 @@ class PurchaseRequestDetail extends Component
     private function setStatus(string $status)
     {
         $this->status = $status;
+    }
+
+    private function proccessGetSupplier()
+    {
+        if ($this->status == 'Diproses') {
+            $suppliers = $this->getSuppliers();
+            if ($suppliers != null) {
+                $this->suppliers = $suppliers->toArray();
+                Log::debug($this->suppliers);
+            }
+        }
+    }
+
+    private function getSuppliers()
+    {
+
+        try {
+            return \App\Models\Supplier::cursor()->take(100)->each(function ($supplier) {
+                return $supplier;
+            });
+
+        } catch (Exception $exception) {
+            Log::error('gagal dapatkan data supplier di pesanan pembelian');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
+    }
+
+    public function render()
+    {
+        return view('livewire.purchase.purchase-request-detail', ['purchaseRequests' => $this->purchaseRequestDetail]);
     }
 
     public function processRequest($id)
@@ -72,7 +121,6 @@ class PurchaseRequestDetail extends Component
                 DB::commit();
                 notify()->success('Berhasil proses pembelian');
 
-                $this->redirect("/purchase/detail?reqId={$this->requestId}", true);
 
                 return;
             }

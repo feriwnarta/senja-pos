@@ -658,7 +658,7 @@
                     <table class="table-component table table-hover margin-top-16"
                            id="tableItemRequest"
                     >
-                        <thead class="sticky-topphp">
+                        <thead class="sticky-top">
                         <tr>
                             <th>
                                 <input class="form-check-input" type="checkbox" value=""
