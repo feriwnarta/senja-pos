@@ -157,3 +157,16 @@ MODAL PILIH PELANGGAN ICON
     background-image: url(../../img/icons/mail.png);
     vertical-align: middle;
 }
+
+/* ---------------------------------------
+PAGE MUTASI ICON
+--------------------------------------- */
+.calendar-dark-icon {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../../img/icons/calendar-dark.png);
+    vertical-align: middle;
+}

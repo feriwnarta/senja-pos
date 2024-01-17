@@ -5,7 +5,8 @@
             <a class="order-detail-close">&times;</a>
         </div>
         <div class="button-order-detail-wrapper">
-            <button type="button" class="button-meja">Meja</button>
+            <button type="button" class="button-meja" data-bs-toggle="modal"
+                data-bs-target="#modalPilihMeja">Meja</button>
             <button type="button" class="button-pelanggan" data-bs-toggle="modal"
                 data-bs-target="#modalPilihPelanggan">Pelanggan</button>
         </div>

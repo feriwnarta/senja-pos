@@ -1,5 +1,4 @@
 <x-page-layout-pos>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalPilihMeja">MEJA</button>
     <livewire:components.navbar-kasir.header-pos-kasir>
         <div class="menu-content-wrapper">
             <div class="menu-content">

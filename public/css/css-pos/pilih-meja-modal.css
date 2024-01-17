@@ -14,17 +14,12 @@
     justify-content: space-between;
 }
 
-/* .radio-group-wrapper div input[type="radio"] {
-    width: 20px;
-    height: 20px;
-} */
-
 .form-check-inline {
     display: flex;
-    flex-direction: row;
     align-items: center;
-
     gap: 8px;
+
+    margin: 0;
 }
 
 input[type="radio"] {
@@ -61,11 +56,123 @@ input[type="radio"]:checked:before {
     font-size: 14px;
     font-style: normal;
     line-height: 20px;
-
-    vertical-align: center;
 }
 
-.select-meja {
-    height: 3rem;
-    border: 1px solid red;
+.card-meja {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    gap: 16px;
+}
+
+.meja-wrapper {
+    width: 119px;
+    height: 119px;
+
+    border: 1px solid #f16622;
+    background: #fff7f2;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* MEJA */
+.meja {
+    position: relative;
+    width: 56px;
+    height: 56px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f16622;
+    border-radius: 3px;
+}
+
+.meja span {
+    color: #fff;
+
+    font-family: "Poppins 500";
+    font-size: 10px;
+    font-style: normal;
+    line-height: 16px;
+}
+
+.dash-meja {
+    position: relative;
+    width: 56px;
+    height: 56px;
+}
+
+/* BORDER MEJA ATAS BAWAH KANAN KIRI*/
+.dash-meja::before {
+    content: "";
+    position: absolute;
+    right: 50%;
+    top: -7px;
+    transform: translate(50%, 0);
+    z-index: 100;
+
+    width: 40px; /* Thickness */
+    height: 4px;
+    background: #f16622;
+
+    border-radius: 4px;
+}
+
+.dash-meja::after {
+    content: "";
+    position: absolute;
+    right: 50%;
+    bottom: -7px;
+    transform: translate(50%, 0);
+    z-index: 100;
+
+    width: 40px; /* Thickness */
+    height: 4px;
+    background: #f16622;
+
+    border-radius: 4px;
+}
+
+.meja::before {
+    content: "";
+    position: absolute;
+    right: -7px;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 100;
+
+    width: 4px; /* Thickness */
+    height: 40px;
+    background: #f16622;
+
+    border-radius: 4px;
+}
+
+.meja::after {
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 100;
+
+    width: 4px; /* Thickness */
+    height: 40px;
+    background: #f16622;
+
+    border-radius: 4px;
+}
+
+.button-pilih-meja-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+
+    gap: 16px;
 }

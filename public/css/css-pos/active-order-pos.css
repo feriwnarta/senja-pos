@@ -7,7 +7,7 @@
 }
 
 .active-order-text {
-    color: #F16622;
+    color: #f16622;
 
     font-family: "Poppins 700";
     font-size: 24px;
@@ -16,13 +16,12 @@
 }
 
 .table-head {
-    background: #FFF7F2;
+    background: #fff7f2;
     border-bottom: none;
 }
 
 .table-row-bordered {
-    border-bottom: 1px solid #EDEDED;
-    padding: 14px 16px;
+    border-bottom: 1px solid #ededed;
 }
 
 .table-head th {
@@ -32,14 +31,18 @@
     font-size: 14px;
     font-style: normal;
     line-height: 20px;
+
+    padding: 14px 16px;
 }
 
 .table-row-bordered td {
     color: #616161;
-    
+
     font-family: "Poppins 400";
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 20px
+    line-height: 20px;
+
+    padding: 14px 16px;
 }
