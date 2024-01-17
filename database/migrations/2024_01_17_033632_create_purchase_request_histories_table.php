@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('purchase_requests_id')->nullable(false);
             $table->string('desc', 255)->nullable(true);
-            $table->enum('status', ['Permintaan baru', 'Ditolak', 'Pembelian dibuat']);
+            $table->enum('status', ['Permintaan baru', 'Diproses', 'Ditolak', 'Pembelian dibuat']);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
 

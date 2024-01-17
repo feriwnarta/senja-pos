@@ -32,7 +32,7 @@ class Purchasing extends Component
             return PurchaseRequest::with('reference.requestable', 'history')
                 ->whereHas('history', function ($query) {
                     $query->where('status', 'Permintaan baru');
-                })
+                })->orderBy('created_at', 'DESC')
                 ->paginate(10);
 
 
@@ -67,7 +67,7 @@ class Purchasing extends Component
             return;
         }
 
-        $this->redirect("/purchase/detail?reqId=$id", true);
+        $this->redirect("/purchase-request/detail?reqId=$id", true);
     }
 
     /**

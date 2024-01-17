@@ -88,7 +88,7 @@
                                 <tr wire:key="{{ $loop->iteration }}"
                                     wire:click="detailPurchase('{{ $purchase->id }}')">
                                     <td>{{ $purchase->reference->requestable->code }}</td>
-                                    <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchase->reference->requestable->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                    <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
                                     <td>{{  $purchase->reference->requestable->note == null ? 'Tanpa catatan' :  $purchase->reference->requestable->note }}</td>
                                     <td>{{  $purchase->history->last()->status }}</td>
                                 </tr>
