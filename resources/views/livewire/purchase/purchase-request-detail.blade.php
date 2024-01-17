@@ -238,6 +238,10 @@
                                     <td>{{ $detail->qty_buy }}</td>
                                     <td>{{ $detail->item->unit->name }}</td>
                                     <td>{{ IndonesiaCurrency::formatToRupiah($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost) }}</td>
+                                    <td>
+                                        <input type="number" class="form-control input-default"
+                                               value="{{$detail->qty_buy  }}">
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
