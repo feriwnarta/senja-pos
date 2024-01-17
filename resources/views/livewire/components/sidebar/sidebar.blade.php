@@ -259,7 +259,7 @@
                                     class="btn button-sidebar-text-only-text description-1-medium  {{ Route::is('purchase') || Route::is('purchase-detail') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
-                                    Pembelian
+                                    Pesanan Pembelian
                                 </button>
                             </a>
                         </div>

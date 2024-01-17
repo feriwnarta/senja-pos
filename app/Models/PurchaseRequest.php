@@ -7,15 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 
-class RequestStock extends Model
+class PurchaseRequest extends Model
 {
     use HasFactory, HasUuids;
 
     public $incrementing = false;
-    protected $table = 'request_stocks';
     protected $keyType = 'string';
 
     protected $guarded = [];
@@ -34,29 +32,19 @@ class RequestStock extends Model
         });
     }
 
-    public function requestStockDetail(): HasMany
+
+    public function reference(): BelongsTo
     {
-        return $this->hasMany(RequestStockDetail::class, 'request_stocks_id');
+        return $this->belongsTo(PurchaseRequestRef::class, 'purchase_request_refs_id');
     }
 
-    public function requestStockHistory(): HasMany
+    public function history(): HasMany
     {
-        return $this->hasMany(RequestStockHistory::class, 'request_stocks_id');
+        return $this->hasMany(PurchaseRequestHistory::class, 'purchase_requests_id');
     }
 
-    public function centralProduction(): HasMany
+    public function detail(): HasMany
     {
-        return $this->hasMany(CentralProduction::class, 'request_stocks_id');
+        return $this->hasMany(PurchaseRequestDetail::class, 'purchase_requests_id');
     }
-
-    public function warehouse(): BelongsTo
-    {
-        return $this->belongsTo(Warehouse::class, 'warehouses_id');
-    }
-
-    public function reference(): MorphMany
-    {
-        return $this->morphMany(PurchaseRequestRef::class, 'requestable');
-    }
-
 }

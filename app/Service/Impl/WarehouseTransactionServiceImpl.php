@@ -2,10 +2,10 @@
 
 namespace App\Service\Impl;
 
-use App\Models\Purchase;
-use App\Models\PurchaseDetail;
-use App\Models\PurchaseHistory;
-use App\Models\PurchaseRef;
+use App\Models\PurchaseRequest;
+use App\Models\PurchaseRequestDetail;
+use App\Models\PurchaseRequestHistory;
+use App\Models\PurchaseRequestRef;
 use App\Models\RequestStock;
 use App\Models\RequestStockDetail;
 use App\Models\RequestStockHistory;
@@ -176,24 +176,24 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                         // buat request po referensi dari request stock gudang
                         $requestStock = RequestStock::findOrFail($reqId);
-                        $purchaseRef = $requestStock->reference()->save(new PurchaseRef());
+                        $purchaseReqRef = $requestStock->reference()->save(new PurchaseRequestRef());
 
-                        // buat purchase
-                        $purchase = Purchase::create([
-                            'purchase_refs_id' => $purchaseRef->id
+                        // buat purchase request
+                        $purchaseReq = PurchaseRequest::create([
+                            'purchase_request_refs_id' => $purchaseReqRef->id
                         ]);
 
-                        // buat purchase history
-                        PurchaseHistory::create([
-                            'purchases_id' => $purchase->id,
+                        // buat purchase request history
+                        PurchaseRequestHistory::create([
+                            'purchase_requests_id' => $purchaseReq->id,
                             'desc' => 'Membuat permintaan pembelian dari request stock',
-                            'status' => 'Diminta',
+                            'status' => 'Permintaan baru',
                         ]);
 
                         // buat purchase detail item
                         foreach ($itemRouteBuy as $item) {
-                            PurchaseDetail::create([
-                                'purchases_id' => $purchase->id,
+                            PurchaseRequestDetail::create([
+                                'purchase_requests_id' => $purchaseReq->id,
                                 'items_id' => $item['items_id'],
                                 'qty_buy' => $item['qty_buy']
                             ]);

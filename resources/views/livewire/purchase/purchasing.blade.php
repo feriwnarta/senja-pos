@@ -1,4 +1,4 @@
-@php use Carbon\Carbon; @endphp
+@php use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -9,7 +9,7 @@
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        Pembelian
+                        Pesanan Pembelian
                     </div>
                 </div>
 
@@ -40,32 +40,68 @@
         <div class="row">
             <div class="row">
                 <div class="col-sm-12">
-                    <table id="" class="table borderless table-hover">
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio1"
+                               autocomplete="off" value="request" wire:change="toggleChange"
+                               wire:loading.attr="disabled"
+                               checked
+                        >
+                        <label class="btn btn-outline-primary" for="btnradio1">Permintaan</label>
+
+                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio2"
+                               autocomplete="off" value="purchase" wire:change="toggleChange"
+                               wire:loading.attr="disabled"
+                        >
+                        <label class="btn btn-outline-primary" for="btnradio2">Pembelian</label>
+
+                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio3"
+                               autocomplete="off" value="reception" wire:change="toggleChange"
+                               wire:loading.attr="disabled">
+                        <label class="btn btn-outline-primary" for="btnradio3">Penerimaan</label>
+
+                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio4"
+                               autocomplete="off" value="payment" wire:change="toggleChange"
+                               wire:loading.attr="disabled">
+                        <label class="btn btn-outline-primary" for="btnradio4">Pembayaran</label>
+
+                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio5"
+                               autocomplete="off" value="history" wire:change="toggleChange"
+                               wire:loading.attr="disabled">
+                        <label class="btn btn-outline-primary" for="btnradio5">Riwayat</label>
+                    </div>
+
+                    <table class="table borderless table-hover margin-top-28">
                         <thead class="table-head-color">
                         <tr>
-                            <th scope="col">Kode</th>
-                            <th scope="col">Kode referensi</th>
+                            <th scope="col">Referensi</th>
                             <th scope="col">Tanggal</th>
+                            <th scope="col">Catatan</th>
                             <th scope="col">Status</th>
                         </tr>
                         </thead>
                         <tbody>
 
-                        @foreach($purchases as $purchase)
-                            <tr id="{{ $loop->iteration }}" wire:click="detailPurchase('{{ $purchase->id }}')">
-                                <td>{{   $purchase->code == null ? 'Menunggu dibuat' : $purchase->code  }}</td>
-                                <td>{{ $purchase->reference->purchasable->code }}</td>
-                                <td>{{ Carbon::createFromFormat('Y-m-d H:i:s', $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
-                                <td>{{ $purchase->history->last()->status }}</td>
-                            </tr>
+                        @if(isset($purchases))
 
-                        @endforeach
+                            @foreach($purchases as $purchase)
 
+                                <tr wire:key="{{ $loop->iteration }}"
+                                    wire:click="detailPurchase('{{ $purchase->id }}')">
+                                    <td>{{ $purchase->reference->requestable->code }}</td>
+                                    <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchase->reference->requestable->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                    <td>{{  $purchase->reference->requestable->note == null ? 'Tanpa catatan' :  $purchase->reference->requestable->note }}</td>
+                                    <td>{{  $purchase->history->last()->status }}</td>
+                                </tr>
+
+                            @endforeach
+                        @endif
 
                         </tbody>
                     </table>
+                    @if(isset($purchases))
+                        {{ $purchases->links() }}
+                    @endif
 
-                    {{ $purchases->links() }}
 
                 </div>
             </div>

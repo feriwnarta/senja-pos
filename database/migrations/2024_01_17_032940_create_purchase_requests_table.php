@@ -10,15 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('purchase_histories', function (Blueprint $table) {
+        Schema::create('purchase_requests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('purchases_id')->nullable(false);
-            $table->string('desc', 255)->nullable(true);
-            $table->enum('status', ['Permintaan baru', 'Dibuat', 'Menunggu', 'Disetujui', 'Ditolak', 'Diproses', 'Dikirim', 'Diterima', 'Ditutup']);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
-
-            $table->foreign('purchases_id')->references('id')->on('purchases')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchase_histories');
+        Schema::dropIfExists('purchase_requests');
     }
 };

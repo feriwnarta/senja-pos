@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->uuid('updated_by')->nullable(true);
 
             $table->foreign('purchases_id')->on('purchases')->references('id')->onDelete('cascade');
-            $table->foreign('suppliers_id')->on('suppliers')->references('id')->onDelete('cascade');
+            $table->foreign('suppliers_id')->on('suppliers')->references('id');
             $table->foreign('items_id')->on('items')->references('id')->onDelete('cascade');
             $table->timestamps();
 
