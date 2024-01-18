@@ -5,19 +5,19 @@ sidebarDetail = document.querySelector(".sidebar-order-detail");
 
 isOpen = document.querySelector(".is-opened");
 
-document.addEventListener("livewire:navigated", () => {
-    saveButton.addEventListener("click", () => {
-        console.log("TEST OPEN");
-        sidebarDetail.classList.add("is-opened");
+posMenu = document.querySelector("#pos-menu").getAttribute("href");
 
-        content.style.marginRight = "430px";
-        content.style.transition = "0.2s";
-    });
+// document.addEventListener("livewire:navigated", () => {
+saveButton.addEventListener("click", () => {
+    sidebarDetail.classList.add("is-opened");
 
-    closeOrderButton.addEventListener("click", () => {
-        sidebarDetail.classList.remove("is-opened");
-
-        content.style.marginRight = "0px";
-        content.style.transition = "0.2s";
-    });
+    content.style.marginRight = "430px";
+    content.style.transition = "0.2s";
 });
+closeOrderButton.addEventListener("click", () => {
+    sidebarDetail.classList.remove("is-opened");
+
+    content.style.marginRight = "0px";
+    content.style.transition = "0.2s";
+});
+// });

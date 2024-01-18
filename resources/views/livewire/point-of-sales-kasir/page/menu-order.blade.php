@@ -5,7 +5,7 @@
                 @for ($data = 0; $data < 24; $data++)
                     <div class="modal" id="modalOrderMenu" tabindex="-1" aria-labelledby="modalOrderMenuLabel"
                         aria-hidden="true" data-bs-backdrop="true">
-                        <livewire:point-of-sales-kasir.modal-menu-order>
+                        <livewire:point-of-sales-kasir.modal-menu-order wire:key='{{$data}}'>
                     </div>
                     <Button type="button" class="menu-card" data-bs-toggle="modal" data-bs-target="#modalOrderMenu">
                         <div class="card-body">

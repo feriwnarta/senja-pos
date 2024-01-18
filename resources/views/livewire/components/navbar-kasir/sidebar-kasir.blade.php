@@ -6,7 +6,7 @@
   <div class="offcanvas-body">
     <ul class="navbar-nav">
       <div class="sidebar-button-container">
-        <button class="btn-clicked-active sidebar-text" type="button" href="/pos/menu" wire:navigate><i
+        <button id="pos-menu" class="btn-clicked-active sidebar-text" type="button" href="/pos/menu" wire:navigate><i
             class="cash-icon"></i>Point Of Sales</button>
       </div>
       <div class="accordion" id="accordionExample">
