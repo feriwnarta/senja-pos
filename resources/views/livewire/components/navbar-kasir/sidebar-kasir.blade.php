@@ -21,8 +21,8 @@
           <div id="collapseTwo" class="accordion-collapse collapse sidebar-text" data-bs-parent="#accordionExample">
             <div class="accordion-body">
               <li><button class="btn-clicked-active text-decoration-none sidebar-text" href="/pos/active-order"
-                  wire:navigate>Pesanan Aktif</a></li>
-              <li><button class="btn-clicked-active text-decoration-none sidebar-text" href="#">Riwayat Pesanan</a>
+                  wire:navigate>Pesanan Aktif</button></li>
+              <li><button class="btn-clicked-active text-decoration-none sidebar-text" href="#">Riwayat Pesanan</button>
               </li>
             </div>
           </div>
@@ -37,11 +37,11 @@
           </h2>
           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <li><button class="btn-clicked-active sidebar-text" href="/pos/active-shift" wire:navigate>Shift Aktif</a>
+              <li><button class="btn-clicked-active sidebar-text" href="/pos/active-shift" wire:navigate>Shift Aktif</button>
               </li>
               <li><button class="btn-clicked-active sidebar-text" href="/pos/riwayat-shift" wire:navigate>Riwayat
-                  Shift</a></li>
-              <li><button class="btn-clicked-active sidebar-text" href="#">Mutasi</a></li>
+                  Shift</button></li>
+              <li><button class="btn-clicked-active sidebar-text" href="#">Mutasi</button></li>
             </div>
           </div>
         </div>

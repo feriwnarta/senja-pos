@@ -15,7 +15,7 @@
           </tr>
         </thead>
         <tbody>
-          @for ($i = 0; $i < 5; $i++) <tr class="table-row-bordered">
+          @for ($i = 0; $i < 5; $i++) <tr class="table-row-bordered" wire:click="redirectRiwayatDetail()">
             <td>Andre</td>
             <td>05/02/2023 08:00</td>
             <td>05/02/2023 15:00</td>
