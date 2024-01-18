@@ -21,8 +21,16 @@ class PurchaseRequestDetail extends Component
 
     public string $currentDateTime = '';
     public array $suppliers;
-    private PurchaseRequest $purchaseRequestDetail;
 
+    public ?string $supplier = null;
+    public ?string $supplierId = null;
+    public string $paymentType = 'NET';
+    public bool $isMultipleSupplier = false;
+    public string $isMultiplePayment = '';
+    public string $note = '';
+    public PurchaseRequest $purchaseRequestDetail;
+
+    public array $componentItems = [];
 
     public function mount()
     {
@@ -41,7 +49,15 @@ class PurchaseRequestDetail extends Component
             $this->purchaseRequestDetail = $purchaseRequestDetail;
             if (isset($purchaseRequestDetail->history->last()->status)) {
                 $this->setStatus($purchaseRequestDetail->history->last()->status);
+
+                // set supplier data
                 $this->proccessGetSupplier();
+
+                if (!empty($this->suppliers) && !isset($this->supplierId)) {
+                    $this->supplierId = $this->suppliers[0]['id'];
+                    $this->supplier = $this->suppliers[0]['id'];
+                    Log::info('init data');
+                }
             }
         }
     }
@@ -87,6 +103,22 @@ class PurchaseRequestDetail extends Component
             Log::error($exception->getTraceAsString());
         }
 
+    }
+
+    /**
+     * handle saat multi supplier checked
+     * @return void
+     */
+    public function handleMultiSupplier()
+    {
+
+        Log::info($this->isMultipleSupplier);
+    }
+
+    public function handleChangeSupplier()
+    {
+        $this->supplierId = $this->supplier;
+        Log::info("suppliers id : $this->supplier");
     }
 
     public function render()

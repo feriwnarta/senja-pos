@@ -131,20 +131,22 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <select class="form-select input-default"
-                                            id="resupplyOutlet">
+                                            id="supplier"
+                                            wire:model.live="supplier"
+                                            {{ $isMultipleSupplier == true ? 'disabled' : '' }} wire:change="handleChangeSupplier">
                                         @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier['id'] }}"
                                                     checked>{{  $supplier['name']  }}</option>
 
                                         @endforeach
-
                                     </select>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value=""
-                                               id="flexCheckDefault">
+                                               id="flexCheckDefault" wire:model.live.debounce.600ms="isMultipleSupplier"
+                                               wire:change="handleMultiSupplier">
                                         <label class="form-check-label margin-left-8" for="flexCheckDefault">
                                             Multiple Supplier
                                         </label>
@@ -167,8 +169,10 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <select class="form-select input-default"
-                                            id="resupplyOutlet">
-                                        <option value="" disabled selected>PT Meat Fresh</option>
+                                            id="resupplyOutlet" wire:model="paymentType">
+                                        <option value="NET">NET</option>
+                                        <option value="PIA">PIA</option>
+
 
                                     </select>
                                 </div>
@@ -176,7 +180,7 @@
                                 <div class="col-md-6">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value=""
-                                               id="flexCheckDefault">
+                                               id="flexCheckDefault" wire:model="isMultiplePayment">
                                         <label class="form-check-label margin-left-8" for="flexCheckDefault">
                                             Multiple Payment
                                         </label>
@@ -205,7 +209,7 @@
                         </div>
                     </div>
 
-                    {{ json_encode($purchaseRequests) }}
+                    {{--                    {{ json_encode($purchaseRequestDetail) }}--}}
 
                     <div class="col-sm-12">
                         <table id="" class="table borderless table-hover">
@@ -229,18 +233,66 @@
                             <tbody>
 
                             @foreach($purchaseRequests->detail as $key => $detail)
+                                @php
+
+                                    $this->componentItems[] = [
+                                        'isSelected' => 'false',
+                                        'purchaseRequestId' => $purchaseRequests->id,
+                                        'itemId' => $detail->item->id,
+                                        'itemName' => $detail->item->name,
+                                        'supplier' => $this->supplierId,
+                                        'payment' =>  '',
+                                        'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand,
+                                        'qtyBuy' => $detail->qty_buy,
+                                        'unitName' => $detail->item->unit->name,
+                                        'unitPrice' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
+                                        'purchaseAmount' =>  $detail->qty_buy,
+                                        'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
+                                    ];
+
+
+                                  $this->componentItems[$key]['supplier'] = $this->supplierId;
+
+
+                                  Log::info($this->componentItems);
+
+
+
+                                @endphp
+
+
                                 <tr wire:key="{{ $loop->iteration }}">
-                                    <td></td>
+                                    <td>
+                                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox"
+                                               wire:model="componentItems.{{ $key }}.isSelected"></td>
                                     <td>{{ $detail->item->name }}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{ $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand }}</td>
-                                    <td>{{ $detail->qty_buy }}</td>
-                                    <td>{{ $detail->item->unit->name }}</td>
-                                    <td>{{ IndonesiaCurrency::formatToRupiah($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost) }}</td>
+                                    <td>
+
+                                        <select class="form-select dropdown-no-border"
+                                                id="supplier"
+                                                {{ $isMultipleSupplier != true ? 'disabled' : '' }} wire:model="componentItems.{{ $key }}.supplier">
+
+                                            @foreach($suppliers as $supplier)
+                                                <option value="{{ $supplier['id'] }}"
+                                                        checked>{{  $supplier['name']  }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="form-select dropdown-no-border"
+                                                id="supplier" disabled
+                                                wire:model="componentsItem.{{ $key }}.payment.name">
+
+                                            <option value="all" selected disabled>Pilih pembayaran</option>
+                                        </select>
+                                    </td>
+                                    <td>{{ $this->componentItems[$key]['stockActual'] }}</td>
+                                    <td>{{ $this->componentItems[$key]['qtyBuy'] }}</td>
+                                    <td>{{ $this->componentItems[$key]['unitName'] }}</td>
+                                    <td>{{ IndonesiaCurrency::formatToRupiah($this->componentItems[$key]['unitPrice']) }}</td>
                                     <td>
                                         <input type="number" class="form-control input-default"
-                                               value="{{$detail->qty_buy  }}">
+                                               value="{{  $this->componentItems[$key]['purchaseAmount'] }}">
                                     </td>
                                 </tr>
                             @endforeach
