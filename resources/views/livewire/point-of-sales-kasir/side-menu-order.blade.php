@@ -2,7 +2,7 @@
     <div class="sidebar-order-detail-content">
         <div class="order-detail-header d-flex flex-row justify-content-between align-items-center">
             <h1 class="detail-order-text">Rincian Pesanan</h1>
-            <a class="order-detail-close">&times;</a>
+            {{-- <a class="order-detail-close">&times;</a> --}}
         </div>
         <div class="button-order-detail-wrapper">
             <button type="button" class="button-meja" data-bs-toggle="modal"
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="button-order-detail-group">
-                <button type="button" class="button-simpan-pesanan">Simpan Pesanan</button>
+                <button type="button" class="button-simpan-pesanan order-detail-close">Simpan Pesanan</button>
                 <div class="button-cetak-bayar">
                     <button type="button" class="button-cetak-pesanan">Cetak</button>
                     <button type="button" class="button-bayar-pesanan">Bayar</button>

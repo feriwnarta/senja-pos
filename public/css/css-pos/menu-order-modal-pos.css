@@ -14,7 +14,6 @@ body::-webkit-scrollbar {
 
 .modal-wrapper {
     min-width: 829px;
-    height: 600px;
     box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.12) !important;
     border-radius: 6px !important;
     border-color: rgba(255, 255, 255, 0) !important;
@@ -27,6 +26,7 @@ body::-webkit-scrollbar {
 }
 
 .modal-content {
+    height: 600px;
     border-radius: 6px;
 }
 

@@ -6,12 +6,12 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Title("Riwayat Shift Detail")]
+#[Title("Mutasi")]
 #[Layout("components.layouts.pos")]
-class RiwayatShiftDetail extends Component
+class MutasiPos extends Component
 {
     public function render()
     {
-        return view('livewire.point-of-sales-kasir.page.riwayat-shift-detail');
+        return view('livewire.point-of-sales-kasir.page.mutasi-pos');
     }
 }

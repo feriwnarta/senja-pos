@@ -29,6 +29,8 @@
     <link rel="stylesheet" href="{{ asset('css/css-pos/shift-berakhir-modal-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/pilih-meja-modal.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/riwayat-shift-detail-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/mutasi-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/diskon-voucher-modal-pos.css') }}">
 
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('data-table/datatables.js') }}"></script>

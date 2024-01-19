@@ -8,7 +8,7 @@ use Livewire\Component;
 #[Layout('components.layouts.pos')]
 class ModalMenuOrder extends Component
 {
-
+    // Counter Order Quantity
     public $count = 1;
 
     public function increment()

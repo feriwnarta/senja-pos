@@ -1,0 +1,50 @@
+.input-discount-voucher {
+    width: 527px;
+
+    gap: 32px;
+}
+
+.radio-group-discount {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.btn-check:checked + .btn {
+    color: #f16622;
+    border-radius: 6px;
+    border: 1px solid #f16622;
+    background: #fff7f2;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+}
+
+.radio-group-discount label.btn {
+    width: 88px;
+    padding: 6px 16px;
+
+    color: #9e9e9e;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    background: #fff;
+
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+
+    color: #9e9e9e;
+    font-family: "Poppins 500";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.discount-vocer-text {
+    color: #404040;
+
+    font-family: "Poppins 700";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.button-group-discvoc {
+    margin-top: 148px;
+}

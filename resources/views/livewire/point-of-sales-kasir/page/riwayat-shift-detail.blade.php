@@ -150,29 +150,101 @@
             <div class="shift-detail-content">
                 {{-- Payment Detail Content --}}
                 <h2 class="shift-detail-text">Payment Detail</h2>
-                <div class="shift-detail-subcontent">
-                    <span>Nama</span>
-                    <span>Andre</span>
+                <div class="payment-detail-content">
+                    <h3 class="shift-detail-subtext">Cash Payment</h3>
+                    <div class="shift-detail-subcontent">
+                        <span>Cash Sale</span>
+                        <span>1.800.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Cash Invoice</span>
+                        <span>70.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Cash Refund</span>
+                        <span>0</span>
+                    </div>
+                    <div class="total-terjual">
+                        <span>Total</span>
+                        <span>1.870.000</span>
+                    </div>
                 </div>
-                <div class="shift-detail-subcontent">
-                    <span>Outlet</span>
-                    <span>Cahaya Senja Cafe</span>
+                <div class="payment-detail-content">
+                    <h3 class="shift-detail-subtext">EDC</h3>
+                    <div class="shift-detail-subcontent">
+                        <span>BCA</span>
+                        <span>750.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Mandiri</span>
+                        <span>89.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>BNI</span>
+                        <span>120.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Lainnya</span>
+                        <span>0</span>
+                    </div>
+                    <div class="total-terjual">
+                        <span>Total</span>
+                        <span>959.000</span>
+                    </div>
                 </div>
-                <div class="shift-detail-subcontent">
-                    <span>Mulai Shift</span>
-                    <span>08:00</span>
+                <div class="payment-detail-content">
+                    <h3 class="shift-detail-subtext">Other Payment</h3>
+                    <div class="shift-detail-subcontent">
+                        <span>Gopay</span>
+                        <span>350.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Shopee Pay</span>
+                        <span>400.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>OVO</span>
+                        <span>80.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Bank Transfer</span>
+                        <span>150.000</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Lainnya</span>
+                        <span>0</span>
+                    </div>
+                    <div class="total-terjual">
+                        <span>Total</span>
+                        <span>980.000</span>
+                    </div>
                 </div>
-                <div class="shift-detail-subcontent">
-                    <span>Akhir Shift</span>
-                    <span>15:00</span>
-                </div>
-                <div class="shift-detail-subcontent">
-                    <span>Sold Items</span>
-                    <span>20</span>
-                </div>
-                <div class="shift-detail-subcontent">
-                    <span>Refund Items</span>
-                    <span>0</span>
+                <div class="payment-detail-content">
+                    <h3 class="shift-detail-subtext">Online Delivery</h3>
+                    <div class="shift-detail-subcontent">
+                        <span>Gofood</span>
+                        <span>0</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Grab Food</span>
+                        <span>0</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Shopee Food</span>
+                        <span>0</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Traveloka Eats</span>
+                        <span>0</span>
+                    </div>
+                    <div class="shift-detail-subcontent">
+                        <span>Lainnya</span>
+                        <span>0</span>
+                    </div>
+                    <div class="total-terjual">
+                        <span>Total</span>
+                        <span>0</span>
+                    </div>
                 </div>
             </div>
         </div>

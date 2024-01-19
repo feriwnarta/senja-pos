@@ -41,7 +41,7 @@
               </li>
               <li><button class="btn-clicked-active sidebar-text" href="/pos/riwayat-shift" wire:navigate>Riwayat
                   Shift</button></li>
-              <li><button class="btn-clicked-active sidebar-text" href="#">Mutasi</button></li>
+              <li><button class="btn-clicked-active sidebar-text" href="/pos/mutasi" wire:navigate>Mutasi</button></li>
             </div>
           </div>
         </div>
