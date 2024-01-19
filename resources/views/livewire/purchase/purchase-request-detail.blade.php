@@ -9,7 +9,7 @@
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        Pesanan Pembelian
+                        Buat Pembelian
                     </div>
                 </div>
 
@@ -26,6 +26,12 @@
                                 wire:click="processRequest('{{ $purchaseRequests->id }}')"
                                 wire:loading.attr="disabled"
                                 class="btn btn-text-only-primary btn-nav margin-left-10">Proses
+                        </button>
+                    @elseif($status == 'Diproses')
+                        <button type="btn"
+                                wire:click="createPurchase('{{ $purchaseRequests->id }}')"
+                                wire:loading.attr="disabled"
+                                class="btn btn-text-only-primary btn-nav margin-left-10">Buat pembelian
                         </button>
                     @endif
 
@@ -132,8 +138,8 @@
 
                                     <select class="form-select input-default"
                                             id="supplier"
-                                            wire:model.live="supplier"
-                                            {{ $isMultipleSupplier == true ? 'disabled' : '' }} wire:change="handleChangeSupplier">
+                                            wire:model.live.600ms="supplier"
+                                        {{ $isMultipleSupplier == true ? 'disabled' : '' }} >
                                         @foreach($suppliers as $supplier)
                                             <option value="{{ $supplier['id'] }}"
                                                     checked>{{  $supplier['name']  }}</option>
@@ -142,11 +148,11 @@
                                     </select>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value=""
                                                id="flexCheckDefault" wire:model.live.debounce.600ms="isMultipleSupplier"
-                                               wire:change="handleMultiSupplier">
+                                        >
                                         <label class="form-check-label margin-left-8" for="flexCheckDefault">
                                             Multiple Supplier
                                         </label>
@@ -169,29 +175,50 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <select class="form-select input-default"
-                                            id="resupplyOutlet" wire:model="paymentType">
-                                        <option value="NET">NET</option>
-                                        <option value="PIA">PIA</option>
+                                            id="resupplyOutlet" wire:model.live="payment"
+                                        {{ $isMultipleSupplier ? 'disabled' : '' }}>
 
+                                        @foreach($paymentType as $payment)
+                                            <option value="{{ $payment }}">{{ $payment }}</option>
+                                        @endforeach
 
                                     </select>
                                 </div>
 
+                            </div>
+                        </div>
+
+                        <div class="container-input-default margin-top-24">
+                            <div class="row align-items-end">
+
                                 <div class="col-md-6">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                               id="flexCheckDefault" wire:model="isMultiplePayment">
-                                        <label class="form-check-label margin-left-8" for="flexCheckDefault">
-                                            Multiple Payment
-                                        </label>
+                                    <label for="warehouseInput"
+                                           class="form-label input-label">Tenggat pembayaran</label>
+
+                                    <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                                    <select class="form-select input-default"
+                                            id="paymentDateOption" wire:model.live="deadlinePayment"
+
+                                        {{ $this->payment != 'NET' || $isMultipleSupplier ? 'disabled' : '' }}
+                                    >
+                                        <option value="3">3 Hari</option>
+                                        <option value="7">7 Hari</option>
+                                        <option value="14">14 Hari</option>
+                                        <option value="30">30 Hari</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="input date" data-provide="datepicker">
+                                        <input type="date" id="datePayment"
+                                               class="form-control input-default" {{ $this->payment != 'NET' || $isMultipleSupplier ? 'disabled' : '' }}>
                                     </div>
 
                                 </div>
 
                             </div>
                         </div>
-
-
                         {{-- DESKRIPSI --}}
                         <div class="margin-top-24">
                             <label for="description" class="form-label">Catatan</label>
@@ -203,7 +230,7 @@
 
                         <div class="margin-top-24">
                             <label for="warehouseInput"
-                                   class="form-label input-label">Tanggal</label>
+                                   class="form-label input-label">Item pembelian</label>
 
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
                         </div>
@@ -215,13 +242,10 @@
                         <table id="" class="table borderless table-hover">
                             <thead class="table-head-color">
                             <tr>
-                                <th scope="col">
-                                    <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox"
-                                           wire:model="selectAll">
-                                </th>
                                 <th scope="col">Item</th>
                                 <th scope="col">Pemasok</th>
                                 <th scope="col">Pembayaran</th>
+                                <th scope="col">Tenggat</th>
                                 <th scope="col">Stok aktual</th>
                                 <th scope="col">Stok Diminta</th>
                                 <th scope="col">Unit</th>
@@ -240,21 +264,26 @@
                                         'purchaseRequestId' => $purchaseRequests->id,
                                         'itemId' => $detail->item->id,
                                         'itemName' => $detail->item->name,
-                                        'supplier' => $this->supplierId,
-                                        'payment' =>  '',
+                                        'supplier' => $this->supplier,
+                                        'payment' =>  $this->payment,
                                         'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand,
                                         'qtyBuy' => $detail->qty_buy,
                                         'unitName' => $detail->item->unit->name,
-                                        'unitPrice' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
-                                        'purchaseAmount' =>  $detail->qty_buy,
+                                        'unitPrice' => number_format($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost, 0),
+                                        'purchaseAmount' =>  number_format($detail->qty_buy, 0),
                                         'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
+                                        'deadlinePayment' => '3',
                                     ];
 
 
-                                  $this->componentItems[$key]['supplier'] = $this->supplierId;
+                                  $this->componentItems[$key]['supplier'] = $this->supplier;
+                                  $this->componentItems[$key]['payment'] = $this->payment;
+                                  $this->componentItems[$key]['deadlinePayment'] = $this->deadlinePayment;
 
-
-                                  Log::info($this->componentItems);
+                                  if($key == $this->indexPayment) {
+                                    $this->componentItems[$key]['payment'] = $this->paymentTemp;
+                                    $this->indexPayment = '';
+                                  }
 
 
 
@@ -262,9 +291,6 @@
 
 
                                 <tr wire:key="{{ $loop->iteration }}">
-                                    <td>
-                                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox"
-                                               wire:model="componentItems.{{ $key }}.isSelected"></td>
                                     <td>{{ $detail->item->name }}</td>
                                     <td>
 
@@ -280,20 +306,47 @@
                                     </td>
                                     <td>
                                         <select class="form-select dropdown-no-border"
-                                                id="supplier" disabled
-                                                wire:model="componentsItem.{{ $key }}.payment.name">
-
-                                            <option value="all" selected disabled>Pilih pembayaran</option>
+                                                id="supplier" {{ !$isMultipleSupplier ? 'disabled' : '' }}
+                                                wire:change="handleItemPaymentChange('{{ $key }}')"
+                                                wire:model="componentItems.{{ $key }}.payment">
+                                            @foreach($paymentType as $payment)
+                                                <option value="{{ $payment }}">{{ $payment }}</option>
+                                            @endforeach
                                         </select>
+                                    </td>
+                                    <td>
+                                        @if($this->componentItems[$key]['payment'] == 'NET')
+                                            <select class="form-select input-default"
+                                                    id="paymentDateOption"
+                                                    wire:model="componentItems.{{$key}}.deadlinePayment"
+
+                                                {{ $this->payment != 'NET' || !$isMultipleSupplier ? 'disabled' : '' }}
+                                            >
+                                                <option value="3">3 Hari</option>
+                                                <option value="7">7 Hari</option>
+                                                <option value="14">14 Hari</option>
+                                                <option value="30">30 Hari</option>
+                                            </select>
+                                        @else
+                                            -
+                                        @endif
                                     </td>
                                     <td>{{ $this->componentItems[$key]['stockActual'] }}</td>
                                     <td>{{ $this->componentItems[$key]['qtyBuy'] }}</td>
                                     <td>{{ $this->componentItems[$key]['unitName'] }}</td>
-                                    <td>{{ IndonesiaCurrency::formatToRupiah($this->componentItems[$key]['unitPrice']) }}</td>
+                                    <td>
+                                        <input type="text" class="form-control input-default"
+                                               wire:model="componentItems.{{ $key }}.unitPrice"
+                                               wire:change="handleValuePurchaseAmount('{{ $key }}')"
+                                               x-mask:dynamic="$money($input)"
+                                        >
+                                    </td>
                                     <td>
                                         <input type="number" class="form-control input-default"
-                                               value="{{  $this->componentItems[$key]['purchaseAmount'] }}">
+                                               wire:model="componentItems.{{ $key }}.purchaseAmount"
+                                               wire:change="handleValuePurchaseAmount('{{ $key }}')">
                                     </td>
+                                    <td>{{  IndonesiaCurrency::formatToRupiah($this->componentItems[$key]['totalAmount']) }}</td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -307,5 +360,9 @@
 
     </div>
 
+    <footer-script>
+        <script src="{{ asset('js/purchase.js') }}"></script>
+    </footer-script>
 
 </x-page-layout>
+

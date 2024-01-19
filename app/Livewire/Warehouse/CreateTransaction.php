@@ -176,9 +176,10 @@ class CreateTransaction extends Component
 
             $allItems = collect(); // Inisialisasi koleksi di luar fungsi each
             $result = $this->warehouse->warehouseItem()->with('items.recipe', 'items.unit', 'items.category', 'stockItem')->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
-
+            $result->each(function ($item) use ($allItems) {
+                $allItems->push($item);
+            });
             $this->items = $allItems;
-
             $this->nextCursor = $result->toArray()['next_cursor'];
         }
     }

@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Number;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -23,12 +24,19 @@ class PurchaseRequestDetail extends Component
     public array $suppliers;
 
     public ?string $supplier = null;
-    public ?string $supplierId = null;
-    public string $paymentType = 'NET';
+    public string $payment = 'NET';
+
+    public array $paymentType = ['NET', 'PIA'];
+
+    public string $deadlinePayment = '3';
+    public string $paymentTemp;
+
+
     public bool $isMultipleSupplier = false;
-    public string $isMultiplePayment = '';
+    public bool $isMultiplePayment = false;
     public string $note = '';
     public PurchaseRequest $purchaseRequestDetail;
+    public string $indexPayment = '';
 
     public array $componentItems = [];
 
@@ -105,21 +113,21 @@ class PurchaseRequestDetail extends Component
 
     }
 
-    /**
-     * handle saat multi supplier checked
-     * @return void
-     */
-    public function handleMultiSupplier()
-    {
 
-        Log::info($this->isMultipleSupplier);
+    public function handleValuePurchaseAmount($index)
+    {
+        $formattedUnitPrice = $this->componentItems[$index]['unitPrice'];
+        $numericUnitPrice = floatval(str_replace(',', '', $formattedUnitPrice)); // Remove commas and convert to float
+        $this->componentItems[$index]['unitPrice'] = Number::format(floatval($numericUnitPrice));
+        $this->componentItems[$index]['totalAmount'] = $this->componentItems[$index]['purchaseAmount'] * $numericUnitPrice;
     }
 
-    public function handleChangeSupplier()
+    public function handleItemPaymentChange($index)
     {
-        $this->supplierId = $this->supplier;
-        Log::info("suppliers id : $this->supplier");
+        $this->paymentTemp = $this->componentItems[$index]['payment'];
+        $this->indexPayment = $index;
     }
+
 
     public function render()
     {
@@ -173,6 +181,18 @@ class PurchaseRequestDetail extends Component
     private function findPurchaseRequestById($id)
     {
         return PurchaseRequest::with('history')->findOrFail($id);
+    }
+
+    public function createPurchase()
+    {
+
+        Log::info('membuat purchasing');
+        Log::info($this->componentItems);
+    }
+
+    private function store()
+    {
+
     }
 
 }
