@@ -5,26 +5,23 @@
                 <div class="tanggal-wrapper">
                     <div>
                         <label>Tanggal Mulai</label>
-                        <input type="date" name="begin"
-                        placeholder="dd-mm-yyyy" value=""
-                        min="1997-01-01" max="2030-12-31">
+                        <input type="date" id="date" name="begin" placeholder="dd/mm/yyyy">
                     </div>
                     <div>
                         <label>Tanggal Selesai</label>
-                        <input type="date" name="begin"
-                        placeholder="dd-mm-yyyy" value=""
-                        min="1997-01-01" max="2030-12-31">
+                        <input type="date" id="date" name="end" placeholder="dd/mm/yyyy">
                     </div>
                     <div class="dropdown-center">
-                        <button class="btn-ekspor dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          Ekspor
+                        <button class="btn-ekspor dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Ekspor
                         </button>
                         <ul class="dropdown-menu" data-bs-theme="light">
-                          <li><a class="dropdown-item" href="#">Action</a></li>
-                          <li><a class="dropdown-item" href="#">Action two</a></li>
-                          <li><a class="dropdown-item" href="#">Action three</a></li>
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Action two</a></li>
+                            <li><a class="dropdown-item" href="#">Action three</a></li>
                         </ul>
-                      </div>
+                    </div>
                 </div>
         </div>
         <table class="table table-borderless">
