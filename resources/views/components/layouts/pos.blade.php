@@ -55,6 +55,7 @@
     </script>
     <script src="{{ asset('js/popup-sidebar.js') }}" async></script>
     <script src="{{ asset('js/select-all.js') }}" async></script>
+    <script src="{{ asset('js/date-format.js') }}" async></script>
     @yield('footer-script')
 </body>
 
