@@ -1,9 +1,9 @@
 let newDate = document.getElementById("date").value;
-todayDate = new Date().toISOString().slice(0, 10);
+todayDate = new Date().toISOString().slice(0, 10).split("-");
 
 console.log(`Before ${todayDate}`);
 
-let splitDate = todayDate.split("-");
+let splitDate = todayDate;
 
 let year = splitDate[2];
 let month = splitDate[1];
