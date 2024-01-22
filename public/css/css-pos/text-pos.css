@@ -1,0 +1,128 @@
+/* ---------------------------------------
+TEXT BOLD WEIGHT 700
+--------------------------------------- */
+.text-bold-32 {
+    font-family: "Poppins 700";
+    font-size: 32px;
+    font-style: normal;
+    line-height: 44px;
+}
+
+.text-bold-24 {
+    font-family: "Poppins 700";
+    font-size: 24px;
+    font-style: normal;
+    line-height: 32px;
+}
+
+.text-bold-20 {
+    font-family: "Poppins 700";
+    font-size: 20px;
+    font-style: normal;
+    line-height: 28px;
+}
+
+.text-bold-16 {
+    font-family: "Poppins 700";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+}
+
+.text-bold-14 {
+    font-family: "Poppins 700";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+/* ---------------------------------------
+TEXT MEDIUM WEIGHT 500
+--------------------------------------- */
+.text-medium-20 {
+    font-family: "Poppins 500";
+    font-size: 20px;
+    font-style: normal;
+    line-height: 28px;
+}
+
+.text-medium-16 {
+    font-family: "Poppins 500";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+}
+
+.text-medium-14 {
+    font-family: "Poppins 500";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+}
+
+/* ---------------------------------------
+TEXT SMALL WEIGHT 400
+--------------------------------------- */
+.text-light-24 {
+    font-family: "Poppins 400";
+    font-size: 24px;
+    font-style: normal;
+    line-height: 32px;
+}
+
+.text-light-16 {
+    font-family: "Poppins 400";
+    font-size: 16px;
+    font-style: normal;
+    line-height: 24px;
+}
+
+.text-light-14 {
+    font-family: "Poppins 400";
+    font-size: 14px;
+    font-style: normal;
+    line-height: 20px;
+}
+
+.text-light-12 {
+    font-family: "Poppins 400";
+    font-size: 12px;
+    font-style: normal;
+    line-height: 16px;
+}
+
+/* ---------------------------------------
+TEXT COLOR
+--------------------------------------- */
+.color-f166 {
+    color: #f16622;
+}
+
+.color-0a0a {
+    color: #0a0a0a;
+}
+
+.color-4040 {
+    color: #404040;
+}
+
+.color-6161 {
+    color: #616161;
+}
+
+.color-9e9e {
+    color: #9e9e9e;
+}
+
+.color-7575 {
+    color: #757575;
+}
+
+.color-f00 {
+    color: #f00;
+}
+
+.color-b241 {
+    color: #b24109;
+}

@@ -11,33 +11,6 @@
     gap: 24px;
 }
 
-.tanggal-shift-detail {
-    color: #404040;
-
-    font-family: "Poppins 700";
-    font-size: 24px;
-    font-style: normal;
-    line-height: 32px;
-}
-
-.shift-detail-text {
-    color: #404040;
-
-    font-family: "Poppins 700";
-    font-size: 20px;
-    font-style: normal;
-    line-height: 28px;
-}
-
-.shift-detail-subtext {
-    color: #404040;
-
-    font-family: "Poppins 700";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
 .shift-detail-content {
     display: flex;
     flex-direction: column;
@@ -56,80 +29,16 @@
     flex-direction: column;
 }
 
-.shift-detail-subcontent span:nth-child(1) {
-    color: #404040;
-
-    font-family: "Poppins 500";
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 24px;
-}
-
-.shift-detail-subcontent span:nth-child(2) {
-    color: #757575;
-
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
-.nama-menu-text {
-    color: #404040;
-
-    font-family: "Poppins 500";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
 .menu-terjual {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.menu-terjual span:nth-child(1) {
-    color: #404040;
-
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
-.menu-terjual span:nth-child(2) {
-    color: #757575;
-
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
 .total-terjual {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
-
-.total-terjual span:nth-child(1) {
-    color: #404040;
-
-    font-family: "Poppins 700";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
-.total-terjual span:nth-child(2) {
-    color: #757575;
-
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
 }
 
 .sold-item-detail {

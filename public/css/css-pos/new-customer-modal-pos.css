@@ -1,23 +1,21 @@
+.modal-pelangganBaru-wrapper {
+    display: flex;
+    padding-top: 52px;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .input-pelanggan-baru {
     width: 527px;
 }
 
-.input-pelanggan-baru div label {
-    color: #404040;
+.body-input-pelanggan-wrapper {
+    display: flex;
+    flex: 1 0 0;
+    flex-direction: column;
+    align-self: center;
 
-    font-family: "Poppins 400";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px; 
-}
-
-input[type="text"] {
-    color: #757575;
-
-    font-family: "Poppins 400";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px;
+    gap: 40px;
 }
 
 .button-group-new-customer {
@@ -36,11 +34,11 @@ input[type="text"] {
     align-items: center;
 
     border-radius: 6px;
-    border: 1px solid #F16622;
-    background: #FFF;
+    border: 1px solid #f16622;
+    background: #fff;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
 
-    color: #F16622;
+    color: #f16622;
 
     font-family: "Poppins 500";
     font-size: 16px;
@@ -57,10 +55,10 @@ input[type="text"] {
     align-items: center;
 
     border-radius: 6px;
-    background: #F16622;
+    background: #f16622;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
 
-    color: #FFF;
+    color: #fff;
 
     font-family: "Poppins 500";
     font-size: 16px;

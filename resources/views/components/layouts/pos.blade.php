@@ -31,6 +31,10 @@
     <link rel="stylesheet" href="{{ asset('css/css-pos/riwayat-shift-detail-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/mutasi-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/diskon-voucher-modal-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/text-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/bayar-order-modal-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/pembayaran-berhasil-modal-pos.css') }}">
+
 
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('data-table/datatables.js') }}"></script>
@@ -55,7 +59,7 @@
     </script>
     <script src="{{ asset('js/popup-sidebar.js') }}" async></script>
     <script src="{{ asset('js/select-all.js') }}" async></script>
-    <script src="{{ asset('js/date-format.js') }}" async></script>
+    <script src="{{ asset('js/date-format.js') }}" async data-navigate-once></script>
     @yield('footer-script')
 </body>
 

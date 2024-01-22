@@ -2,13 +2,13 @@
     <div class="modal-content">
         <div
             class="modal-header header-body-wrapper d-flex flex-row justify-content-center align-items-center sticky-top">
-            <h1 class="jumlah-pelanggan">Tambah Diskon</h1>
+            <h1 class="text-medium-20 color-4040">Tambah Diskon</h1>
         </div>
-        <div class="modal-body modal-body-wrapper">
+        <div class="modal-body modal-discvoc-wrapper">
             <div class="body-select-pelanggan-wrapper">
                 <form class="input-discount-voucher d-flex flex-column">
                     <div class="d-flex flex-column gap-2">
-                        <label class="discount-vocer-text">Discount</label>
+                        <label class="text-bold-14 color-4040">Discount</label>
                         <div class="line-divider"></div>
                         <div class="radio-group-discount d-flex flex-row">
                             <input type="radio" class="btn-check btn-outline-primary" name="options-base" id="10percent"
@@ -29,9 +29,9 @@
                         </div>
                     </div>
                     <div class="d-flex flex-column">
-                        <label class="discount-vocer-text">Vocer</label>
+                        <label class="text-bold-14 color-4040">Vocer</label>
                         <div class="line-divider"></div>
-                        <input class="form-control" type="text" placeholder="Masukan nomor vocer">
+                        <input class="form-control text-light-14 color-7575" type="text" placeholder="Masukan nomor vocer">
                     </div>
                 </form>
                 <div class="button-group-discvoc d-flex flex-row justify-content-end gap-3">

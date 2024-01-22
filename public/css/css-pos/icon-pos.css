@@ -170,3 +170,16 @@ PAGE MUTASI ICON
     background-image: url(../../img/icons/calendar-dark.png);
     vertical-align: middle;
 }
+
+/* ---------------------------------------
+MODAL PEMBAYARAN BERHASIL
+--------------------------------------- */
+.dollar-icon {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../../img/icons/currency-dollar.png);
+    vertical-align: middle;
+}

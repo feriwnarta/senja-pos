@@ -1,0 +1,49 @@
+.modal-header-pembayaran {
+    margin: 12px 12px;
+}
+
+.close-position {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    margin: 0;
+}
+
+.body-pembayaran-berhasil-wrapper {
+    margin: 0 164px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    gap: 1rem;
+}
+
+.pembayaran-berhasil-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2.5rem;
+}
+
+.total-pembayaran-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+}
+
+.jenis-pembayaran-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5rem;
+}
+
+.button-group-pembayaran {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.938rem;
+}

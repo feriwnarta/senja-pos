@@ -1,44 +1,74 @@
 <div class="modal-dialog modal-wrapper">
     <div class="modal-content">
         <div
-            class="modal-header header-body-wrapper d-flex flex-row justify-content-center align-items-center sticky-top">
-            <h1 class="jumlah-pelanggan">Tambah Diskon</h1>
+            class="modal-header header-body-wrapper d-flex flex-row justify-content-between align-items-center sticky-top">
+            <button class="">Keluar</button>
+            <div class="d-flex flex-column align-items-center">
+                <h1 class="text-bold-20 color-4040">Grand Total</h1>
+                <h1 class="text-bold-32 color-0a0a">Rp. 90.000</h1>
+            </div>
+            <Button class="">Bayar</Button>
         </div>
-        <div class="modal-body modal-body-wrapper">
-            <div class="body-select-pelanggan-wrapper">
-                HALLO
-                {{-- <form class="input-discount-voucher d-flex flex-column">
-                    <div class="d-flex flex-column gap-2">
-                        <label class="discount-vocer-text">Discount</label>
-                        <div class="line-divider"></div>
-                        <div class="radio-group-discount d-flex flex-row">
-                            <input type="radio" class="btn-check btn-outline-primary" name="options-base" id="10percent"
-                                autocomplete="off">
-                            <label class="btn" for="10percent">10%</label>
-                            <input type="radio" class="btn-check btn-outline-primary" name="options-base" id="20percent"
-                                autocomplete="off">
-                            <label class="btn" for="20percent">20%</label>
-                            <input type="radio" class="btn-check btn-outline-primary" name="options-base" id="30percent"
-                                autocomplete="off">
-                            <label class="btn" for="30percent">30%</label>
-                            <input type="radio" class="btn-check btn-outline-primary" name="options-base" id="50percent"
-                                autocomplete="off">
-                            <label class="btn" for="50percent">50%</label>
-                            <input type="radio" class="btn-check btn-outline-primary" name="options-base" id="100percent"
-                            autocomplete="off">
-                            <label class="btn" for="100percent">100%</label>
-                        </div>
+        <div class="modal-body modal-bayar-wrapper">
+            <div class="body-select-pelanggan-wrapper p-0">
+                <div class="modal-content-wrapper">
+                    <div class="content-header">
+                        <span class="text-bold-14 color-6161">Tunai</span>
                     </div>
-                    <div class="d-flex flex-column">
-                        <label class="discount-vocer-text">Vocer</label>
-                        <div class="line-divider"></div>
-                        <input class="form-control" type="text" placeholder="Masukan nomor vocer">
+                    <div class="line-divider"></div>
+                    <div class="content-body">
+                        <button type="button" class="modal-variasi-button">Satu</button>
+                        <button type="button" class="modal-variasi-button">Dua</button>
+                        <button type="button" class="modal-variasi-button">Tiga</button>
                     </div>
-                </form>
-                <div class="button-group-discvoc d-flex flex-row justify-content-end gap-3">
-                    <button class="btn btn-outline-danger" data-bs-dismiss="modal">Keluar</button>
-                    <button class="btn btn-primary">Simpan</button>
-                </div> --}}
+                </div>
+                <div class="modal-content-wrapper">
+                    <div class="content-header">
+                        <span class="text-bold-14 color-6161">EDC</span>
+                    </div>
+                    <div class="line-divider"></div>
+                    <div class="content-body d-flex flex-wrap">
+                        <button type="button" class="modal-variasi-button">BCA</button>
+                        <button type="button" class="modal-variasi-button">Mandiri</button>
+                        <button type="button" class="modal-variasi-button">BNI</button>
+                        <button type="button" class="modal-variasi-button">Lainnya</button>
+                    </div>
+                </div>
+                <div class="modal-content-wrapper">
+                    <div class="content-header">
+                        <span class="text-bold-14 color-6161">Other Payment</span>
+                    </div>
+                    <div class="line-divider"></div>
+                    <div class="content-body d-flex flex-wrap">
+                        <button type="button" class="modal-variasi-button">Gopay</button>
+                        <button type="button" class="modal-variasi-button">Shopee Pay</button>
+                        <button type="button" class="modal-variasi-button">OVO</button>
+                        <button type="button" class="modal-variasi-button">Bank Transfer</button>
+                        <button type="button" class="modal-variasi-button">Lainnya</button>
+                    </div>
+                </div>
+                <div class="modal-content-wrapper">
+                    <div class="content-header">
+                        <span class="text-bold-14 color-6161">Online Delivery</span>
+                    </div>
+                    <div class="line-divider"></div>
+                    <div class="content-body d-flex flex-wrap">
+                        <button type="button" class="modal-variasi-button">Go Food</button>
+                        <button type="button" class="modal-variasi-button">Grab Food</button>
+                        <button type="button" class="modal-variasi-button">Shopee Food</button>
+                        <button type="button" class="modal-variasi-button">Traveloka Eats</button>
+                        <button type="button" class="modal-variasi-button">Lainnya</button>
+                    </div>
+                </div>
+                <div class="modal-content-wrapper">
+                    <div class="content-header">
+                        <span class="text-bold-14 color-6161">Note</span>
+                    </div>
+                    <div class="line-divider"></div>
+                    <div class="content-body">
+                        <textarea class="form-control note-text-area" placeholder="" id="floatingTextarea2"></textarea>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -9,13 +9,10 @@
     background: #f16622;
 }
 
-.akhiri-shift-text {
-    color: #fff;
-
-    font-family: "Poppins 500";
-    font-size: 20px;
-    font-style: normal;
-    line-height: 28px;
+.modal-akhiriShift-wrapper {
+    display: flex;
+    padding-top: 24px;
+    flex-direction: column;
 }
 
 .header-shift-body-wrapper i {
@@ -33,51 +30,6 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
-
-.saldo-akhir-shift span:nth-child(1) {
-    color: #404040;
-
-    font-family: "Poppins 500";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
-.saldo-akhir-shift span:nth-child(2) {
-    color: #404040;
-
-    font-family: "Poppins 700";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
-.selisih-akhir-shift span:nth-child(1) {
-    color: #404040;
-
-    font-family: "Poppins 500";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
-.input-akhiri-shift div label {
-    color: #404040;
-
-    font-family: "Poppins 400";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px;
-}
-
-.selisih-akhir-shift span:nth-child(2) {
-    color: #f00;
-
-    font-family: "Poppins 700";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
 }
 
 .button-modal-akhiri-shift {

@@ -4,12 +4,12 @@
             <livewire:components.navbar-kasir.header-kasir>
                 <div class="tanggal-wrapper">
                     <div>
-                        <label>Tanggal Mulai</label>
+                        <label class="text-light-14 color-9e9e">Tanggal Mulai</label>
                         <input type="date" id="date" name="begin" value="yyyy-MM-dd">
                     </div>
                     <div>
-                        <label>Tanggal Selesai</label>
-                        <input type="date" id="date" name="end">
+                        <label class="text-light-14 color-9e9e">Tanggal Selesai</label>
+                        <input type="date" id="date" name="end" value="yyyy-MM-dd">
                     </div>
                     <div class="dropdown-center">
                         <button class="btn-ekspor dropdown-toggle" type="button" data-bs-toggle="dropdown"
@@ -27,23 +27,23 @@
         <table class="table table-borderless">
             <thead class="table-head">
                 <tr>
-                    <th scope="col">No</th>
-                    <th scope="col">Tanggal</th>
-                    <th scope="col">Nomor Transaksi</th>
-                    <th scope="col">Meja</th>
-                    <th scope="col">Jumlah Total</th>
-                    <th scope="col">Status</th>
+                    <th class="text-light-14 color-4040" scope="col">No</th>
+                    <th class="text-light-14 color-4040" scope="col">Tanggal</th>
+                    <th class="text-light-14 color-4040" scope="col">Nomor Transaksi</th>
+                    <th class="text-light-14 color-4040" scope="col">Meja</th>
+                    <th class="text-light-14 color-4040" scope="col">Jumlah Total</th>
+                    <th class="text-light-14 color-4040" scope="col">Status</th>
                 </tr>
             </thead>
             <tbody>
                 @for ($i = 1; $i < 15; $i++)
                     <tr class="table-row-bordered">
-                        <td>{{ $i }}</td>
-                        <td>05/02/2023</td>
-                        <td>CSCF0001</td>
-                        <td>T12</td>
-                        <td>Rp. 350.000</td>
-                        <td>Lunas</td>
+                        <td class="text-light-14 color-4040">{{ $i }}</td>
+                        <td class="text-light-14 color-4040">05/02/2023</td>
+                        <td class="text-light-14 color-4040">CSCF0001</td>
+                        <td class="text-light-14 color-4040">T12</td>
+                        <td class="text-light-14 color-4040">Rp. 350.000</td>
+                        <td class="text-light-14 color-4040">Lunas</td>
                     </tr>
                 @endfor
             </tbody>

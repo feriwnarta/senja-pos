@@ -11,7 +11,7 @@
                         <div class="card-body">
                             <img src="../img/chicken.png" alt="Test">
                         </div>
-                        <p class="menu-title">
+                        <p class="menu-title text-light-12 color-4040">
                             Bubur Hot Pot
                         </p>
                     </Button>

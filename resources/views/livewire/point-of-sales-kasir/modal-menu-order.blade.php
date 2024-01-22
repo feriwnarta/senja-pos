@@ -2,15 +2,15 @@
     <div class="modal-content">
         <div
             class="modal-header header-body-wrapper d-flex flex-column justify-content-center align-items-center sticky-top">
-            <h1 class="modal-title menu-name" id="exampleModalLabel">Modal title</h1>
-            <h1 class="modal-title menu-price" id="exampleModalLabel">Rp. 0</h1>
+            <h1 class="modal-title text-medium-20 color-6161" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title text-bold-20 color-4040" id="exampleModalLabel">Rp. 0</h1>
         </div>
-        <form class="modal-body modal-body-wrapper d-flex flex-column justify-content-center align-items-center">
+        <form class="modal-body modal-menu-wrapper d-flex flex-column justify-content-center align-items-center">
             <div class="modal-content-wrapper">
                 <div class="content-header">
-                    <span class="inline-text">Variasi</span>
+                    <span class="text-bold-14 color-6161">Variasi</span>
                     <span class="divider"></span>
-                    <span class="inline-text-2">Pilih Salah Satu</span>
+                    <span class="text-light-12 color-9e9e">Pilih Salah Satu</span>
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
@@ -21,9 +21,9 @@
             </div>
             <div class="modal-content-wrapper">
                 <div class="content-header">
-                    <span class="inline-text">Ukuran</span>
+                    <span class="text-bold-14 color-6161">Ukuran</span>
                     <span class="divider"></span>
-                    <span class="inline-text-2">Pilih Salah Satu</span>
+                    <span class="text-light-12 color-9e9e">Pilih Salah Satu</span>
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
@@ -35,13 +35,13 @@
             <div class="modal-content-wrapper">
                 <div class="content-header-toping">
                     <div class="toping-left-content">
-                        <span class="inline-text">Toping</span>
+                        <span class="text-bold-14 color-6161">Toping</span>
                         <span class="divider"></span>
-                        <span class="inline-text-2">Pilih Salah Satu / Lebih Dari Satu</span>
+                        <span class="text-light-12 color-9e9e">Pilih Salah Satu / Lebih Dari Satu</span>
                     </div>
                     <div class="toping-right-content">
                         <input type="checkbox" id="check-all" class="checkbox" onclick="checkAll(this)">
-                        <label for="check-all"> Pilih Semua</label>
+                        <label for="check-all" class="text-light-12 color-9e9e">Pilih Semua</label>
                     </div>
                 </div>
                 <div class="line-divider"></div>
@@ -84,13 +84,13 @@
             </div>
             <div class="modal-content-wrapper">
                 <div class="content-header">
-                    <span class="inline-text">Ukuran</span>
+                    <span class="text-bold-14 color-6161">Ukuran</span>
                     <span class="divider"></span>
-                    <span class="inline-text-2">Pilih Salah Satu</span>
+                    <span class="text-light-12 color-9e9e">Pilih Salah Satu</span>
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
-                    <input type="number" class="modal-variasi-input text-end" placeholder="1" wire:model.live="count">
+                    <input type="number" class="modal-variasi-input text-light-14 color-7575 text-end" placeholder="1" wire:model.live="count">
                     <button type="button" class="modal-variasi-button1" wire:click="decrement"><i
                             class="minus-icon"></i></button>
                     <button type="button" class="modal-variasi-button2" wire:click="increment"><i
@@ -99,7 +99,7 @@
             </div>
             <div class="modal-content-wrapper">
                 <div class="content-header">
-                    <span class="inline-text">Tipe Penjualan</span>
+                    <span class="text-bold-14 color-6161">Tipe Penjualan</span>
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body-sell-type">
@@ -109,7 +109,7 @@
             </div>
             <div class="modal-content-wrapper">
                 <div class="content-header">
-                    <span class="inline-text">Note</span>
+                    <span class="text-bold-14 color-6161">Note</span>
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
@@ -118,7 +118,7 @@
             </div>
             <div class="modal-content-wrapper">
                 <div class="content-header">
-                    <span class="inline-text">Tipe Penjualan</span>
+                    <span class="text-bold-14 color-6161">Tipe Penjualan</span>
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body-sell-type">

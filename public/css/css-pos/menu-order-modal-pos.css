@@ -42,32 +42,12 @@ body::-webkit-scrollbar {
     flex-shrink: 0;
 }
 
-.menu-name {
-    color: #616161;
-
-    font-family: "Poppins 500";
-    font-size: 20px;
-    font-style: normal;
-    line-height: 28px;
-}
-
-.menu-price {
-    color: #404040;
-
-    font-family: "Poppins 700";
-    font-size: 20px;
-    font-style: normal;
-    line-height: 28px;
-}
-
-.modal-body-wrapper {
+.modal-menu-wrapper {
     display: flex;
     padding-top: 16px;
     flex-direction: column;
     justify-content: center;
 
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
     gap: 24px;
 }
 
@@ -95,20 +75,16 @@ body::-webkit-scrollbar {
     gap: 8px;
 }
 
-.toping-right-content {
+.toping-left-content {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.toping-right-content label {
-    color: #9e9e9e;
-
-    font-family: "Poppins 400";
-    font-size: 12px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 16px;
+.toping-right-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .checkbox[type="checkbox"] {
@@ -132,24 +108,6 @@ body::-webkit-scrollbar {
 
 .checkbox[type="checkbox"]:checked {
     background-color: #f16622;
-}
-
-.inline-text {
-    color: #616161;
-
-    font-family: "Poppins 700";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px;
-}
-
-.inline-text-2 {
-    color: #9e9e9e;
-
-    font-family: "Poppins 400";
-    font-size: 12px;
-    font-style: normal;
-    line-height: 16px;
 }
 
 .divider {
@@ -217,13 +175,6 @@ body::-webkit-scrollbar {
     border: 1px solid #c2c2c2;
     background: #fff;
     box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.12) inset;
-
-    color: #757575;
-
-    font-family: "Poppins 400";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px;
 }
 
 .choose-multiple {

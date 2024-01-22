@@ -4,35 +4,35 @@
             <livewire:components.navbar-kasir.header-kasir>
         </div>
         <div class="riwayat-shift-detail-content">
-            <h1 class="tanggal-shift-detail">Minggu, 5 Februari 2023</h1>
+            <h1 class="text-bold-24 color-4040">Minggu, 5 Februari 2023</h1>
             {{-- Shift Detail --}}
             <div class="shift-detail-content">
                 {{-- Shift Detail Content --}}
-                <h2 class="shift-detail-text">Shift Detail</h2>
+                <h2 class="text-bold-20 color-4040">Shift Detail</h2>
                 <div class="d-flex flex-column gap-2">
                     <div class="shift-detail-subcontent">
-                        <span>Nama</span>
-                        <span>Andre</span>
+                        <span class="text-medium-16 color-4040">Nama</span>
+                        <span class="text-light-16 color-7575">Andre</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Outlet</span>
-                        <span>Cahaya Senja Cafe</span>
+                        <span class="text-medium-16 color-4040">Outlet</span>
+                        <span class="text-light-16 color-7575">Cahaya Senja Cafe</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Mulai Shift</span>
-                        <span>08:00 WIB</span>
+                        <span class="text-medium-16 color-4040">Mulai Shift</span>
+                        <span class="text-light-16 color-7575">08:00 WIB</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Akhir Shift</span>
-                        <span>15:00 WIB</span>
+                        <span class="text-medium-16 color-4040">Akhir Shift</span>
+                        <span class="text-light-16 color-7575">15:00 WIB</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Sold Items</span>
-                        <span>20</span>
+                        <span class="text-medium-16 color-4040">Sold Items</span>
+                        <span class="text-light-16 color-7575">20</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Refund Items</span>
-                        <span>0</span>
+                        <span class="text-medium-16 color-4040">Refund Items</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                 </div>
             </div>
@@ -40,35 +40,35 @@
             {{-- Cash Management --}}
             <div class="shift-detail-content">
                 {{-- Cash Management Content --}}
-                <h2 class="shift-detail-text">Cash Management</h2>
+                <h2 class="text-bold-20 color-4040">Cash Management</h2>
                 <div class="d-flex flex-column gap-2">
                     <div class="shift-detail-subcontent">
-                        <span>Starting Cash</span>
-                        <span>2.000.000</span>
+                        <span class="text-medium-16 color-4040">Starting Cash</span>
+                        <span class="text-light-16 color-7575">2.000.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Cash Payment</span>
-                        <span>1.800.000</span>
+                        <span class="text-medium-16 color-4040">Cash Payment</span>
+                        <span class="text-light-16 color-7575">1.800.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Kas Keluar</span>
-                        <span>70.000</span>
+                        <span class="text-medium-16 color-4040">Kas Keluar</span>
+                        <span class="text-light-16 color-7575">70.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Kas Masuk</span>
-                        <span>0</span>
+                        <span class="text-medium-16 color-4040">Kas Masuk</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Saldo Akhir</span>
-                        <span>3.730.000</span>
+                        <span class="text-medium-16 color-4040">Saldo Akhir</span>
+                        <span class="text-light-16 color-7575">3.730.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Saldo Aktual</span>
-                        <span>3.600.000</span>
+                        <span class="text-medium-16 color-4040">Saldo Aktual</span>
+                        <span class="text-light-16 color-7575">3.600.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Selisih</span>
-                        <span>130.000</span>
+                        <span class="text-medium-16 color-4040">Selisih</span>
+                        <span class="text-light-16 color-7575">130.000</span>
                     </div>
                 </div>
             </div>
@@ -76,9 +76,9 @@
             {{-- Transaction Detail --}}
             <div class="shift-detail-content">
                 {{-- Transaction Detail Content --}}
-                <h2 class="shift-detail-text">Transaction Detail</h2>
+                <h2 class="text-bold-20 color-4040">Transaction Detail</h2>
                 <div class="sold-item-detail">
-                    <h3 class="shift-detail-subtext">Sold Item</h3>
+                    <h3 class="text-bold-16 color-4040">Sold Item</h3>
                     {{-- DUMMY DATA FOR SOLD ITEM --}}
                     @php
                         $arrayMenu = [
@@ -128,20 +128,20 @@
                     @foreach ($arrayMenu as $item)
                         <div>
                             <div class="shift-detail-subcontent2" wire:key="{{ $item['id'] }}">
-                                <div class="nama-menu-text">
+                                <div class="text-medium-16 color-4040">
                                     {{ $item['name'] }}
                                 </div>
                                 <div class="menu-terjual">
-                                    <span>{{ $item['itemSold'] }} x {{ $item['price'] }}</span>
-                                    <span>{{ $item['itemSold'] * $item['price'] }}</span>
+                                    <span class="text-light-16 color-4040">{{ $item['itemSold'] }} x {{ $item['price'] }}</span>
+                                    <span class="text-light-16 color-7575">{{ $item['itemSold'] * $item['price'] }}</span>
                                 </div>
                             </div>
                         </div>
                     @endforeach
                 </div>
                 <div class="total-terjual">
-                    <span>Total</span>
-                    <span>{{ $totalSold }}</span>
+                    <span class="text-bold-16 color-4040">Total</span>
+                    <span class="text-light-16 color-7575">{{ $totalSold }}</span>
                 </div>
 
             </div>
@@ -149,101 +149,101 @@
             {{-- Payment Detail --}}
             <div class="shift-detail-content">
                 {{-- Payment Detail Content --}}
-                <h2 class="shift-detail-text">Payment Detail</h2>
+                <h2 class="text-bold-20 color-4040">Payment Detail</h2>
                 <div class="payment-detail-content">
-                    <h3 class="shift-detail-subtext">Cash Payment</h3>
+                    <h3 class="text-bold-16 color-4040">Cash Payment</h3>
                     <div class="shift-detail-subcontent">
-                        <span>Cash Sale</span>
-                        <span>1.800.000</span>
+                        <span class="text-light-16 color-4040">Cash Sale</span>
+                        <span class="text-light-16 color-7575">1.800.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Cash Invoice</span>
-                        <span>70.000</span>
+                        <span class="text-light-16 color-4040">Cash Invoice</span>
+                        <span class="text-light-16 color-7575">70.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Cash Refund</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Cash Refund</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="total-terjual">
-                        <span>Total</span>
-                        <span>1.870.000</span>
+                        <span class="text-light-16 color-4040">Total</span>
+                        <span class="text-light-16 color-7575">1.870.000</span>
                     </div>
                 </div>
                 <div class="payment-detail-content">
-                    <h3 class="shift-detail-subtext">EDC</h3>
+                    <h3 class="text-bold-16 color-4040">EDC</h3>
                     <div class="shift-detail-subcontent">
-                        <span>BCA</span>
-                        <span>750.000</span>
+                        <span class="text-light-16 color-4040">BCA</span>
+                        <span class="text-light-16 color-7575">750.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Mandiri</span>
-                        <span>89.000</span>
+                        <span class="text-light-16 color-4040">Mandiri</span>
+                        <span class="text-light-16 color-7575">89.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>BNI</span>
-                        <span>120.000</span>
+                        <span class="text-light-16 color-4040">BNI</span>
+                        <span class="text-light-16 color-7575">120.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Lainnya</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Lainnya</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="total-terjual">
-                        <span>Total</span>
-                        <span>959.000</span>
+                        <span class="text-bold-16 color-4040">Total</span>
+                        <span class="text-light-16 color-7575">959.000</span>
                     </div>
                 </div>
                 <div class="payment-detail-content">
-                    <h3 class="shift-detail-subtext">Other Payment</h3>
+                    <h3 class="text-bold-16 color-4040">Other Payment</h3>
                     <div class="shift-detail-subcontent">
-                        <span>Gopay</span>
-                        <span>350.000</span>
+                        <span class="text-light-16 color-4040">Gopay</span>
+                        <span class="text-light-16 color-7575">350.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Shopee Pay</span>
-                        <span>400.000</span>
+                        <span class="text-light-16 color-4040">Shopee Pay</span>
+                        <span class="text-light-16 color-7575">400.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>OVO</span>
-                        <span>80.000</span>
+                        <span class="text-light-16 color-4040">OVO</span>
+                        <span class="text-light-16 color-7575">80.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Bank Transfer</span>
-                        <span>150.000</span>
+                        <span class="text-light-16 color-4040">Bank Transfer</span>
+                        <span class="text-light-16 color-7575">150.000</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Lainnya</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Lainnya</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="total-terjual">
-                        <span>Total</span>
-                        <span>980.000</span>
+                        <span class="text-bold-16 color-4040">Total</span>
+                        <span class="text-light-16 color-7575">980.000</span>
                     </div>
                 </div>
                 <div class="payment-detail-content">
-                    <h3 class="shift-detail-subtext">Online Delivery</h3>
+                    <h3 class="text-bold-16 color-4040">Online Delivery</h3>
                     <div class="shift-detail-subcontent">
-                        <span>Gofood</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Gofood</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Grab Food</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Grab Food</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Shopee Food</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Shopee Food</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Traveloka Eats</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Traveloka Eats</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="shift-detail-subcontent">
-                        <span>Lainnya</span>
-                        <span>0</span>
+                        <span class="text-light-16 color-4040">Lainnya</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                     <div class="total-terjual">
-                        <span>Total</span>
-                        <span>0</span>
+                        <span class="text-bold-16 color-4040">Total</span>
+                        <span class="text-light-16 color-7575">0</span>
                     </div>
                 </div>
             </div>

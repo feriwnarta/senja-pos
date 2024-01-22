@@ -14,7 +14,7 @@
     height: 100vh;
     top: 0%;
     right: 0%;
-    background: #FFF;
+    background: #fff;
 
     box-shadow: -1px 0px 2px 0px rgba(10, 10, 10, 0.12);
     transition: 0.3s;
@@ -26,22 +26,6 @@
 
 .sidebar-order-detail-content {
     margin: 96px 32px 0px 16px;
-}
-
-.detail-order-text {
-    color: #F16622;
-
-    font-family: "Poppins 700";
-    font-size: 20px;
-    font-style: normal;
-    line-height: 28px;
-}
-
-.order-detail-close {
-    color: #757575;
-
-    font-family: "Poppins 500";
-    font-size: 30px;
 }
 
 .button-order-detail-wrapper {
@@ -59,10 +43,10 @@
     width: 187.5px;
 
     border-radius: 6px 0px 0px 6px;
-    border: 1px solid #EDEDED;
-    background: #F5F5F5;
+    border: 1px solid #ededed;
+    background: #f5f5f5;
 
-    color: #C2C2C2;
+    color: #c2c2c2;
 
     font-family: "Poppins 500";
     font-size: 12px;
@@ -79,10 +63,10 @@
     width: 187.5px;
 
     border-radius: 0px 6px 6px 0px;
-    border: 1px solid #EDEDED;
-    background: #F5F5F5;
+    border: 1px solid #ededed;
+    background: #f5f5f5;
 
-    color: #C2C2C2;
+    color: #c2c2c2;
 
     font-family: "Poppins 500";
     font-size: 12px;
@@ -95,7 +79,7 @@
     height: 1.25px;
     align-self: stretch;
     margin: 26px 0px;
-    background: #EDEDED;
+    background: #ededed;
 }
 
 .ordered-detail {
@@ -106,47 +90,11 @@
     gap: 16px;
 }
 
-.selling-type-text {
-    color: #0A0A0A;
-
-    font-family: "Poppins 700";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
 .ordered-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-self: stretch;
-}
-
-.menu-ordered p:nth-child(1) {
-    color: #404040;
-
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
-.menu-ordered p:nth-child(2) {
-    color: #757575;
-
-    font-family: "Poppins 400";
-    font-size: 12px;
-    font-style: normal;
-    line-height: 16px;
-}
-
-.ordered-menu-number span {
-    color: #404040;
-
-    font-family: "Poppins 500";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
 }
 
 .payment-wrapper {
@@ -163,28 +111,10 @@
     justify-content: space-between;
 }
 
-.discount span {
-    color: #404040;
-    
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
 .subtotal {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
-
-.subtotal span {
-    color: #404040;
-    
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
 }
 
 .tax {
@@ -193,28 +123,10 @@
     justify-content: space-between;
 }
 
-.tax span {
-    color: #404040;
-    
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
-}
-
 .rounding {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
-
-.rounding span {
-    color: #404040;
-    
-    font-family: "Poppins 400";
-    font-size: 16px;
-    font-style: normal;
-    line-height: 24px;
 }
 
 .grand-total-wrapper {
@@ -230,23 +142,13 @@
     height: 1.25px;
     align-self: stretch;
     margin-bottom: 16px;
-    background: #EDEDED;
+    background: #ededed;
 }
 
 .grand-total {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
-
-.grand-total span {
-    color: #0A0A0A;
-    
-    font-family: "Poppins 700";
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 28px;
 }
 
 .button-order-detail-group {
@@ -257,14 +159,14 @@
 }
 
 .button-simpan-pesanan {
-    color: #F16622;
+    color: #f16622;
     text-align: center;
-    
+
     font-family: "Poppins 500";
     font-size: 14px;
     font-style: normal;
     line-height: 20px;
- 
+
     display: flex;
     width: 374px;
     padding: 8px 16px;
@@ -272,8 +174,8 @@
     align-items: center;
 
     border-radius: 6px;
-    border: 1px solid #F16622;
-    background: #FFF;
+    border: 1px solid #f16622;
+    background: #fff;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
 }
 
@@ -284,14 +186,14 @@
 }
 
 .button-cetak-pesanan {
-    color: #F16622;
+    color: #f16622;
     text-align: center;
-    
+
     font-family: "Poppins 500";
     font-size: 14px;
     font-style: normal;
     line-height: 20px;
- 
+
     display: flex;
     width: 179px;
     padding: 8px 16px;
@@ -299,20 +201,20 @@
     align-items: center;
 
     border-radius: 6px;
-    border: 1px solid #F16622;
-    background: #FFF;
+    border: 1px solid #f16622;
+    background: #fff;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
 }
 
 .button-bayar-pesanan {
-    color: #FFF;
+    color: #fff;
     text-align: center;
-    
+
     font-family: "Poppins 500";
     font-size: 14px;
     font-style: normal;
     line-height: 20px;
- 
+
     display: flex;
     width: 179px;
     padding: 8px 16px;
@@ -320,6 +222,6 @@
     align-items: center;
 
     border-radius: 6px;
-    background: #F16622;
+    background: #f16622;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
 }
