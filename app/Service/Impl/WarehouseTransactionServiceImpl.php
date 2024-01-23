@@ -257,6 +257,8 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                         $id = $item['item_id'];
 
+                        Log::debug($item);
+
                         if (!in_array($id, $addedItemIds)) {
 
                             $addedItemIds[] = $id;
@@ -286,7 +288,6 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                                 throw new Exception('Gagal menghitung nilai inventory valuation');
                             }
 
-                            Log::debug($result);
 
                             // update inventory valuation
                             $stock = StockItem::create([
@@ -304,9 +305,12 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
 
                             // update warehouse outbound items send
-                            WarehouseOutboundItem::where('warehouse_outbounds_id', $item['outboundId'])->update([
-                                'qty_send' => ($item['qty_send'] < 0) ? $item['qty_send'] * -1 : $item['qty_send'],
-                            ]);
+                            WarehouseOutboundItem::where('warehouse_outbounds_id', $item['outboundId'])
+                                ->where('items_id', $id)
+                                ->update([
+                                    'qty_send' => ($item['qty_send'] < 0) ? $item['qty_send'] * -1 : $item['qty_send'],
+                                ]);
+
 
                             // update history outbound
                             WarehouseOutboundHistory::create([

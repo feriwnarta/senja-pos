@@ -323,11 +323,15 @@ class ProductionDetail extends Component
         try {
             if (isset($this->production) && $this->production != null) {
 
+                Log::debug($this->production->outbound);
+
                 $outboundItem = $this->production->outbound()->first()->outboundItem;
 
                 if ($outboundItem != null) {
 
                     $result = $outboundItem->map(function ($item) {
+
+                        Log::debug($item);
                         return [
                             'item_id' => $item->item->id,
                             'name' => $item->item->name,
