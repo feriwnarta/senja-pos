@@ -13,19 +13,7 @@
     margin: 0 0 32px 2rem;
 }
 
-.pos-category-button {
-    color: #c2c2c2;
-    padding: 6px 16px;
-
-    font-family: "Poppins 500";
-    font-size: 12px;
-    font-style: normal;
-    border-radius: 6px;
-    border: 1px solid #ededed;
-    background: #f5f5f5;
-}
-
-.pos-category-button:focus {
+.button-not-selected:focus {
     color: #f16622;
     padding: 6px 16px;
 

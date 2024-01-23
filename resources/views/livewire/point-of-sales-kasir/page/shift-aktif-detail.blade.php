@@ -163,16 +163,16 @@
                 </div>
             </div>
             <div class="button-akhiri-shift-wrapper">
-                <button class="button-akhiri-shift" data-bs-toggle="modal" data-bs-target="#modalAkhiriShift">Akhiri
+                <button class="button-w255-f166 text-medium-16 text-white p-8-16 h-40" data-bs-toggle="modal" data-bs-target="#modalAkhiriShift">Akhiri
                     Shift</button>
             </div>
         </div>
     </div>
-    <div class="modal" id="modalAkhiriShift" tabindex="-1" aria-labelledby="modalAkhiriShiftLabel" aria-hidden="true"
+    <div class="modal fade" id="modalAkhiriShift" tabindex="-1" aria-labelledby="modalAkhiriShiftLabel" aria-hidden="true"
         data-bs-backdrop="true">
         <livewire:point-of-sales-kasir.modal-akhiri-shift>
     </div>
-    <div class="modal" id="modalShiftBerakhir" tabindex="-1" aria-labelledby="modalShiftBerakhirLabel"
+    <div class="modal fade" id="modalShiftBerakhir" tabindex="-1" aria-labelledby="modalShiftBerakhirLabel"
         aria-hidden="true" data-bs-backdrop="true">
         <livewire:point-of-sales-kasir.modal-shift-berakhir>
     </div>

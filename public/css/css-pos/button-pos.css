@@ -1,0 +1,133 @@
+/* ---------------------------------------
+BUTTON WITH OUTLINE
+--------------------------------------- */
+/* NO-W */
+.button-outline-eded {
+    border-radius: 6px;
+    border: 1px solid #ededed;
+    background: #f5f5f5;
+}
+
+/* W-119 */
+.button-outline-w119-f166 {
+    width: 119px;
+
+    border-radius: 6px;
+    border: 1px solid #f16622;
+    box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+}
+/* W-161 */
+.button-outline-w161-e0e0 {
+    width: 161px;
+
+    border-radius: 6px;
+    border: 1px solid#E0E0E0;
+    background: #fff;
+
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+}
+
+/* W-INHERIT */
+.button-outline-e0e0-inh {
+    width: inherit;
+
+    border-radius: 6px;
+    border: 1px solid#E0E0E0;
+    background: #fff;
+
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+}
+
+.button-outline-f166-inh {
+    width: inherit;
+
+    border-radius: 6px;
+    border: 1px solid #f16622;
+    box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+}
+
+/* ---------------------------------------
+BUTTON WITH FULL BACKGROUND
+--------------------------------------- */
+/* NO-W */
+.button-f166 {
+    border-radius: 6px;
+    border: 1px solid #f16622;
+    background: #f16622;
+
+    box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+}
+
+/* W-255 */
+.button-w255-f166 {
+    width: 255px;
+
+    border-radius: 6px;
+    background: #f16622;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+}
+/* W-119 */
+.button-w119-f166 {
+    width: 120px;
+
+    border-radius: 6px;
+    background: #f16622;
+
+    box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+}
+/* W-102 */
+.button-w102-f166 {
+    width: 102px;
+
+    background: #f16622;
+}
+
+/* W-INHERIT */
+.button-f166-inh {
+    width: inherit;
+
+    border-radius: 6px;
+    border: 1px solid #f16622;
+    background: #f16622;
+
+    box-shadow: 1px 1px 2px 0px rgba(10, 10, 10, 0.12);
+}
+
+/* ---------------------------------------
+PADDING BUTTON
+--------------------------------------- */
+.p-6-16 {
+    padding: 6px 16px;
+}
+
+.p-8-16 {
+    padding: 8px 16px;
+}
+
+.p-6 {
+    padding: 6px;
+}
+
+/* ---------------------------------------
+LETTER SPACING
+--------------------------------------- */
+.ls-176 {
+    letter-spacing: -0.176px;
+}
+
+/* HEIGHT */
+.h-28 {
+    height: 28px;
+}
+
+.h-32 {
+    height: 32px;
+}
+
+.h-36px {
+    height: 36px;
+}
+
+.h-40 {
+    height: 40px;
+}

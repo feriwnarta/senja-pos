@@ -1,3 +1,23 @@
 .modal-bayar-wrapper {
+    width: 527px;
     margin: 0px auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.content-body-column {
+    width: inherit;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.content-body-column .content-body-row {
+    width: inherit;
+
+    display: flex;
+    gap: 22px;
 }

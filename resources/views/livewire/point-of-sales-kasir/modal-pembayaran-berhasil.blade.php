@@ -21,10 +21,10 @@
                         </div>
                     </div>
                     <div class="button-group-pembayaran">
-                        <button class="btn btn-warning w-100">Cetak Struk</button>
+                        <button class="button-f166-inh text-medium-14 text-white p-8-16 h-36">Cetak Struk</button>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Kirim struk ke email" aria-label="Recipient's username" aria-describedby="button-kirim-email">
-                            <button class="btn btn-outline-secondary" type="button" id="button-kirim-email">Kirim</button>
+                            <input type="text" class="form-control input-email text-light-14 h-32" placeholder="Kirim struk ke email" aria-label="Recipient's username" aria-describedby="button-kirim-email">
+                            <button class="button-w119-f166 text-medium-14 text-white h-32" type="button" id="button-kirim-email">Kirim</button>
                           </div>    
                     </div>
                 </div>

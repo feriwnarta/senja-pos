@@ -28,7 +28,7 @@
                     <span class="text-light-16 color-7575">Minggu, 5 Feb pada 15:00</span>
                 </div>
                 <div class="d-flex justify-content-end my-3">
-                    <button type="button" class="button-akhiri-shift" data-bs-toggle="modal"
+                    <button type="button" class="button-w255-f166 text-medium-16 text-white p-8-16 h-40" data-bs-toggle="modal"
                         data-bs-target="#modalShiftBerakhir">Cetak Laporan Shift</button>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-saveButton = document.querySelector(".modal-save-button");
+saveButton = document.querySelector(".sidebar-trigger");
 closeOrderButton = document.querySelector(".order-detail-close");
 content = document.querySelector(".content");
 sidebarDetail = document.querySelector(".sidebar-order-detail");

@@ -61,6 +61,14 @@ TEXT MEDIUM WEIGHT 500
     line-height: 20px;
 }
 
+.text-medium-12 {
+    font-family: "Poppins 500";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 16px;
+}
+
 /* ---------------------------------------
 TEXT SMALL WEIGHT 400
 --------------------------------------- */
@@ -117,6 +125,10 @@ TEXT COLOR
 
 .color-7575 {
     color: #757575;
+}
+
+.color-c2c2 {
+    color: #c2c2c2;
 }
 
 .color-f00 {

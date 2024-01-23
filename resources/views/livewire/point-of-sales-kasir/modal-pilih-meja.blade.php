@@ -34,8 +34,8 @@
                     @endforeach
                 </div>
                 <div class="button-pilih-meja-group">
-                    <button class="btn btn-outline-danger" data-bs-dismiss="modal">Keluar</button>
-                    <button class="btn btn-primary">Simpan</button>
+                    <button class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40" data-bs-dismiss="modal">Keluar</button>
+                    <button class="button-w119-f166 text-medium-16 text-white p-8-16 ls-176 h-40">Simpan</button>
                 </div>
             </div>
         </div>

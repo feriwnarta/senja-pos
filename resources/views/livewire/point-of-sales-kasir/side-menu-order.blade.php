@@ -5,9 +5,9 @@
             {{-- <a class="order-detail-close text-medium-20 color-7575">&times;</a> --}}
         </div>
         <div class="button-order-detail-wrapper">
-            <button type="button" class="button-meja" data-bs-toggle="modal"
+            <button type="button" class="button-meja text-medium-12 color-c2c2" data-bs-toggle="modal"
                 data-bs-target="#modalPilihMeja">Meja</button>
-            <button type="button" class="button-pelanggan" data-bs-toggle="modal"
+            <button type="button" class="button-pelanggan text-medium-12 color-c2c2" data-bs-toggle="modal"
                 data-bs-target="#modalPilihPelanggan">Pelanggan</button>
         </div>
         <div class="line-divider-order-detail"></div>
@@ -50,10 +50,10 @@
                 </div>
             </div>
             <div class="button-order-detail-group">
-                <button type="button" class="button-simpan-pesanan">Simpan Pesanan</button>
+                <button type="button" class="button-outline-f166-inh text-medium-14 color-f166 p-8-16 h-36">Simpan Pesanan</button>
                 <div class="button-cetak-bayar">
-                    <button type="button" class="button-cetak-pesanan">Cetak</button>
-                    <button type="button" class="button-bayar-pesanan">Bayar</button>
+                    <button type="button" class="button-outline-f166-inh text-medium-14 color-f166 p-8-16 h-36">Cetak</button>
+                    <button type="button" class="button-f166-inh text-medium-14 text-white p-8-16 h-36">Bayar</button>
                 </div>
             </div>
         </div>

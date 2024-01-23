@@ -25,12 +25,13 @@
 }
 
 .sidebar-order-detail-content {
-    margin: 96px 32px 0px 16px;
+    width: 375px;
+    margin: 96px auto;
 }
 
 .button-order-detail-wrapper {
     display: flex;
-    width: 375px;
+    width: inherit;
     margin-top: 16px;
 }
 
@@ -40,18 +41,11 @@
     align-items: center;
     justify-content: center;
 
-    width: 187.5px;
+    width: inherit;
 
     border-radius: 6px 0px 0px 6px;
     border: 1px solid #ededed;
     background: #f5f5f5;
-
-    color: #c2c2c2;
-
-    font-family: "Poppins 500";
-    font-size: 12px;
-    font-style: normal;
-    line-height: 16px;
 }
 
 .button-pelanggan {
@@ -60,22 +54,15 @@
     align-items: center;
     justify-content: center;
 
-    width: 187.5px;
+    width: inherit;
 
     border-radius: 0px 6px 6px 0px;
     border: 1px solid #ededed;
     background: #f5f5f5;
-
-    color: #c2c2c2;
-
-    font-family: "Poppins 500";
-    font-size: 12px;
-    font-style: normal;
-    line-height: 16px;
 }
 
 .line-divider-order-detail {
-    /* width: 375px; */
+    width: inherit;
     height: 1.25px;
     align-self: stretch;
     margin: 26px 0px;
@@ -84,7 +71,7 @@
 
 .ordered-detail {
     display: flex;
-    width: 375px;
+    width: inherit;
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
@@ -152,76 +139,17 @@
 }
 
 .button-order-detail-group {
+    width: inherit;
     display: flex;
     flex-direction: column;
-    margin-top: 60px;
+    margin: 60px auto 0px auto;
+
     gap: 16px;
 }
 
-.button-simpan-pesanan {
-    color: #f16622;
-    text-align: center;
-
-    font-family: "Poppins 500";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px;
-
-    display: flex;
-    width: 374px;
-    padding: 8px 16px;
-    justify-content: center;
-    align-items: center;
-
-    border-radius: 6px;
-    border: 1px solid #f16622;
-    background: #fff;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
-}
-
 .button-cetak-bayar {
-    display: flex;
-    justify-content: space-between;
-    align-self: stretch;
-}
-
-.button-cetak-pesanan {
-    color: #f16622;
-    text-align: center;
-
-    font-family: "Poppins 500";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px;
+    width: inherit;
 
     display: flex;
-    width: 179px;
-    padding: 8px 16px;
-    justify-content: center;
-    align-items: center;
-
-    border-radius: 6px;
-    border: 1px solid #f16622;
-    background: #fff;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
-}
-
-.button-bayar-pesanan {
-    color: #fff;
-    text-align: center;
-
-    font-family: "Poppins 500";
-    font-size: 14px;
-    font-style: normal;
-    line-height: 20px;
-
-    display: flex;
-    width: 179px;
-    padding: 8px 16px;
-    justify-content: center;
-    align-items: center;
-
-    border-radius: 6px;
-    background: #f16622;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
+    gap: 16px;
 }

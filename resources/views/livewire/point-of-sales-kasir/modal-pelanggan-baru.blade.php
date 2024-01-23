@@ -20,9 +20,9 @@
                         <input class="form-control text-light-14 color-7575" type="text" placeholder="Email" aria-label="nama">
                     </div>
                     <div class="button-group-new-customer">
-                        <button type="button" class="button-keluar-pelanggan-baru"
+                        <button type="button" class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40"
                             data-bs-dismiss="modal">Keluar</button>
-                        <button type="button" class="button-simpan-pelanggan-baru">Simpan</button>
+                        <button type="button" class="button-w119-f166 text-medium-16 text-white p-8-16 ls-176 h-40">Simpan</button>
                     </div>
                 </form>
             </div>

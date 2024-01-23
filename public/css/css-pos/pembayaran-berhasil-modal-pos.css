@@ -47,3 +47,7 @@
 
     gap: 0.938rem;
 }
+
+.input-email {
+    border: 1px solid #f16622 !important;
+}

@@ -2,10 +2,10 @@
     <div class="modal-content">
         <div
             class="modal-header header-body-wrapper d-flex flex-column justify-content-center align-items-center sticky-top">
-            <h1 class="modal-title text-medium-20 color-6161" id="exampleModalLabel">Modal title</h1>
+            <h1 class="modal-title text-medium-20 color-6161" id="exampleModalLabel">Modal Title</h1>
             <h1 class="modal-title text-bold-20 color-4040" id="exampleModalLabel">Rp. 0</h1>
         </div>
-        <form class="modal-body modal-menu-wrapper d-flex flex-column justify-content-center align-items-center">
+        <form class="modal-body modal-menu-wrapper">
             <div class="modal-content-wrapper">
                 <div class="content-header">
                     <span class="text-bold-14 color-6161">Variasi</span>
@@ -14,9 +14,9 @@
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
-                    <button type="button" class="modal-variasi-button">Satu</button>
-                    <button type="button" class="modal-variasi-button">Dua</button>
-                    <button type="button" class="modal-variasi-button">Tiga</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Satu</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Dua</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Tiga</button>
                 </div>
             </div>
             <div class="modal-content-wrapper">
@@ -27,9 +27,9 @@
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
-                    <button type="button" class="modal-variasi-button">Satu</button>
-                    <button type="button" class="modal-variasi-button">Dua</button>
-                    <button type="button" class="modal-variasi-button">Tiga</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Satu</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Dua</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Tiga</button>
                 </div>
             </div>
             <div class="modal-content-wrapper">
@@ -49,34 +49,34 @@
                     <div class="d-flex flex-row choose-multiple-wrapper">
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" id="toping" value="satu"><span>Satu</span>
+                                <input type="checkbox" id="toping" value="satu"><span class="text-medium-14 color-9e9e">Satu</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" id="toping" value="dua"><span>Dua</span>
+                                <input type="checkbox" id="toping" value="dua"><span class="text-medium-14 color-9e9e">Dua</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" id="toping" value="tiga"><span>Tiga</span>
+                                <input type="checkbox" id="toping" value="tiga"><span class="text-medium-14 color-9e9e">Tiga</span>
                             </label>
                         </div>
                     </div>
                     <div class="d-flex flex-row choose-multiple-wrapper">
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" id="toping" value="satu"><span>Satu</span>
+                                <input type="checkbox" id="toping" value="satu"><span class="text-medium-14 color-9e9e">Satu</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" id="toping" value="dua"><span>Dua</span>
+                                <input type="checkbox" id="toping" value="dua"><span class="text-medium-14 color-9e9e">Dua</span>
                             </label>
                         </div>
                         <div class="choose-multiple">
                             <label>
-                                <input type="checkbox" id="toping" value="tiga"><span>Tiga</span>
+                                <input type="checkbox" id="toping" value="tiga"><span class="text-medium-14 color-9e9e">Tiga</span>
                             </label>
                         </div>
                     </div>
@@ -90,11 +90,11 @@
                 </div>
                 <div class="line-divider"></div>
                 <div class="content-body">
-                    <input type="number" class="modal-variasi-input text-light-14 color-7575 text-end" placeholder="1" wire:model.live="count">
-                    <button type="button" class="modal-variasi-button1" wire:click="decrement"><i
-                            class="minus-icon"></i></button>
-                    <button type="button" class="modal-variasi-button2" wire:click="increment"><i
-                            class="plus-icon"></i></button>
+                    <input type="number" class="modal-variasi-input text-light-14 color-7575 h-32 text-end" placeholder="1" wire:model.live="count">
+                    <button type="button" class="button-outline-f166-inh p-6 h-32" wire:click="decrement"><span
+                            class="minus-icon"></span></button>
+                    <button type="button" class="button-f166-inh p-6 h-32" wire:click="increment"><span
+                            class="plus-icon"></span></button>
                 </div>
             </div>
             <div class="modal-content-wrapper">
@@ -102,9 +102,9 @@
                     <span class="text-bold-14 color-6161">Tipe Penjualan</span>
                 </div>
                 <div class="line-divider"></div>
-                <div class="content-body-sell-type">
-                    <button type="button" class="modal-variasi-button3">Dine in</button>
-                    <button type="button" class="modal-variasi-button3">Take Away</button>
+                <div class="content-body">
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Dine in</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Take Away</button>
                 </div>
             </div>
             <div class="modal-content-wrapper">
@@ -118,18 +118,18 @@
             </div>
             <div class="modal-content-wrapper">
                 <div class="content-header">
-                    <span class="text-bold-14 color-6161">Tipe Penjualan</span>
+                    <span class="text-bold-14 color-6161">Discount</span>
                 </div>
                 <div class="line-divider"></div>
-                <div class="content-body-sell-type">
-                    <button type="button" class="modal-variasi-button3">Happy Hour 5%</button>
-                    <button type="button" class="modal-variasi-button3">Happy Weekend 10%</button>
+                <div class="content-body">
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Happy Hour 5%</button>
+                    <button type="button" class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Happy Weekend 10%</button>
                 </div>
             </div>
+            <div class="modal-variasi-footer">
+                <button class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40" type="button" data-bs-dismiss="modal">Cancel</button>
+                <button class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40 sidebar-trigger" type="button" data-bs-dismiss="modal">Save</button>
+            </div>
         </form>
-        <div class="modal-variasi-footer">
-            <button class="modal-cancel-button" type="button" data-bs-dismiss="modal">Cancel</button>
-            <button class="modal-save-button" type="button" data-bs-dismiss="modal">Save</button>
-        </div>
     </div>
 </div>

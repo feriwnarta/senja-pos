@@ -14,7 +14,7 @@
                     <input type="password" class="form-control" placeholder="Masukan PIN">
                 </div>
                 <div class="button-group-shift">
-                    <button class="button-mulai-shift" href="/pos/active-shift-detail" wire:navigate>Mulai Shift</button>
+                    <button class="button-w255-f166 text-medium-16 text-white p-8-16 h-40" href="/pos/active-shift-detail" wire:navigate>Mulai Shift</button>
                 </div>
             </form>
         </div>
