@@ -107,6 +107,14 @@ class MenuOrder extends Component
             'image_url' => 'img/cs-menu/tahu-goreng-cg.png',
         ],
     ];
+
+    public function getData()
+    {
+        $data = $this->menuCS;
+
+        return $data;
+    }
+
     public function render()
     {
         return view('livewire.point-of-sales-kasir.page.menu-order');

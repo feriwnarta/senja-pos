@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PointOfSalesKasir;
 
+use App\Livewire\PointOfSalesKasir\Page\MenuOrder;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -24,8 +25,13 @@ class ModalMenuOrder extends Component
             $this->count++;
         }
     }
-    public function render()
+
+    public $dataMenu = [];
+
+    public function render(MenuOrder $menuOrder)
     {
-        return view('livewire.point-of-sales-kasir.modal-menu-order');
+        $this->dataMenu = $menuOrder->getData();
+
+        return view('livewire.point-of-sales-kasir.modal-menu-order', ['data'=>$this->dataMenu]);
     }
 }

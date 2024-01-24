@@ -48,8 +48,7 @@
       </div>
       <div class="sidebar-button-container sidebar-text">
         <button class="btn-clicked-active" type="button">
-          <i class="setting-icon"></i>
-          Settings
+          <i class="setting-icon"></i>Settings
         </button>
       </div>
     </ul>

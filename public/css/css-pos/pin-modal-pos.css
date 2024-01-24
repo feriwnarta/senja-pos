@@ -1,0 +1,48 @@
+.modal-pin-wrapper {
+    border: none;
+    border-radius: 6px;
+    width: 287px;
+
+    box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.12);
+}
+
+.modal-header-pin {
+    padding: 8px 16px 8px 16px;
+
+    border-radius: 6px 6px 0px 0px;
+    border-bottom: 1px solid #ededed;
+    background: #fff;
+}
+
+.modal-header-pin button {
+    width: 20px;
+    height: 20px;
+
+    position: absolute;
+    top: 0px;
+    right: 16px;
+
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.modal-pin-body-wrapper {
+    display: flex;
+    justify-content: center;
+    vertical-align: middle;
+}
+
+.input-pin[type="number"] {
+    -webkit-text-security: disc;
+    text-align: center;
+    width: 232px;
+    height: 60px;
+
+    font-size: 50px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 30px;
+
+    border: 1px solid black;
+}

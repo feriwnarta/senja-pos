@@ -13,28 +13,37 @@
     @notifyCss
     {{--
         <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
+
+    {{-- MICRO COMPONENT --}}
     <link rel="stylesheet" href="{{ asset('css/css-pos/font-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/icon-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/text-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/button-pos.css') }}">
+    
+    {{-- COMPONENT --}}
     <link rel="stylesheet" href="{{ asset('css/css-pos/navbar-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/header-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/menu-order-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/menu-order-modal-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/icon-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/active-order-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/sidebar-pos.css') }}">
+
+    {{-- PAGES --}}
+    <link rel="stylesheet" href="{{ asset('css/css-pos/menu-order-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/active-order-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/active-shift-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/active-shift-detail-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/riwayat-shift-detail-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/mutasi-pos.css') }}">
+
+    {{-- MODALS --}}
+    <link rel="stylesheet" href="{{ asset('css/css-pos/menu-order-modal-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/select-customer-modal-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/new-customer-modal-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/active-shift-detail-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/akhiri-shift-modal-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/shift-berakhir-modal-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/pilih-meja-modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/riwayat-shift-detail-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/mutasi-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/diskon-voucher-modal-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/text-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/bayar-order-modal-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/pembayaran-berhasil-modal-pos.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/css-pos/button-pos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/css-pos/pin-modal-pos.css') }}">
 
 
     <script src="{{ asset('js/jquery.js') }}"></script>
