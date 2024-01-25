@@ -28,21 +28,60 @@
 
 .modal-pin-body-wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    vertical-align: middle;
+
+    width: 232px;
+
+    padding: 24px 27.5px 8px;
+}
+
+.input-screen-wrapper {
+    width: inherit;
+    padding-bottom: 32px;
 }
 
 .input-pin[type="number"] {
     -webkit-text-security: disc;
     text-align: center;
-    width: 232px;
+    width: inherit;
     height: 60px;
 
-    font-size: 50px;
+    font-size: 40px;
+    padding-bottom: 10px;
 
-    display: inline-flex;
-    align-items: center;
-    gap: 30px;
+    border-radius: 6px;
+    background: #ededed;
+    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12) inset;
+}
 
-    border: 1px solid black;
+.button-pin-wrapper {
+    width: inherit;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 11px;
+
+    padding-bottom: 40px;
+}
+
+.row-button-wrapper {
+    gap: 11px;
+}
+
+.button-position {
+    display: flex;
+    flex-direction: row;
+
+    position: relative;
+    left: 80px;
+    gap: 11px;
+}
+
+.button-number-wrapper {
+    width: 70px;
+
+    text-align: center;
+    line-height: 32px;
 }

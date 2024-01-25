@@ -1,11 +1,14 @@
-let newDate = document.getElementById("date");
-todayDate = new Date().toISOString().slice(0, 10).split("-");
+// let newDate = document.getElementById("date");
+const formatDate = () => {
+    var todayDate = new Date().toISOString().slice(0, 10).split("-");
 
-let splitDate = todayDate;
+    var splitDate = todayDate;
 
-let year = splitDate[2];
-let month = splitDate[1];
-let day = splitDate[0];
+    var year = splitDate[2];
+    var month = splitDate[1];
+    var day = splitDate[0];
 
-let newFormatDate = `${year}/${month}/${day}`;
-console.log(newFormatDate);
+    var newFormatDate = `${year}/${month}/${day}`;
+
+    return newFormatDate;
+};

@@ -183,3 +183,16 @@ MODAL PEMBAYARAN BERHASIL
     background-image: url(../../img/icons/currency-dollar.png);
     vertical-align: middle;
 }
+
+/* ---------------------------------------
+MODAL PIN
+--------------------------------------- */
+.backspace-icon {
+    display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(../../img/icons/backspace.png);
+    vertical-align: middle;
+}

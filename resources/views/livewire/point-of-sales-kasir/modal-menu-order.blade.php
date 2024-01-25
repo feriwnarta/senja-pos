@@ -104,14 +104,12 @@
                         </div>
                         <div class="modal-content-wrapper">
                             <div class="content-header">
-                                <span class="text-bold-14 color-6161">Ukuran</span>
-                                <span class="divider"></span>
-                                <span class="text-light-12 color-9e9e">Pilih Salah Satu</span>
+                                <span class="text-bold-14 color-6161">Jumlah</span>
                             </div>
                             <div class="line-divider"></div>
                             <div class="content-body">
                                 <input type="number" class="modal-variasi-input text-light-14 color-7575 h-32 text-end"
-                                    placeholder="1" wire:model.live="count">
+                                    placeholder="1" wire:model.live="count" disabled>
                                 <button type="button" class="button-outline-f166-inh p-6 h-32"
                                     wire:click="decrement"><span class="minus-icon"></span></button>
                                 <button type="button" class="button-f166-inh p-6 h-32" wire:click="increment"><span
@@ -161,6 +159,7 @@
                             <button class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40"
                                 type="button" data-bs-dismiss="modal">Cancel</button>
                             <button
+                                id="sidebar-pos-trigger"
                                 class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40 sidebar-trigger"
                                 type="button" data-bs-dismiss="modal">Save</button>
                         </div>

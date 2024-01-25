@@ -1,4 +1,4 @@
-var triggerCheckbox = document.querySelectorAll('input[type="checkbox"]');
+var triggerCheckbox = document.querySelectorAll("#toping");
 
 function checkAll(checkboxes) {
     // Memberikan kondisi jika checkbox is checked

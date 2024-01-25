@@ -5,11 +5,11 @@
                 <div class="tanggal-wrapper">
                     <div>
                         <label class="text-light-14 color-9e9e">Tanggal Mulai</label>
-                        <input type="date" id="date" name="begin" value="yyyy-MM-dd">
+                        <input type="date" id="date" name="begin">
                     </div>
                     <div>
                         <label class="text-light-14 color-9e9e">Tanggal Selesai</label>
-                        <input type="date" id="date" name="end" value="yyyy-MM-dd">
+                        <input type="date" id="date" name="end">
                     </div>
                     <div class="dropdown-center">
                         <button class="btn-ekspor dropdown-toggle" type="button" data-bs-toggle="dropdown"

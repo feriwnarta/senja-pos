@@ -81,6 +81,17 @@ BUTTON WITH FULL BACKGROUND
 
     background: #f16622;
 }
+/* W-70 */
+.button-w70-eded {
+    width: 70px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 6px;
+    background: #ededed;
+}
 
 /* W-INHERIT */
 .button-f166-inh {

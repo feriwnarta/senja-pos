@@ -20,8 +20,8 @@
     transition: 0.3s;
 }
 
-.sidebar-order-detail.is-opened .content {
-    margin-right: 433px;
+.sidebar-order-detail.is-opened {
+    transition: all 0.3s ease-in-out;
 }
 
 .sidebar-order-detail-content {
