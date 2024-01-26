@@ -26,12 +26,14 @@ class ModalMenuOrder extends Component
         }
     }
 
-    public $dataMenu = [];
-
-    public function render(MenuOrder $menuOrder)
+    public $menuSelected;
+    public function mount($dataMenu)
     {
-        $this->dataMenu = $menuOrder->getData();
+        $this->menuSelected = $dataMenu;
+    }
 
-        return view('livewire.point-of-sales-kasir.modal-menu-order', ['data'=>$this->dataMenu]);
+    public function render()
+    {
+        return view('livewire.point-of-sales-kasir.modal-menu-order');
     }
 }

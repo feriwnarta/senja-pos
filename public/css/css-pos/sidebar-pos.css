@@ -5,23 +5,16 @@
     top: 0;
     right: 0;
     z-index: 1;
-    transition: 0.3s;
+    transition: all 0.35s linear;
 }
 
 .sidebar-order-detail.is-opened {
-    position: fixed;
+    /* position: fixed; */
     width: 423px;
-    height: 100vh;
-    top: 0%;
-    right: 0%;
     background: #fff;
 
     box-shadow: -1px 0px 2px 0px rgba(10, 10, 10, 0.12);
-    transition: 0.3s;
-}
-
-.sidebar-order-detail.is-opened {
-    transition: all 0.3s ease-in-out;
+    transition: all 0.35s linear;
 }
 
 .sidebar-order-detail-content {

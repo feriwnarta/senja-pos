@@ -3,24 +3,26 @@
         <div class="header-active-order">
             <livewire:components.navbar-kasir.header-kasir>
         </div>
-        <table class="table table-borderless">
-            <thead class="table-head">
-                <tr>
-                    <th class="text-light-14 color-4040" scope="col">Meja</th>
-                    <th class="text-light-14 color-4040" scope="col">Nama</th>
-                    <th class="text-light-14 color-4040" scope="col">Tipe</th>
-                </tr>
-            </thead>
-            <tbody>
-                @for ($i = 0; $i < 5; $i++)
-                    <tr id="sidebar-pos-trigger" class="table-row-bordered">
-                        <td class="text-light-14 color-6161">T17</td>
-                        <td class="text-light-14 color-6161">William</td>
-                        <td class="text-light-14 color-6161">Dine in</td>
+        <div class="active-order-table">
+            <table class="table table-borderless">
+                <thead class="table-head">
+                    <tr>
+                        <th class="text-light-14 color-4040" scope="col">Meja</th>
+                        <th class="text-light-14 color-4040" scope="col">Nama</th>
+                        <th class="text-light-14 color-4040" scope="col">Tipe</th>
                     </tr>
-                @endfor
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for ($i = 0; $i < 5; $i++)
+                        <tr id="sidebar-pos-trigger" class="table-row-bordered">
+                            <td class="text-light-14 color-6161">T17</td>
+                            <td class="text-light-14 color-6161">William</td>
+                            <td class="text-light-14 color-6161">Dine in</td>
+                        </tr>
+                    @endfor
+                </tbody>
+            </table>
+        </div>
         <div>
             <button class="button-outline-f166-inh text-medium-14 color-f166 p-8-16 h-36" data-bs-toggle="modal"
                 data-bs-target="#modalOtorisasiPin">Pin</button>

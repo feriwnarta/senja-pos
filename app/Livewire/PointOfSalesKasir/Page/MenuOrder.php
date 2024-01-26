@@ -108,12 +108,12 @@ class MenuOrder extends Component
         ],
     ];
 
-    public function getData()
-    {
-        $data = $this->menuCS;
+    // public function getData()
+    // {
+    //     $data = $this->menuCS;
 
-        return $data;
-    }
+    //     return $data;
+    // }
 
     public function render()
     {
