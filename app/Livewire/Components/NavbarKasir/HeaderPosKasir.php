@@ -8,7 +8,7 @@ use Livewire\Component;
 #[Layout('components.layouts.pos')]
 class HeaderPosKasir extends Component
 {
-    public $buttons_category = ["Semua", "Bubur", "Mie", "Bihun", "Kwetiau", "Sayur & Sup", "Nasi", "Senja Plus", "Ayam & Pork", "Telur & Seafood", "Senja Drink"];
+    public $categories = ["Semua", "Bubur", "Mie", "Bihun", "Kwetiau", "Sayur & Sup", "Nasi", "Senja Plus", "Ayam & Pork", "Telur & Seafood", "Senja Drink"];
     
     public function render()
     {
