@@ -1,5 +1,8 @@
 window.onload = setPaymentDate;
 
+document.addEventListener('livewire:navigated', () => {
+    setPaymentDate();
+})
 document.getElementById('paymentDateOption').addEventListener('change', setPaymentDate);
 document.getElementById('datePayment').addEventListener('change', calculateDaysDifference);
 
@@ -35,6 +38,8 @@ function addOptionAndSelect(daysDifference) {
         const newOption = document.createElement('option');
         newOption.value = daysDifference;
         newOption.text = `${daysDifference} Hari`;
+
+        Livewire.dispatch('set-due-date', {date: daysDifference});
 
         durationSelect.add(newOption);
         durationSelect.options.selectedIndex = [...durationSelect.options].findIndex(option => option.value === daysDifference.toString());

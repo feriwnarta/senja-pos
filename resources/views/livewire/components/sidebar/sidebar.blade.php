@@ -75,6 +75,14 @@
                                 {{ __('sidebar_locale.gudang.unit') }}
                             </button>
                         </a>
+                        <a href="/composition/decomposition" wire:navigate>
+                            <button
+                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('Dekomposisi')  ? 'inner-menu-active' : ''}}"
+                                type="button"
+                                id="">
+                                Dekomposisi
+                            </button>
+                        </a>
                         <a href="/composition/recipe" wire:navigate>
                             <button
                                 class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('recipe') || Route::is('create-recipe') ? 'inner-menu-active' : ''}}"

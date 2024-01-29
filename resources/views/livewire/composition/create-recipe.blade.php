@@ -127,9 +127,23 @@
                         </div>
                     </div>
 
+                    <div class="margin-top-20">
+                        <label for="description" class="form-label">Bahan menghasilkan dekomposisi</label>
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value=""
+                                   id="flexCheckDefault" wire:model.live.debounce.600ms="isMultipleSupplier"
+                            >
+                            <label class="form-check-label margin-left-8" for="flexCheckDefault">
+                                Dekomposisi
+                            </label>
+                        </div>
+                    </div>
                 </div>
             @endif
+
         </div>
+
 
         <div class="row margin-top-32">
             <div class="col-sm-8 offset-1">
@@ -144,9 +158,9 @@
                         <table class="table table-bordered only-underline table-create-recipes body-text-regular">
                             <thead>
                             <tr class="no-border-side">
-                                <th scope="col">Ingredients</th>
-                                <th scope="col">Usage</th>
-                                <th scope="col">Unit</th>
+                                <th scope="col">Bahan</th>
+                                <th scope="col">Penggunaan</th>
+                                <th scope="col">Satuan</th>
                                 <th scope="col">Avg Cost</th>
                                 <th scope="col">Last Cost</th>
                             </tr>
@@ -209,7 +223,7 @@
                                     style="padding-bottom: 5px; padding-top: 5px;">
                                     <button class="btn icon-text" type="button" id="addIngredients"
                                             wire:click="addIngredient">
-                                        + Add ingredients
+                                        + Tambah bahan
                                     </button>
                                 </td>
                             </tr>
@@ -229,7 +243,6 @@
                             </tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>

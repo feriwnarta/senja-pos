@@ -198,15 +198,18 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <select class="form-select input-default"
-                                            id="paymentDateOption" wire:model.live="deadlinePayment"
+                                            wire:ignore
+                                            id="paymentDateOption" wire:model.live="dueDate"
 
                                         {{ $this->payment != 'NET' || $isMultipleSupplier ? 'disabled' : '' }}
                                     >
+
                                         <option value="3">3 Hari</option>
                                         <option value="7">7 Hari</option>
                                         <option value="14">14 Hari</option>
                                         <option value="30">30 Hari</option>
                                     </select>
+                                    
                                 </div>
 
                                 <div class="col-md-4">
@@ -258,32 +261,34 @@
 
                             @foreach($purchaseRequests->detail as $key => $detail)
                                 @php
+                                    if(empty($this->componentItems)) {
+                                        $this->componentItems[] = [
+                                                'purchaseRequestId' => $purchaseRequests->id,
+                                                'itemId' => $detail->item->id,
+                                                'itemName' => $detail->item->name,
+                                                'supplier' => $this->supplier,
+                                                'payment' =>  $this->payment,
+                                                'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand,
+                                                'qtyBuy' => $detail->qty_buy,
+                                                'unitName' => $detail->item->unit->name,
+                                                'unitPrice' => number_format($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost, 0),
+                                                'purchaseAmount' =>  number_format($detail->qty_buy, 0),
+                                                'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
+                                                'deadlinePayment' => '3',
+                                        ];
+                                        $this->componentItems[$key]['supplier'] = $this->supplier;
+                                        $this->componentItems[$key]['payment'] = $this->payment;
+                                        $this->componentItems[$key]['dueDate'] = $this->dueDate;
 
-                                    $this->componentItems[] = [
-                                        'isSelected' => 'false',
-                                        'purchaseRequestId' => $purchaseRequests->id,
-                                        'itemId' => $detail->item->id,
-                                        'itemName' => $detail->item->name,
-                                        'supplier' => $this->supplier,
-                                        'payment' =>  $this->payment,
-                                        'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand,
-                                        'qtyBuy' => $detail->qty_buy,
-                                        'unitName' => $detail->item->unit->name,
-                                        'unitPrice' => number_format($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost, 0),
-                                        'purchaseAmount' =>  number_format($detail->qty_buy, 0),
-                                        'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
-                                        'deadlinePayment' => '3',
-                                    ];
+                                        if($key == $this->indexPayment) {
+                                            $this->componentItems[$key]['payment'] = $this->paymentTemp;
+                                            $this->indexPayment = '';
+                                        }
+
+                                    }
 
 
-                                  $this->componentItems[$key]['supplier'] = $this->supplier;
-                                  $this->componentItems[$key]['payment'] = $this->payment;
-                                  $this->componentItems[$key]['deadlinePayment'] = $this->deadlinePayment;
 
-                                  if($key == $this->indexPayment) {
-                                    $this->componentItems[$key]['payment'] = $this->paymentTemp;
-                                    $this->indexPayment = '';
-                                  }
 
 
 
@@ -318,7 +323,7 @@
                                         @if($this->componentItems[$key]['payment'] == 'NET')
                                             <select class="form-select input-default"
                                                     id="paymentDateOption"
-                                                    wire:model="componentItems.{{$key}}.deadlinePayment"
+                                                    wire:model="componentItems.{{$key}}.dueDate"
 
                                                 {{ $this->payment != 'NET' || !$isMultipleSupplier ? 'disabled' : '' }}
                                             >

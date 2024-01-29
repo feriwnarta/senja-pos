@@ -12,6 +12,8 @@ class CreateSupplier extends Component
 {
     #[Rule('required|min:5|unique:suppliers,name')]
     public string $name = '';
+    #[Rule('required|min:5|unique:suppliers,code')]
+    public string $code = '';
     public string $phone = '';
     public string $email = '';
     public string $city = '';
@@ -44,6 +46,7 @@ class CreateSupplier extends Component
             DB::beginTransaction();
 
             $supplier = \App\Models\Supplier::create([
+                'code' => $this->code,
                 'name' => $this->name,
                 'phone' => $this->phone,
                 'email' => $this->email,

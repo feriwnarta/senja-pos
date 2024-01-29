@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 
 class PurchaseRequest extends Model
@@ -30,6 +31,11 @@ class PurchaseRequest extends Model
             $userId = Auth::check() ? Auth::id() : 'USER NOT LOGIN';
             $model->updated_by = $userId;
         });
+    }
+
+    public function purchaseReference(): MorphMany
+    {
+        return $this->morphMany(PurchaseRef::class, 'purchasable');
     }
 
 

@@ -40,8 +40,22 @@
         <div class="row">
             <div class="col-sm-6 offset-1">
 
-                {{-- NAME --}}
+                {{-- Code --}}
                 <div class="container-input-default">
+                    <label for="warehouseInput"
+                           class="form-label input-label">Kode pemasok</label>
+
+                    <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                    <input type="name" class="form-control input-default"
+                           id="warehouseInput" placeholder="Masukan kode pemasok"
+                           wire:model.live.debounce.600ms="code">
+                    @error('code') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+
+                </div>
+
+                {{-- NAME --}}
+                <div class="container-input-default margin-top-16">
                     <label for="warehouseInput"
                            class="form-label input-label">Nama pemasok</label>
 

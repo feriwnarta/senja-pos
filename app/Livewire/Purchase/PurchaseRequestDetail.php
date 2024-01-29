@@ -3,11 +3,14 @@
 namespace App\Livewire\Purchase;
 
 use App\Models\PurchaseRequest;
+use App\Service\Impl\PurchaseServiceImpl;
+use App\Service\PurchaseService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -28,7 +31,7 @@ class PurchaseRequestDetail extends Component
 
     public array $paymentType = ['NET', 'PIA'];
 
-    public string $deadlinePayment = '3';
+    public string $dueDate = '3';
     public string $paymentTemp;
 
 
@@ -39,6 +42,132 @@ class PurchaseRequestDetail extends Component
     public string $indexPayment = '';
 
     public array $componentItems = [];
+    private PurchaseService $purchaseService;
+
+    public function handleValuePurchaseAmount($index)
+    {
+        $formattedUnitPrice = $this->componentItems[$index]['unitPrice'];
+        $numericUnitPrice = floatval(str_replace(',', '', $formattedUnitPrice)); // Remove commas and convert to float
+        $this->componentItems[$index]['unitPrice'] = Number::format(floatval($numericUnitPrice));
+        $this->componentItems[$index]['totalAmount'] = $this->componentItems[$index]['purchaseAmount'] * $numericUnitPrice;
+    }
+
+    public function handleItemPaymentChange($index)
+    {
+        $this->paymentTemp = $this->componentItems[$index]['payment'];
+        $this->indexPayment = $index;
+    }
+
+    public function render()
+    {
+        return view('livewire.purchase.purchase-request-detail', ['purchaseRequests' => $this->purchaseRequestDetail]);
+    }
+
+    public function processRequest($id)
+    {
+
+        try {
+
+            $purchaseRequest = $this->findPurchaseRequestById($id);
+            $history = $purchaseRequest->history->last();
+            $status = $history->status;
+
+
+            if ($status != 'Permintaan baru') {
+                notify()->error('Ada sesuatu yang salah silahkan hubungi admin');
+                Log::error('ada sesuatu yang salah saat mengelola permintaan pembelian baru karena statusnya bukan permintaan baru');
+                return;
+            }
+            DB::beginTransaction();
+            // buat status baru
+            $result = $history->create([
+                'purchase_requests_id' => $id,
+                'desc' => 'Permintaan pembelian diproses',
+                'status' => 'Diproses',
+            ])->save();
+
+            if ($result) {
+                DB::commit();
+                notify()->success('Berhasil proses pembelian');
+
+
+                return;
+            }
+
+            DB::rollBack();
+            notify()->error('gagal proses permintaan');
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('gagal melakukan proses permintaan');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
+
+    }
+
+    private function findPurchaseRequestById($id)
+    {
+        return PurchaseRequest::with('history')->findOrFail($id);
+    }
+
+    public function createPurchase()
+    {
+
+        Log::info('membuat purchasing');
+        Log::info($this->componentItems);
+
+        $this->validate(
+            [
+                'componentItems.*.unitPrice' => 'required',
+            ]
+        );
+
+        Log::info('validasi berjalan');
+
+        // lakukan proses pembuatan permintaan pembelian
+        $this->store();
+    }
+
+    /**
+     * proses pembuatan pembelian, harap diperhatikan penggunaan multiple pembelian
+     * panggil service pembelian
+     * @return void
+     */
+    private function store()
+    {
+
+        $this->purchaseService = app()->make(PurchaseServiceImpl::class);
+
+        // lakukan proses pengecekan apa opsi multi supplier terpilih
+        // jika iya maka akan tercipta proses multiple purchasing
+        if ($this->isMultipleSupplier) {
+            // jalankan service fungsi multi supplier
+            Log::info('jalankan pembelian secara multi supplier');
+            return;
+        }
+
+        try {
+            // panggil fungsi buat purchase dari request stock
+            $resultCreatePurchase = $this->purchaseService->createPurchaseNetFromRequestStock($this->requestId, $this->supplier, $this->payment, $this->dueDate, $this->componentItems);
+
+            if ($resultCreatePurchase) {
+                notify()->success('Berhasil membuat pembelian');
+            }
+        } catch (Exception $exception) {
+            Log::error('gagal membuat pembelian');
+            notify()->error('Gagal membuat pembelian');
+        }
+
+
+    }
+
+    #[On('set-due-date')]
+    public function setDueDate($date)
+    {
+        $this->dueDate = $date;
+    }
 
     public function mount()
     {
@@ -110,88 +239,6 @@ class PurchaseRequestDetail extends Component
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }
-
-    }
-
-
-    public function handleValuePurchaseAmount($index)
-    {
-        $formattedUnitPrice = $this->componentItems[$index]['unitPrice'];
-        $numericUnitPrice = floatval(str_replace(',', '', $formattedUnitPrice)); // Remove commas and convert to float
-        $this->componentItems[$index]['unitPrice'] = Number::format(floatval($numericUnitPrice));
-        $this->componentItems[$index]['totalAmount'] = $this->componentItems[$index]['purchaseAmount'] * $numericUnitPrice;
-    }
-
-    public function handleItemPaymentChange($index)
-    {
-        $this->paymentTemp = $this->componentItems[$index]['payment'];
-        $this->indexPayment = $index;
-    }
-
-
-    public function render()
-    {
-        return view('livewire.purchase.purchase-request-detail', ['purchaseRequests' => $this->purchaseRequestDetail]);
-    }
-
-    public function processRequest($id)
-    {
-
-        try {
-
-            $purchaseRequest = $this->findPurchaseRequestById($id);
-            $history = $purchaseRequest->history->last();
-            $status = $history->status;
-
-
-            if ($status != 'Permintaan baru') {
-                notify()->error('Ada sesuatu yang salah silahkan hubungi admin');
-                Log::error('ada sesuatu yang salah saat mengelola permintaan pembelian baru karena statusnya bukan permintaan baru');
-                return;
-            }
-            DB::beginTransaction();
-            // buat status baru
-            $result = $history->create([
-                'purchase_requests_id' => $id,
-                'desc' => 'Permintaan pembelian diproses',
-                'status' => 'Diproses',
-            ])->save();
-
-            if ($result) {
-                DB::commit();
-                notify()->success('Berhasil proses pembelian');
-
-
-                return;
-            }
-
-            DB::rollBack();
-            notify()->error('gagal proses permintaan');
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error('gagal melakukan proses permintaan');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-        }
-
-
-    }
-
-    private function findPurchaseRequestById($id)
-    {
-        return PurchaseRequest::with('history')->findOrFail($id);
-    }
-
-    public function createPurchase()
-    {
-
-        Log::info('membuat purchasing');
-        Log::info($this->componentItems);
-    }
-
-    private function store()
-    {
 
     }
 
