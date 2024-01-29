@@ -24,11 +24,9 @@
             </table>
         </div>
         <div>
-            <button class="button-outline-f166-inh text-medium-14 color-f166 p-8-16 h-36" data-bs-toggle="modal"
-                data-bs-target="#modalOtorisasiPin">Pin</button>
             <button class="btn btn-primary">Cetak Pesanan</button>
         </div>
     </div>
-    <livewire:point-of-sales-kasir.modal-pin>
-        <livewire:point-of-sales-kasir.side-menu-order>
+    <livewire:point-of-sales-kasir.side-menu-order>
+        <livewire:point-of-sales-kasir.modal-pembayaran-berhasil>
 </x-page-layout-pos>

@@ -9,7 +9,7 @@
 .menu-content {
     display: flex;
     flex-wrap: wrap;
-    gap: 17px;
+    gap: 8px;
 }
 
 .menu-card {

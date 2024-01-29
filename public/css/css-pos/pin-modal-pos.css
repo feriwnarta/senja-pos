@@ -36,12 +36,16 @@
     padding: 24px 27.5px 8px;
 }
 
+.pin-content {
+    width: inherit;
+}
+
 .input-screen-wrapper {
     width: inherit;
     padding-bottom: 32px;
 }
 
-.input-pin[type="number"] {
+.input-pin[type="text"] {
     -webkit-text-security: disc;
     text-align: center;
     width: inherit;

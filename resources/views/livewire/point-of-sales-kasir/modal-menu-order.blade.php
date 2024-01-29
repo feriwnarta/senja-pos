@@ -103,12 +103,12 @@
                             <span class="text-bold-14 color-6161">Jumlah</span>
                         </div>
                         <div class="line-divider"></div>
-                        <div class="content-body" wire:ignore>
+                        <div class="content-body" x-data="{ count: 1 }">
                             <input type="number" class="modal-variasi-input text-light-14 color-7575 h-32 text-end"
-                                placeholder="1" wire:model.live="count" disabled>
-                            <button type="button" class="button-outline-f166-inh p-6 h-32" wire:click="decrement"><span
-                                    class="minus-icon"></span></button>
-                            <button type="button" class="button-f166-inh p-6 h-32" wire:click="increment"><span
+                                placeholder="1" x-model="count" disabled>
+                            <button type="button" class="button-outline-f166-inh p-6 h-32"
+                                @click="count <= 1 ? count + 1 : count--"><span class="minus-icon"></span></button>
+                            <button type="button" class="button-f166-inh p-6 h-32" @click="count++"><span
                                     class="plus-icon"></span></button>
                         </div>
                     </div>

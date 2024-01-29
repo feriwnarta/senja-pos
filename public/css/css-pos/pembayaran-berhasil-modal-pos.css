@@ -9,8 +9,20 @@
     margin: 0;
 }
 
+.modal-wrapper-bayar-berhasil {
+    min-width: 670px;
+    height: 520px;
+
+    box-shadow: 6px 6px 12px 0px rgba(0, 0, 0, 0.12) !important;
+    border-radius: 6px !important;
+    border-color: rgba(255, 255, 255, 0) !important;
+
+    overflow-y: none;
+    background: #fff;
+}
+
 .body-pembayaran-berhasil-wrapper {
-    margin: 0 164px;
+    margin: auto;
 
     display: flex;
     flex-direction: column;

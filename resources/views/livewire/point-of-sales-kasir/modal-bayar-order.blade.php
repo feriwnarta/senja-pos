@@ -75,7 +75,8 @@
                     <div class="line-divider"></div>
                     <div class="content-body-column">
                         <div class="content-body-row">
-                            <button type="button" class="button-outline-w161-e0e0 text-medium-14 color-9e9e p-6-16">Go
+                            <button type="button"
+                                class="button-outline-w161-e0e0 text-medium-14 color-9e9e p-6-16">Go
                                 Food</button>
                             <button type="button"
                                 class="button-outline-w161-e0e0 text-medium-14 color-9e9e p-6-16">Grab
@@ -105,5 +106,4 @@
             </div>
         </div>
     </div>
-    <livewire:point-of-sales-kasir.modal-pembayaran-berhasil>
 </div>

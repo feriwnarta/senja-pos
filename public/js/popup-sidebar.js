@@ -16,7 +16,7 @@ triggerButton.addEventListener("click", () => {
     content.style.marginRight = "410px";
     content.style.transition = "all 0.35s linear";
 
-    menuContent.style.gap = "12px";
+    menuContent.style.gap = "7px";
 });
 closeOrderButton.addEventListener("click", () => {
     sidebarDetail.classList.remove("is-opened");
@@ -24,6 +24,6 @@ closeOrderButton.addEventListener("click", () => {
     content.style.marginRight = "0px";
     content.style.transition = "all 0.35s linear";
 
-    menuContent.style.gap = "17px";
+    menuContent.style.gap = "8px";
 });
 // });

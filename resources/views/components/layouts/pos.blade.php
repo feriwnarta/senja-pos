@@ -67,6 +67,7 @@
         integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous">
     </script>
     <script src="{{ asset('js/popup-sidebar.js') }}" async></script>
+    <script src="{{ asset('js/pin.js') }}" async></script>
     <script src="{{ asset('js/select-all.js') }}" async></script>
     {{-- <script src="{{ asset('js/date-format.js') }}" async data-navigate-once></script> --}}
     @yield('footer-script')

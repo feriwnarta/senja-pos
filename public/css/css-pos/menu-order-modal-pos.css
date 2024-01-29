@@ -28,10 +28,6 @@ body::-webkit-scrollbar {
     --bs-modal-border-radius: border-radius: 6px;
 }
 
-.modal-content {
-    border-radius: 6px;
-}
-
 .modal-dialog::-webkit-scrollbar {
     display: none;
 }
@@ -212,7 +208,7 @@ body::-webkit-scrollbar {
 
 .modal-variasi-footer {
     width: inherit;
-    
+
     display: flex;
     justify-content: end;
     gap: 16px;
