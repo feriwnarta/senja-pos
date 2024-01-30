@@ -1,4 +1,4 @@
-@php use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
+@php use App\Utils\IndonesiaCurrency;use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -122,8 +122,12 @@
                             <tbody>
                             @foreach($purchases as $purchase)
                                 <tr wire:key="{{ $loop->iteration }}">
+                                    <td class="{{  $purchase->reference->purchasable->code == null ? 'text-danger' : 'code' }}">{{ ( $purchase->reference->purchasable->code == null) ? 'Menunggu pembelian dibuat' :  $purchase->reference->purchasable->code  }}</td>
                                     <td>{{ $purchase->code }}</td>
-                                    <td>{{ $purchase->reference }}</td>
+                                    <td>{{ Carbon::createFromFormat('Y-m-d H:i:s', $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                    <td>{{ $purchase->supplier->name }}</td>
+                                    <td>{{ IndonesiaCurrency::formatToRupiah($purchase->detail_sum_total_price) }}</td>
+                                    <td>{{ $purchase->history->first()->status }}</td>
                                 </tr>
                             @endforeach
                             </tbody>

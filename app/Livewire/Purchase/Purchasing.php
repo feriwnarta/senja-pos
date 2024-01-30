@@ -66,9 +66,14 @@ class Purchasing extends Component
     private function handlePurchase()
     {
         try {
-            return Purchase::with(['detail' => function ($query) {
+            return $purchases = Purchase::with(['detail' => function ($query) {
                 $query->latest()->limit(1);
-            }, 'reference.purchasable', 'supplier'])->orderBy('created_at')->paginate(10);
+            }, 'reference.purchasable', 'supplier', 'history' => function ($query) {
+                $query->latest()->limit(1);
+            }])
+                ->withSum('detail', 'total_price') // Menghitung total total_price di relasi detail
+                ->orderBy('created_at', 'DESC')
+                ->paginate(10);
 
         } catch (Exception $exception) {
             Log::error('gagal mengambil data pembelian (Purchase) ');
