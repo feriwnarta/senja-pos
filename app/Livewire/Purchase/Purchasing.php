@@ -37,7 +37,7 @@ class Purchasing extends Component
 
 
         } catch (Exception $exception) {
-            notify()->error('gagal mengambil data pembelian');
+            notify()->error('gagal mengambil data pembelian (request)');
             Log::error('gagal mengambil data permintaan pembelian');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
@@ -78,6 +78,20 @@ class Purchasing extends Component
     public function toggleChange()
     {
 
+
+    }
+
+    private function handlePurchase()
+    {
+        try {
+            return Purchase::
+
+
+        } catch (Exception $exception) {
+            Log::error('gagal mengambil data pembelian (Purchase) ');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
 
     }
 

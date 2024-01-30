@@ -70,38 +70,59 @@
                         <label class="btn btn-outline-primary" for="btnradio5">Riwayat</label>
                     </div>
 
-                    <table class="table borderless table-hover margin-top-28">
-                        <thead class="table-head-color">
-                        <tr>
-                            <th scope="col">Referensi</th>
-                            <th scope="col">Tanggal</th>
-                            <th scope="col">Catatan</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
 
+                    @if($toggle == 'request')
+
+                        <table class="table borderless table-hover margin-top-28">
+                            <thead class="table-head-color">
+                            <tr>
+                                <th scope="col">Referensi</th>
+                                <th scope="col">Tanggal</th>
+                                <th scope="col">Catatan</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            @if(isset($purchases))
+
+                                @foreach($purchases as $purchase)
+
+                                    <tr wire:key="{{ $loop->iteration }}"
+                                        wire:click="detailPurchase('{{ $purchase->id }}')">
+                                        <td>{{ $purchase->reference->requestable->code }}</td>
+                                        <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                        <td>{{  $purchase->reference->requestable->note == null ? 'Tanpa catatan' :  $purchase->reference->requestable->note }}</td>
+                                        <td>{{  $purchase->history->last()->status }}</td>
+                                    </tr>
+
+                                @endforeach
+                            @endif
+
+                            </tbody>
+                        </table>
                         @if(isset($purchases))
-
-                            @foreach($purchases as $purchase)
-
-                                <tr wire:key="{{ $loop->iteration }}"
-                                    wire:click="detailPurchase('{{ $purchase->id }}')">
-                                    <td>{{ $purchase->reference->requestable->code }}</td>
-                                    <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
-                                    <td>{{  $purchase->reference->requestable->note == null ? 'Tanpa catatan' :  $purchase->reference->requestable->note }}</td>
-                                    <td>{{  $purchase->history->last()->status }}</td>
-                                </tr>
-
-                            @endforeach
+                            {{ $purchases->links() }}
                         @endif
 
-                        </tbody>
-                    </table>
-                    @if(isset($purchases))
-                        {{ $purchases->links() }}
-                    @endif
+                    @elseif($toggle == 'purchase')
+                        <table class="table borderless table-hover margin-top-28">
+                            <thead class="table-head-color">
+                            <tr>
+                                <th scope="col">Kode pembelian</th>
+                                <th scope="col">Referensi</th>
+                                <th scope="col">Tanggal</th>
+                                <th scope="col">Supplier</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
+                            </tbody>
+                        </table>
+
+                    @endif
 
                 </div>
             </div>

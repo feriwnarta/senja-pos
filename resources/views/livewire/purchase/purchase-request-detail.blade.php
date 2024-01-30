@@ -209,7 +209,7 @@
                                         <option value="14">14 Hari</option>
                                         <option value="30">30 Hari</option>
                                     </select>
-                                    
+
                                 </div>
 
                                 <div class="col-md-4">
@@ -359,6 +359,8 @@
                     </div>
                 </div>
 
+            @elseif($status == 'Pembelian dibuat')
+                
             @endif
         </div>
     </div>
