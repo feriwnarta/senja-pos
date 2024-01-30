@@ -103,9 +103,6 @@
 
                             </tbody>
                         </table>
-                        @if(isset($purchases))
-                            {{ $purchases->links() }}
-                        @endif
 
                     @elseif($toggle == 'purchase')
                         <table class="table borderless table-hover margin-top-28">
@@ -122,8 +119,11 @@
                             <tbody>
                             @foreach($purchases as $purchase)
                                 <tr wire:key="{{ $loop->iteration }}">
-                                    <td class="{{  $purchase->reference->purchasable->code == null ? 'text-danger' : 'code' }}">{{ ( $purchase->reference->purchasable->code == null) ? 'Menunggu pembelian dibuat' :  $purchase->reference->purchasable->code  }}</td>
-                                    <td>{{ $purchase->code }}</td>
+                                    <td class
+                                        ="{{  $purchase->reference->purchasable->code == null ? 'text-danger' : 'code' }}
+                                    ">{{ $purchase->code }}</td>
+                                    <td>{{ ( $purchase->reference->purchasable->code == null) ? '-' :  $purchase->reference->purchasable->code  }}</td>
+
                                     <td>{{ Carbon::createFromFormat('Y-m-d H:i:s', $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
                                     <td>{{ $purchase->supplier->name }}</td>
                                     <td>{{ IndonesiaCurrency::formatToRupiah($purchase->detail_sum_total_price) }}</td>
@@ -132,6 +132,10 @@
                             @endforeach
                             </tbody>
                         </table>
+                    @endif
+
+                    @if(isset($purchases))
+                        {{ $purchases->links() }}
                     @endif
 
                 </div>

@@ -8,9 +8,12 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Purchasing extends Component
 {
+
+    use WithPagination;
 
     #[Url(as: 'option', history: true, keep: true)]
     public string $toggle = 'request';
