@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
+use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 
 class Purchase extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, HasEagerLimit;
 
     public $incrementing = false;
     protected $keyType = 'string';
@@ -35,6 +36,11 @@ class Purchase extends Model
     public function reference(): BelongsTo
     {
         return $this->belongsTo(PurchaseRef::class, 'purchase_refs_id');
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'suppliers_id');
     }
 
     public function detail(): HasMany

@@ -47,6 +47,17 @@ class TestPurchaseService extends TestCase
 
     }
 
+    public function testGeneratePurchaseRequestCode()
+    {
+
+        $result = $this->purchaseService->generateCodeRequestFromReqStock('9b28cab3-6ed3-4448-a7c4-a73ff25075a0', '9b367c47-91cd-4965-ba55-5a78696178cc');
+
+        self::assertNotNull($result);
+        self::assertIsArray($result);
+        print_r($result);
+
+    }
+
 
     protected function setUp(): void
     {

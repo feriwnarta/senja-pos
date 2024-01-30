@@ -5,7 +5,9 @@ namespace App\Service\Impl;
 use App\Models\Purchase;
 use App\Models\PurchaseRef;
 use App\Models\PurchaseRequest;
+use App\Models\PurchaseRequestHistory;
 use App\Models\Supplier;
+use App\Models\Warehouse;
 use App\Service\PurchaseService;
 use Carbon\Carbon;
 use Exception;
@@ -28,12 +30,42 @@ class PurchaseServiceImpl implements PurchaseService
                 DB::beginTransaction();
 
                 try {
-                    // buat
+
+                    PurchaseRequestHistory::create([
+                        'purchase_requests_id' => $purchaseReqId,
+                        'desc' => 'Permintaan pembelian diproses',
+                        'status' => 'Diproses',
+                    ]);
+
+                    $purchaseRequest = PurchaseRequest::findOrFail($purchaseReqId);
+                    $requestable = $purchaseRequest->reference->requestable->latest()->first();
+
+                    if ($requestable == null) {
+                        throw new Exception('gagal mendapatkan data requestable');
+                    }
+
+                    $warehouseId = $requestable->warehouses_id;
 
 
+                    // generate code
+
+                    $resultGenerateCode = $this->generateCodeRequestFromReqStock($warehouseId, $purchaseReqId);
+
+                    if ($resultGenerateCode == null) {
+                        throw new Exception('gagal menggenerate code request');
+                    }
+
+
+                    $purchaseRequest->update([
+                        'code' => $resultGenerateCode['code'],
+                        'increment' => $resultGenerateCode['increment'],
+                    ]);
+
+                    DB::commit();
+                    return true;
                 } catch (Exception $exception) {
                     DB::rollBack();
-                    Log::error('Gagal menyimpan item detail:', [
+                    Log::error('Gagal memproses request stock', [
                         'message' => $exception->getMessage(),
                         'trace' => $exception->getTraceAsString(),
                     ]);
@@ -44,15 +76,55 @@ class PurchaseServiceImpl implements PurchaseService
             Log::error('Gagal mendapatkan lock:', [
                 'message' => $e->getMessage(),
             ]);
-            throw new Exception('Lock tidak didapatkan selama 5 detik');
+            throw new Exception('Gagal memproses request stock');
         } catch (Exception $exception) {
-            Log::error('Error saat membuat produksi:', [
+            Log::error('', [
                 'trace' => $exception->getTraceAsString(),
             ]);
             throw $exception; // Re-throw for further handling
         }
     }
 
+    public function generateCodeRequestFromReqStock(string $warehouseId, string $purchaseRequestId)
+    {
+        $prefix = 'PQ';
+        $year = date('Ymd');
+        $nextCode = 1;
+
+        // dapatkan purchase request terakhir berdasarkan kode warehouse
+        // dan juga code purchase request tidak null
+        $lastPurchase = PurchaseRequest::with(['reference' => function ($query) use ($warehouseId) {
+            $query->whereHas('requestable', function ($query) use ($warehouseId) {
+                $query->where('warehouses_id', $warehouseId);
+            });
+        }])
+            ->whereNotNull('code') // Menambahkan kriteria untuk memastikan 'code' tidak null
+            ->latest()
+            ->first();
+
+        Log::info($lastPurchase);
+
+        // dapatkan kode warehouse
+        $warehouse = Warehouse::findOrFail($warehouseId);
+
+
+        // kode pertama kali digenerate
+        if ($lastPurchase != null) {
+            $latestDate = Carbon::parse($lastPurchase->created_at);
+
+            if ($latestDate->format('Y-m') == Carbon::now()->format('Y-m')) {
+                // Bulan sama, increment $nextCode
+                $nextCode = ++$lastPurchase->increment;
+            }
+        }
+
+
+        return [
+            'code' => "$prefix{$warehouse->warehouse_code}$year$nextCode",
+            'increment' => $nextCode
+        ];
+
+    }
 
     /**
      * buat purchase dari request stock gudang tanpa multi supplier
@@ -148,7 +220,6 @@ class PurchaseServiceImpl implements PurchaseService
         }
     }
 
-
     public function generateCodePurchase(string $supplierCode)
     {
         $prefix = 'PO';
@@ -164,9 +235,7 @@ class PurchaseServiceImpl implements PurchaseService
             $latestDate = Carbon::parse($lastPurchase->created_at);
 
             // Cek apakah bulan saat ini berbeda dengan bulan dari waktu terakhir diambil
-            if ($latestDate->format('Y-m') !== Carbon::now()->format('Y-m')) {
-                // Bulan berbeda, atur $nextCode kembali ke nol
-            } else {
+            if ($latestDate->format('Y-m') == Carbon::now()->format('Y-m')) {
                 // Bulan sama, increment $nextCode
                 $nextCode = ++$lastPurchase->increment;
             }

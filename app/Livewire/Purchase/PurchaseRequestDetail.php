@@ -66,6 +66,7 @@ class PurchaseRequestDetail extends Component
     public function processRequest($id)
     {
 
+
         try {
 
             $purchaseRequest = $this->findPurchaseRequestById($id);
@@ -78,28 +79,21 @@ class PurchaseRequestDetail extends Component
                 Log::error('ada sesuatu yang salah saat mengelola permintaan pembelian baru karena statusnya bukan permintaan baru');
                 return;
             }
-            DB::beginTransaction();
-            // buat status baru
-            $result = $history->create([
-                'purchase_requests_id' => $id,
-                'desc' => 'Permintaan pembelian diproses',
-                'status' => 'Diproses',
-            ])->save();
+
+
+            $this->purchaseService = app()->make(PurchaseServiceImpl::class);
+            $result = $this->purchaseService->processPurchaseRequestFromReqStock($id);
 
             if ($result) {
-                DB::commit();
-                notify()->success('Berhasil proses pembelian');
-
-
+                notify()->success('Berhasil membuat permintaan');
                 return;
             }
 
-            DB::rollBack();
             notify()->error('gagal proses permintaan');
-
         } catch (Exception $exception) {
             DB::rollBack();
             Log::error('gagal melakukan proses permintaan');
+            notify()->error('gagal proses permintaan, hubungi administrator');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }

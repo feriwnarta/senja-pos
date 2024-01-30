@@ -57,6 +57,23 @@ class Purchasing extends Component
         switch ($this->toggle) {
             case  "request":
                 return $this->handleRequest();
+            case "purchase" :
+                return $this->handlePurchase();
+        }
+
+    }
+
+    private function handlePurchase()
+    {
+        try {
+            return Purchase::with(['detail' => function ($query) {
+                $query->latest()->limit(1);
+            }, 'reference.purchasable', 'supplier'])->orderBy('created_at')->paginate(10);
+
+        } catch (Exception $exception) {
+            Log::error('gagal mengambil data pembelian (Purchase) ');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
         }
 
     }
@@ -78,20 +95,6 @@ class Purchasing extends Component
     public function toggleChange()
     {
 
-
-    }
-
-    private function handlePurchase()
-    {
-        try {
-            return Purchase::
-
-
-        } catch (Exception $exception) {
-            Log::error('gagal mengambil data pembelian (Purchase) ');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-        }
 
     }
 

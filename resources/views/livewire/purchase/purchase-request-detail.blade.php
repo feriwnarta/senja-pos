@@ -260,38 +260,36 @@
                             <tbody>
 
                             @foreach($purchaseRequests->detail as $key => $detail)
+
                                 @php
-                                    if(empty($this->componentItems)) {
-                                        $this->componentItems[] = [
-                                                'purchaseRequestId' => $purchaseRequests->id,
-                                                'itemId' => $detail->item->id,
-                                                'itemName' => $detail->item->name,
-                                                'supplier' => $this->supplier,
-                                                'payment' =>  $this->payment,
-                                                'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand,
-                                                'qtyBuy' => $detail->qty_buy,
-                                                'unitName' => $detail->item->unit->name,
-                                                'unitPrice' => number_format($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost, 0),
-                                                'purchaseAmount' =>  number_format($detail->qty_buy, 0),
-                                                'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
-                                                'deadlinePayment' => '3',
+                                    // Inisialisasi komponen item jika belum ada
+                                    if (!isset($this->componentItems[$key])) {
+                                        $this->componentItems[$key] = [
+                                            'purchaseRequestId' => $purchaseRequests->id,
+                                            'itemId' => $detail->item->id,
+                                            'itemName' => $detail->item->name,
+                                            'supplier' => $this->supplier,
+                                            'payment' =>  $this->payment,
+                                            'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand,
+                                            'qtyBuy' => $detail->qty_buy,
+                                            'unitName' => $detail->item->unit->name,
+                                            'unitPrice' => number_format($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost),
+                                            'purchaseAmount' =>  number_format($detail->qty_buy, 0),
+                                            'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
+                                            'deadlinePayment' => '3',
                                         ];
-                                        $this->componentItems[$key]['supplier'] = $this->supplier;
-                                        $this->componentItems[$key]['payment'] = $this->payment;
-                                        $this->componentItems[$key]['dueDate'] = $this->dueDate;
-
-                                        if($key == $this->indexPayment) {
-                                            $this->componentItems[$key]['payment'] = $this->paymentTemp;
-                                            $this->indexPayment = '';
-                                        }
-
                                     }
 
+                                    // Memperbarui nilai supplier, payment, dan dueDate
+                                    $this->componentItems[$key]['supplier'] = $this->supplier;
+                                    $this->componentItems[$key]['payment'] = $this->payment;
+                                    $this->componentItems[$key]['dueDate'] = $this->dueDate;
 
-
-
-
-
+                                    // Memperbarui nilai payment jika key sama dengan indexPayment
+                                    if($key == $this->indexPayment) {
+                                        $this->componentItems[$key]['payment'] = $this->paymentTemp;
+                                        $this->indexPayment = '';
+                                    }
                                 @endphp
 
 
@@ -360,7 +358,7 @@
                 </div>
 
             @elseif($status == 'Pembelian dibuat')
-                
+
             @endif
         </div>
     </div>
