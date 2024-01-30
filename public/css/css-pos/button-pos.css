@@ -105,6 +105,16 @@ BUTTON WITH FULL BACKGROUND
 }
 
 /* ---------------------------------------
+ACTIVE BUTTON
+--------------------------------------- */
+.button-active {
+    border: 1px solid #f2c6af;
+    background: #fff7f2;
+
+    color: #f16622;
+}
+
+/* ---------------------------------------
 PADDING BUTTON
 --------------------------------------- */
 .p-6-16 {

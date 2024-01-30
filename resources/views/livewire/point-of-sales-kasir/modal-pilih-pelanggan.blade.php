@@ -6,7 +6,7 @@
                 class="modal-header header-body-wrapper d-flex flex-row justify-content-between align-items-center sticky-top">
                 <button type="button" class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 h-40"
                     data-bs-dismiss="modal">Keluar</button>
-                <h1 class="text-medium-20 color-4040 ls-176">5 Pelanggan</h1>
+                <h1 class="text-medium-20 color-4040 ls-176">{{count($data)}} Pelanggan</h1>
                 <button type="button" class="button-f166-inh text-medium-16 text-white ls-176 p-8-16 h-40"
                     data-bs-toggle="modal" data-bs-target="#modalPelangganBaru">Pelanggan Baru</button>
             </div>
@@ -18,16 +18,25 @@
                     <div class="list-pelanggan-wrapper">
                         <table class="table">
                             <tbody>
-                                @for ($i = 0; $i < 3; $i++)
+                                @foreach ($data as $customer)
                                     <tr class="table-pelanggan-bordered">
-                                        <td class="text-light-14 color-6161"><i class="user-icon"></i>pelanggan
-                                            <span>{{ $i }}</span></td>
-                                        <td class="text-light-14 color-6161"><i class="phone-icon"></i>Phone Number
-                                            <span>{{ $i }}</span></td>
-                                        <td class="text-light-14 color-6161"><i class="mail-icon"></i>Customer Name
-                                            <span>{{ $i }}</span></td>
+                                        <td class="text-light-14 color-6161 w-100">
+                                            <span class="text-start">
+                                                <i class="user-icon"></i>
+                                                {{ $customer->name }}</span>
+                                        </td>
+                                        <td class="text-light-14 color-6161 w-100">
+                                            <span class="text-start">
+                                                <i class="phone-icon"></i>
+                                                {{ $customer->phoneNumber }}</span>
+                                        </td>
+                                        <td class="text-light-14 color-6161 w-100">
+                                            <span class="text-start">
+                                                <i class="mail-icon"></i>
+                                                {{ $customer->emailAddress }}</span>
+                                        </td>
                                     </tr>
-                                @endfor
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

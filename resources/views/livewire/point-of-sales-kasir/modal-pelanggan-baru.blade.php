@@ -8,28 +8,37 @@
             </div>
             <div class="modal-body modal-pelangganBaru-wrapper">
                 <div class="body-input-pelanggan-wrapper">
-                    <form class="input-pelanggan-baru d-flex flex-column gap-3">
+                    <form class="input-pelanggan-baru d-flex flex-column gap-3" wire:submit="save">
                         <div class="d-flex flex-column gap-1">
                             <label class="text-light-14 color-4040">Nama</label>
-                            <input class="form-control text-light-14 color-7575" type="text"
-                                placeholder="Nama Pelanggan" aria-label="nama">
+                            <input class="form-control text-light-14 color-7575" type="text" min="2"
+                                max="100" placeholder="Nama Pelanggan" aria-label="nama" wire:model="name">
+                            @error('name')
+                                <span class="text-danger fs-6 text-lighter">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="d-flex flex-column gap-1">
                             <label class="text-light-14 color-4040">Nomor Telfon</label>
-                            <input class="form-control text-light-14 color-7575" type="text"
-                                placeholder="Nomor Telfon" aria-label="noTelp">
+                            <input class="form-control text-light-14 color-7575" type="number" min="10"
+                                max="13" placeholder="Nomor Telfon" aria-label="noTelp" wire:model="phoneNumber">
+                            @error('phoneNumber')
+                                <span class="text-danger fs-6 text-lighter">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="d-flex flex-column gap-1">
                             <label class="text-light-14 color-4040">Email</label>
-                            <input class="form-control text-light-14 color-7575" type="text" placeholder="Email"
-                                aria-label="nama">
+                            <input class="form-control text-light-14 color-7575" type="email" placeholder="Email"
+                                aria-label="nama" wire:model="emailAddress">
+                            @error('emailAddress')
+                                <span class="text-danger fs-6 text-lighter">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="button-group-new-customer">
                             <button type="button"
                                 class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40"
                                 data-bs-dismiss="modal">Keluar</button>
-                            <button type="button"
-                                class="button-w119-f166 text-medium-16 text-white p-8-16 ls-176 h-40">Simpan</button>
+                            <button class="button-w119-f166 text-medium-16 text-white p-8-16 ls-176 h-40"
+                                data-bs-toggle="modal" data-bs-target="#modalPilihPelanggan">Simpan</button>
                         </div>
                     </form>
                 </div>

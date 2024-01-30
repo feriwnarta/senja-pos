@@ -2,6 +2,7 @@
 
 namespace App\Livewire\PointOfSalesKasir;
 
+use App\Models\Customer;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -10,6 +11,9 @@ class ModalPilihPelanggan extends Component
 {
     public function render()
     {
-        return view('livewire.point-of-sales-kasir.modal-pilih-pelanggan');
+        $dataPelanggan = Customer::all();
+        return view('livewire.point-of-sales-kasir.modal-pilih-pelanggan',[
+            'data' => $dataPelanggan,
+        ]);
     }
 }
