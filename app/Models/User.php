@@ -12,10 +12,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasUuids;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasUuids, Notifiable;
 
-    protected $primaryKey = 'id';
     public $incrementing = false;
+    protected $primaryKey = 'id';
     protected $keyType = 'string';
 
     /**

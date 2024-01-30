@@ -4,8 +4,12 @@ namespace Tests\Feature;
 
 use App\Models\PurchaseRequest;
 use App\Models\Supplier;
+use App\Models\User;
+use App\Notifications\PurchaseRequestNotification;
 use App\Service\Impl\PurchaseServiceImpl;
 use App\Service\PurchaseService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
 
 class TestPurchaseService extends TestCase
@@ -55,6 +59,28 @@ class TestPurchaseService extends TestCase
         self::assertNotNull($result);
         self::assertIsArray($result);
         print_r($result);
+
+    }
+
+    public function testNotification()
+    {
+
+
+        $user = User::create([
+            'name' => fake()->name,
+            'email' => fake()->email,
+            'password' => fake()->password,
+        ]);
+
+
+        $result = Notification::sendNow(
+            $user,
+            new PurchaseRequestNotification([
+                'id' => 'ini id'
+            ]));
+
+        Log::info($result);
+
 
     }
 

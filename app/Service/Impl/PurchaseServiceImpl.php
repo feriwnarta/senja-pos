@@ -61,6 +61,7 @@ class PurchaseServiceImpl implements PurchaseService
                         'increment' => $resultGenerateCode['increment'],
                     ]);
 
+
                     DB::commit();
                     return true;
                 } catch (Exception $exception) {

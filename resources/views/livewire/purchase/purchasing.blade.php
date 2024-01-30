@@ -119,9 +119,7 @@
                             <tbody>
                             @foreach($purchases as $purchase)
                                 <tr wire:key="{{ $loop->iteration }}">
-                                    <td class
-                                        ="{{  $purchase->reference->purchasable->code == null ? 'text-danger' : 'code' }}
-                                    ">{{ $purchase->code }}</td>
+                                    <td class="code">{{ $purchase->code }}</td>
                                     <td>{{ ( $purchase->reference->purchasable->code == null) ? '-' :  $purchase->reference->purchasable->code  }}</td>
 
                                     <td>{{ Carbon::createFromFormat('Y-m-d H:i:s', $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>

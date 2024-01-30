@@ -804,3 +804,8 @@ select {
 .item {
 
 }
+
+
+.notify {
+    z-index: 100;
+}
