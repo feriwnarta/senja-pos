@@ -4,34 +4,42 @@ namespace App\Livewire\PointOfSalesKasir;
 
 use App\Models\Customer;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\Rule;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('components.layout.pos')]
 class ModalPelangganBaru extends Component
 {
-    #[Rule('required|min:2|max:100')]
+    #[Validate('required|min:2|max:100')]
     public $name;
-    #[Rule('required|decimal:10,13')]
+    #[Validate('required|digits_between:10,13')]
     public $phoneNumber;
-    #[Rule('required|email')]
+    #[Validate('required|email')]
     public $emailAddress;
 
-    public function save()
+    public function createCustomer()
     {
-        // $this->validate();
+        $this->validate();
 
         Customer::create([
             'name' => $this->name,
             'phoneNumber' => $this->phoneNumber,
             'emailAddress' => $this->emailAddress,
         ]);
-
-        // $this->reset('name', 'phoneNumber', 'emailAddress');
     }
 
     public function render()
     {
-        return view('livewire.point-of-sales-kasir.modal-pelanggan-baru');
+        $dataCustomers = Customer::all();
+        return view('livewire.point-of-sales-kasir.modal-pelanggan-baru', ['data' => $dataCustomers]);
+    }
+
+    public function save()
+    {
+        $this->createCustomer();
+
+        $this->reset('name', 'phoneNumber', 'emailAddress');
+
+        $this->redirect('/pos/menu');
     }
 }

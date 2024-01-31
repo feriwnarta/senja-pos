@@ -12,20 +12,6 @@ class ModalMenuOrder extends Component
     // Counter Order Quantity
     public $count;
 
-    // public function increment()
-    // {
-    //     $this->count++;
-    // }
-
-    // public function decrement()
-    // {
-    //     $this->count--;
-
-    //     if ($this->count < 0) {
-    //         $this->count++;
-    //     }
-    // }
-
     public $menuSelected;
     public function mount($dataMenu)
     {
