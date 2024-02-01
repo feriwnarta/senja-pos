@@ -4,6 +4,7 @@ namespace App\Livewire\PointOfSalesKasir;
 
 use App\Models\Customer;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -11,35 +12,39 @@ use Livewire\Component;
 class ModalPelangganBaru extends Component
 {
     #[Validate('required|min:2|max:100')]
-    public $name;
+    public $name = '';
     #[Validate('required|digits_between:10,13')]
-    public $phoneNumber;
+    public $phoneNumber = '';
     #[Validate('required|email')]
-    public $emailAddress;
-
-    public function createCustomer()
-    {
-        $this->validate();
-
-        Customer::create([
-            'name' => $this->name,
-            'phoneNumber' => $this->phoneNumber,
-            'emailAddress' => $this->emailAddress,
-        ]);
-    }
+    public $emailAddress = '';
 
     public function render()
     {
-        $dataCustomers = Customer::all();
-        return view('livewire.point-of-sales-kasir.modal-pelanggan-baru', ['data' => $dataCustomers]);
+        return view('livewire.point-of-sales-kasir.modal-pelanggan-baru', ['customers' => Customer::first()->get()]);
+    }
+    public function createCustomer()
+    {
+        // validate input
+        // create customer
+        // dispatch customer list that will be passed on the list pelanggan component
+
+        $validated = $this->validate([
+            'name' => 'required|min:2|max:100',
+            'phoneNumber' => 'required|digits_between:10,13',
+            'emailAddress' => 'required|email',
+        ]);
+
+        $customersList = Customer::create($validated);
+
+        $this->dispatch('customer-created', $customersList);
     }
 
     public function save()
     {
+        // call createCustomer function
+        // reset all input after sumbit
         $this->createCustomer();
-
         $this->reset('name', 'phoneNumber', 'emailAddress');
-
-        $this->redirect('/pos/menu');
+        
     }
 }

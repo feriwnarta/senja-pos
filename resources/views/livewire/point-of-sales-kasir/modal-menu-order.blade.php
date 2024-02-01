@@ -162,4 +162,5 @@
             </div>
         </div>
     </div>
+    <livewire:point-of-sales-kasir.side-menu-order>
 </div>

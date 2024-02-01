@@ -4,22 +4,24 @@ namespace App\Livewire\PointOfSalesKasir;
 
 use App\Models\Customer;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 #[Layout("components.layout.pos")]
 class ModalPilihPelanggan extends Component
 {
-    // protected $listeners = ['refresh-data' => 'refresh'];
+    // get list pelanggan using On Attr and customer-created params
+    // make a function to make it listed
 
-    // public function mount()
-    // {
-    //     $this->dispatch('refresh-data');
-    // }
-    public $dataCustomers;
+    #[On('customer-created')]
+    public function updateListCustomer($customersList)
+    {
+    }
 
     public function render()
     {
-        $this->dataCustomers = Customer::all();
-        return view('livewire.point-of-sales-kasir.modal-pilih-pelanggan',[$this->dataCustomers]);
+        // calling data customer in the second params
+        
+        return view('livewire.point-of-sales-kasir.modal-pilih-pelanggan',['data'=>Customer::first()->get()]);
     }
 }

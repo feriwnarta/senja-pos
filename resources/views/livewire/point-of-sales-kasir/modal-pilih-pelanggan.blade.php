@@ -1,6 +1,5 @@
-{{-- <div>
-    @if ($showModalPilihPelanggan) --}}
-<div class="modal fade" id="modalPilihPelanggan" tabindex="-1" aria-labelledby="modalPilihPelangganLabel" data-bs-backdrop="true">
+
+<div wire:ignore.self class="modal fade" id="modalPilihPelanggan" tabindex="-1" aria-labelledby="modalPilihPelangganLabel" data-bs-backdrop="true">
     <div class="modal-dialog modal-wrapper">
         <div class="modal-content">
             <div
@@ -8,7 +7,7 @@
                 <button type="button" class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 h-40"
                     data-bs-dismiss="modal">Keluar</button>
                     {{-- {{ count($data) }} --}}
-                <h1 class="text-medium-20 color-4040 ls-176">{{ count($dataCustomers) }} Pelanggan</h1>
+                <h1 class="text-medium-20 color-4040 ls-176">{{ count($data) }} Pelanggan</h1>
                 <button type="button" class="button-f166-inh text-medium-16 text-white ls-176 p-8-16 h-40"
                     data-bs-toggle="modal" data-bs-target="#modalPelangganBaru">Pelanggan Baru</button>
                     {{-- <button class="btn btn-primary" wire:click="updateCustomerSaved">TEST</button> --}}
@@ -21,7 +20,7 @@
                     <div class="list-pelanggan-wrapper">
                         <table class="table">
                             <tbody>
-                                @foreach ($dataCustomers as $customer)
+                                @forelse ($data as $customer)
                                     <tr class="table-pelanggan-bordered">
                                         <td class="d-flex gap-1 text-truncate text-light-14 color-6161 w-100">
                                             <span class="text-start">
@@ -42,7 +41,15 @@
                                             </span>
                                         </td>
                                     </tr>
-                                @endforeach
+                                    @empty
+                                    <tr class="table-pelanggan-bordered">
+                                        <td class="d-flex gap-1 text-truncate text-bold-14 color-6161 w-100">
+                                            <span class="text-center">
+                                                No data recorded
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -51,5 +58,4 @@
         </div>
     </div>
 </div>
-{{-- @endif
-</div> --}}
+

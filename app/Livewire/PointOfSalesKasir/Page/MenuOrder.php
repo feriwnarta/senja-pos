@@ -108,13 +108,6 @@ class MenuOrder extends Component
         ],
     ];
 
-    // public function getData()
-    // {
-    //     $data = $this->menuCS;
-
-    //     return $data;
-    // }
-
     public function render()
     {
         return view('livewire.point-of-sales-kasir.page.menu-order');

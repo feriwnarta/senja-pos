@@ -18,6 +18,14 @@
     width: 559px;
 }
 
+.list-pelanggan-wrapper {
+    max-height: 360px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #f16622 #fff;
+    scroll-behavior: smooth;
+}
+
 .table-pelanggan-bordered {
     display: flex;
     justify-content: space-between;
