@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repository\Impl\WarehouseItemReceiptRepositoryImpl;
+use App\Repository\WarehouseItemReceiptRepository;
 use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use App\Service\Impl\ShippingServiceImpl;
@@ -20,6 +22,7 @@ class WarehouseTransaction extends ServiceProvider
         CentralProductionService::class => CentralProductionServiceImpl::class,
         ShippingService::class => ShippingServiceImpl::class,
         WarehouseItemReceiptService::class => WarehouseItemReceiptServiceImpl::class,
+        WarehouseItemReceiptRepository::class => WarehouseItemReceiptRepositoryImpl::class,
     ];
 
     /**

@@ -198,7 +198,6 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <select class="form-select input-default"
-                                            wire:ignore
                                             id="paymentDateOption" wire:model.live="dueDate"
 
                                         {{ $this->payment != 'NET' || $isMultipleSupplier ? 'disabled' : '' }}

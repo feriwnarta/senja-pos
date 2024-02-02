@@ -67,7 +67,7 @@
                         <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="Unggas"
+                               id="warehouseInput" placeholder="Raw material"
                                wire:model.live.debounce.600ms="name">
                         @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
                     </div>

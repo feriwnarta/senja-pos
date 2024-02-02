@@ -40,6 +40,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository
             Log::error('dengan data' . json_encode($data, JSON_PRETTY_PRINT));
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
+            throw $exception;
         }
     }
 
@@ -53,7 +54,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository
             Log::error("Gagal mendapatkan purchase berdasarkan id $id");
             Log::error($exception->getMessage());
             Log::error($exception->getMessage());
-            throw new $exception;
+            throw $exception;
         }
     }
 
@@ -72,7 +73,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository
             Log::error('gagal membuat warehouse item receipt');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
-            throw new $exception;
+            throw $exception;
         }
     }
 
@@ -90,7 +91,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository
             Log::error('gagal membuat warehouse item receipt history');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
-            throw new $exception;
+            throw $exception;
         }
     }
 
@@ -102,7 +103,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository
             Log::error('gagal mendapatkan purchase items details');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
-            throw new $exception;
+            throw $exception;
         }
     }
 
@@ -127,7 +128,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository
             Log::error('gagal menyimpan warehouse item receipt details');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
-            throw new $exception;
+            throw $exception;
         }
     }
 }

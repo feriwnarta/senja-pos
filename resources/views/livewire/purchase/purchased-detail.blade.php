@@ -33,7 +33,7 @@
     </x-slot>
 
 
-    <div id="content-loaded">
+    <div id="content-loaded" wire:init="loadPosts">
         <x-notify::notify/>
         <div class="row">
             <div class="row">

@@ -10,9 +10,13 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class Transaction extends Component
 {
+
+    use WithPagination;
+
     public Collection $warehouses;
 
     public string $toggle = '';

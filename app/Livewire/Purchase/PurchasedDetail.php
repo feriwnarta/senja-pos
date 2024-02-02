@@ -15,8 +15,13 @@ class PurchasedDetail extends Component
     public string $purchaseId;
     #[Url(as: 'status', keep: true)]
     public string $purchaseStatus;
-
+    public $readyToLoad = false;
     private PurchaseService $purchaseService;
+
+    public function loadPosts()
+    {
+        $this->readyToLoad = true;
+    }
 
 
     public function boot()

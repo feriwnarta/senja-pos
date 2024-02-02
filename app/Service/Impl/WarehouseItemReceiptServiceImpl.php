@@ -2,8 +2,8 @@
 
 namespace App\Service\Impl;
 
-use App\Models\WarehouseItemReceipt;
-use App\Models\WarehouseItemReceiptDetail;
+use App\Repository\Impl\WarehouseItemReceiptRepositoryImpl;
+use App\Repository\WarehouseItemReceiptRepository;
 use App\Service\WarehouseItemReceiptService;
 use Carbon\Carbon;
 use Exception;
@@ -14,6 +14,16 @@ use Illuminate\Support\Facades\Log;
 
 class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 {
+
+    private WarehouseItemReceiptRepository $receiptRepository;
+
+    /**
+     * @param WarehouseItemReceiptRepository $receiptRepository
+     */
+    public function __construct(WarehouseItemReceiptRepositoryImpl $receiptRepository)
+    {
+        $this->receiptRepository = $receiptRepository;
+    }
 
     /**
      * Lakukan proses penerimaan barang dan panggil fungsi generate kode terima barang
@@ -34,30 +44,19 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             return Cache::lock('acceptItemReceipt', 10)->block(5, function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items) {
                 DB::beginTransaction();
 
+
                 try {
-                    $code = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
+                    $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
 
                     // update warehouse receipt
-                    $warehouseReceipt = WarehouseItemReceipt::find($itemReceiptId);
-
-                    $warehouseReceipt->update([
-                        'code' => $code['code'],
-                        'increment' => $code['increment'],
-                    ]);
+                    $warehouseReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptId);
+                    $this->receiptRepository->updateCodeDataExistingItemReceipt($itemReceiptId, $resultGenerateCodeData['code'], $resultGenerateCodeData['increment']);
 
                     // Update details
-                    foreach ($items as $item) {
-                        WarehouseItemReceiptDetail::where('id', $item['id'])->update([
-                            'qty_accept' => $item['qty_accept']
-                        ]);
-                    }
+                    $this->receiptRepository->createWarehouseItemReceiptDetail($items);
 
                     // update history warehouse receipt
-                    $warehouseReceipt->history()->create([
-                        'desc' => 'Menerima penerimaan barang',
-                        'status' => 'Diterima',
-                    ]);
-
+                    $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
                     DB::commit();
 
                     return true;
@@ -87,7 +86,9 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 
     public function generateCodeReceipt(string $itemReceiptId, string $warehouseId, string $warehouseCode)
     {
-        $warehouseItemReceipt = WarehouseItemReceipt::findOrFail($itemReceiptId);
+
+        $nextCode = 1;
+        $warehouseItemReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptId);
 
         // jika sudah tersedia maka balikan kode yang sudah digenerate
         if ($warehouseItemReceipt->code !== null) {
@@ -98,21 +99,15 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
         }
 
         // dapatkan kode terakhir
-        $latestCode = WarehouseItemReceipt::where('warehouses_id', $warehouseId)
-            ->whereNotNull('code')
-            ->latest('created_at')
-            ->first();
+        $latestCodeData = $this->receiptRepository->getLastCodeDataByWarehouseId($warehouseId);
 
-
-        Log::debug($latestCode);
-
+        // format date time bulan dan tahun ini
         $currentYearMonth = Carbon::now()->format('Ym');
-        $nextCode = 1;
 
-        if ($latestCode) {
-            $latestCodeDate = Carbon::parse($latestCode->created_at)->format('Ym');
+        if (!empty($latestCodeData)) {
+            $latestCodeDate = Carbon::parse($latestCodeData['created_at'])->format('Ym');
             if ($latestCodeDate === $currentYearMonth) {
-                $nextCode = $latestCode->increment + 1;
+                $nextCode = $latestCodeData['increment'] + 1;
             }
         }
 

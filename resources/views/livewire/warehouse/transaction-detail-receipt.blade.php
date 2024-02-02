@@ -14,13 +14,14 @@
                 </div>
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                    <button type="btn"
-                            class="btn btn-text-only-danger btn-nav margin-left-10"
-                            wire:click="reject('{{ $itemReceiptRef->itemReceipt->id }}')"
-                            wire:loading.attr="disabled">Tolak
-                    </button>
 
                     @if($itemReceiptRef->itemReceipt->history->last()->status == 'Draft' || $itemReceiptRef->itemReceipt->history->last()->status == 'Ditolak')
+                        <button type="btn"
+                                class="btn btn-text-only-danger btn-nav margin-left-10"
+                                wire:click="reject('{{ $itemReceiptRef->itemReceipt->id }}')"
+                                wire:loading.attr="disabled">Tolak
+                        </button>
+
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
                                 wire:loading.attr="disabled"
@@ -65,7 +66,7 @@
                     </div>
 
                     <div class="margin-top-24">
-                        <p class="subtitle-3-regular">Item produksi</p>
+                        <p class="subtitle-3-regular">Item</p>
                         <div id="divider" class="margin-top-6"></div>
                         <table id="" class="table borderless table-hover margin-top-6">
                             <thead class="table-head-color">
@@ -78,7 +79,7 @@
                             </thead>
                             <tbody>
 
-                            @if ($itemReceiptRef->receivable instanceof CentralProduction && isset($itemReceiptRef->itemReceipt->details))
+                            @if ($itemReceiptRef->receivable  && isset($itemReceiptRef->itemReceipt->details))
                                 @foreach ($itemReceiptRef->itemReceipt->details as $key => $item)
 
                                     @php
