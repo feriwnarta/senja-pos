@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Models\Purchase;
+
 interface PurchaseService
 {
 
@@ -12,5 +14,8 @@ interface PurchaseService
     public function generateCodePurchase(string $supplierCode);
 
     public function generateCodeRequestFromReqStock(string $warehouseId, string $purchaseRequestId);
-    
+
+    public function purchaseHasBeenShipped(string $id, array $data): ?Purchase;
+
+    public function getPurchaseStatus(string $id): string;
 }

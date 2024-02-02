@@ -51,7 +51,9 @@ class Purchasing extends Component
 
     public function detailPurchased($id)
     {
-        
+        if ($id != '') {
+            $this->redirect("purchased/detail?pId=$id", true);
+        }
     }
 
     public function render()

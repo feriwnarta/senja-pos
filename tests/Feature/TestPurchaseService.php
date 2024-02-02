@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Purchase;
 use App\Models\PurchaseRequest;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Notifications\PurchaseRequestNotification;
+use App\Repository\Impl\PurchaseRepositoryImpl;
 use App\Service\Impl\PurchaseServiceImpl;
 use App\Service\PurchaseService;
 use Illuminate\Support\Facades\Log;
@@ -61,6 +63,29 @@ class TestPurchaseService extends TestCase
         print_r($result);
 
     }
+
+    public function testMakeWarehouseRecipt()
+    {
+
+        $purchase = app()->make(PurchaseRepositoryImpl::class);
+        $purchase->makeWarehouseRecipt('9b34e09a-7426-4b96-a15f-da5ddadc6cf4');
+
+    }
+
+    public function testPurchaseHasBeenShipped()
+    {
+
+        $purchase = Purchase::first();
+        $dataHistory = [
+            'desc' => 'Purchase dikirim oleh supplier, bersiap untuk melakukan penerimaan',
+            'status' => 'Dikirim'
+        ];
+
+        $result = $this->purchaseService->purchaseHasBeenShipped($purchase->id, $dataHistory);
+        self::assertNotNull($result);
+
+    }
+
 
     public function testNotification()
     {

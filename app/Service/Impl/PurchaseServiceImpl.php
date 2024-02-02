@@ -6,8 +6,12 @@ use App\Models\Purchase;
 use App\Models\PurchaseRef;
 use App\Models\PurchaseRequest;
 use App\Models\PurchaseRequestHistory;
+use App\Models\RequestStock;
 use App\Models\Supplier;
 use App\Models\Warehouse;
+use App\Models\WarehouseItemReceiptRef;
+use App\Repository\Impl\PurchaseRepositoryImpl;
+use App\Repository\PurchaseRepository;
 use App\Service\PurchaseService;
 use Carbon\Carbon;
 use Exception;
@@ -18,6 +22,17 @@ use Illuminate\Support\Facades\Log;
 
 class PurchaseServiceImpl implements PurchaseService
 {
+
+    private PurchaseRepository $purchaseRepository;
+
+    /**
+     * @param PurchaseRepository $purchaseRepository
+     */
+    public function __construct(PurchaseRepositoryImpl $purchaseRepository)
+    {
+        $this->purchaseRepository = $purchaseRepository;
+    }
+
 
     /**
      * proses pembuatan purchase request dari request stock gudang
@@ -247,5 +262,70 @@ class PurchaseServiceImpl implements PurchaseService
             'increment' => $nextCode
         ];
 
+    }
+
+    public function purchaseHasBeenShipped(string $id, array $data): ?Purchase
+    {
+        try {
+            Log::info('buat pengiriman');
+            DB::beginTransaction();
+            $result = $this->purchaseRepository->createPurchaseHistory($id, $data);
+            $this->makeWarehouseRecipt($id);
+            DB::commit();
+            return $result;
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('gagal mengirim pembelian');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+            return null;
+        }
+    }
+
+    public function makeWarehouseRecipt(string $purchaseId)
+    {
+
+        // dapatkan data purchase terlebih dahulu
+        $purchase = $this->purchaseRepository->findPurchaseById($purchaseId);
+
+        // ambil purchase reff, dapatkan warehouse
+        $reference = $purchase->reference->purchasable->reference->requestable;
+
+        if (!$reference instanceof RequestStock) {
+            throw new Exception('gagal mendpatkan warehouse receipt');
+        }
+        $warehouseId = $reference->warehouses_id;
+
+        // buat reference warehouse item receipt
+        $warehouseReceiptReff = $purchase->warehouseReceiptReference()->save(new WarehouseItemReceiptRef());
+
+        // buat warehouse item receipt
+        $warehouseReceipt = $this->purchaseRepository->insertWarehouseReceiptData($warehouseId, $warehouseReceiptReff->id);
+
+        // dapatkan warehouse item receipt details
+        $purchaseItem = $this->purchaseRepository->getPurchaseItems($purchaseId);
+
+        // buat warehouse item receipt item detail
+        $this->purchaseRepository->createWarehouseItemReceiptDetail($warehouseReceipt->id, $purchaseItem);
+
+        // buat history
+        $history = $this->purchaseRepository->createWarehouseReceiptHistory($warehouseReceipt->id, 'Membuat draft penerimaan barang dari pembelian', 'Draft');
+
+    }
+
+    public function getPurchaseStatus(string $id): string
+    {
+        try {
+
+            $purchase = $this->purchaseRepository->findPurchaseById($id);
+
+            return $purchase->history->last()->status;
+
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan status purchase');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
     }
 }

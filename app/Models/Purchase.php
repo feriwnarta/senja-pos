@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 use Staudenmeir\EloquentEagerLimit\HasEagerLimit;
 
@@ -51,6 +52,11 @@ class Purchase extends Model
     public function history(): HasMany
     {
         return $this->hasMany(PurchaseHistory::class, 'purchases_id');
+    }
+
+    public function warehouseReceiptReference(): MorphMany
+    {
+        return $this->morphMany(WarehouseItemReceiptRef::class, 'receivable');
     }
 
 

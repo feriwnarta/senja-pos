@@ -11,6 +11,7 @@ use App\Livewire\Composition\Recipe;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
 use App\Livewire\Purchase\CreateSupplier;
+use App\Livewire\Purchase\PurchasedDetail;
 use App\Livewire\Purchase\PurchaseDetail;
 use App\Livewire\Purchase\PurchaseRequestDetail;
 use App\Livewire\Purchase\Purchasing;
@@ -81,6 +82,7 @@ Route::get('supplier', Supplier::class)->name('supplier');
 Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
 Route::get('purchase', Purchasing::class)->name('purchase');
 Route::get('purchase-request/detail', PurchaseRequestDetail::class)->name('purchase-request-detail');
+Route::get('purchased/detail', PurchasedDetail::class)->name('purchased-detail');
 Route::get('purchase/detail', PurchaseDetail::class)->name('purchase-detail');
 
 
