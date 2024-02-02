@@ -9,7 +9,7 @@
 .pos-category-wrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 11.5px;
     margin: 0 0 32px 2rem;
 }
 

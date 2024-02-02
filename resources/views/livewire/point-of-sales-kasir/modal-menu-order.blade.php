@@ -154,13 +154,16 @@
                     <div class="modal-variasi-footer">
                         <button class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40"
                             type="button" data-bs-dismiss="modal">Cancel</button>
-                        <button id="sidebar-pos-trigger"
-                            class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40 sidebar-trigger"
-                            type="button" data-bs-dismiss="modal">Save</button>
+                        {{-- x-data wire:click="$dispatch('sidemenu-open')" --}}
+                        {{-- {{ `$menuSelected['id']` }} --}}
+                        {{-- @click="$dispatch('sidemenu-open')" --}}
+                        <button data-bs-target="#sidebar-trigger{{ $menuSelected['id'] }}" data-bs-toggle="offcanvas"
+                            class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40" type="button"
+                            data-bs-dismiss="modal">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <livewire:point-of-sales-kasir.side-menu-order>
+    <livewire:point-of-sales-kasir.side-menu-order :dataMenu="$menuSelected" wire:key="{{ $menuSelected['id'] }}">
 </div>

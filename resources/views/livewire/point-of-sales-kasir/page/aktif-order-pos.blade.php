@@ -1,6 +1,6 @@
 <x-page-layout-pos>
     <div class="active-order-wrapper">
-        <div class="header-active-order">
+        <div class="header-active-order sidemenu-open">
             <livewire:components.navbar-kasir.header-kasir>
         </div>
         <div class="active-order-table">
@@ -14,7 +14,8 @@
                 </thead>
                 <tbody>
                     @for ($i = 0; $i < 5; $i++)
-                        <tr id="sidebar-pos-trigger" class="table-row-bordered">
+                        <tr id="sidebar-trigger" class="table-row-bordered" x-data
+                            @click="$dispatch('sidemenu-open')">
                             <td class="text-light-14 color-6161">T17</td>
                             <td class="text-light-14 color-6161">William</td>
                             <td class="text-light-14 color-6161">Dine in</td>
