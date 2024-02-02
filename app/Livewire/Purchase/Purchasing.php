@@ -48,6 +48,12 @@ class Purchasing extends Component
 
     }
 
+
+    public function detailPurchased($id)
+    {
+        
+    }
+
     public function render()
     {
         $result = $this->handleOption();
@@ -86,7 +92,7 @@ class Purchasing extends Component
 
     }
 
-    public function detailPurchase($id)
+    public function detailPurchaseRequest($id)
     {
         if ($id == null || $id == '') {
             return;

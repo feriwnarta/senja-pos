@@ -90,7 +90,7 @@
                                 @foreach($purchases as $purchase)
 
                                     <tr wire:key="{{ $loop->iteration }}"
-                                        wire:click="detailPurchase('{{ $purchase->id }}')">
+                                        wire:click="detailPurchaseRequest('{{ $purchase->id }}')">
                                         <td class="{{ $purchase->code == null ? '' : 'code'}}">{{ $purchase->code == null ? '* Menunggu diproses' : $purchase->code}}</td>
                                         <td>{{ $purchase->reference->requestable->code }}</td>
                                         <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchase->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
@@ -118,7 +118,8 @@
                             </thead>
                             <tbody>
                             @foreach($purchases as $purchase)
-                                <tr wire:key="{{ $loop->iteration }}">
+                                <tr wire:key="{{ $loop->iteration }}"
+                                    wire:click="detailPurchased('{{ $purchase->id }}')">
                                     <td class="code">{{ $purchase->code }}</td>
                                     <td>{{ ( $purchase->reference->purchasable->code == null) ? '-' :  $purchase->reference->purchasable->code  }}</td>
 
