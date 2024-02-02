@@ -146,7 +146,7 @@ class Transaction extends Component
         }
 
         if ($this->urlQuery == 'stockIn') {
-            $data = WarehouseItemReceiptRef::with('receivable')->paginate(10);
+            $data = WarehouseItemReceiptRef::with('receivable')->orderBy('id', 'DESC')->paginate(10);
             $data->load('itemReceipt.history');
         }
 

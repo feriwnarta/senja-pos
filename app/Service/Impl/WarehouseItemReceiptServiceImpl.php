@@ -2,6 +2,9 @@
 
 namespace App\Service\Impl;
 
+use App\Models\CentralProduction;
+use App\Models\Purchase;
+use App\Models\WarehouseItemReceiptRef;
 use App\Repository\Impl\WarehouseItemReceiptRepositoryImpl;
 use App\Repository\WarehouseItemReceiptRepository;
 use App\Service\WarehouseItemReceiptService;
@@ -33,7 +36,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
      * @return void
      * @throws Exception
      */
-    public function accept(string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items): bool
+    public function accept(WarehouseItemReceiptRef $reference, string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items): bool
     {
         if (empty($items) || $itemReceiptId == '' || $itemReceiptId == null) {
             throw new Exception('parameter accept receipt tidak valid atau ada yang kosong, seperti dompet anda yang kosong');
@@ -41,34 +44,26 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 
         // panggil fungsi generate code
         try {
-            return Cache::lock('acceptItemReceipt', 10)->block(5, function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items) {
-                DB::beginTransaction();
+
+            Log::info($reference);
+
+            return Cache::lock('acceptItemReceipt', 10)->block(5, function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items, $reference) {
 
 
-                try {
-                    $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
+                // proses penerimaan item receipt melibatkan 2 flow proses
+                // penerimana dari produksi atau penerimaan dari pembelian
 
-                    // update warehouse receipt
-                    $warehouseReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptId);
-                    $this->receiptRepository->updateCodeDataExistingItemReceipt($itemReceiptId, $resultGenerateCodeData['code'], $resultGenerateCodeData['increment']);
-
-                    // Update details
-                    $this->receiptRepository->createWarehouseItemReceiptDetail($items);
-
-                    // update history warehouse receipt
-                    $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
-                    DB::commit();
-
-                    return true;
-
-                } catch (Exception $exception) {
-                    DB::rollBack();
-                    Log::error('Gagal menerima item receipt', [
-                        'message' => $exception->getMessage(),
-                        'trace' => $exception->getTraceAsString(),
-                    ]);
-                    throw $exception; // Re-throw for further handling
+                if ($reference->receivable instanceof CentralProduction) {
+                    return $this->processItemReceiptFromProduction(itemReceiptId: $itemReceiptId, warehouseId: $warehouseId, warehouseCode: $warehouseCode, items: $items);
                 }
+
+                if ($reference->receivable instanceof Purchase) {
+                    return $this->processItemReceiptFromPurchase(itemReceiptId: $itemReceiptId, warehouseId: $warehouseId, warehouseCode: $warehouseCode, items: $items);
+                }
+
+
+                return false;
+
             });
         } catch (LockTimeoutException $e) {
             Log::error('Gagal mendapatkan lock:', [
@@ -82,6 +77,47 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             throw $exception; // Re-throw for further handling
         }
 
+    }
+
+    /**
+     * proses penerimaan barang dari produksi
+     * @param string $itemReceiptId
+     * @param string $warehouseId
+     * @param string $warehouseCode
+     * @param array $items
+     * @return true
+     * @throws Exception
+     */
+    private function processItemReceiptFromProduction(string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items)
+    {
+        try {
+            DB::beginTransaction();
+            $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
+
+            // update warehouse receipt
+            $warehouseReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptId);
+            $this->receiptRepository->updateCodeDataExistingItemReceipt($itemReceiptId, $resultGenerateCodeData['code'], $resultGenerateCodeData['increment']);
+
+            // Update details
+            $this->receiptRepository->createWarehouseItemReceiptDetail($items);
+
+            // update history warehouse receipt
+            $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
+
+            // TODO: naikan stock dan avg cost
+
+            DB::commit();
+
+            return true;
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('Gagal menerima item receipt', [
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            throw $exception; // Re-throw for further handling
+        }
     }
 
     public function generateCodeReceipt(string $itemReceiptId, string $warehouseId, string $warehouseCode)
@@ -117,6 +153,47 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             'code' => $code,
             'increment' => $nextCode,
         ];
+    }
+
+    /**
+     * proses penerimaan barang dari purchase
+     * @param string $itemReceiptId
+     * @param string $warehouseId
+     * @param string $warehouseCode
+     * @param array $items
+     * @return true
+     * @throws Exception
+     */
+    private function processItemReceiptFromPurchase(string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items)
+    {
+        try {
+            DB::beginTransaction();
+            $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
+
+            // update warehouse receipt
+            $warehouseReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptId);
+            $this->receiptRepository->updateCodeDataExistingItemReceipt($itemReceiptId, $resultGenerateCodeData['code'], $resultGenerateCodeData['increment']);
+
+            // Update details
+            $this->receiptRepository->createWarehouseItemReceiptDetail($items);
+
+            // update history warehouse receipt
+            $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
+
+            // TODO: naikan stock dan avg cost
+
+            DB::commit();
+
+            return true;
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            Log::error('Gagal menerima item receipt', [
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            throw $exception; // Re-throw for further handling
+        }
     }
 
     /**

@@ -117,7 +117,7 @@ class TransactionDetailReceipt extends Component
     {
         try {
             $this->itemReceiptService = app()->make(WarehouseItemReceiptServiceImpl::class);
-            $result = $this->itemReceiptService->accept($itemReceiptRefId, $warehouseId, $warehouseCode, $items);
+            $result = $this->itemReceiptService->accept($this->itemReceiptRef, $itemReceiptRefId, $warehouseId, $warehouseCode, $items);
 
             if ($result) {
                 notify()->success('Berhasil melakukan penerimaan');
