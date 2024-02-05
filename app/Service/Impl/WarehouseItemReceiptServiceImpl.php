@@ -39,7 +39,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
     public function accept(WarehouseItemReceiptRef $reference, string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items): bool
     {
         if (empty($items) || $itemReceiptId == '' || $itemReceiptId == null) {
-            throw new Exception('parameter accept receipt tidak valid atau ada yang kosong, seperti dompet anda yang kosong');
+            throw new Exception('parameter accept receipt tidak valid atau ada yang kosong');
         }
 
         // panggil fungsi generate code

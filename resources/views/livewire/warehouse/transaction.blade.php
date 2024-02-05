@@ -104,8 +104,6 @@
                         </tbody>
                     </table>
 
-                    {{ $requestStock->links() }}
-
                 @elseif($urlQuery == 'stockIn')
 
                     <table id="" class="table borderless table-hover margin-top-28">
@@ -161,6 +159,10 @@
                         </tbody>
                     </table>
                     </table>
+                @endif
+
+                @if(isset($requestStock))
+                    {{ $requestStock->links() }}
                 @endif
             </div>
 
