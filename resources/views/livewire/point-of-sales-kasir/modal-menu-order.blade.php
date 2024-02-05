@@ -19,11 +19,11 @@
                         <div class="line-divider"></div>
                         <div class="content-body">
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Satu</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Ayam</button>
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Dua</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Pork</button>
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Tiga</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Scallop</button>
                         </div>
                     </div>
                     <div class="modal-content-wrapper">
@@ -35,11 +35,11 @@
                         <div class="line-divider"></div>
                         <div class="content-body">
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Satu</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Kecil</button>
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Dua</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Sedang</button>
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Tiga</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Besar</button>
                         </div>
                     </div>
                     <div class="modal-content-wrapper">
@@ -60,19 +60,19 @@
                                 <div class="choose-multiple">
                                     <label>
                                         <input type="checkbox" id="toping" value="satu"><span
-                                            class="text-medium-14 color-9e9e">Satu</span>
+                                            class="text-medium-14 color-9e9e">Udang</span>
                                     </label>
                                 </div>
                                 <div class="choose-multiple">
                                     <label>
                                         <input type="checkbox" id="toping" value="dua"><span
-                                            class="text-medium-14 color-9e9e">Dua</span>
+                                            class="text-medium-14 color-9e9e">Ayam</span>
                                     </label>
                                 </div>
                                 <div class="choose-multiple">
                                     <label>
                                         <input type="checkbox" id="toping" value="tiga"><span
-                                            class="text-medium-14 color-9e9e">Tiga</span>
+                                            class="text-medium-14 color-9e9e">Ikan</span>
                                     </label>
                                 </div>
                             </div>
@@ -80,19 +80,19 @@
                                 <div class="choose-multiple">
                                     <label>
                                         <input type="checkbox" id="toping" value="satu"><span
-                                            class="text-medium-14 color-9e9e">Satu</span>
+                                            class="text-medium-14 color-9e9e">Cumi</span>
                                     </label>
                                 </div>
                                 <div class="choose-multiple">
                                     <label>
                                         <input type="checkbox" id="toping" value="dua"><span
-                                            class="text-medium-14 color-9e9e">Dua</span>
+                                            class="text-medium-14 color-9e9e">Telur Pitan</span>
                                     </label>
                                 </div>
                                 <div class="choose-multiple">
                                     <label>
                                         <input type="checkbox" id="toping" value="tiga"><span
-                                            class="text-medium-14 color-9e9e">Tiga</span>
+                                            class="text-medium-14 color-9e9e">Telur Asin</span>
                                     </label>
                                 </div>
                             </div>
@@ -157,9 +157,10 @@
                         {{-- x-data wire:click="$dispatch('sidemenu-open')" --}}
                         {{-- {{ `$menuSelected['id']` }} --}}
                         {{-- @click="$dispatch('sidemenu-open')" --}}
-                        <button data-bs-target="#sidebar-trigger{{ $menuSelected['id'] }}" data-bs-toggle="offcanvas"
-                            class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40" type="button"
-                            data-bs-dismiss="modal">Save</button>
+                        <button id="shift-maincontent"
+                            class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40"
+                            data-bs-target="#sidebar-trigger{{ $menuSelected['id'] }}" data-bs-toggle="offcanvas"
+                            type="button">Save</button>
                     </div>
                 </form>
             </div>

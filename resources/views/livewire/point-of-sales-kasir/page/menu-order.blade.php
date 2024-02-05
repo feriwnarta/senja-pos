@@ -14,5 +14,4 @@
                     </div>
                     <livewire:point-of-sales-kasir.modal-menu-order :dataMenu="$data" wire:key="{{ $data['id'] }}">
                 @endforeach
-            </div>
 </x-page-layout-pos>

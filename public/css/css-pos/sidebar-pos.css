@@ -1,23 +1,25 @@
-.sidebar-order-detail {
+/* .sidebar-order-detail {
     position: fixed;
     width: 0px;
     height: 100vh;
     top: 0;
     right: 0;
-}
+} */
 
-.sidebar-order-detail.isOpened {
-    /* position: fixed; */
+/* .sidebar-order-detail.isOpened {
+    position: fixed;
     width: 423px;
     background: #fff;
 
     box-shadow: -1px 0px 2px 0px rgba(200, 200, 200, 0.12);
-}
+} */
 
 .sidebar-order.show,
 .sidebar-order.showing,
 .sidebar-order.hiding {
-    z-index: 1;
+    position: fixed;
+    width: 423px;
+    z-index: 0;
     padding: 0px;
     align-items: center;
 }

@@ -1,17 +1,17 @@
-var sidebarTrigger = document.querySelector("#sidebar-trigger");
-var sidebarClose = document.querySelector(".order-detail-close");
 var content = document.querySelector(".content");
 var menuContent = document.querySelector(".menu-content");
-var sidebarDetail = document.querySelector(".sidebar-order-detail");
 
-sidebarTrigger.addEventListener("click", () => {
+var shiftMainContent = document.querySelector("#shift-maincontent");
+var sidebarOrderClose = document.querySelector(".sidebar-order");
+
+shiftMainContent.addEventListener("click", () => {
     content.style.marginRight = "410px";
     content.style.transition = "all 0.35s linear";
     menuContent.style.gap = "7px";
 });
 
-sidebarClose.addEventListener("click", () => {
-    sidebarDetail.classList.remove("isOpened");
+sidebarOrderClose.addEventListener("click", () => {
+    sidebarOrderClose.classList.remove("show");
 
     content.style.marginRight = "0px";
     content.style.transition = "all 0.35s linear";

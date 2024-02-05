@@ -14,8 +14,7 @@
                 </thead>
                 <tbody>
                     @for ($i = 0; $i < 5; $i++)
-                        <tr id="sidebar-trigger" class="table-row-bordered" x-data
-                            @click="$dispatch('sidemenu-open')">
+                        <tr class="table-row-bordered" data-bs-target="#sidebar-trigger" data-bs-toggle="offcanvas">
                             <td class="text-light-14 color-6161">T17</td>
                             <td class="text-light-14 color-6161">William</td>
                             <td class="text-light-14 color-6161">Dine in</td>
@@ -24,10 +23,7 @@
                 </tbody>
             </table>
         </div>
-        <div>
-            <button class="btn btn-primary">Cetak Pesanan</button>
-        </div>
     </div>
-    <livewire:point-of-sales-kasir.side-menu-order>
-        <livewire:point-of-sales-kasir.modal-pembayaran-berhasil>
+    {{-- <livewire:point-of-sales-kasir.side-menu-order> --}}
+    <livewire:point-of-sales-kasir.modal-pembayaran-berhasil>
 </x-page-layout-pos>

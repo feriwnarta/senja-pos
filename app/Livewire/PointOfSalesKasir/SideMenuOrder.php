@@ -14,6 +14,7 @@ class SideMenuOrder extends Component
     {
         $this->menuSaved = $dataMenu;
     }
+
     public function render()
     {
         return view('livewire.point-of-sales-kasir.side-menu-order');
