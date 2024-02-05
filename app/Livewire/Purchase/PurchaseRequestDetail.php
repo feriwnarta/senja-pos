@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Purchase;
 
+use App\Jobs\Purchase\CreatePurchase;
+use App\Jobs\Purchase\CreatePurchaseRequestFromStock;
 use App\Models\PurchaseRequest;
-use App\Service\Impl\PurchaseServiceImpl;
 use App\Service\PurchaseService;
+use App\Traits\Jobs;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Number;
 use Livewire\Attributes\On;
@@ -16,6 +17,8 @@ use Livewire\Component;
 
 class PurchaseRequestDetail extends Component
 {
+
+    use Jobs;
 
     #[Url(as: 'reqId', keep: true)]
     public string $requestId = '';
@@ -65,43 +68,15 @@ class PurchaseRequestDetail extends Component
 
     public function processRequest($id)
     {
-        try {
 
-            $purchaseRequest = $this->findPurchaseRequestById($id);
-            $history = $purchaseRequest->history->last();
-            $status = $history->status;
+        $response = $this->ajaxDispatch(new CreatePurchaseRequestFromStock($id));
 
-
-            if ($status != 'Permintaan baru') {
-                notify()->error('Ada sesuatu yang salah silahkan hubungi admin');
-                Log::error('ada sesuatu yang salah saat mengelola permintaan pembelian baru karena statusnya bukan permintaan baru');
-                return;
-            }
-
-
-            $this->purchaseService = app()->make(PurchaseServiceImpl::class);
-            $result = $this->purchaseService->processPurchaseRequestFromReqStock($id);
-
-            if ($result) {
-                notify()->success('Berhasil membuat permintaan');
-                return;
-            }
-
-            notify()->error('gagal proses permintaan');
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error('gagal melakukan proses permintaan');
-            notify()->error('gagal proses permintaan, hubungi administrator');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
+        if ($response['success']) {
+            notify()->success('Berhasil memproses permintaan');
+        } else {
+            notify()->error('Gagal memproses permintaan');
         }
 
-
-    }
-
-    private function findPurchaseRequestById($id)
-    {
-        return PurchaseRequest::with('history')->findOrFail($id);
     }
 
     public function createPurchase()
@@ -130,29 +105,15 @@ class PurchaseRequestDetail extends Component
     private function store()
     {
 
-        $this->purchaseService = app()->make(PurchaseServiceImpl::class);
+        $response = $this->ajaxDispatch(new CreatePurchase($this->isMultipleSupplier, $this->requestId, $this->supplier, $this->payment, $this->dueDate, $this->componentItems));
 
-        // lakukan proses pengecekan apa opsi multi supplier terpilih
-        // jika iya maka akan tercipta proses multiple purchasing
-        if ($this->isMultipleSupplier) {
-            // jalankan service fungsi multi supplier
-            Log::info('jalankan pembelian secara multi supplier');
-            return;
-        }
+        Log::info($response);
 
-        try {
-            // panggil fungsi buat purchase dari request stock
-            $resultCreatePurchase = $this->purchaseService->createPurchaseNetFromRequestStock($this->requestId, $this->supplier, $this->payment, $this->dueDate, $this->componentItems);
-
-            if ($resultCreatePurchase) {
-                notify()->success('Berhasil membuat pembelian');
-            }
-        } catch (Exception $exception) {
-            Log::error('gagal membuat pembelian');
+        if ($response['success']) {
+            notify()->success('Berhasil membuat pembelian');
+        } else {
             notify()->error('Gagal membuat pembelian');
         }
-
-
     }
 
     #[On('set-due-date')]
@@ -232,6 +193,11 @@ class PurchaseRequestDetail extends Component
             Log::error($exception->getTraceAsString());
         }
 
+    }
+
+    private function findPurchaseRequestById($id)
+    {
+        return PurchaseRequest::with('history')->findOrFail($id);
     }
 
 }

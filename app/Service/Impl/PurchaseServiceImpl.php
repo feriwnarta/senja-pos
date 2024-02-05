@@ -11,7 +11,9 @@ use App\Models\Supplier;
 use App\Models\Warehouse;
 use App\Models\WarehouseItemReceiptRef;
 use App\Repository\Impl\PurchaseRepositoryImpl;
+use App\Repository\Impl\PurchaseRequestRepositoryImpl;
 use App\Repository\PurchaseRepository;
+use App\Repository\PurchaseRequestRepository;
 use App\Service\PurchaseService;
 use Carbon\Carbon;
 use Exception;
@@ -24,13 +26,15 @@ class PurchaseServiceImpl implements PurchaseService
 {
 
     private PurchaseRepository $purchaseRepository;
+    private PurchaseRequestRepository $purchaseRequestRepository;
 
     /**
      * @param PurchaseRepository $purchaseRepository
      */
-    public function __construct(PurchaseRepositoryImpl $purchaseRepository)
+    public function __construct(PurchaseRepositoryImpl $purchaseRepository, PurchaseRequestRepositoryImpl $purchaseRequestRepository)
     {
         $this->purchaseRepository = $purchaseRepository;
+        $this->purchaseRequestRepository = $purchaseRequestRepository;
     }
 
 
@@ -45,6 +49,16 @@ class PurchaseServiceImpl implements PurchaseService
                 DB::beginTransaction();
 
                 try {
+
+                    // cari purchase request berdasarkan id
+                    $purchaseRequest = $this->purchaseRequestRepository->findPurchaseRequestById($purchaseReqId);
+                    $history = $purchaseRequest->history->last();
+                    $status = $history->status;
+
+                    if ($status != 'Permintaan baru') {
+                        Log::error('ada sesuatu yang salah saat mengelola permintaan pembelian baru karena statusnya bukan permintaan baru');
+                        throw new Exception('ada sesuatu yang salah saat mengelola permintaan pembelian baru karena statusnya bukan permintaan baru');
+                    }
 
                     PurchaseRequestHistory::create([
                         'purchase_requests_id' => $purchaseReqId,
@@ -61,15 +75,12 @@ class PurchaseServiceImpl implements PurchaseService
 
                     $warehouseId = $requestable->warehouses_id;
 
-
                     // generate code
-
                     $resultGenerateCode = $this->generateCodeRequestFromReqStock($warehouseId, $purchaseReqId);
 
                     if ($resultGenerateCode == null) {
                         throw new Exception('gagal menggenerate code request');
                     }
-
 
                     $purchaseRequest->update([
                         'code' => $resultGenerateCode['code'],
