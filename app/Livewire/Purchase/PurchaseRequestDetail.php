@@ -65,8 +65,6 @@ class PurchaseRequestDetail extends Component
 
     public function processRequest($id)
     {
-
-
         try {
 
             $purchaseRequest = $this->findPurchaseRequestById($id);

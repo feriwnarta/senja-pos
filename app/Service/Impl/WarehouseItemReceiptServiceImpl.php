@@ -42,9 +42,9 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             throw new Exception('parameter accept receipt tidak valid atau ada yang kosong');
         }
 
+
         // panggil fungsi generate code
         try {
-
             Log::info($reference);
 
             return Cache::lock('acceptItemReceipt', 10)->block(5, function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items, $reference) {
@@ -60,7 +60,6 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
                 if ($reference->receivable instanceof Purchase) {
                     return $this->processItemReceiptFromPurchase(itemReceiptId: $itemReceiptId, warehouseId: $warehouseId, warehouseCode: $warehouseCode, items: $items);
                 }
-
 
                 return false;
 
@@ -90,8 +89,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
      */
     private function processItemReceiptFromProduction(string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items)
     {
-        try {
-            DB::beginTransaction();
+        DB::transaction(function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items) {
             $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
 
             // update warehouse receipt
@@ -105,19 +103,9 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
 
             // TODO: naikan stock dan avg cost
+        });
 
-            DB::commit();
-
-            return true;
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error('Gagal menerima item receipt', [
-                'message' => $exception->getMessage(),
-                'trace' => $exception->getTraceAsString(),
-            ]);
-            throw $exception; // Re-throw for further handling
-        }
+        return true;
     }
 
     public function generateCodeReceipt(string $itemReceiptId, string $warehouseId, string $warehouseCode)
@@ -166,8 +154,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
      */
     private function processItemReceiptFromPurchase(string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items)
     {
-        try {
-            DB::beginTransaction();
+        DB::transaction(function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items) {
             $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
 
             // update warehouse receipt
@@ -182,18 +169,46 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 
             // TODO: naikan stock dan avg cost
 
+        });
+
+        return true;
+
+    }
+
+    public function reject($itemReceiptRefId): bool
+    {
+        // lakukan proses reject
+        try {
+            DB::beginTransaction();
+
+            $warehouseReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptRefId);
+
+
+            $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptRefId, 'Permintaan barang ditolak', 'Ditolak');
+
+            // Gunakan 'each' untuk mengiterasi koleksi dan update setiap model
+            $warehouseReceipt->details->each(function ($detail) {
+                $detail->update(['qty_accept' => 0]);
+            });
+
+            Log::info('reject dijalankan');
+
             DB::commit();
 
             return true;
 
+        } catch (ModelNotFoundException $exception) {
+            DB::rollBack();
+            Log::error("Gagal menolak item receipt $itemReceiptRefId: Data tidak ditemukan");
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
         } catch (Exception $exception) {
             DB::rollBack();
-            Log::error('Gagal menerima item receipt', [
-                'message' => $exception->getMessage(),
-                'trace' => $exception->getTraceAsString(),
-            ]);
-            throw $exception; // Re-throw for further handling
+            Log::error("Gagal menolak item receipt $itemReceiptRefId");
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
         }
+
     }
 
     /**

@@ -10,4 +10,5 @@ interface WarehouseItemReceiptService
 
     public function generateCodeReceipt(string $itemReceiptId, string $warehouseId, string $warehouseCode);
 
+    public function reject($itemReceiptRefId): bool;
 }

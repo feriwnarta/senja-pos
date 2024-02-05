@@ -2,18 +2,21 @@
 
 namespace App\Livewire\Warehouse;
 
-use App\Models\WarehouseItemReceipt;
+use App\Jobs\Warehouse\AcceptReceipt;
+use App\Jobs\Warehouse\RejectReceipt;
 use App\Models\WarehouseItemReceiptRef;
-use App\Service\Impl\WarehouseItemReceiptServiceImpl;
 use App\Service\WarehouseItemReceiptService;
+use App\Traits\Jobs;
 use Exception;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class TransactionDetailReceipt extends Component
 {
+
+    use Jobs;
+
     #[Url(as: 'refId', history: true)]
     public string $receiptRefId = '';
 
@@ -115,69 +118,33 @@ class TransactionDetailReceipt extends Component
 
     private function processAcceptReceipt($itemReceiptRefId, $warehouseId, $warehouseCode, $items)
     {
-        try {
-            $this->itemReceiptService = app()->make(WarehouseItemReceiptServiceImpl::class);
-            $result = $this->itemReceiptService->accept($this->itemReceiptRef, $itemReceiptRefId, $warehouseId, $warehouseCode, $items);
+        $response = $this->ajaxDispatch(new AcceptReceipt([
+            'itemReceiptRefId' => $itemReceiptRefId,
+            'warehouseId' => $warehouseId,
+            'warehouseCode' => $warehouseCode,
+            'items' => $items
+        ], $this->itemReceiptRef));
 
-            if ($result) {
-                notify()->success('Berhasil melakukan penerimaan');
-                $itemReceiptRef = $this->getItemReceiptDetail($this->receiptRefId);
-                $this->itemReceiptRef = $itemReceiptRef;
-                return;
-            }
-
+        // jika success berarti service berjalan dengan baik
+        if ($response['success']) {
+            notify()->success('Berhasil melakukan penerimaan');
+        } else {
             notify()->error('Gagal melakukan penerimaan');
-            return;
-        } catch (Exception $exception) {
-            Log::error('Gagal melakukan penerimaan barang di TransactonDetailReceipt');
-            Log::error($exception);
-            Log::error($exception->getMessage());
-            notify()->error('Gagal melakukan penerimaan');
-            return;
-
         }
     }
 
+
     public function reject($itemReceiptRefId)
     {
+        $response = $this->ajaxDispatch(new RejectReceipt($itemReceiptRefId));
 
-        // lakukan proses reject
-        try {
-            DB::beginTransaction();
+        Log::info('result dari job');
+        Log::info($response);
 
-            // Gunakan 'firstOrFail()' untuk mengatasi exception jika tidak ditemukan
-            $warehouseReceipt = WarehouseItemReceipt::with('details')->find($itemReceiptRefId)->firstOrFail();
-
-
-            $warehouseReceipt->history()->create([
-                'desc' => 'Penerimaan barang ditolak',
-                'status' => 'Ditolak'
-            ]);
-
-            // Gunakan 'each' untuk mengiterasi koleksi dan update setiap model
-            $warehouseReceipt->details->each(function ($detail) {
-                $detail->update(['qty_accept' => 0]);
-            });
-
-            DB::commit();
-
-            notify()->success('Berhasil menolak penerimaan barang');
-            $itemReceiptRef = $this->getItemReceiptDetail($this->receiptRefId);
-            $this->itemReceiptRef = $itemReceiptRef;
-
-
-        } catch (ModelNotFoundException $exception) {
-            DB::rollBack();
-            notify()->error('Gagal menolak penerimaan barang: Data tidak ditemukan');
-            Log::error("Gagal menolak item receipt $itemReceiptRefId: Data tidak ditemukan");
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-        } catch (Exception $exception) {
-            DB::rollBack();
-            notify()->error('Gagal menolak penerimaan barang');
-            Log::error("Gagal menolak item receipt $itemReceiptRefId");
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
+        if ($response['success']) {
+            notify()->success('Berhasil melakukan penerimaan');
+        } else {
+            notify()->error('Gagal melakukan penerimaan');
         }
 
     }
