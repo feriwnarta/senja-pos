@@ -2,14 +2,18 @@
 
 namespace App\Livewire\Purchase;
 
+use App\Jobs\Purchase\PurchaseShipped;
 use App\Service\Impl\PurchaseServiceImpl;
 use App\Service\PurchaseService;
+use App\Traits\Jobs;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class PurchasedDetail extends Component
 {
+
+    use Jobs;
 
     #[Url(as: 'pId', keep: true)]
     public string $purchaseId;
@@ -47,23 +51,22 @@ class PurchasedDetail extends Component
     public function purchasedSend()
     {
 
-        $dataHistory = [
+        $history = [
             'desc' => 'Purchase dikirim oleh supplier, bersiap untuk melakukan penerimaan',
             'status' => 'Dikirim'
         ];
-        // panggil service Purchase yang menjalankan logic pengiriman
-        $result = $this->purchaseService->purchaseHasBeenShipped($this->purchaseId, $dataHistory);
 
+        $response = $this->ajaxDispatch(new PurchaseShipped($this->purchaseId, $history));
+        Log::info($response);
 
-        // pengiriman gagal
-        if ($result == null) {
-            $this->js("alert('gagal')");
-            notify()->error('Gagal membuat pengiriman');
-            return;
+        if ($response['success']) {
+            notify()->success('Berhasil membuat pembelian');
+            $this->js("alert('Berhasil membuat pembelian')");
+        } else {
+            notify()->error('Gagal membuat pembelian');
+            $this->js("alert('Gagal membuat pembelian')");
         }
 
-        $this->js("alert('berhasil')");
-        notify()->success('Berhasil membuat pengiriman');
     }
 
     public function render()

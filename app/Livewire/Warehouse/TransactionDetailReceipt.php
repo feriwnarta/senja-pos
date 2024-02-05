@@ -5,7 +5,6 @@ namespace App\Livewire\Warehouse;
 use App\Jobs\Warehouse\AcceptReceipt;
 use App\Jobs\Warehouse\RejectReceipt;
 use App\Models\WarehouseItemReceiptRef;
-use App\Service\WarehouseItemReceiptService;
 use App\Traits\Jobs;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -25,8 +24,6 @@ class TransactionDetailReceipt extends Component
     public WarehouseItemReceiptRef $itemReceiptRef;
 
     public array $dataItemReceipt = [];
-
-    private WarehouseItemReceiptService $itemReceiptService;
 
 
     public function render()

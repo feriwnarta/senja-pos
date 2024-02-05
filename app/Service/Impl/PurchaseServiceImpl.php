@@ -289,7 +289,7 @@ class PurchaseServiceImpl implements PurchaseService
             Log::error('gagal mengirim pembelian');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
-            return null;
+            throw $exception;
         }
     }
 
