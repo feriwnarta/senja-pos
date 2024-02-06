@@ -13,6 +13,14 @@
 
     box-shadow: -1px 0px 2px 0px rgba(200, 200, 200, 0.12);
 } */
+.content.sidebar-open {
+    margin-right: 410px;
+    transition: all 0.35s ease-in-out;
+}
+
+.menu-content.sidebar-open {
+    gap: 7px;
+}
 
 .sidebar-order.show,
 .sidebar-order.showing,

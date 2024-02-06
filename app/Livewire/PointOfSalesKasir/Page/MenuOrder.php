@@ -28,7 +28,7 @@ class MenuOrder extends Component
         ],
         [
             'id' => 4,
-            'menu_name' => 'Bubuk Special Mix Porsi',
+            'menu_name' => 'Bubur Special Mix Porsi',
             'image_url' => 'img/cs-menu/bubur-special-mix-porsi.png',
         ],
         [

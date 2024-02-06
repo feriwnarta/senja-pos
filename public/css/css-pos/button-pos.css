@@ -107,7 +107,21 @@ BUTTON WITH FULL BACKGROUND
 /* ---------------------------------------
 ACTIVE BUTTON
 --------------------------------------- */
-.button-active {
+.button-outline-eded:focus {
+    border: 1px solid #f2c6af;
+    background: #fff7f2;
+
+    color: #f16622;
+}
+
+.button-outline-e0e0-inh:focus {
+    border: 1px solid #f2c6af;
+    background: #fff7f2;
+
+    color: #f16622;
+}
+
+.button-outline-w161-e0e0:focus {
     border: 1px solid #f2c6af;
     background: #fff7f2;
 

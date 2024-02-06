@@ -157,14 +157,13 @@
                         {{-- x-data wire:click="$dispatch('sidemenu-open')" --}}
                         {{-- {{ `$menuSelected['id']` }} --}}
                         {{-- @click="$dispatch('sidemenu-open')" --}}
-                        <button id="shift-maincontent"
+                        <button onclick="openSidebar()" data-bs-dismiss="modal"
                             class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40"
-                            data-bs-target="#sidebar-trigger{{ $menuSelected['id'] }}" data-bs-toggle="offcanvas"
                             type="button">Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <livewire:point-of-sales-kasir.side-menu-order :dataMenu="$menuSelected" wire:key="{{ $menuSelected['id'] }}">
+    <livewire:point-of-sales-kasir.side-menu-order>
 </div>

@@ -8,12 +8,12 @@ use Livewire\Component;
 #[Layout('components.layouts.pos')] 
 class SideMenuOrder extends Component
 {
-    public $menuSaved;
+    // public $menuSaved;
 
-    public function mount($dataMenu)
-    {
-        $this->menuSaved = $dataMenu;
-    }
+    // public function mount($dataMenu)
+    // {
+    //     $this->menuSaved = $dataMenu;
+    // }
 
     public function render()
     {

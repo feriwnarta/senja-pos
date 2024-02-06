@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('css/css-pos/icon-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/text-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/button-pos.css') }}">
-    
+
     {{-- COMPONENT --}}
     <link rel="stylesheet" href="{{ asset('css/css-pos/navbar-pos.css') }}">
     <link rel="stylesheet" href="{{ asset('css/css-pos/header-pos.css') }}">
@@ -66,9 +66,35 @@
     <script data-navigate-once src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
         integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous">
     </script>
-    <script src="{{ asset('js/popup-sidebar.js') }}" async></script>
+    <script>
+        function openSidebar() {
+            // Open the sidebar without overlapping the main content
+            $('#sidebar-trigger').offcanvas({
+                backdrop: false,
+                keyboard: false
+            });
+            // Add class sidebar-open to customize content style
+            $('.content').addClass('sidebar-open');
+            // Add class sidebar-open to customize content style
+            $('.menu-content').addClass('sidebar-open');
+            // show sidebar
+            $('#sidebar-trigger').offcanvas('show');
+        }
+
+        function closeSidebar() {
+            $('#sidebar-trigger').offcanvas('hide');
+
+            $('#sidebar-trigger').on('hidden.bs.offcanvas', function() {
+                $('.content').removeClass('sidebar-open');
+                $('.menu-content').removeClass('sidebar-open');
+
+                $('.content').css('transition', 'all 0.4s ease-in-out');
+            })
+        }
+    </script>
     <script src="{{ asset('js/pin.js') }}" async></script>
     <script src="{{ asset('js/select-all.js') }}" async></script>
+    {{-- <script src="{{ asset('js/popup-sidebar.js') }}" async></script> --}}
     {{-- <script src="{{ asset('js/date-format.js') }}" async data-navigate-once></script> --}}
     @yield('footer-script')
 </body>
