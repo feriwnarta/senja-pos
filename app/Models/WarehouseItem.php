@@ -46,6 +46,6 @@ class WarehouseItem extends Model
     {
         return $this->hasMany(StockItem::class, 'warehouse_items_id');
     }
-
+    
 }
 

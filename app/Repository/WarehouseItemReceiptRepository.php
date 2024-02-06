@@ -17,5 +17,5 @@ interface WarehouseItemReceiptRepository
 
     public function creteNewWarehouseItemReceiptHistory(string $warehouseReceiptId, string $desc, string $status): bool;
 
-
+    public function setInventoryValuation(string $warehouseId, array $items);
 }

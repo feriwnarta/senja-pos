@@ -11,6 +11,7 @@ use App\Service\WarehouseItemReceiptService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Contracts\Cache\LockTimeoutException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -42,13 +43,11 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             throw new Exception('parameter accept receipt tidak valid atau ada yang kosong');
         }
 
-
         // panggil fungsi generate code
         try {
             Log::info($reference);
 
             return Cache::lock('acceptItemReceipt', 10)->block(5, function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items, $reference) {
-
 
                 // proses penerimaan item receipt melibatkan 2 flow proses
                 // penerimana dari produksi atau penerimaan dari pembelian
@@ -58,6 +57,10 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
                 }
 
                 if ($reference->receivable instanceof Purchase) {
+                    // format data items sebelum diproses oleh purchasing
+                    // ini digunakna untuk mengambil harga pembelian
+                    $items = $this->formatItemsDataFromPurchasing($reference->receivable->detail);
+
                     return $this->processItemReceiptFromPurchase(itemReceiptId: $itemReceiptId, warehouseId: $warehouseId, warehouseCode: $warehouseCode, items: $items);
                 }
 
@@ -143,6 +146,21 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
         ];
     }
 
+    private function formatItemsDataFromPurchasing(Collection $purchaseDetail): array
+    {
+        $items = array();
+
+        foreach ($purchaseDetail as $detail) {
+            $items[] = [
+                'id' => $detail->items_id,
+                'qty_accept' => $detail->qty_buy,
+                'price' => $detail->single_price,
+            ];
+        }
+
+        return $items;
+    }
+
     /**
      * proses penerimaan barang dari purchase
      * @param string $itemReceiptId
@@ -155,10 +173,15 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
     private function processItemReceiptFromPurchase(string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items)
     {
         DB::transaction(function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items) {
+
+            $this->receiptRepository->setInventoryValuation($warehouseId, $items);
+
             $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
 
             // update warehouse receipt
             $warehouseReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptId);
+
+            // berikan kode dan increment ke item receipt yang sudah ada
             $this->receiptRepository->updateCodeDataExistingItemReceipt($itemReceiptId, $resultGenerateCodeData['code'], $resultGenerateCodeData['increment']);
 
             // Update details
@@ -166,13 +189,10 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 
             // update history warehouse receipt
             $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
-
-            // TODO: naikan stock dan avg cost
-
+            
         });
 
         return true;
-
     }
 
     public function reject($itemReceiptRefId): bool
@@ -182,7 +202,6 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             DB::beginTransaction();
 
             $warehouseReceipt = $this->receiptRepository->findWarehouseItemReceiptById($itemReceiptRefId);
-
 
             $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptRefId, 'Permintaan barang ditolak', 'Ditolak');
 
