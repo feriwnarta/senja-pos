@@ -60,8 +60,8 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
                     // format data items sebelum diproses oleh purchasing
                     // ini digunakna untuk mengambil harga pembelian
                     $items = $this->formatItemsDataFromPurchasing($reference->receivable->detail);
+                    return $this->processItemReceiptFromPurchase($itemReceiptId, $warehouseId, $warehouseCode, $items);
 
-                    return $this->processItemReceiptFromPurchase(itemReceiptId: $itemReceiptId, warehouseId: $warehouseId, warehouseCode: $warehouseCode, items: $items);
                 }
 
                 return false;
@@ -111,6 +111,14 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
         return true;
     }
 
+    /**
+     * generate kode receipt
+     * @param string $itemReceiptId
+     * @param string $warehouseId
+     * @param string $warehouseCode
+     * @return array
+     * @throws Exception
+     */
     public function generateCodeReceipt(string $itemReceiptId, string $warehouseId, string $warehouseCode)
     {
 
@@ -189,7 +197,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
 
             // update history warehouse receipt
             $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
-            
+
         });
 
         return true;
@@ -229,15 +237,5 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
         }
 
     }
-
-    /**
-     * naikan stok item yang diterima, dan hitung inventoy valuasinya
-     * @param $qtyAccept
-     * @return void
-     */
-    private function increaseStockAndCalculateValuation($itemId, $qtyAccept)
-    {
-
-
-    }
+    
 }
