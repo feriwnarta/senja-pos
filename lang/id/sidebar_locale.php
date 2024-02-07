@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'sales' => [
+        'name' => 'Penjualan',
+        'daftarMenu' => 'Daftar Menu',
+        'kategoriMenu' => 'Kategori Menu',
+        'diskon' => 'Diskon',
+    ],
     'komposisi' => [
         'name' => 'Komposisi',
         'item' => 'Item',

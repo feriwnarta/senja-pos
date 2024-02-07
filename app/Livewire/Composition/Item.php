@@ -4,6 +4,7 @@ namespace App\Livewire\Composition;
 
 use App\Models\CentralKitchen;
 use App\Models\Outlet;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 

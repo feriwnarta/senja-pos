@@ -155,7 +155,6 @@
                         <button class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40"
                             type="button" data-bs-dismiss="modal">Cancel</button>
                         {{-- x-data wire:click="$dispatch('sidemenu-open')" --}}
-                        {{-- {{ `$menuSelected['id']` }} --}}
                         {{-- @click="$dispatch('sidemenu-open')" --}}
                         <button onclick="openSidebar()" data-bs-dismiss="modal"
                             class="button-w119-f166 text-medium-16 text-white p-6-16 ls-176 h-40"
