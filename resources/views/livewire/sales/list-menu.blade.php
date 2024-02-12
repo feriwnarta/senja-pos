@@ -27,7 +27,7 @@
                         </select>
                     </div> --}}
 
-                    <a href="/sales/create-menu" wire:navigate>
+                    <a href="/sales/list-menu/create-menu" wire:navigate>
                         <button type="btn"
                                 wire:loading.attr="disabled"
                                 class="btn btn-text-only-primary btn-nav margin-left-10">+ Buat Menu

@@ -12,7 +12,7 @@
                         <div class="d-flex flex-column gap-1">
                             <label class="text-light-14 color-4040">Nama</label>
                             <input class="form-control text-light-14 color-7575" type="text"
-                                placeholder="Nama Pelanggan" aria-label="nama" wire:model.live="name">
+                                placeholder="Nama Pelanggan" aria-label="nama" wire:model.blur="name">
                             <div>
                                 @error('name')
                                     <small class="d-block text-danger">{{ $message }}</small>
@@ -22,7 +22,7 @@
                         <div class="d-flex flex-column gap-1">
                             <label class="text-light-14 color-4040">Nomor Telfon</label>
                             <input class="form-control text-light-14 color-7575" type="number"
-                                placeholder="Nomor Telepon" aria-label="noTelp" wire:model.live="phoneNumber">
+                                placeholder="Nomor Telepon" aria-label="noTelp" wire:model.blur="phoneNumber">
                             <div>
                                 @error('phoneNumber')
                                     <small class="d-block text-danger">{{ $message }}</small>
@@ -32,7 +32,7 @@
                         <div class="d-flex flex-column gap-1">
                             <label class="text-light-14 color-4040">Email</label>
                             <input class="form-control text-light-14 color-7575" type="email" placeholder="Email"
-                                aria-label="nama" wire:model.live="emailAddress">
+                                aria-label="nama" wire:model.blur="emailAddress">
                             <div>
                                 @error('emailAddress')
                                     <small class="d-block text-danger">{{ $message }}</small>

@@ -1,5 +1,5 @@
 <x-page-layout>
-    <x-slot id="appBar">
+    <x-slot name="appBar">
         <div class="navbar-app">
             <div class="content-navbar d-flex flex-row justify-content-between">
 
@@ -27,10 +27,10 @@
                         </select>
                     </div> --}}
 
-                    <a href="/sales/create-menu" wire:navigate>
+                    <a href="/sales/list-category/create-category" wire:navigate>
                         <button type="btn"
                                 wire:loading.attr="disabled"
-                                class="btn btn-text-only-primary btn-nav margin-left-10">+ Buat Menu
+                                class="btn btn-text-only-primary btn-nav margin-left-10">+ Buat kategori menu
                         </button>
                     </a>
 

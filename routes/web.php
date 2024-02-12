@@ -19,7 +19,9 @@ use App\Livewire\PointOfSalesKasir\Page\ShiftAktifDetail;
 use App\Livewire\PointOfSalesKasir\Page\ShiftAktifPos;
 use App\Livewire\Purchase\CreateSupplier;
 use App\Livewire\Purchase\Supplier;
+use App\Livewire\Sales\AddCategoryMenu;
 use App\Livewire\Sales\AddMenu;
+use App\Livewire\Sales\ListCategory;
 use App\Livewire\Sales\ListMenu;
 use App\Livewire\Warehouse\AddCategory;
 use App\Livewire\Warehouse\AddUnit;
@@ -89,7 +91,9 @@ Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supp
 
 // Sales
 Route::get('sales/list-menu', ListMenu::class)->name('list-menu');
-Route::get('sales/create-menu', AddMenu::class)->name('create-menu');
+Route::get('sales/list-menu/create-menu', AddMenu::class)->name('create-menu');
+Route::get('sales/list-category', ListCategory::class)->name('list-category');
+Route::get('sales/list-category/create-category', AddCategoryMenu::class)->name('create-category');
 
 // Point Of Sales Kasir
 Route::get('/pos/menu', MenuOrder::class)->name('menu');

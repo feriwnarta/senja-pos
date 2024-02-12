@@ -11,7 +11,7 @@
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
-                    <button href="list-menu" wire:navigate type="btn"
+                    <button href="/sales/list-menu" wire:navigate type="btn"
                         class="btn btn-text-only-danger btn-nav margin-left-10">
                         Batal
                     </button>
@@ -65,7 +65,7 @@
 
                                     <label for="pricing" class="form-label input-label">Pricing</label>
 
-                                    {{-- <div id="divider" class="margin-symmetric-vertical-6"></div> --}}
+                                    <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <input type="name" class="form-control input-default" id="pricing"
                                         placeholder="65.000">
@@ -76,7 +76,7 @@
 
                                     <label for="codeSKU" class="form-label input-label">Code SKU</label>
 
-                                    {{-- <div id="divider" class="margin-symmetric-vertical-6"></div> --}}
+                                    <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <input type="name" class="form-control input-default" id="codeSKU"
                                         placeholder="CHB01">
@@ -86,6 +86,8 @@
                             </div>
 
                             <button class="btn btn-text-only-primary w-100 mt-2">Add Variant</button>
+
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         </div>
 

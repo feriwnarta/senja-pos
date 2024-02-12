@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Customer extends Model
+class CategoryMenu extends Model
 {
     use HasUuids;
     use HasFactory;
 
-    protected $fillable = ['name','phoneNumber','emailAddress'];
+    protected $fillable = ['code', 'name'];
 }

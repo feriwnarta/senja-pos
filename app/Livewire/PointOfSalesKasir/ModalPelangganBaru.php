@@ -18,33 +18,33 @@ class ModalPelangganBaru extends Component
     #[Validate('required|email')]
     public $emailAddress = '';
 
-    public function render()
-    {
-        return view('livewire.point-of-sales-kasir.modal-pelanggan-baru', ['customers' => Customer::first()->get()]);
-    }
     public function createCustomer()
     {
         // validate input
         // create customer
         // dispatch customer list that will be passed on the list pelanggan component
 
-        $validated = $this->validate([
-            'name' => 'required|min:2|max:100',
-            'phoneNumber' => 'required|digits_between:10,13',
-            'emailAddress' => 'required|email',
+        $this->validate();
+
+        $customers = Customer::create([
+            'name' => $this->name,
+            'phoneNumber' => $this->phoneNumber,
+            'emailAddress' => $this->emailAddress,
         ]);
 
-        $customersList = Customer::create($validated);
-
-        $this->dispatch('customer-created', $customersList);
+        $this->dispatch('customer-created', $customers);
     }
 
     public function save()
     {
         // call createCustomer function
         // reset all input after sumbit
+        
         $this->createCustomer();
         $this->reset('name', 'phoneNumber', 'emailAddress');
-        
+    }
+    public function render()
+    {
+        return view('livewire.point-of-sales-kasir.modal-pelanggan-baru');
     }
 }

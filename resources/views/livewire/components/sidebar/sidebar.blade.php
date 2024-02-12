@@ -33,9 +33,9 @@
                     </div>
                 </div>
 
-{{-- BUAT LIST CATEGORY : BUAT CREATE CATEGORY --}}
+                
                 @php
-                    $collapseSales = Route::is(['list-menu', 'create-menu']);
+                    $collapseSales = Route::is(['list-menu', 'create-menu', 'list-category', 'create-category']);
                 @endphp
 
                 <div class="accordion-item">
@@ -58,20 +58,13 @@
                                     {{ __('sidebar_locale.sales.daftarMenu') }}
                                 </button>
                             </a>
-                            {{-- <a href="/composition/category-item" wire:navigate>
+                            <a href="/sales/list-category" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') || Route::is('add-category') || Route::is('detail-category') ? 'inner-menu-active' : '' }}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-category') || Route::is('create-category') ? 'inner-menu-active' : '' }}"
                                     type="button" id="">
                                     {{ __('sidebar_locale.sales.kategoriMenu') }}
                                 </button>
                             </a>
-                            <a href="/composition/category-item" wire:navigate>
-                                <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') || Route::is('add-category') || Route::is('detail-category') ? 'inner-menu-active' : '' }}"
-                                    type="button" id="">
-                                    {{ __('sidebar_locale.sales.diskon') }}
-                                </button>
-                            </a> --}}
                         </div>
                     </div>
                 </div>
