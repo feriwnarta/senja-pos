@@ -14,7 +14,7 @@ class ModalPilihPelanggan extends Component
     // make a function to make it listed
 
     #[On('customer-created')]
-    public function updateListCustomer($customersList)
+    public function updateListCustomer($customers)
     {
     }
 
