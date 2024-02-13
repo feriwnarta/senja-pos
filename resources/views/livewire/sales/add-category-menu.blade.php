@@ -16,8 +16,8 @@
                         Batal
                     </button>
 
-                    <button type="submit" wire:click="save" wire:loading.attr="disabled"
-                        class="btn btn-text-only-primary btn-nav margin-left-10">
+                    <button type="btn" class="btn btn-text-only-primary btn-nav margin-left-10"
+                        wire:click="saveCategoryMenu">
                         Simpan
                     </button>
 
@@ -29,15 +29,17 @@
 
         <div id="content-loaded">
             <div class="row">
+
                 <div class="col-sm-6 offset-1">
+
                     <div class="d-flex flex-column gap-4">
 
                         <div class="container-input-default">
 
-                            <label for="categoryCode" class="form-label input-label">Kode kategori</label>
+                            <label for="code" class="form-label input-label">Kode kategori</label>
 
-                            <input type="text" class="form-control input-default" id="categoryCode"
-                                placeholder="CHMSPC01" wire.model.blur="code">
+                            <input type="name" class="form-control input-default" id="code" name="code"
+                                placeholder="CHMSPC01" wire:model.blur="code">
 
                             @error('code')
                                 <small class="d-block text-danger">
@@ -49,10 +51,10 @@
 
                         <div class="container-input-default">
 
-                            <label for="categoryName" class="form-label input-label">Nama kategori</label>
+                            <label for="name" class="form-label input-label">Nama kategori</label>
 
-                            <input type="text" class="form-control input-default" id="categoryName" placeholder="Mie"
-                                wire.model.blur="name">
+                            <input type="name" class="form-control input-default" id="name" name="name"
+                                placeholder="Mie" wire:model.blur="name">
 
                             @error('name')
                                 <small class="d-block text-danger">
@@ -67,7 +69,7 @@
                 </div>
 
             </div>
-        </div>
+
         </div>
     </x-slot>
 </x-page-layout>

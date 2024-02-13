@@ -8,8 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoryMenu extends Model
 {
-    use HasUuids;
-    use HasFactory;
+    use HasUuids, HasFactory;
 
-    protected $fillable = ['code', 'name'];
+    protected $fillable = ['code','name'];
 }

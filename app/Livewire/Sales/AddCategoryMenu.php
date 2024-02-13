@@ -3,6 +3,7 @@
 namespace App\Livewire\Sales;
 
 use App\Models\CategoryMenu;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -23,12 +24,12 @@ class AddCategoryMenu extends Component
 
         $this->dispatch('category-created', $category);
 
-        $this->reset();
+        $this->reset('code', 'name');
 
         return redirect()->to('/sales/list-category');
     }
 
-    public function save()
+    public function saveCategoryMenu()
     {
         $this->validate();
         $this->createCategoryMenu();

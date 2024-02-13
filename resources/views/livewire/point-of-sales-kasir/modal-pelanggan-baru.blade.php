@@ -8,7 +8,7 @@
             </div>
             <div class="modal-body modal-pelangganBaru-wrapper">
                 <div class="body-input-pelanggan-wrapper">
-                    <form class="input-pelanggan-baru d-flex flex-column gap-3" wire:submit="save">
+                    <form class="input-pelanggan-baru d-flex flex-column gap-3" wire:submit="savePelanggan">
                         <div class="d-flex flex-column gap-1">
                             <label class="text-light-14 color-4040">Nama</label>
                             <input class="form-control text-light-14 color-7575" type="text"

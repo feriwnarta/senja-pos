@@ -4,7 +4,6 @@ namespace App\Livewire\PointOfSalesKasir;
 
 use App\Models\Customer;
 use Livewire\Attributes\Layout;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -35,7 +34,7 @@ class ModalPelangganBaru extends Component
         $this->dispatch('customer-created', $customers);
     }
 
-    public function save()
+    public function savePelanggan()
     {
         // call createCustomer function
         // reset all input after sumbit
