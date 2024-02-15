@@ -120,10 +120,22 @@
                 </div>
                 <div class="col-sm-3 offset-2">
 
-                    <img src="{{ asset('img/no-image.png') }}" alt="" width="140" height="140"
-                        @click="document.getElementById('fileInput').click()">
+                        @if ($thumbnail && !$errors->has('thumbnail'))
+                            <img src="{{ $thumbnail->temporaryUrl() }}" alt="Menu image" width="220" height="220"
+                                @click="document.getElementById('fileInput').click()">
+                        @else
+                            <img src="{{ asset('img/no-image.png') }}" alt="No image" width="140" height="140"
+                                @click="document.getElementById('fileInput').click()">
+                        @endif
 
-                    <input type="file" id="fileInput" style="display: none;" accept="image/*">
+                    <div wire:loading wire:target="thumbnail">Uploading...</div>
+
+                    @error('thumbnail')
+                        <small class="d-block text-danger">{{ $message }}</small>
+                    @enderror
+
+                    <input type="file" id="fileInput" style="display: none;" accept="image/*"
+                        wire:model="thumbnail">
 
                 </div>
             </div>
