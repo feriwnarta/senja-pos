@@ -296,8 +296,6 @@
                             <input type="file" id="fileInput" wire:model="thumbnail"
                                    style="display: none;"
                                    accept="image/*">
-
-                            
                         </div>
                     </div>
                 @endif

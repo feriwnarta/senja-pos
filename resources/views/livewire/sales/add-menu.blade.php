@@ -16,8 +16,8 @@
                         Batal
                     </button>
 
-                    <button type="btn" wire:click="addWarehouse" wire:loading.attr="disabled"
-                        class="btn btn-text-only-primary btn-nav margin-left-10">Simpan
+                    <button type="btn" wire:loading.attr="disabled"
+                        class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="save">Simpan
                     </button>
 
                 </div>
@@ -36,7 +36,11 @@
                             <label for="menuCode" class="form-label input-label">Kode Menu</label>
 
                             <input type="name" class="form-control input-default" id="menuCode"
-                                placeholder="CHMSPC01">
+                                placeholder="CHMSPC01" wire:model.blur="code">
+
+                            @error('code')
+                                <small class="d-block text-danger">{{ $message }}</small>
+                            @enderror
 
                         </div>
 
@@ -45,7 +49,11 @@
                             <label for="menuName" class="form-label input-label">Nama Menu</label>
 
                             <input type="name" class="form-control input-default" id="menuName"
-                                placeholder="Chamie Special XO">
+                                placeholder="Chamie Special XO" wire:model.blur="name">
+
+                            @error('name')
+                                <small class="d-block text-danger">{{ $message }}</small>
+                            @enderror
 
                         </div>
 
@@ -54,7 +62,11 @@
                             <label for="menuDescription" class="form-label input-label">Deskripsi Menu</label>
 
                             <textarea type="name" class="form-control textarea" id="menuDescription" rows="5"
-                                placeholder="Chamie / mie goreng special dengan saus XO"></textarea>
+                                placeholder="Chamie / mie goreng special dengan saus XO" wire:model.blur="description"></textarea>
+
+                            {{-- @error('description')
+                                <small class="d-block text-danger">{{ $message }}</small>
+                            @enderror --}}
 
                         </div>
 
@@ -68,7 +80,11 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <input type="name" class="form-control input-default" id="pricing"
-                                        placeholder="65.000">
+                                        placeholder="65.000" wire:model.blur="price">
+
+                                    @error('price')
+                                        <small class="d-block text-danger">{{ $message }}</small>
+                                    @enderror
 
                                 </div>
 
@@ -79,7 +95,11 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <input type="name" class="form-control input-default" id="codeSKU"
-                                        placeholder="CHB01">
+                                        placeholder="CHB01" wire:model.blur="sku">
+
+                                    @error('sku')
+                                        <small class="d-block text-danger">{{ $message }}</small>
+                                    @enderror
 
                                 </div>
 
@@ -120,13 +140,13 @@
                 </div>
                 <div class="col-sm-3 offset-2">
 
-                        @if ($thumbnail && !$errors->has('thumbnail'))
-                            <img src="{{ $thumbnail->temporaryUrl() }}" alt="Menu image" width="220" height="220"
-                                @click="document.getElementById('fileInput').click()">
-                        @else
-                            <img src="{{ asset('img/no-image.png') }}" alt="No image" width="140" height="140"
-                                @click="document.getElementById('fileInput').click()">
-                        @endif
+                    @if ($thumbnail && !$errors->has('thumbnail'))
+                        <img src="{{ $thumbnail->temporaryUrl() }}" alt="Menu image" width="220" height="220"
+                            @click="document.getElementById('fileInput').click()">
+                    @else
+                        <img src="{{ asset('img/no-image.png') }}" alt="No image" width="140" height="140"
+                            @click="document.getElementById('fileInput').click()">
+                    @endif
 
                     <div wire:loading wire:target="thumbnail">Uploading...</div>
 
