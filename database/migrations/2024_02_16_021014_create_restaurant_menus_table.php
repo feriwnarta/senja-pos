@@ -17,13 +17,13 @@ return new class extends Migration
             $table->string('name')->nullable(false);
             $table->text('description')->nullable();
             $table->integer('price')->nullable(false)->default(0);
-            $table->string('SKU')->nullable(false);
+            $table->string('SKU')->nullable(false)->unique();
             $table->string('thumbnail')->nullable(false);
             $table->string('code_category')->nullable(false);
 
             $table->timestamps();
 
-            $table->foreign('code_category')->on('category_menus')->references('code');
+            $table->foreign('code_category')->on('category_menus')->references('code')->onDelete('cascade');
         });
     }
 

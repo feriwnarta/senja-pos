@@ -14,10 +14,10 @@ class RestaurantMenu extends Model
     protected $table = "restaurant_menus";
     protected $keyType = "string";
 
-    protected $fillable = ['code', 'name', 'description', 'price', 'sku', 'thumbnail'];
+    protected $fillable = ['code', 'name', 'description', 'price', 'sku', 'thumbnail', 'code_category'];
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(CategoryMenu::class, "code_category", "code");
+        return $this->belongsTo(CategoryMenu::class, "code", "code_category");
     }
 }

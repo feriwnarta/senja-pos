@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Sales;
 
+use App\Models\CategoryMenu;
 use App\Models\RestaurantMenu;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Validate;
@@ -24,11 +25,15 @@ class AddMenu extends Component
     public $price;
     #[Validate('required|min:2')]
     public $sku;
+    #[Validate('required', message: 'Category name is required to fill')]
+    public $code_category;
+
+    // Result of thumbnail image
     public $result = null;
+
 
     public function createMenu()
     {
-
         if ($this->thumbnail !== null) {
             $this->result = $this->thumbnail->store('public/item-image');
         }
@@ -39,7 +44,8 @@ class AddMenu extends Component
             'name' => $this->name,
             'description' => $this->description,
             'price' => $this->price,
-            'sku' => $this->sku
+            'sku' => $this->sku,
+            'code_category' => $this->code_category
         ]);
 
         $this->dispatch("menu-created", $restaurantMenu);
@@ -57,6 +63,7 @@ class AddMenu extends Component
 
     public function render()
     {
-        return view('livewire.sales.add-menu');
+        $allCategoryMenus = CategoryMenu::all();
+        return view('livewire.sales.add-menu', ["allCategoryMenus" => $allCategoryMenus]);
     }
 }

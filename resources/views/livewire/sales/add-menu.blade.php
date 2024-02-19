@@ -31,6 +31,7 @@
                 <div class="col-sm-6 offset-1">
                     <div class="d-flex flex-column gap-4">
 
+                        {{-- KODE MENU --}}
                         <div class="container-input-default">
 
                             <label for="menuCode" class="form-label input-label">Kode Menu</label>
@@ -44,6 +45,30 @@
 
                         </div>
 
+                        {{-- KATEGORI ITEM --}}
+                        <div class="container-input-default">
+
+                            <label for="categoryItem" class="form-label">Kategori item</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                            <select id="categoryItem" class="form-select input-default" wire:model.blur="code_category">
+                                <option value="" hidden>Pilih kategori item</option>
+                                {{-- @if (isset($allCategoryMenus)) --}}
+                                    @foreach ($allCategoryMenus as $category)
+                                        <option value="{{ $category->code }}">
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                {{-- @endif --}}
+
+                            </select>
+
+                            @error('code_category')
+                                <small class="d-block text-danger">{{ $message }}</small>
+                            @enderror
+
+                        </div>
+
+                        {{-- NAMA MENU --}}
                         <div class="container-input-default">
 
                             <label for="menuName" class="form-label input-label">Nama Menu</label>
@@ -57,6 +82,7 @@
 
                         </div>
 
+                        {{-- DESCRIPTION --}}
                         <div class="container-input-default">
 
                             <label for="menuDescription" class="form-label input-label">Deskripsi Menu</label>
@@ -70,9 +96,11 @@
 
                         </div>
 
+
                         <div class="container-input-default">
                             <div class="row">
 
+                                {{-- PRICE --}}
                                 <div class="col-sm-7">
 
                                     <label for="pricing" class="form-label input-label">Pricing</label>
@@ -88,6 +116,7 @@
 
                                 </div>
 
+                                {{-- CODE SKU --}}
                                 <div class="col-sm-5">
 
                                     <label for="codeSKU" class="form-label input-label">Code SKU</label>
@@ -105,15 +134,17 @@
 
                             </div>
 
+                            {{-- ADD VARIANT MODAL --}}
                             <button class="btn btn-text-only-primary w-100 mt-2">Add Variant</button>
 
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         </div>
 
+                        {{-- INVENTORY SETTING MODAL --}}
                         <div class="container-input-default">
 
-                            <label for="pricing" class="form-label input-label">Inventory</label>
+                            <label class="form-label input-label">Inventory</label>
 
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
 
@@ -123,9 +154,10 @@
 
                         </div>
 
+                        {{-- COGS SETTING MODAL --}}
                         <div class="container-input-default">
 
-                            <label for="pricing" class="form-label input-label">COGS</label>
+                            <label class="form-label input-label">COGS</label>
 
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
 
@@ -138,6 +170,8 @@
                     </div>
 
                 </div>
+
+                {{-- MENU IMAGE UPLOAD --}}
                 <div class="col-sm-3 offset-2">
 
                     @if ($thumbnail && !$errors->has('thumbnail'))
