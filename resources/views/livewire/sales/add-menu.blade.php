@@ -49,15 +49,16 @@
                         <div class="container-input-default">
 
                             <label for="categoryItem" class="form-label">Kategori item</label>
-                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+
                             <select id="categoryItem" class="form-select input-default" wire:model.blur="code_category">
+
                                 <option value="" hidden>Pilih kategori item</option>
                                 {{-- @if (isset($allCategoryMenus)) --}}
-                                    @foreach ($allCategoryMenus as $category)
-                                        <option value="{{ $category->code }}">
-                                            {{ $category->name }}
-                                        </option>
-                                    @endforeach
+                                @foreach ($allCategoryMenus as $category)
+                                    <option value="{{ $category->code }}">
+                                        {{ $category->name }}
+                                    </option>
+                                @endforeach
                                 {{-- @endif --}}
 
                             </select>
@@ -135,9 +136,11 @@
                             </div>
 
                             {{-- ADD VARIANT MODAL --}}
-                            <button class="btn btn-text-only-primary w-100 mt-2">Add Variant</button>
+                            <button class="btn btn-text-only-primary w-100 mt-2" data-bs-toggle="modal"
+                                data-bs-target="#modalAddVariant">Add Variant</button>
+                            <livewire:sales.modal-add-variant>
 
-                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         </div>
 
@@ -148,9 +151,11 @@
 
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
 
-                            <button class="btn btn-text-only-primary w-100">Setting Inventory</button>
+                            <button class="btn btn-text-only-primary w-100" data-bs-toggle="modal"
+                                data-bs-target="#modalSettingInventory">Setting Inventory</button>
+                            <livewire:sales.modal-setting-inventory>
 
-                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         </div>
 
