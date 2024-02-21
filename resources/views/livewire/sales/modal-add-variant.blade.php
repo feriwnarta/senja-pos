@@ -2,8 +2,8 @@
     <div class="modal fade" id="modalAddVariant" tabindex="-1" aria-labelledby="modalAddVariant" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header p-0">
-                    <button class="btn btn-primary rounded-0 rounded-top w-100 px-3 py-4">+ Add Variant</button>
+                <div class="modal-header bg-primary py-4 justify-content-center">
+                    <h1 class="text-white">+ Add Variant</h1>
                 </div>
                 <div class="modal-body-variant p-0 w-100">
                     <div class="input-group">

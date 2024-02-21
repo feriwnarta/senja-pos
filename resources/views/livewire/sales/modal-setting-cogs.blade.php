@@ -1,6 +1,5 @@
 <div>
-    <div class="modal fade" id="modalSettingInventory" tabindex="-1" aria-labelledby="modalSettingInventory"
-        aria-hidden="true">
+    <div class="modal fade" id="modalSettingCogs" tabindex="-1" aria-labelledby="modalSettingCogs" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-primary py-4 justify-content-center">
@@ -11,9 +10,8 @@
                         <thead class="table-warning">
                             <tr>
                                 <td class="p-3">Variant</td>
-                                <td class="p-3">Track Stock</td>
-                                <td class="p-3">In Stock</td>
-                                <td class="p-3">Minimum Stock</td>
+                                <td class="p-3">Track Cogs</td>
+                                <td class="p-3">Average Cost</td>
                             </tr>
                         </thead>
                         <tbody class="table-borderless">
@@ -25,10 +23,7 @@
                                     <input class="form-check-input input-modal-checkbox" type="checkbox" value="">
                                 </td>
                                 <td class="p-3">
-                                    <input class="form-input input-modal-default" type="text" value="">
-                                </td>
-                                <td class="p-3">
-                                    <input class="form-input input-modal-default" type="text" value="">
+                                    <input class="form-input input-default" type="text" value="">
                                 </td>
                             </tr>
                         </tbody>

@@ -166,9 +166,11 @@
 
                             <div id="divider" class="margin-symmetric-vertical-6"></div>
 
-                            <button class="btn btn-text-only-primary w-100">Setting COGS</button>
+                            <button class="btn btn-text-only-primary w-100" data-bs-toggle="modal"
+                                data-bs-target="#modalSettingCogs">Setting COGS</button>
+                            <livewire:sales.modal-setting-cogs>
 
-                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                                <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         </div>
 
