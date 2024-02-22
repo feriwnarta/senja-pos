@@ -1,3 +1,4 @@
+@php use illuminate\Support\Str; @endphp
 <x-page-layout>
     <x-slot name="appBar">
         <div class="navbar-app">
@@ -13,24 +14,23 @@
 
                     <form class="d-flex margin-left-10">
                         <input class="form-control search-bar clear" type="search"
-                               placeholder="{{ __('app_locale.input.cari') }}"
-                               aria-label="Search" wire:model.live.debounce.600ms="search">
+                            placeholder="{{ __('app_locale.input.cari') }}" aria-label="Search"
+                            wire:model.live.debounce.600ms="search">
                     </form>
 
                     {{-- <div class="dropdown margin-left-10">
                         <select class="form-select input-default {{ ($notSelected) ? 'border border-danger' : '' }}"
                                 id="resupplyOutlet" wire:model="selected">
                             <option value="" disabled selected>Pilih Outlet</option>
-                            @foreach($outletCentralKitchenDropdown as $result)
+                            @foreach ($outletCentralKitchenDropdown as $result)
                                 <option value="{{ $result->id }}">{{ $result->name }}</option>
                             @endforeach
                         </select>
                     </div> --}}
 
                     <a href="/sales/list-menu/create-menu" wire:navigate>
-                        <button type="btn"
-                                wire:loading.attr="disabled"
-                                class="btn btn-text-only-primary btn-nav margin-left-10">+ Buat Menu
+                        <button type="btn" wire:loading.attr="disabled"
+                            class="btn btn-text-only-primary btn-nav margin-left-10">+ Buat Menu
                         </button>
                     </a>
 
@@ -40,4 +40,46 @@
             <div id="divider"></div>
         </div>
     </x-slot>
+
+    <div id="content-loaded">
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <table id="" class="table borderless table-hover">
+                    <thead class="table-head-color">
+                        <tr>
+                            <th scope="col">Kode</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Price</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="listCentralKitchen">
+
+                        @foreach ($restaurantMenus as $data)
+                            <tr class="items-table-head-color" id="po1" wire:click="">
+                                <td class="code">{{ $data->code }}</td>
+                                <td>
+                                    {{-- DATA EXIST BUT CAN'T BE SHOWN --}}
+                                    @if ($data->thumbnail && !$errors->has('thumbnail'))
+                                        <img src="{{ asset("/storage/app/" . $data->thumbnail) }}" alt="image">
+                                    @endif
+                                    {{ $data->name }}
+                                </td>
+                                <td>{{ $data->category->name }}</td>
+                                <td>Rp. {{ number_format($data->price) }}</td>
+                            </tr>
+                        @endforeach
+
+                    </tbody>
+                </table>
+                {{ $restaurantMenus->links() }}
+
+            </div>
+        </div>
+
+    </div>
+
 </x-page-layout>

@@ -4,6 +4,7 @@ namespace App\Livewire\Sales;
 
 use App\Models\CategoryMenu;
 use App\Models\RestaurantMenu;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Validate;
 use Livewire\Component;

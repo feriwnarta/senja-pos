@@ -12,12 +12,13 @@ class RestaurantMenu extends Model
     use HasUuids, HasFactory;
 
     protected $table = "restaurant_menus";
+    protected $primaryKey = "id";
     protected $keyType = "string";
 
     protected $fillable = ['code', 'name', 'description', 'price', 'sku', 'thumbnail', 'code_category'];
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(CategoryMenu::class, "code", "code_category");
+        return $this->belongsTo(CategoryMenu::class, "code_category", "code");
     }
 }

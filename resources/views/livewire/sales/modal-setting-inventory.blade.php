@@ -18,17 +18,17 @@
                         </thead>
                         <tbody class="table-borderless">
                             <tr>
-                                <td class="p-3">
+                                <td class="align-middle p-3">
                                     Chamie Seafood XO L
                                 </td>
-                                <td class="p-3">
-                                    <input class="form-check-input input-modal-checkbox" type="checkbox" value="">
+                                <td class="align-middle p-3">
+                                    <input class="form-check-input input-modal-checkbox m-0" type="checkbox" value="">
                                 </td>
-                                <td class="p-3">
-                                    <input class="form-input input-modal-default" type="text" value="">
+                                <td class="align-middle p-3">
+                                    <input class="form-input input-modal-default text-center" type="text" value="">
                                 </td>
-                                <td class="p-3">
-                                    <input class="form-input input-modal-default" type="text" value="">
+                                <td class="align-middle p-3">
+                                    <input class="form-input input-modal-default text-center" type="text" value="">
                                 </td>
                             </tr>
                         </tbody>
