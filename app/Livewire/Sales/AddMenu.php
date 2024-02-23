@@ -36,7 +36,7 @@ class AddMenu extends Component
     public function createMenu()
     {
         if ($this->thumbnail !== null) {
-            $this->result = $this->thumbnail->store('public/item-image');
+            $this->result = $this->thumbnail->store('public/menu-image');
         }
 
         $restaurantMenu = RestaurantMenu::create([

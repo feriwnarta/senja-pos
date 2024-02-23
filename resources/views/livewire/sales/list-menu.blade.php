@@ -60,16 +60,16 @@
 
                         @foreach ($restaurantMenus as $data)
                             <tr class="items-table-head-color" id="po1" wire:click="">
-                                <td class="code">{{ $data->code }}</td>
-                                <td>
+                                <td class="code align-middle">{{ $data->code }}</td>
+                                <td class="d-flex flex-row align-items-center gap-3">
                                     {{-- DATA EXIST BUT CAN'T BE SHOWN --}}
                                     @if ($data->thumbnail && !$errors->has('thumbnail'))
-                                        <img src="{{ asset("/storage/app/" . $data->thumbnail) }}" alt="image">
+                                        <img src="{{ asset(Storage::url("$data->thumbnail")) }}" alt="{{ $data->name }}" width="50px" height="50px">
                                     @endif
                                     {{ $data->name }}
                                 </td>
-                                <td>{{ $data->category->name }}</td>
-                                <td>Rp. {{ number_format($data->price) }}</td>
+                                <td class="align-middle">{{ $data->category->name }}</td>
+                                <td class="align-middle">Rp. {{ number_format($data->price) }}</td>
                             </tr>
                         @endforeach
 
