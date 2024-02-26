@@ -140,6 +140,30 @@
                                 data-bs-target="#modalAddVariant">Add Variant</button>
                             <livewire:sales.modal-add-variant>
 
+                                @if (!empty($submittedVariant))
+
+                                    <table id="" class="table borderless table-hover my-3">
+                                        <thead class="table-head-color">
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">SKU</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="listCentralKitchen">
+                                            @foreach ($submittedVariant as $data)
+                                                <tr class="items-table-head-color" id="po1" wire:click="">
+                                                    <td class="align-middle">{{ $data['variantName'] }}</td>
+                                                    <td class="align-middle">{{ $data['variantPrice'] }}</td>
+                                                    <td class="align-middle">{{ $data['variantSKU'] }}</td>
+                                                </tr>
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
+
+                                @endif
+
                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         </div>

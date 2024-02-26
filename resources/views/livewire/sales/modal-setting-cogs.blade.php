@@ -16,13 +16,13 @@
                         </thead>
                         <tbody class="table-borderless">
                             <tr>
-                                <td class="align-middle p-3">
+                                <td class="col-4 align-middle p-3">
                                     Chamie Seafood XO L
                                 </td>
-                                <td class="align-middle p-3">
+                                <td class="col-4 align-middle p-3">
                                     <input class="form-check-input input-modal-checkbox m-0" type="checkbox" value="">
                                 </td>
-                                <td class="align-middle p-3">
+                                <td class="col-4 align-middle p-3">
                                     <input class="form-input input-default" type="text" value="">
                                 </td>
                             </tr>

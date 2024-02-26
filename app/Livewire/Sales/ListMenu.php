@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Sales;
 
-use App\Models\Category;
-use App\Models\CategoryMenu;
 use App\Models\RestaurantMenu;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -24,7 +22,9 @@ class ListMenu extends Component
     // {
     //     $this->categoryMenus = CategoryMenu::findOrFail($id);
     // }
-
+    public function updateListMenu($restaurantMenu)
+    {
+    }
 
     public function render()
     {

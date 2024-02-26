@@ -55,6 +55,7 @@ class AddMenu extends Component
         // return $this->redirect('/sales/list-menu');
     }
 
+
     public function save()
     {
         $this->validate();
@@ -62,9 +63,19 @@ class AddMenu extends Component
         $this->createMenu();
     }
 
+
+    public $submittedDataVariant = [];
+
+    protected $listeners = ['variantSubmit'];
+
+    public function variantSubmit($dataVariant)
+    {
+        $this->submittedDataVariant[] = $dataVariant;
+    }
+
     public function render()
     {
         $allCategoryMenus = CategoryMenu::all();
-        return view('livewire.sales.add-menu', ["allCategoryMenus" => $allCategoryMenus]);
+        return view('livewire.sales.add-menu', ["allCategoryMenus" => $allCategoryMenus, "submittedVariant" => $this->submittedDataVariant]);
     }
 }

@@ -62,7 +62,6 @@
                             <tr class="items-table-head-color" id="po1" wire:click="">
                                 <td class="code align-middle">{{ $data->code }}</td>
                                 <td class="d-flex flex-row align-items-center gap-3">
-                                    {{-- DATA EXIST BUT CAN'T BE SHOWN --}}
                                     @if ($data->thumbnail && !$errors->has('thumbnail'))
                                         <img src="{{ asset(Storage::url("$data->thumbnail")) }}" alt="{{ $data->name }}" width="50px" height="50px">
                                     @endif

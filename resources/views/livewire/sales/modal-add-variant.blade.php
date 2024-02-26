@@ -7,19 +7,19 @@
                 </div>
                 <div class="modal-body-variant p-0 w-100">
                     <div class="input-group">
-                        <input type="text" aria-label="First name"
-                            class="form-control border-top-0 border-bottom-0 rounded-0 p-3" placeholder="Variant Name">
-                        <input type="number" aria-label="Last name"
-                            class="form-control border-top-0 border-bottom-0 rounded-0 p-3" placeholder="Rp. 0">
-                        <input type="text" aria-label="Last name"
-                            class="form-control border-top-0 border-bottom-0 rounded-0 p-3" placeholder="SKU">
+                        <input type="text" aria-label="Variant Name"
+                            class="form-control border-top-0 border-bottom-0 rounded-0 p-3" placeholder="Variant Name" wire:model='name'>
+                        <input type="number" aria-label="Price"
+                            class="form-control border-top-0 border-bottom-0 rounded-0 p-3" placeholder="Rp. 0" wire:model='price'>
+                        <input type="text" aria-label="SKU"
+                            class="form-control border-top-0 border-bottom-0 rounded-0 p-3" placeholder="SKU" wire:model='SKU'>
                     </div>
                 </div>
                 <div class="modal-footer py-3 gap-2">
                     <div class="btn btn-outline-danger m-0" data-bs-dismiss="modal">
                         Cancel
                     </div>
-                    <div class="btn btn-warning m-0">
+                    <div class="btn btn-warning m-0" wire:click='move' data-bs-dismiss="modal">
                         Move Selected Items
                     </div>
                 </div>
