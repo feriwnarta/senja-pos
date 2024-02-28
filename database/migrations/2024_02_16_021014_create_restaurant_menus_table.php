@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('code')->nullable(false)->unique();
             $table->string('name')->nullable(false);
             $table->text('description')->nullable();
-            $table->integer('price')->nullable(false)->default(0);
-            $table->string('SKU')->nullable(false)->unique();
+            $table->decimal('price', 10, 2)->nullable(false)->default(0.00);
+            $table->string('SKU')->nullable(false);
             $table->string('thumbnail')->nullable(false);
             $table->string('code_category')->nullable(false);
 

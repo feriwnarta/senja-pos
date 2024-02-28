@@ -24,10 +24,10 @@ class Item extends Model
     protected $guarded = [];
 
 
-//    public function racks(): BelongsTo
-//    {
-//        return $this->belongsTo(Rack::class, 'racks_id');
-//    }
+    //    public function racks(): BelongsTo
+    //    {
+    //        return $this->belongsTo(Rack::class, 'racks_id');
+    //    }
 
     public function unit(): BelongsTo
     {
@@ -66,14 +66,16 @@ class Item extends Model
 
     public function outlet(): BelongsToMany
     {
-        return $this->belongsToMany(Outlet::class, 'items_outlets', 'items_id', 'outlets_id')->using(new class extends Pivot {
+        return $this->belongsToMany(Outlet::class, 'items_outlets', 'items_id', 'outlets_id')->using(new class extends Pivot
+        {
             use  HasUuids;
         })->withTimestamps();
     }
 
     public function centralKitchen(): BelongsToMany
     {
-        return $this->belongsToMany(CentralKitchen::class, 'items_central_kitchens', 'items_id', 'central_kitchens_id')->using(new class extends Pivot {
+        return $this->belongsToMany(CentralKitchen::class, 'items_central_kitchens', 'items_id', 'central_kitchens_id')->using(new class extends Pivot
+        {
             use  HasUuids;
         })->withTimestamps();
     }
@@ -97,11 +99,11 @@ class Item extends Model
 
 
 
-//    // Relasi many to many ke category
-//    public function categories(): BelongsToMany
-//    {
-//        return $this->belongsToMany(Item::class, 'category_items', 'items_id', 'categories_id') > using(new class extends Pivot {
-//                use HasUuids;
-//            })->withTimestamps();
-//    }
+    //    // Relasi many to many ke category
+    //    public function categories(): BelongsToMany
+    //    {
+    //        return $this->belongsToMany(Item::class, 'category_items', 'items_id', 'categories_id') > using(new class extends Pivot {
+    //                use HasUuids;
+    //            })->withTimestamps();
+    //    }
 }

@@ -26,7 +26,7 @@ class AddMenu extends Component
     public $price;
     #[Validate('required|min:2')]
     public $sku;
-    #[Validate('required', message: 'Category name is required to fill')]
+    #[Validate('required', message: 'Category name is required')]
     public $code_category;
 
     // Result of thumbnail image
@@ -46,7 +46,7 @@ class AddMenu extends Component
             'description' => $this->description,
             'price' => $this->price,
             'sku' => $this->sku,
-            'code_category' => $this->code_category
+            'code_category' => $this->code_category,
         ]);
 
         $this->dispatch("menu-created", $restaurantMenu);
@@ -64,18 +64,21 @@ class AddMenu extends Component
     }
 
 
-    public $submittedDataVariant = [];
+    // public $submittedDataVariant = [];
 
-    protected $listeners = ['variantSubmit'];
+    // protected $listeners = ['variantSubmit'];
 
-    public function variantSubmit($dataVariant)
-    {
-        $this->submittedDataVariant[] = $dataVariant;
-    }
+    // public function variantSubmit($dataVariant)
+    // {
+    //     $this->submittedDataVariant[] = $dataVariant;
+    // }
 
     public function render()
     {
         $allCategoryMenus = CategoryMenu::all();
-        return view('livewire.sales.add-menu', ["allCategoryMenus" => $allCategoryMenus, "submittedVariant" => $this->submittedDataVariant]);
+        return view('livewire.sales.add-menu', [
+            "allCategoryMenus" => $allCategoryMenus,
+            // "submittedVariant" => $this->submittedDataVariant
+        ]);
     }
 }

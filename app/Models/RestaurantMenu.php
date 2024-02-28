@@ -21,4 +21,9 @@ class RestaurantMenu extends Model
     {
         return $this->belongsTo(CategoryMenu::class, "code_category", "code");
     }
+
+    public function stockMenu(): BelongsTo
+    {
+        return $this->belongsTo(StockMenu::class, "menu_id", "id");
+    }
 }

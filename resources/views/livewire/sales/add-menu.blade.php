@@ -140,7 +140,7 @@
                                 data-bs-target="#modalAddVariant">Add Variant</button>
                             <livewire:sales.modal-add-variant>
 
-                                @if (!empty($submittedVariant))
+                                {{-- @if (!empty($submittedVariant))
 
                                     <table id="" class="table borderless table-hover my-3">
                                         <thead class="table-head-color">
@@ -162,7 +162,7 @@
                                         </tbody>
                                     </table>
 
-                                @endif
+                                @endif --}}
 
                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
 
