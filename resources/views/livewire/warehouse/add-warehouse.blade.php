@@ -88,7 +88,7 @@
                                             <input type="text"
                                                    class="input-no-border make-input areaInput caption-medium"
                                                    placeholder="Area A" style="width: 100%"
-                                                   wire:model.live="areas.{{$key}}.area.area">
+                                                   wire:model.live="areas.{{$key}}.area">
 
                                             @if ($errors->has("areas.$key.area.area"))
                                                 <span
@@ -99,8 +99,8 @@
                                             <input type="text"
                                                    class="input-no-border make-input rackInput caption-medium"
                                                    placeholder="A1" style="width: 100%"
-                                                   wire:model="areas.{{$key}}.area.rack">
-                                            @if ($errors->has("areas.$key.area.rack"))
+                                                   wire:model="areas.{{$key}}.racks.0">
+                                            @if ($errors->has("areas.$key.rack.0"))
                                                 <span
                                                     class="text-xs text-red-600">{{ $errors->first("areas.$key.area.rack") }}</span>
                                             @endif
@@ -112,25 +112,27 @@
                                         </td>
                                     </tr>
 
-                                    @if(isset($area['rack']))
-                                        @foreach($area['rack'] as $subKey => $value)
-                                            <tr>
-                                                <td></td>
-                                                <td>
-                                                    <input type="text"
-                                                           class="input-no-border make-input rackInput caption-medium"
-                                                           placeholder="A1" style="width: 100%"
-                                                           wire:model="areas.{{ $key }}.rack.{{ $subKey }}.rack">
-                                                    @if ($errors->has("areas.$key.rack.$subKey.rack"))
-                                                        <span
-                                                            class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
-                                                    @endif
-                                                </td>
-                                                <td class="delete-item"
-                                                    wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
-                                                    <i class="x-icon"></i>
-                                                </td>
-                                            </tr>
+                                    @if(isset($area['racks']) && count($area['racks']) > 1)
+                                        @foreach($area['racks'] as $subKey => $value)
+                                            @if($subKey > 0)
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="text"
+                                                               class="input-no-border make-input rackInput caption-medium"
+                                                               placeholder="A1" style="width: 100%"
+                                                               wire:model="areas.{{ $key }}.racks.{{ $subKey }}">
+                                                        @if ($errors->has("areas.$key.rack.$subKey.rack"))
+                                                            <span
+                                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td class="delete-item"
+                                                        wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
+                                                        <i class="x-icon"></i>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @endforeach
                                     @endif
                                 @endforeach

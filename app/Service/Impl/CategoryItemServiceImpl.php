@@ -59,7 +59,6 @@ class CategoryItemServiceImpl implements CategoryItemService
     public function saveCategoryOnlyCodeAndName(string $code, string $name): ?Category
     {
         try {
-
             return Category::create([
                 'code' => $code,
                 'name' => $name,
