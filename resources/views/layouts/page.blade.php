@@ -6,7 +6,7 @@
 
 
     <div id="content">
-
+        <x-notify::notify/>
         <div id="page">
 
             {{ $appBar }}

@@ -35,6 +35,11 @@ class AddWarehouse extends Component
     #[Rule('required|min:5')]
     public string $addressWarehouse;
 
+    #[Rule([
+        'areas' => 'array',
+        'areas.*.area' => 'required|min:2|distinct',
+        'areas.*.racks.*' => 'required|min:2|distinct',
+    ])]
     public array $areas = [];
 
     public array $items = [];
@@ -50,26 +55,6 @@ class AddWarehouse extends Component
     #[Url(as: 'qId', keep: true)]
     public string $url = '';
 
-    protected $rules = [
-        'areas.*.area.area' => 'required|min:2',
-        'areas.*.area.rack' => 'required|min:2',
-        'areas.*.area.category_inventory' => 'required|min:3',
-        'areas.*.rack.*.rack' => 'required|min:2',
-        'areas.*.rack.*.category_inventory' => 'required|min:3',
-
-    ];
-    protected $messages = [
-        'areas.*.area.area.required' => 'The Area A field is required.',
-        'areas.*.area.area.min' => 'The Area A field should be at least 3 characters.',
-        'areas.*.area.rack.required' => 'The Rack field is required.',
-        'areas.*.area.rack.min' => 'The Rack field should be at least 3 characters.',
-        'areas.*.area.category_inventory.required' => 'The Category Inventory field is required.',
-        'areas.*.area.category_inventory.min' => 'The Category Inventory field should be at least 3 characters.',
-        'areas.*.rack.*.rack.required' => 'The Rack field is required.',
-        'areas.*.rack.*.rack.min' => 'The Rack field should be at least 3 characters.',
-        'areas.*.rack.*.category_inventory.required' => 'The Category Inventory field is required.',
-        'areas.*.rack.*.category_inventory.min' => 'The Category Inventory field should be at least 3 characters.',
-    ];
 
     /**
      * fungsi ini digunakan untuk menambahkan input area baru
@@ -132,6 +117,9 @@ class AddWarehouse extends Component
     }
 
 
+    public function handleAreaValidate() {
+        $this->validate();
+    }
 
     /**
      * fungsi ini digunakan untuk melakukan validasi data sebelum
@@ -140,17 +128,7 @@ class AddWarehouse extends Component
      */
     public function validateInput()
     {
-
-        // TODO: Perbaiki validasi message rack yang sama untuk satu gudang atau area yg sama
-        // lakukan validasi hanya data yang diperlukan
-        $this->validate([
-            'areas' => 'array',  // Validate areas as a required array
-            'areas.*.area' => 'required|min:2|distinct',  // Validate area name
-            'areas.*.racks.*' => 'required|min:2|distinct', // Validate racks as a required array with distinct values
-            'codeWarehouse' => 'required|min:5',
-            'nameWarehouse' => 'required|min:5',
-            'addressWarehouse' => 'min:5',
-        ]);
+        $this->validate();
 
         $warehouseDto = new WarehouseDTO(
             $this->url,
@@ -161,13 +139,13 @@ class AddWarehouse extends Component
             ($this->state == 'outlet') ? WarehouseEnum::OUTLET : WarehouseEnum::CENTRAL
         );
 
-
         $repository = new WarehouseRepository();
         $service = new WarehouseService($repository);
         $result = $service->create($warehouseDto);
-
-
-        $this->js("alert('sukses buat warehouse')");
+        $this->reset();
+        $this->url = $warehouseDto->getSourceId();
+        $this->redirect("/warehouse/list-warehouse/view/{$result->id}");
+        notify()->success('oke');
 
     }
 

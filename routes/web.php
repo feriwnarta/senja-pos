@@ -63,7 +63,8 @@ Route::get("composition/recipe/create-recipe", CreateRecipe::class)->name('creat
 Route::get("warehouse/stock", StockItem::class)->name('stock');
 Route::get("warehouse/list-warehouse", ListWarehouse::class)->name('list-warehouse');
 Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class)->name('add-warehouse');
-Route::get("warehouse/list-warehouse/detail-warehouse", DetailWarehouse::class)->name('detail-warehouse');
+Route::get("warehouse/list-warehouse/view/{warehouse}", DetailWarehouse::class)->name('detail-warehouse');
+
 Route::get("warehouse/transaction", Transaction::class)->name('warehouse-transaction');
 Route::get("warehouse/transaction/add-transaction", CreateTransaction::class)->name('warehouse-add-transaction');
 

@@ -88,22 +88,19 @@
                                             <input type="text"
                                                    class="input-no-border make-input areaInput caption-medium"
                                                    placeholder="Area A" style="width: 100%"
-                                                   wire:model.live="areas.{{$key}}.area">
-
-                                            @if ($errors->has("areas.$key.area.area"))
-                                                <span
-                                                    class="text-xs text-red-600">{{ $errors->first("areas.$key.area.area") }}</span>
-                                            @endif
+                                                   wire:model.live.debounce.600ms="areas.{{$key}}.area" wire:change="handleAreaValidate">
+                                            @error("areas.$key.area")
+                                            <span class="text-xs text-red-600">{{ $message }}</span>
+                                            @enderror
                                         </td>
                                         <td>
                                             <input type="text"
                                                    class="input-no-border make-input rackInput caption-medium"
                                                    placeholder="A1" style="width: 100%"
-                                                   wire:model="areas.{{$key}}.racks.0">
-                                            @if ($errors->has("areas.$key.rack.0"))
-                                                <span
-                                                    class="text-xs text-red-600">{{ $errors->first("areas.$key.area.rack") }}</span>
-                                            @endif
+                                                   wire:model.live.debounce.600ms="areas.{{$key}}.racks.0" wire:change="handleAreaValidate">
+                                            @error("areas.$key.racks.0")
+                                            <span class="text-xs text-red-600">{{ $message }}</span>
+                                            @enderror
                                         </td>
 
                                         <td class="delete-item" style="width: 16px"
@@ -121,11 +118,10 @@
                                                         <input type="text"
                                                                class="input-no-border make-input rackInput caption-medium"
                                                                placeholder="A1" style="width: 100%"
-                                                               wire:model="areas.{{ $key }}.racks.{{ $subKey }}">
-                                                        @if ($errors->has("areas.$key.rack.$subKey.rack"))
-                                                            <span
-                                                                class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
-                                                        @endif
+                                                               wire:model.live.debounce.600ms="areas.{{ $key }}.racks.{{ $subKey }}" wire:change="handleAreaValidate">
+                                                        @error("areas.$key.racks.$subKey")
+                                                        <span class="text-xs text-red-600">{{ $message }}</span>
+                                                        @enderror
                                                     </td>
                                                     <td class="delete-item"
                                                         wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
@@ -136,6 +132,7 @@
                                         @endforeach
                                     @endif
                                 @endforeach
+
 
 
                                 <tr id="addWarehouseAction">
@@ -159,18 +156,16 @@
                                 </tr>
                                 </tbody>
                             </table>
+                        </div>
 
 
-                            <div class="margin-top-16">
-                                <label for="addressWarehouse" class="form-label">Alamat</label>
-                                <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                <textarea class="form-control textarea" id="addressWarehouse" rows="5"
-                                          placeholder="Jln. Ki Hajar Dewantoro"
-                                          wire:model.blur="addressWarehouse"></textarea>
-                                @error('addressWarehouse') <span text-xs text-red-600>{{ $message }}</span> @enderror
-                            </div>
-
-
+                        <div class="margin-top-16">
+                            <label for="addressWarehouse" class="form-label">Alamat</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                            <textarea class="form-control textarea" id="addressWarehouse" rows="5"
+                                      placeholder="Jln. Ki Hajar Dewantoro"
+                                      wire:model.blur="addressWarehouse"></textarea>
+                            @error('addressWarehouse') <span text-xs text-red-600>{{ $message }}</span> @enderror
                         </div>
                     @endif
                 </div>
