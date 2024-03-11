@@ -139,14 +139,24 @@ class AddWarehouse extends Component
             ($this->state == 'outlet') ? WarehouseEnum::OUTLET : WarehouseEnum::CENTRAL
         );
 
+
+
         $repository = new WarehouseRepository();
         $service = new WarehouseService($repository);
         $result = $service->create($warehouseDto);
-        $this->reset();
-        $this->url = $warehouseDto->getSourceId();
-        $this->redirect("/warehouse/list-warehouse/view/{$result->id}");
+        $this->resetPage();
+        $this->redirect("/warehouse/list-warehouse/view/{$result->id}", true);
         notify()->success('oke');
 
+    }
+
+    public function resetPage()
+    {
+        $this->reset('addressWarehouse');
+        $this->reset('codeWarehouse');
+        $this->reset('nameWarehouse');
+        $this->reset('areas');
+        $this->reset('isAddedArea');
     }
 
 
