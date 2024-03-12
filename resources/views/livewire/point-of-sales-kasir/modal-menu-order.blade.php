@@ -9,7 +9,11 @@
                         {{ $menuSelected['menu_name'] }}</h1>
                     <h1 class="modal-title text-bold-20 color-4040" id="modalOrderMenuLabel">Rp. 0</h1>
                 </div>
+
+                {{-- FORM MENU --}}
                 <form class="modal-body modal-menu-wrapper">
+
+                    {{-- VARIASI --}}
                     <div class="modal-content-wrapper">
                         <div class="content-header">
                             <span class="text-bold-14 color-6161">Variasi</span>
@@ -18,14 +22,30 @@
                         </div>
                         <div class="line-divider"></div>
                         <div class="content-body">
-                            <button type="button"
+                            <div class="radio-group-menu-order d-flex flex-row">
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="variant-base" id="variant_ayam" autocomplete="off">
+                                <label class="btn" for="variant_ayam">Ayam</label>
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="variant-base" id="variant_pork" autocomplete="off">
+                                <label class="btn" for="variant_pork">Pork</label>
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="variant-base" id="variant_scallop" autocomplete="off">
+                                <label class="btn" for="variant_scallop">Scallop</label>
+                            </div>
+                            {{-- <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Ayam</button>
                             <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Pork</button>
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Scallop</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Scallop</button> --}}
                         </div>
                     </div>
+
+                    {{-- UKURAN --}}
                     <div class="modal-content-wrapper">
                         <div class="content-header">
                             <span class="text-bold-14 color-6161">Ukuran</span>
@@ -34,14 +54,30 @@
                         </div>
                         <div class="line-divider"></div>
                         <div class="content-body">
-                            <button type="button"
+                            <div class="radio-group-menu-order d-flex flex-row">
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="ukuran-base" id="ukuran_kecil" autocomplete="off">
+                                <label class="btn" for="ukuran_kecil">Kecil</label>
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="ukuran-base" id="ukuran_sedang" autocomplete="off">
+                                <label class="btn" for="ukuran_sedang">Sedang</label>
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="ukuran-base" id="ukuran_besar" autocomplete="off">
+                                <label class="btn" for="ukuran_besar">Besar</label>
+                            </div>
+                            {{-- <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Kecil</button>
                             <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Sedang</button>
                             <button type="button"
-                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Besar</button>
+                                class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Besar</button> --}}
                         </div>
                     </div>
+
+                    {{-- TOPING --}}
                     <div class="modal-content-wrapper">
                         <div class="content-header-toping">
                             <div class="toping-left-content">
@@ -98,6 +134,8 @@
                             </div>
                         </div>
                     </div>
+
+                    {{-- JUMLAH --}}
                     <div class="modal-content-wrapper">
                         <div class="content-header">
                             <span class="text-bold-14 color-6161">Jumlah</span>
@@ -112,20 +150,36 @@
                                     class="plus-icon"></span></button>
                         </div>
                     </div>
+
+                    {{-- TIPE PENJUALAN --}}
                     <div class="modal-content-wrapper">
                         <div class="content-header">
                             <span class="text-bold-14 color-6161">Tipe Penjualan</span>
+                            <span class="divider"></span>
+                            <span class="text-light-12 color-9e9e">Pilih Salah Satu</span>
                         </div>
                         <div class="line-divider"></div>
                         <div class="content-body">
-                            <button type="button"
+                            <div class="radio-group-menu-order d-flex flex-row">
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="sell-type-base" id="dine_in" autocomplete="off">
+                                <label class="btn" for="dine_in">Dine In</label>
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="sell-type-base" id="take_away" autocomplete="off">
+                                <label class="btn" for="take_away">Take Away</label>
+                            </div>
+                            {{-- <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Dine
                                 in</button>
                             <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Take
-                                Away</button>
+                                Away</button> --}}
                         </div>
                     </div>
+
+                    {{-- NOTE --}}
                     <div class="modal-content-wrapper">
                         <div class="content-header">
                             <span class="text-bold-14 color-6161">Note</span>
@@ -135,22 +189,38 @@
                             <textarea class="form-control note-text-area" placeholder="" id="floatingTextarea2"></textarea>
                         </div>
                     </div>
+
+                    {{-- DISCOUNT --}}
                     <div class="modal-content-wrapper">
                         <div class="content-header">
                             <span class="text-bold-14 color-6161">Discount</span>
+                            <span class="divider"></span>
+                            <span class="text-light-12 color-9e9e">Pilih Salah Satu</span>
                         </div>
                         <div class="line-divider"></div>
                         <div class="content-body">
-                            <button type="button"
+                            <div class="radio-group-menu-order d-flex flex-row">
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="note-base" id="happy_hour" autocomplete="off">
+                                <label class="btn" for="happy_hour">Happy Hour 5%</label>
+                                <input type="radio"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    name="note-base" id="happy_weekend" autocomplete="off">
+                                <label class="btn" for="happy_weekend">Happy Weekend 10%</label>
+                            </div>
+                            {{-- <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Happy
                                 Hour
                                 5%</button>
                             <button type="button"
                                 class="button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32">Happy
                                 Weekend
-                                10%</button>
+                                10%</button> --}}
                         </div>
                     </div>
+
+                    {{-- BUTTON GROUP --}}
                     <div class="modal-variasi-footer">
                         <button class="button-outline-w119-f166 text-medium-16 color-f166 p-8-16 ls-176 h-40"
                             type="button" data-bs-dismiss="modal">Cancel</button>
