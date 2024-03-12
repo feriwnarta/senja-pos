@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\CentralKitchen;
 
+use App\Contract\CentralKitchen\CentralKitchenRepository;
 use App\Contract\CentralKitchen\CentralKitchenService;
 use App\Dto\CentralKitchenDTO;
-use App\Http\Resources\CentralKitchenResource;
 use App\Models\CentralKitchen;
-use App\Repository\CentralKitchen\CentralKitchenRepository;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\MockInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
@@ -26,9 +23,9 @@ class CentralKitchenServiceTest extends TestCase
             'name' => fake()->name,
         ]);
 
-        $mock = $this->mock(\App\Contract\CentralKitchen\CentralKitchenRepository::class,function (MockInterface $mock) use ($centralKitchen) {
+        $mock = $this->mock(CentralKitchenRepository::class, function (MockInterface $mock) use ($centralKitchen) {
             $mock->shouldReceive('create')->once()->andReturn(
-                new CentralKitchenResource($centralKitchen)
+                new CentralKitchen()
             );
         });
 
@@ -37,7 +34,7 @@ class CentralKitchenServiceTest extends TestCase
             'code',
             'name'
         ));
-        self::assertInstanceOf(CentralKitchenResource::class, $result);
+        self::assertInstanceOf(CentralKitchen::class, $result);
         self::assertEquals($result['id'], $centralKitchen->id);
         print_r($result);
     }
@@ -45,12 +42,8 @@ class CentralKitchenServiceTest extends TestCase
     public function testFailedCreateCentralKitchen()
     {
 
-        $centralKitchen = new CentralKitchen([
-            'id' => fake()->uuid(),
-            'name' => fake()->name,
-        ]);
 
-        $mock = $this->mock(\App\Contract\CentralKitchen\CentralKitchenRepository::class,function (MockInterface $mock) use ($centralKitchen) {
+        $mock = $this->mock(CentralKitchenRepository::class, function (MockInterface $mock) {
             $mock->shouldReceive('create')->never();
         });
 

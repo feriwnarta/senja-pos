@@ -9,6 +9,10 @@ use Livewire\Component;
 class ListCentralKitchen extends Component
 {
 
+    public function view(string $id)
+    {
+        $this->redirect("/central-kitchen/list-central-kitchen/view/$id", true);
+    }
 
     public function render()
     {

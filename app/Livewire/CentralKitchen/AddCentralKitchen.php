@@ -34,9 +34,12 @@ class AddCentralKitchen extends Component
         $service = new CentralKitchenService($repository);
         $dto = new CentralKitchenDTO($this->code, $this->name);
 
-        $centralKitchenResource = $service->create($dto);
+        $result = $service->create($dto);
 
-        $this->js("alert('success create central kitchen')");
+        $this->reset();
+        $this->redirect("/central-kitchen/list-central-kitchen/view/{$result->id}");
+        notify()->success('Sukses buat central kitchen');
+
     }
 
 }

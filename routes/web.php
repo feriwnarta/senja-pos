@@ -4,6 +4,7 @@ use App\Livewire\CentralKitchen\AddCentralKitchen;
 use App\Livewire\CentralKitchen\ListCentralKitchen;
 use App\Livewire\CentralKitchen\Production;
 use App\Livewire\CentralKitchen\ProductionDetail;
+use App\Livewire\CentralKitchen\ViewCentralKitchen;
 use App\Livewire\Composition\CreateItem;
 use App\Livewire\Composition\CreateRecipe;
 use App\Livewire\Composition\Item;
@@ -78,6 +79,7 @@ Route::get('warehouse/transaction/detail-out/', TransactionDetail::class)->name(
 Route::get('warehouse/transaction/detail-receipt/', TransactionDetailReceipt::class)->name('warehouse-transaction-detail-receipt');
 
 Route::get('central-kitchen/list-central-kitchen', ListCentralKitchen::class)->name('list-central-kitchen');
+Route::get('central-kitchen/list-central-kitchen/view/{centralKitchen}', ViewCentralKitchen::class)->name('view-central-kitchen');
 Route::get('central-kitchen/list-central-kitchen/add-central-kitchen', AddCentralKitchen::class)->name('add-central-kitchen');
 Route::get('central-kitchen/production', Production::class)->name('central-kitchen-production');
 Route::get('central-kitchen/production/detail-production', ProductionDetail::class)->name('central-kitchen-production-detail');

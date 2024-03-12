@@ -3,9 +3,7 @@
 namespace App\Repository\CentralKitchen;
 
 use App\Dto\CentralKitchenDTO;
-use App\Http\Resources\CentralKitchenResource;
 use App\Models\CentralKitchen;
-use Illuminate\Support\Facades\Log;
 
 class CentralKitchenRepository implements \App\Contract\CentralKitchen\CentralKitchenRepository
 {
@@ -15,7 +13,7 @@ class CentralKitchenRepository implements \App\Contract\CentralKitchen\CentralKi
         // TODO: Implement show() method.
     }
 
-    public function create(CentralKitchenDTO $centralKitchenDTO): CentralKitchenResource
+    public function create(CentralKitchenDTO $centralKitchenDTO): CentralKitchen
     {
         $centralKitchen = new CentralKitchen();
         $centralKitchen->code = $centralKitchenDTO->getCode();
@@ -25,7 +23,7 @@ class CentralKitchenRepository implements \App\Contract\CentralKitchen\CentralKi
         $centralKitchen->email = $centralKitchenDTO->getEmail();
         $centralKitchen->save();
 
-        return new CentralKitchenResource($centralKitchen);
+        return $centralKitchen;
 
     }
 }

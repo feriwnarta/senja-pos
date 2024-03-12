@@ -7,21 +7,12 @@
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        Buat central kitchen baru
+                        Detail central kitchen
                     </div>
                 </div>
 
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
-
-
-                    <div class="dropdown margin-left-10">
-                        <button type="btn"
-                                class="btn btn-text-only-secondary btn-nav margin-left-10"
-                                @click="$dispatch('cancel-edit-warehouse')">
-                            Batal
-                        </button>
-                    </div>
 
 
                     <button type="btn"
@@ -30,7 +21,7 @@
                     >
                         <span wire:loading wire:target="save" class="spinner-border text-warning" role="status">
                         </span>
-                        Simpan
+                        Update
                     </button>
 
 
@@ -47,70 +38,66 @@
                     {{-- KODE OUTLET --}}
                     <div class="container-input-default">
                         <label for="warehouseInput"
-                               class="form-label input-label">Kode central kitchen</label>
+                               class="form-label input-label">Kode</label>
 
                         <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="CKCHS01"
-                               wire:model.live.debounce.600ms="code">
-                        @error('code') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                               id="warehouseInput" value="{{ $centralKitchen->code }}" disabled
+                        >
 
                     </div>
 
                     {{-- NAMA OUTLET --}}
                     <div class="container-input-default margin-top-24">
                         <label for="warehouseInput"
-                               class="form-label input-label">Nama central kitchen</label>
+                               class="form-label input-label">Nama</label>
 
                         <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="Central kitchen poris"
-                               wire:model.live.debounce.600ms="name">
-                        @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                               id="warehouseInput" value="{{ $centralKitchen->name }}" disabled
+                        >
 
                     </div>
 
                     {{-- ALAMAT OUTLET --}}
                     <div class="container-input-default margin-top-24">
                         <label for="warehouseInput"
-                               class="form-label input-label">Alamat central kitchen</label>
+                               class="form-label input-label">Alamat</label>
 
                         <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <input type="name" class="form-control input-default"
-                               id="warehouseInput" placeholder="Jl poris indah"
-                               wire:model.live.debounce.600ms="address">
-                        @error('address') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                               id="warehouseInput"
+                               value="{{ $centralKitchen->address }}" disabled
+                        >
 
                     </div>
 
                     {{-- NOMOR TELPON OUTLET --}}
                     <div class="container-input-default margin-top-24">
                         <label for="warehouseInput"
-                               class="form-label input-label">Nomor telpon central kitchen</label>
+                               class="form-label input-label">Nomor telpon</label>
 
                         <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <input type="number" class="form-control input-default"
-                               id="warehouseInput" placeholder="08xxxxxxxxx"
-                               wire:model.live.debounce.600ms="phone">
-                        @error('phone') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                               id="warehouseInput" value="{{ $centralKitchen->phone }}" disabled
+                        >
 
                     </div>
 
                     {{-- EMAIL OUTLET --}}
                     <div class="container-input-default margin-top-24">
                         <label for="warehouseInput"
-                               class="form-label input-label">Email central kitchen</label>
+                               class="form-label input-label">Email</label>
 
                         <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                         <input type="email" class="form-control input-default"
-                               id="warehouseInput" placeholder="cahayasenja.bandung@gmail.com"
-                               wire:model.live.debounce.600ms="email">
-                        @error('email') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                               id="warehouseInput" value="{{ $centralKitchen->email }}" disabled
+                        >
 
                     </div>
 
@@ -122,7 +109,3 @@
 
 
 </x-page-layout>
-
-@section('footer-script')
-
-@endsection

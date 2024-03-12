@@ -69,7 +69,7 @@
                         </div>
                         <a href="/composition/unit" wire:navigate>
                             <button
-                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('unit') || Route::is('view-unit') ? 'inner-menu-active' : ''}}"
+                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('unit')|| Route::is('add-unit') || Route::is('view-unit') ? 'inner-menu-active' : ''}}"
                                 type="button"
                                 id="">
                                 {{ __('sidebar_locale.gudang.unit') }}
@@ -159,7 +159,7 @@
 
 
                 @php
-                    $collapseCk = Route::is(['list-central-kitchen', 'add-central-kitchen', 'central-kitchen-production', 'central-kitchen-production-detail']);
+                    $collapseCk = Route::is(['list-central-kitchen', 'view-central-kitchen', 'add-central-kitchen', 'central-kitchen-production', 'central-kitchen-production-detail']);
                 @endphp
 
                 <div class="accordion-item">
@@ -180,7 +180,7 @@
                         <div class="accordion-body">
                             <a href="/central-kitchen/list-central-kitchen" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-central-kitchen') || Route::is('add-central-kitchen') ? 'inner-menu-active' : ''}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-central-kitchen')|| Route::is('view-central-kitchen') || Route::is('add-central-kitchen') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     Daftar dapur sentral
