@@ -204,9 +204,10 @@ class CreateRecipe extends Component
         if ($this->type == 'recipeSemi') {
             $result = $this->recipeService->saveRecipeItem($this->code, $this->selectMenuOrMaterial, $recipes);
 
-            if ($result) {
-                notify()->success('Berhasil buat resep', 'Sukses');
+            if (!is_null($result)) {
                 $this->reset('code', 'ingredients', 'selectMenuOrMaterial', 'totalAvg', 'totalLastCost');
+                $this->redirect("/composition/recipe/view/{$result->id}");
+                notify()->success('Berhasil buat resep', 'Sukses');
                 return;
             }
 
@@ -216,6 +217,6 @@ class CreateRecipe extends Component
         }
     }
 
-    
+
 }
 

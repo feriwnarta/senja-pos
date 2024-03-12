@@ -10,6 +10,8 @@ use App\Livewire\Composition\Item;
 use App\Livewire\Composition\Recipe;
 use App\Livewire\Composition\ViewCategory;
 use App\Livewire\Composition\ViewItem;
+use App\Livewire\Composition\ViewRecipeItem;
+use App\Livewire\Composition\ViewUnit;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
 use App\Livewire\Purchase\CreateSupplier;
@@ -25,7 +27,6 @@ use App\Livewire\Warehouse\AddWarehouse;
 use App\Livewire\Warehouse\CategoryItem;
 use App\Livewire\Warehouse\CreateTransaction;
 use App\Livewire\Warehouse\DetailCategoryItem;
-use App\Livewire\Warehouse\DetailUnit;
 use App\Livewire\Warehouse\DetailWarehouse;
 use App\Livewire\Warehouse\ListWarehouse;
 use App\Livewire\Warehouse\StockItem;
@@ -59,8 +60,9 @@ Route::get("composition/category-item/detail-category", DetailCategoryItem::clas
 
 Route::get("composition/unit", Unit::class)->name('unit');
 Route::get("composition/unit/add-unit", AddUnit::class)->name('add-unit');
-Route::get("composition/unit/detail-unit", DetailUnit::class)->name('detail-unit');
+Route::get("composition/unit/view/{unit}", ViewUnit::class)->name('view-unit');
 Route::get("composition/recipe", Recipe::class)->name('recipe');
+Route::get("composition/recipe/view/{recipeItem}", ViewRecipeItem::class)->name('view-recipe');
 Route::get("composition/recipe/create-recipe", CreateRecipe::class)->name('create-recipe');
 
 // Warehouse

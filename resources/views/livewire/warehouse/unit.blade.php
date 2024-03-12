@@ -46,6 +46,7 @@
                 <tbody>
                 @foreach($units as $unit)
                     <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                        wire:click="view('{{ $unit->id }}')"
                     >
                         <td>{{ $unit->code }}</td>
                         <td>{{ $unit->name }}</td>

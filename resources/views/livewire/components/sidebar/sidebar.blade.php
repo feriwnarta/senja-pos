@@ -34,7 +34,7 @@
                 </div>
 
                 @php
-                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'detail-unit', 'recipe', 'create-recipe']);
+                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'view-unit', 'recipe', 'view-recipe', 'create-recipe'])
                 @endphp
 
                 <div class="accordion-item">
@@ -69,23 +69,23 @@
                         </div>
                         <a href="/composition/unit" wire:navigate>
                             <button
-                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('unit') ? 'inner-menu-active' : ''}}"
+                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('unit') || Route::is('view-unit') ? 'inner-menu-active' : ''}}"
                                 type="button"
                                 id="">
                                 {{ __('sidebar_locale.gudang.unit') }}
                             </button>
                         </a>
-                        <a href="/composition/decomposition" wire:navigate>
-                            <button
-                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('Dekomposisi')  ? 'inner-menu-active' : ''}}"
-                                type="button"
-                                id="">
-                                Dekomposisi
-                            </button>
-                        </a>
+                        {{--                        <a href="/composition/decomposition" wire:navigate>--}}
+                        {{--                            <button--}}
+                        {{--                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('Dekomposisi')  ? 'inner-menu-active' : ''}}"--}}
+                        {{--                                type="button"--}}
+                        {{--                                id="">--}}
+                        {{--                                Dekomposisi--}}
+                        {{--                            </button>--}}
+                        {{--                        </a>--}}
                         <a href="/composition/recipe" wire:navigate>
                             <button
-                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('recipe') || Route::is('create-recipe') ? 'inner-menu-active' : ''}}"
+                                class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('recipe') || Route::is('view-recipe') || Route::is('create-recipe') ? 'inner-menu-active' : ''}}"
                                 type="button"
                                 id="">
                                 Resep

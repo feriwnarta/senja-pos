@@ -55,7 +55,6 @@
         <table id="" class="table borderless table-hover margin-top-28">
             <thead class="table-head-color">
             <tr>
-                <th scope="col">Gambar</th>
                 <th scope="col">Kode</th>
                 <th scope="col">Name</th>
                 <th scope="col">Unit</th>
@@ -67,9 +66,6 @@
             @foreach($items as $item)
                 <tr class="items-table-head-color" id="po1" style="cursor: pointer"
                     wire:click="view('{{ $item->id }}')">
-                    <td>
-                        <img width="100" src="{{ asset("{$item->thumbnail}") }}">
-                    </td>
                     <td>{{ $item->code }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->unit->name }}</td>

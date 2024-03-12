@@ -43,8 +43,6 @@
     <div id="content-loaded">
         <x-notify::notify/>
         <div class="row">
-
-
             @if($type == 'recipeMenu')
                 {{-- Tambah kategori baru --}}
                 <div class="col-sm-4 offset-1">
@@ -127,18 +125,6 @@
                         </div>
                     </div>
 
-                    <div class="margin-top-20">
-                        <label for="description" class="form-label">Bahan menghasilkan dekomposisi</label>
-                        <div id="divider" class="margin-symmetric-vertical-6"></div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value=""
-                                   id="flexCheckDefault" wire:model.live.debounce.600ms="isMultipleSupplier"
-                            >
-                            <label class="form-check-label margin-left-8" for="flexCheckDefault">
-                                Dekomposisi
-                            </label>
-                        </div>
-                    </div>
                 </div>
             @endif
 

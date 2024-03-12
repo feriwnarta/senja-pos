@@ -3,6 +3,7 @@
 namespace App\Service;
 
 
+use App\Models\RecipeItem;
 use Illuminate\Database\Eloquent\Collection;
 
 interface RecipeService
@@ -14,7 +15,7 @@ interface RecipeService
     public function selectMenuOrMaterial(bool $isMenu): ?Collection;
 
 
-    public function saveRecipeItem(string $code, string $itemsId, array $recipes);
+    public function saveRecipeItem(string $code, string $itemsId, array $recipes): ?RecipeItem;
 
 
 }

@@ -176,9 +176,9 @@ class CreateItem extends Component
             $this->lastCost
         );
 
-        if ($item == 'success') {
+        if (!is_null($item)) {
             $this->reset('code', 'name', 'description', 'unit', 'inStock', 'minimumStock', 'avgCost', 'lastCost', 'placement', 'category', 'thumbnail');
-            $this->redirect("/composition/item/view/{$item->id}", true);
+            $this->redirect("/composition/item/view/{$item}", true);
             notify()->success('Berhasil buat item', 'Sukses');
             return;
         }

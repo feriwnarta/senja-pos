@@ -52,7 +52,7 @@ class RecipeServiceImpl implements RecipeService
 
     }
 
-    public function saveRecipeItem(string $code, string $itemsId, array $recipes): bool
+    public function saveRecipeItem(string $code, string $itemsId, array $recipes): ?RecipeItem
     {
         try {
             DB::beginTransaction();
@@ -60,13 +60,13 @@ class RecipeServiceImpl implements RecipeService
             $recipe->recipeDetail()->createMany($recipes);
             DB::commit();
 
-            return true;
+            return $recipe;
         } catch (Exception $exception) {
             DB::rollBack();
             Log::error('gagal menyimpan resep item');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
-            return false;
+            return null;
         }
     }
 }

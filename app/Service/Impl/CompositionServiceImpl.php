@@ -214,7 +214,7 @@ class CompositionServiceImpl implements CompositionService
             Log::debug($stock);
 
             DB::commit();
-            return 'success';
+            return $item->id;
 
         } catch (Exception $exception) {
             DB::rollBack();
