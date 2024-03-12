@@ -38,7 +38,28 @@
     </x-slot>
 
     <div id="content-loaded">
-        {{--        <livewire:category-item-table wire:model="search"/>--}}
+        <table id="" class="table borderless table-hover margin-top-28">
+            <thead class="table-head-color">
+            <tr>
+                <th scope="col">Kode</th>
+                <th scope="col">Unit</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($categories as $category)
+                <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                    wire:click="view('{{ $category->id }}')"
+                >
+                    <td>{{ $category->code }}</td>
+                    <td>{{ $category->name }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+
+        @if(isset($categories))
+            {{ $categories->links() }}
+        @endif
     </div>
 
 </x-page-layout>

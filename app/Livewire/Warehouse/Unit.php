@@ -16,6 +16,6 @@ class Unit extends Component
 
     public function render()
     {
-        return view('livewire.warehouse.unit');
+        return view('livewire.warehouse.unit', ['units' => \App\Models\Unit::paginate(10)]);
     }
 }

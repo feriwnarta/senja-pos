@@ -55,6 +55,9 @@ class CreateItem extends Component
     public $thumbnail;
 
     public string $routeProduce = 'PRODUCECENTRALKITCHEN';
+    // tipe outlet / central kitchen
+    public string $type = '';
+
     private CompositionService $compositionService;
 
     public function mount()
@@ -87,6 +90,7 @@ class CreateItem extends Component
 
         if ($outlet != '') {
             $this->isOutlet = true;
+            $this->type = $outlet->name;
             return;
         }
 
@@ -97,7 +101,7 @@ class CreateItem extends Component
         if ($centralKitchen != '') {
             // found
             $this->isOutlet = false;
-
+            $this->type = $centralKitchen->name;
             return;
         }
 
@@ -151,9 +155,7 @@ class CreateItem extends Component
         $result = null;
 
         if ($this->thumbnail != null) {
-            $result = $this->thumbnail->store('public/item-image');
-
-
+            $result = $this->thumbnail->store('item-image');
         }
 
         $item = $this->compositionService->saveItem(
@@ -175,8 +177,9 @@ class CreateItem extends Component
         );
 
         if ($item == 'success') {
-            notify()->success('Berhasil buat item', 'Sukses');
             $this->reset('code', 'name', 'description', 'unit', 'inStock', 'minimumStock', 'avgCost', 'lastCost', 'placement', 'category', 'thumbnail');
+            $this->redirect("/composition/item/view/{$item->id}", true);
+            notify()->success('Berhasil buat item', 'Sukses');
             return;
         }
 

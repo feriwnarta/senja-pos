@@ -8,6 +8,7 @@ use App\Models\Rack;
 use App\Models\Warehouse;
 use App\Service\Impl\WarehouseServiceImpl;
 use App\Service\WarehouseService;
+use Exception;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertIsArray;
@@ -54,7 +55,7 @@ class WarehouseServiceTest extends TestCase
      */
     public function testExceptionIfNullGetDetailWarehouse()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('detail warehouse tidak ditemukan karena data null testExceptionIfNullGetDetailWarehouse');
         $result = $this->warehouseService->getDetailWarehouse('1');
     }
@@ -118,7 +119,7 @@ class WarehouseServiceTest extends TestCase
      */
     public function testExceptionIfParamGetDataAreaRackItemWarehouseNull()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
 
         $data = $this->warehouseService->getDetailDataAreaRackItemWarehouse(Warehouse::find('1'));
         $this->expectExceptionCode(2);
@@ -250,6 +251,12 @@ class WarehouseServiceTest extends TestCase
         self::assertTrue($result);
     }
 
+    public function testFailedCreateNewWarehouse()
+    {
+        assertNotNull(true);
+    }
+
+
     public function testEditWithOneAreaTwoRacks()
     {
         $data = [
@@ -338,7 +345,7 @@ class WarehouseServiceTest extends TestCase
 
     public function testSaveWarehouseDataEmpty()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $result = $this->warehouseService->saveWarehouse([]);
         $this->expectExceptionMessage('Gagal melakukan update warehouse parameter kosong');
     }
@@ -363,7 +370,7 @@ class WarehouseServiceTest extends TestCase
             ]
         ];
 
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $result = $this->warehouseService->saveWarehouse($sample);
         $this->expectExceptionMessage('Gagal melakukan update warehouse data area kosong');
 

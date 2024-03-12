@@ -2,10 +2,10 @@
 
 namespace App\Livewire;
 
-use App\Models\Unit;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
-use Livewire\Attributes\Modelable;
+use Livewire\Attributes\On;
 use PowerComponents\LivewirePowerGrid\Column;
 use PowerComponents\LivewirePowerGrid\Exportable;
 use PowerComponents\LivewirePowerGrid\Footer;
@@ -15,34 +15,27 @@ use PowerComponents\LivewirePowerGrid\PowerGridColumns;
 use PowerComponents\LivewirePowerGrid\PowerGridComponent;
 use PowerComponents\LivewirePowerGrid\Traits\WithExport;
 
-final class UnitTable extends PowerGridComponent
+final class CategoryTable extends PowerGridComponent
 {
     use WithExport;
-
-    public bool $deferLoading = true; // default false
-
-    public string $loadingComponent = 'components.loading';
-
-    #[Modelable]
-    public string $search;
 
     public function setUp(): array
     {
 
         return [
-            Exportable::make('unit-data')
+            Exportable::make('export')
                 ->striped()
                 ->type(Exportable::TYPE_XLS, Exportable::TYPE_CSV),
             Header::make()->showSearchInput(),
             Footer::make()
-                ->showPerPage(7)
+                ->showPerPage()
                 ->showRecordCount(),
         ];
     }
 
     public function datasource(): Builder
     {
-        return Unit::query();
+        return Category::query();
     }
 
     public function relationSearch(): array
@@ -53,42 +46,49 @@ final class UnitTable extends PowerGridComponent
     public function addColumns(): PowerGridColumns
     {
         return PowerGrid::columns()
-            ->addColumn('created_at_formatted', fn(Unit $model) => Carbon::createFromFormat('Y-m-d H:i:s', $model->created_at)->locale('id_ID')->isoFormat('D MMMM Y'));
+            ->addColumn('id')
+            /** Example of custom column using a closure **/
+            ->addColumn('id_lower', fn(Category $model) => strtolower(e($model->id)))
+            ->addColumn('code')
+            ->addColumn('name')
+            ->addColumn('created_at_formatted', fn(Category $model) => Carbon::createFromFormat('Y-m-d H:i:s', $model->created_at)->locale('id_ID')->isoFormat('D MMMM Y'));
     }
 
     public function columns(): array
     {
         return [
-            Column::add()->title('Kode unit')->field('code', 'code')->searchable()->sortable(),
-            Column::add()->title('Unit')->field('name')->searchable()->sortable(),
+
+            Column::make('Code', 'code')
+                ->sortable()
+                ->searchable(),
+
+            Column::make('Name', 'name')
+                ->sortable()
+                ->searchable(),
+
             Column::make('Created at', 'created_at_formatted', 'created_at')
                 ->sortable()
                 ->searchable(),
+
         ];
     }
 
     public function filters(): array
     {
         return [
-
+//            Filter::inputText('id')->operators(['contains']),
+//            Filter::inputText('code')->operators(['contains']),
+//            Filter::inputText('name')->operators(['contains']),
+//            Filter::datetimepicker('created_at'),
         ];
     }
 
-//    #[On('detail')]
-//    public function detail($id): void
-//    {
-//        $this->redirect("/warehouse/unit/detail-unit?q=$id", true);
-//    }
+    #[On('edit')]
+    public function edit($rowId): void
+    {
+        $this->js('alert(' . $rowId . ')');
+    }
 
-//    public function actions(Unit $row): array
-//    {
-//        return [
-//            Button::add('edit')
-//                ->slot('Detail')
-//                ->id()
-//                ->class('btn btn-text-only-primary')->dispatch('detail', ['id' => $row->id])
-//        ];
-//    }
 
     /*
     public function actionRules($row): array

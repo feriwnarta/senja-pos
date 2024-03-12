@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,7 +26,12 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->reportable(function (Throwable $e) {
-            //
+            Log::error(json_encode([
+                'message' => $e->getMessage(),
+                'user' => '{user}',
+                'date' => Carbon::now()->toString(),
+                'trace' => $e->getTraceAsString()
+            ]));
         });
     }
 }

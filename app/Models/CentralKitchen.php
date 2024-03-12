@@ -59,4 +59,5 @@ class CentralKitchen extends Model
     {
         return $this->hasMany(CentralProduction::class, 'central_kitchens_id');
     }
+    
 }

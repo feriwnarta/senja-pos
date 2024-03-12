@@ -8,6 +8,8 @@ use App\Livewire\Composition\CreateItem;
 use App\Livewire\Composition\CreateRecipe;
 use App\Livewire\Composition\Item;
 use App\Livewire\Composition\Recipe;
+use App\Livewire\Composition\ViewCategory;
+use App\Livewire\Composition\ViewItem;
 use App\Livewire\Outlet\AddOutlet;
 use App\Livewire\Outlet\ListOutlet;
 use App\Livewire\Purchase\CreateSupplier;
@@ -46,9 +48,11 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('composition/item', Item::class)->name('composition-item');
+Route::get('composition/item/view/{item}', ViewItem::class)->name('composition-item');
 Route::get('composition/item/create-item', CreateItem::class)->name('composition-create-item');
 
 Route::get("composition/category-item", CategoryItem::class)->name('category-item');
+Route::get("composition/category-item/view/{category}", ViewCategory::class)->name('category-item');
 Route::get("composition/category-item/add-category", AddCategory::class)->name('add-category');
 Route::get("composition/category-item/detail-category", DetailCategoryItem::class)->name('detail-category');
 

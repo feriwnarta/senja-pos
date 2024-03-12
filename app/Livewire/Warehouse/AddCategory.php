@@ -233,10 +233,10 @@ class AddCategory extends Component
             return;
         }
 
-        notify()->success('Berhasil membuat kategori', 'Sukses');
-
         $this->reset();
+        $this->redirect("/composition/category-item/view/{$result->id}", true);
 
+        notify()->success('Berhasil membuat kategori', 'Sukses');
     }
 
 

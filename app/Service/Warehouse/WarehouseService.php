@@ -5,8 +5,8 @@ namespace App\Service\Warehouse;
 use App\Contract\Warehouse\WarehouseRepository;
 use App\Dto\WarehouseDTO;
 use App\Dto\WarehouseEnum;
-use App\Http\Resources\WarehouseResource;
 use App\Models\Warehouse;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -27,18 +27,18 @@ class WarehouseService implements \App\Contract\Warehouse\WarehouseService
      * buat warehouse baru untuk outlet atau central kitchen berdasarkan enum warehouse dto
      * @return void
      */
-    public function create(WarehouseDTO $warehouseDTO)
+    public function create(?WarehouseDTO $warehouseDTO): Warehouse
     {
 
         Log::info(json_encode([
-            'message' => 'Membuat warehouse baru'
+            'message' => 'Membuat warehouse baru',
+            'user' => 'user {user}'
         ]));
 
 
         // jika warehouse dto null
-        if(is_null($warehouseDTO)) {
-            Log::error('Warehouse DTO null');
-            report(new \Exception('gagal membuat warehouse dikarenakan warehouse dto null'));
+        if (is_null($warehouseDTO)) {
+            report(new Exception('gagal membuat warehouse dikarenakan warehouse dto null'));
             abort(400);
         }
 
@@ -67,34 +67,32 @@ class WarehouseService implements \App\Contract\Warehouse\WarehouseService
 
             Log::info(json_encode([
                 'message' => 'Berhasil membuat warehouse baru',
+                'user' => '{user}',
+                'warehouseDTO' => $warehouseDTO,
                 'type' => $warehouseDTO->getEnum()->name
             ]));
 
 
             return $resultCreateWarehouse;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
+            Log::error(json_encode([
+                'error' => 'gagal membuat warehouse baru',
+                'warehouseDTO' => $warehouseDTO,
+                'user' => '{user}',
+            ]));
             report($exception);
+            abort(400);
         }
 
     }
 
-    public function createWarehouse(WarehouseDTO $warehouseDTO): Warehouse {
+    public function createWarehouse(WarehouseDTO $warehouseDTO): Warehouse
+    {
         return $this->repository->createWarehouse($warehouseDTO);
     }
 
-    public function getCreateType(WarehouseDTO $warehouseDTO): WarehouseEnum {
-        return $warehouseDTO->getEnum();
-    }
-
-    public function createWarehouseCentral(Warehouse $warehouse, WarehouseDTO $warehouseDTO): array {
-        return $this->repository->createRelationCentral($warehouse, $warehouseDTO);
-    }
-
-    public function createWarehouseOutlet(Warehouse $warehouse, WarehouseDTO $warehouseDTO): array {
-        return $this->repository->createRelationOutlet($warehouse, $warehouseDTO);
-    }
-
-    public function createAreaAndRack(WarehouseDTO $warehouseDTO): bool {
+    public function createAreaAndRack(WarehouseDTO $warehouseDTO): bool
+    {
 //        format
 //        $data = [
 //            [
@@ -128,6 +126,21 @@ class WarehouseService implements \App\Contract\Warehouse\WarehouseService
         }
 
         return true;
+    }
+
+    public function getCreateType(WarehouseDTO $warehouseDTO): WarehouseEnum
+    {
+        return $warehouseDTO->getEnum();
+    }
+
+    public function createWarehouseCentral(Warehouse $warehouse, WarehouseDTO $warehouseDTO): array
+    {
+        return $this->repository->createRelationCentral($warehouse, $warehouseDTO);
+    }
+
+    public function createWarehouseOutlet(Warehouse $warehouse, WarehouseDTO $warehouseDTO): array
+    {
+        return $this->repository->createRelationOutlet($warehouse, $warehouseDTO);
     }
 
 

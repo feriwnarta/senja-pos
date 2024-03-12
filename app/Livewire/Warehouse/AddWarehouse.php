@@ -4,20 +4,13 @@ namespace App\Livewire\Warehouse;
 
 use App\Dto\WarehouseDTO;
 use App\Dto\WarehouseEnum;
-use App\Models\Category;
 use App\Models\CategoryItem;
 use App\Models\CentralKitchen;
-use App\Models\Item;
 use App\Models\Outlet;
-use App\Models\Warehouse;
 use App\Repository\Warehuouse\WarehouseRepository;
 use App\Service\Warehouse\WarehouseService;
 use Exception;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Livewire\Attributes\Computed;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -32,8 +25,8 @@ class AddWarehouse extends Component
     public string $codeWarehouse;
     #[Rule('required|min:5|unique:warehouses,name')]
     public string $nameWarehouse;
-    #[Rule('required|min:5')]
-    public string $addressWarehouse;
+    #[Rule('min:5')]
+    public string $addressWarehouse = '';
 
     #[Rule([
         'areas' => 'array',
@@ -117,7 +110,8 @@ class AddWarehouse extends Component
     }
 
 
-    public function handleAreaValidate() {
+    public function handleAreaValidate()
+    {
         $this->validate();
     }
 
@@ -138,7 +132,6 @@ class AddWarehouse extends Component
             $this->addressWarehouse,
             ($this->state == 'outlet') ? WarehouseEnum::OUTLET : WarehouseEnum::CENTRAL
         );
-
 
 
         $repository = new WarehouseRepository();
@@ -194,7 +187,6 @@ class AddWarehouse extends Component
 
         return view('livewire.warehouse.add-warehouse');
     }
-
 
 
 }

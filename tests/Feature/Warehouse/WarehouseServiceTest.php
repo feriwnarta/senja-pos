@@ -10,6 +10,7 @@ use App\Models\Area;
 use App\Models\Rack;
 use App\Models\Warehouse;
 use App\Service\Warehouse\WarehouseService;
+use Exception;
 use Mockery\MockInterface;
 use Tests\TestCase;
 use function PHPUnit\Framework\assertEquals;
@@ -35,24 +36,6 @@ class WarehouseServiceTest extends TestCase
             ]
         ]
     ];
-
-    protected function setUp():void
-    {
-        parent::setUp();
-
-
-
-        $this->warehouseDTO = new WarehouseDTO(
-            fake()->uuid,
-            fake()->countryCode(),
-            fake()->name,
-            $this->data,
-            '',
-            WarehouseEnum::CENTRAL
-        );
-
-
-    }
 
     public function testGetCreateTypeCentral()
     {
@@ -95,7 +78,7 @@ class WarehouseServiceTest extends TestCase
         $warehouse = new Warehouse();
         $warehouse->id = fake()->uuid;
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($warehouse) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($warehouse) {
 
             $mock->shouldReceive('createWarehouse')->once()->andReturn($warehouse);
         });
@@ -106,14 +89,13 @@ class WarehouseServiceTest extends TestCase
         assertEquals($warehouse->id, $result->id);
     }
 
-
     public function testCreateWarehouseCentral()
     {
 
         $warehouse = new Warehouse();
         $warehouse->id = fake()->uuid;
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($warehouse) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($warehouse) {
             $mock->shouldReceive('createRelationCentral')->once()->andReturn([]);
         });
 
@@ -130,7 +112,7 @@ class WarehouseServiceTest extends TestCase
         $warehouse = new Warehouse();
         $warehouse->id = fake()->uuid;
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($warehouse) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($warehouse) {
             $mock->shouldReceive('createRelationCentral')->once()->andReturn([]);
         });
 
@@ -152,7 +134,7 @@ class WarehouseServiceTest extends TestCase
         $rack->id = fake()->uuid;
 
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($area, $rack) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($area, $rack) {
             $mock->shouldReceive('createAreas')->twice()->andReturn($area);
             $mock->shouldReceive('createRacks')->times(3)->andReturn($rack);
         });
@@ -173,7 +155,7 @@ class WarehouseServiceTest extends TestCase
         $rack->id = fake()->uuid;
 
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($area, $rack) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($area, $rack) {
             $mock->shouldReceive('createAreas')->never()->andReturn($area);
             $mock->shouldReceive('createRacks')->never()->andReturn($rack);
         });
@@ -184,7 +166,6 @@ class WarehouseServiceTest extends TestCase
         $this->warehouseDTO->setId(fake()->uuid);
         $this->warehouseService->createAreaAndRack($this->warehouseDTO);
     }
-
 
     public function testCreateFullCentralWarehouse()
     {
@@ -197,7 +178,7 @@ class WarehouseServiceTest extends TestCase
         $warehouse = new Warehouse();
         $warehouse->id = fake()->uuid;
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($area, $rack, $warehouse) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($area, $rack, $warehouse) {
             $mock->shouldReceive('createWarehouse')->once()->andReturn($warehouse);
             $mock->shouldReceive('createAreas')->twice()->andReturn($area);
             $mock->shouldReceive('createRacks')->times(3)->andReturn($rack);
@@ -210,7 +191,6 @@ class WarehouseServiceTest extends TestCase
 
     }
 
-
     public function testCreateFullCentralWarehouseWithoutRack()
     {
         $area = new Area();
@@ -222,7 +202,7 @@ class WarehouseServiceTest extends TestCase
         $warehouse = new Warehouse();
         $warehouse->id = fake()->uuid;
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($area, $rack, $warehouse) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($area, $rack, $warehouse) {
             $mock->shouldReceive('createWarehouse')->once()->andReturn($warehouse);
             $mock->shouldReceive('createAreas')->twice()->andReturn($area);
             $mock->shouldReceive('createRacks')->times(3)->andReturn($rack);
@@ -244,6 +224,15 @@ class WarehouseServiceTest extends TestCase
 
     }
 
+    public function testFailedCreateCentralWarehouse()
+    {
+        $mock = $this->mock(WarehouseRepository::class);
+
+        $this->warehouseService = new WarehouseService($mock);
+        $this->expectException(Exception::class);
+        $result = $this->warehouseService->create(null);
+
+    }
 
     public function testCreateWarehouseCentralWithoutAddress()
     {
@@ -256,7 +245,7 @@ class WarehouseServiceTest extends TestCase
         $warehouse = new Warehouse();
         $warehouse->id = fake()->uuid;
 
-        $mock = $this->mock(WarehouseRepository::class, function(MockInterface $mock) use ($area, $rack, $warehouse) {
+        $mock = $this->mock(WarehouseRepository::class, function (MockInterface $mock) use ($area, $rack, $warehouse) {
             $mock->shouldReceive('createWarehouse')->once()->andReturn($warehouse);
             $mock->shouldReceive('createAreas')->never()->andReturn($area);
             $mock->shouldReceive('createRacks')->never()->andReturn($rack);
@@ -276,8 +265,22 @@ class WarehouseServiceTest extends TestCase
 
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
 
 
+        $this->warehouseDTO = new WarehouseDTO(
+            fake()->uuid,
+            fake()->countryCode(),
+            fake()->name,
+            $this->data,
+            '',
+            WarehouseEnum::CENTRAL
+        );
+
+
+    }
 
 
 }
