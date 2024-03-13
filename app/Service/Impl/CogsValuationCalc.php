@@ -13,6 +13,9 @@ class CogsValuationCalc extends InventoryValuationCalc
         // TODO: Last cost terakhir
         $totalFirstCost = $initialStock * $initialAvgCost;
 
+        Log::debug('total first cost');
+        Log::debug($initialStock);
+        Log::debug($initialAvgCost);
         Log::debug($totalFirstCost);
 
         return [
@@ -24,8 +27,6 @@ class CogsValuationCalc extends InventoryValuationCalc
             'avg_cost' => $initialAvgCost,
             'last_cost' => $initialLastCost,
         ];
-
-
     }
 
     public function calculateAvgPrice(float $inventoryValue, float $oldQty, float $oldAvgCost, float $incomingQty, float $purchasePrice, bool $isReduce): array

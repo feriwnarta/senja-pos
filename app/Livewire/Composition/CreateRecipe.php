@@ -141,17 +141,19 @@ class CreateRecipe extends Component
     {
         $totalAvg = 0;
         $totalLastCost = 0;
-        foreach ($this->ingredients as $ingredient) {
-            $avg = floatval(str_replace('Rp ', '', $ingredient['avgCost']));
-            $lastCost = floatval(str_replace('Rp ', '', $ingredient['lastCost']));
 
+        foreach ($this->ingredients as $ingredient) {
+            // Menghapus "Rp " dan titik sebagai pemisah ribuan
+            $avg = floatval(str_replace(['Rp ', '.'], '', $ingredient['avgCost']));
+            $lastCost = floatval(str_replace(['Rp ', '.'], '', $ingredient['lastCost']));
+
+            // Menambahkan nilai uang ke dalam total
             $totalAvg += $avg;
             $totalLastCost += $lastCost;
         }
-
-
-        $this->totalAvg = IndonesiaCurrency::formatToRupiah(number_format($totalAvg, 3, '', ''));
-        $this->totalLastCost = IndonesiaCurrency::formatToRupiah(number_format($totalLastCost, 3, '', ''));
+        
+        $this->totalAvg = IndonesiaCurrency::formatToRupiah($totalAvg);
+        $this->totalLastCost = IndonesiaCurrency::formatToRupiah($totalLastCost);
 
     }
 
@@ -172,10 +174,9 @@ class CreateRecipe extends Component
 
         $this->ingredients[$index]['avgCost'] = IndonesiaCurrency::formatToRupiah($avgCost);
         $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah($lastCost);
-        
+
         $this->calculateTotalAvgAndLastCost();
     }
-
 
     public function save()
     {
@@ -219,4 +220,3 @@ class CreateRecipe extends Component
 
 
 }
-

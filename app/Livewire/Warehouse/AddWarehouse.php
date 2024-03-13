@@ -29,7 +29,7 @@ class AddWarehouse extends Component
     public string $addressWarehouse = '';
 
     #[Rule([
-        'areas' => 'array',
+        'areas' => 'array|required',
         'areas.*.area' => 'required|min:2|distinct',
         'areas.*.racks.*' => 'required|min:2|distinct',
     ])]

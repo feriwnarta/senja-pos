@@ -19,7 +19,7 @@ class CreateItem extends Component
 
     #[Rule('required|min:5|unique:items,code')]
     public string $code;
-    #[Rule('required|min:1')]
+    #[Rule('required|min:1|unique:items,name')]
     public string $name;
     public string $description = '';
     #[Rule('required')]
@@ -158,6 +158,10 @@ class CreateItem extends Component
             $result = $this->thumbnail->store('item-image');
         }
 
+        $avgCost = str_replace('.', '', $this->avgCost);
+        $lastCost = str_replace('.', '', $this->lastCost);
+
+
         $item = $this->compositionService->saveItem(
             $this->route,
             $this->routeProduce,
@@ -172,8 +176,8 @@ class CreateItem extends Component
             $this->description,
             $this->category,
             $this->url,
-            $this->avgCost,
-            $this->lastCost
+            $avgCost,
+            $lastCost,
         );
 
         if (!is_null($item)) {

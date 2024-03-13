@@ -33,6 +33,7 @@ class AddCentralKitchen extends Component
         $repository = app()->make(\App\Repository\CentralKitchen\CentralKitchenRepository::class);
         $service = new CentralKitchenService($repository);
         $dto = new CentralKitchenDTO($this->code, $this->name);
+        $dto->setAddress($this->address);
 
         $result = $service->create($dto);
 
