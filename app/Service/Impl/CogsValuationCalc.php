@@ -17,12 +17,12 @@ class CogsValuationCalc extends InventoryValuationCalc
 
         return [
             'incoming_qty' => $initialStock,
-            'incoming_value' => number_format(floatval($totalFirstCost), 3, '', ''),
+            'incoming_value' => $totalFirstCost,
             'price_diff' => 0,
-            'inventory_value' => number_format(floatval($totalFirstCost), 3, '', ''),
+            'inventory_value' => $totalFirstCost,
             'qty_on_hand' => $initialStock,
-            'avg_cost' => number_format(floatval($initialAvgCost), 3, '', ''),
-            'last_cost' => number_format(floatval($initialLastCost), 3, '', ''),
+            'avg_cost' => $initialAvgCost,
+            'last_cost' => $initialLastCost,
         ];
 
 

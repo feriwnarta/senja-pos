@@ -163,16 +163,16 @@ class CreateRecipe extends Component
     public function updateUsage($index)
     {
 
-        $initAvgCost = $this->ingredients[$index]['initAvgCost'];
-        $initAvgCost = str_replace('Rp ', '', $initAvgCost);
-        $initLastCost = $this->ingredients[$index]['initLastCost'];
-        $initLastCost = str_replace('Rp ', '', $initLastCost);
+        $initAvgCost = str_replace('Rp ', '', $this->ingredients[$index]['initAvgCost']);
+        $initLastCost = str_replace('Rp ', '', $this->ingredients[$index]['initLastCost']);
         $usage = $this->ingredients[$index]['usage'];
 
+        $avgCost = floatval($usage) * floatval($initAvgCost);
+        $lastCost = floatval($usage) * floatval($initLastCost);
 
-        $this->ingredients[$index]['avgCost'] = IndonesiaCurrency::formatToRupiah(number_format(floatval($usage) * floatval($initAvgCost), 3, '', ''));
-        $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah(number_format(floatval($usage) * floatval($initLastCost), 3, '', ''));
-
+        $this->ingredients[$index]['avgCost'] = IndonesiaCurrency::formatToRupiah($avgCost);
+        $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah($lastCost);
+        
         $this->calculateTotalAvgAndLastCost();
     }
 

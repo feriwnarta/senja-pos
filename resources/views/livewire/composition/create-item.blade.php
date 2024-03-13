@@ -113,8 +113,10 @@
                                     <div class="container-input-default">
                                         <label for="warehouseInput" class="form-label input-label">Stok saat ini</label>
                                         <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                        <input type="number" class="form-control input-default" id="warehouseInput"
-                                               placeholder="0" wire:model.live.debounce.600ms="inStock">
+                                        <input type="text" class="form-control input-default" id="warehouseInput"
+                                               placeholder="0" wire:model.live.debounce.600ms="inStock"
+                                               x-mask:dynamic="$money($input, ',')"
+                                        >
                                         @error('inStock') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
@@ -136,8 +138,9 @@
                                     <div class="container-input-default">
                                         <label for="warehouseInput" class="form-label input-label">Stok minimum</label>
                                         <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                        <input type="number" class="form-control input-default" id="warehouseInput"
-                                               placeholder="0" wire:model.live.debounce.600ms="minimumStock">
+                                        <input type="text" class="form-control input-default" id="warehouseInput"
+                                               placeholder="0" wire:model.live.debounce.600ms="minimumStock"
+                                               x-mask:dynamic="$money($input, ',')">
                                         @error('minimumStock') <span
                                             textclass="text-danger">{{ $message }}</span> @enderror
                                     </div>

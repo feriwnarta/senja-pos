@@ -156,7 +156,6 @@
                             @foreach($ingredients as $key => $ingredient)
                                 <tr class="row-recipe" wire:key="{{ $ingredient['id'] }}">
                                     <td>
-
                                         <select class="form-select create-recipes-select"
                                                 wire:model="ingredients.{{ $key }}.id"
                                                 wire:change="itemSelected('{{ $key }}', $event.target.value)"
