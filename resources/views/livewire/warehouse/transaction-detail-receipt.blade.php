@@ -17,12 +17,6 @@
 
                     @if($itemReceiptRef->itemReceipt->history->last()->status == 'Draft' || $itemReceiptRef->itemReceipt->history->last()->status == 'Ditolak')
                         <button type="btn"
-                                class="btn btn-text-only-danger btn-nav margin-left-10"
-                                wire:click="reject('{{ $itemReceiptRef->itemReceipt->id }}')"
-                                wire:loading.attr="disabled">Tolak
-                        </button>
-
-                        <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
                                 wire:loading.attr="disabled"
                                 wire:click="acceptItemReceipt('{{ $itemReceiptRef->itemReceipt->id }}', '{{ $itemReceiptRef->itemReceipt->warehouse->id }}', '{{ $itemReceiptRef->itemReceipt->warehouse->warehouse_code }}')">

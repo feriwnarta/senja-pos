@@ -555,6 +555,11 @@
                                                        wire:model="components.{{$key}}.result_qty"
                                                 >
                                             </div>
+                                            @if($errors->has('components.*.result_qty'))
+                                                <span class="text-xs text-red-600">
+                                                    {{ $errors->first('components.*.result_qty') }}
+                                                </span>
+                                            @endif
                                         </div>
                                         <div class="col-md-6">
                                             <div class="container-input-default">
@@ -753,19 +758,16 @@
                             <thead class="sticky-topphp">
                             <tr>
                                 <th>Item</th>
-                                <th>Diminta</th>
                                 <th>Hasil</th>
                                 <th>Unit</th>
                             </tr>
                             </thead>
                             <tbody>
                             @if(isset($production->result))
-                                {{ $production->ending }}
                                 @foreach($production->ending as $resultProduction)
 
                                     <tr wire:key="{{ $loop->iteration }}">
                                         <td>{{ $resultProduction->targetItem->name }}</td>
-                                        <td>{{ $resultProduction->qty_target }}</td>
                                         <td>{{ $resultProduction->qty }}</td>
                                         <td>{{ $resultProduction->targetItem->unit->name }}</td>
                                     </tr>

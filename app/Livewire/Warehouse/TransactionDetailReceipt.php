@@ -104,10 +104,10 @@ class TransactionDetailReceipt extends Component
             Log::error('data item receipt kosong');
             return;
         }
-
         $this->validate([
             'dataItemReceipt.*.qty_accept' => 'numeric|min:1'
         ]);
+
 
         $this->processAcceptReceipt($itemReceiptRefId, $warehouseId, $warehouseCode, $this->dataItemReceipt);
 

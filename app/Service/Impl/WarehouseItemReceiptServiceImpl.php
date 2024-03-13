@@ -43,6 +43,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             throw new Exception('parameter accept receipt tidak valid atau ada yang kosong');
         }
 
+
         // panggil fungsi generate code
         try {
             Log::info($reference);
@@ -53,7 +54,7 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
                 // penerimana dari produksi atau penerimaan dari pembelian
 
                 if ($reference->receivable instanceof CentralProduction) {
-                    return $this->processItemReceiptFromProduction(itemReceiptId: $itemReceiptId, warehouseId: $warehouseId, warehouseCode: $warehouseCode, items: $items);
+                    return $this->processItemReceiptFromProduction($reference->receivable, itemReceiptId: $itemReceiptId, warehouseId: $warehouseId, warehouseCode: $warehouseCode, items: $items);
                 }
 
                 if ($reference->receivable instanceof Purchase) {
@@ -90,9 +91,11 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
      * @return true
      * @throws Exception
      */
-    private function processItemReceiptFromProduction(string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items)
+    private function processItemReceiptFromProduction(CentralProduction $reference, string $itemReceiptId, string $warehouseId, string $warehouseCode, array $items)
     {
-        DB::transaction(function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items) {
+        DB::transaction(function () use ($itemReceiptId, $warehouseId, $warehouseCode, $items, $reference) {
+
+
             $resultGenerateCodeData = $this->generateCodeReceipt($itemReceiptId, $warehouseId, $warehouseCode);
 
             // update warehouse receipt
@@ -106,10 +109,13 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
             $this->receiptRepository->creteNewWarehouseItemReceiptHistory($itemReceiptId, 'Menerima penerimaan barang', 'Diterima');
 
             // TODO: naikan stock dan avg cost
+            
+
         });
 
         return true;
     }
+
 
     /**
      * generate kode receipt
@@ -237,5 +243,5 @@ class WarehouseItemReceiptServiceImpl implements WarehouseItemReceiptService
         }
 
     }
-    
+
 }

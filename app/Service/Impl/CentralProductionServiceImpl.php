@@ -470,7 +470,7 @@ class CentralProductionServiceImpl implements CentralProductionService
             // Ambil semua data sekaligus untuk menghindari N+1
             $results = CentralProductionResult::findMany($resultIds)->first();
             $centralProductionResultId = $results->central_productions_id;
-
+            
 
             foreach ($items as $item) {
                 $centralProductionEnding = new CentralProductionEnding();
@@ -589,14 +589,13 @@ class CentralProductionServiceImpl implements CentralProductionService
 
         $itemReceiptDetail = [];
 
-        // Loop melalui data dan update
-        foreach ($items as $item) {
-            // tambahakn ke item receipt detail array
+        foreach ($centralProduction->ending as $ending) {
             $itemReceiptDetail[] = [
-                'items_id' => $item['id'],
-                'qty_send' => $item['result_qty']
+                'items_id' => $ending->target_items_id,
+                'qty_send' => $ending->qty
             ];
         }
+
 
         // Simpan referensi terlebih dahulu ke dalam WarehouseItemReceiptRef
         $itemReceiptRef = $centralProduction->reference()->save(new WarehouseItemReceiptRef());

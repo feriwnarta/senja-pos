@@ -47,7 +47,7 @@ class ProductionDetail extends Component
 
         // proses menerima item yang dikirim
         Log::debug($this->components);
-        
+
 
         if (!isset($this->production) && $this->production == null) {
             $this->production = $this->findProductionById($this->requestId);
@@ -787,9 +787,12 @@ class ProductionDetail extends Component
 
         // validasi result qty
         $this->validate([
-            'components.*.result_qty' => 'required|numeric|min:0']);
+            'components.*.result_qty' => 'required|numeric|min:1'], [
+            'components.*.result_qty' => 'The yield quantity must be greater than 0'
+        ]);
         Log:
         info('Proses selesai produksi');
+        
 
         if (!isset($this->production) && $this->production == null) {
             $this->production = $this->findProductionById($this->requestId);

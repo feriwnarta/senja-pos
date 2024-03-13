@@ -7,6 +7,7 @@ use App\Models\CentralKitchen;
 use App\Models\Rack;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class WarehouseWithCentral extends Seeder
 {
@@ -16,6 +17,31 @@ class WarehouseWithCentral extends Seeder
      */
     public function run(): void
     {
+
+        DB::table('categories')->insert([
+            'id' => fake()->uuid,
+            'code' => 'KTG01',
+            'name' => 'Bahan mentah'
+        ]);
+
+        DB::table('categories')->insert([
+            'id' => fake()->uuid,
+            'code' => 'KTG02',
+            'name' => 'Bahan setengah jadi'
+        ]);
+
+        DB::table('units')->insert([
+            'id' => fake()->uuid,
+            'code' => 'UNIT01',
+            'name' => 'Gram'
+        ]);
+
+        DB::table('units')->insert([
+            'id' => fake()->uuid,
+            'code' => 'UNIT02',
+            'name' => 'Pcs'
+        ]);
+        
         $centralKitchen = new CentralKitchen();
         $centralKitchen->code = 'CENTRAL01';
         $centralKitchen->name = 'Central Poris';
