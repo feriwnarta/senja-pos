@@ -4,6 +4,7 @@ namespace App\Service\Impl;
 
 use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
+use App\Models\CentralProductionEnding;
 use App\Models\CentralProductionResult;
 use App\Models\CentralProductionShipping;
 use App\Models\RequestStock;
@@ -128,15 +129,20 @@ class CentralProductionServiceImpl implements CentralProductionService
                         'target_items_id' => $element['item']['id'],
                         'central_productions_id' => $productionId,
                         'items_id' => $recipe['item_component_id'],
-                        'qty_target' => $recipe['item_component_usage'],
+                        'qty_target' => str_replace('.', '', $recipe['item_component_usage']),
                     ];
                 }
 
                 Log::debug($element);
             }
 
+
             // simpan production result
-            $production->result()->createMany($resultArray);
+            $result = $production->result()->createMany($resultArray);
+
+
+            Log::debug('TOTAL');
+            Log::debug($result);
 
             // update status request stock
 
@@ -408,9 +414,10 @@ class CentralProductionServiceImpl implements CentralProductionService
             $extractItem = array_map(function ($item) {
                 return [
                     'items_id' => $item['item_id'],
-                    'qty_accept' => $item['qty_accept'],
+                    'qty_accept' => str_replace('.', '', $item['qty_accept']),
                 ];
             }, $items);
+
 
             $outbound = CentralKitchenReceipts::create([
                 'warehouse_outbounds_id' => $outboundId,
@@ -461,23 +468,16 @@ class CentralProductionServiceImpl implements CentralProductionService
             $resultIds = array_column($items, 'result_id');
 
             // Ambil semua data sekaligus untuk menghindari N+1
-            $results = CentralProductionResult::findMany($resultIds);
+            $results = CentralProductionResult::findMany($resultIds)->first();
+            $centralProductionResultId = $results->central_productions_id;
 
-            // Loop melalui data dan update
+
             foreach ($items as $item) {
-                $centralProductionResultId = $item['result_id'];
-
-                // Temukan hasil yang sesuai dari $results
-                $result = $results->where('id', $centralProductionResultId)->first();
-
-                // update target quantity
-                if ($result) {
-                    $result->update([
-                        'qty_result' => $item['result_qty'],
-                    ]);
-
-                }
-
+                $centralProductionEnding = new CentralProductionEnding();
+                $centralProductionEnding->central_productions_id = $centralProductionResultId;
+                $centralProductionEnding->target_items_id = $item['id'];
+                $centralProductionEnding->qty = $item['result_qty'];
+                $centralProductionEnding->save();
             }
 
             Log::debug('result ids');

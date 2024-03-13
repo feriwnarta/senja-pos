@@ -278,11 +278,12 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             $inventoryValue = $req['inventory_value'];
                             $oldQty = $req['qty_on_hand'];
                             $oldAvg = $req['avg_cost'];
-                            $incomingQty = $item['qty_send'];
+                            $incomingQty = str_replace('.', '', $item['qty_send']);
                             $purchasePrice = $req['avg_cost'];
 
 
                             $result = $cogsCalc->calculateAvgPrice($inventoryValue, $oldQty, $oldAvg, $incomingQty, $purchasePrice, true);
+
 
                             if (empty($result)) {
                                 throw new Exception('Gagal menghitung nilai inventory valuation');
@@ -308,7 +309,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             WarehouseOutboundItem::where('warehouse_outbounds_id', $item['outboundId'])
                                 ->where('items_id', $id)
                                 ->update([
-                                    'qty_send' => ($item['qty_send'] < 0) ? $item['qty_send'] * -1 : $item['qty_send'],
+                                    'qty_send' => str_replace('.', '', ($item['qty_send'] < 0) ? $item['qty_send'] * -1 : $item['qty_send']),
                                 ]);
 
 

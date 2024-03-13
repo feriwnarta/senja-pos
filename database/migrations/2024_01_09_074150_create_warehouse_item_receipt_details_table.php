@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('warehouse_items_receipts_id')->nullable(false);
             $table->uuid('items_id')->nullable(false);
-            $table->decimal('qty_accept', 10, 2)->nullable(false);
+            $table->decimal('qty_accept', 15, 2)->nullable(false);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
 

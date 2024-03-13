@@ -13,14 +13,14 @@ return new class extends Migration {
         Schema::create('stock_items', function (Blueprint $table) {
             $table->uuid('id')->nullable(false)->primary();
             $table->uuid('items_id')->nullable(false);
-            $table->decimal('incoming_qty', 10, 2)->nullable(true)->default(0.00);
-            $table->decimal('incoming_value', 10, 2)->nullable(true)->default(0.00);
-            $table->decimal('price_diff', 10, 2)->nullable(true)->default(0.00);
-            $table->decimal('inventory_value', 10, 2)->nullable(true)->default(0.00);
-            $table->decimal('qty_on_hand', 10, 2)->nullable(false)->default(0);
-            $table->decimal('avg_cost', 10, 2)->default(0.00);
-            $table->decimal('last_cost', 10, 2)->default(0.00);
-            $table->decimal('minimum_stock', 10, 2)->nullable(true)->default(0.00);
+            $table->decimal('incoming_qty', 15, 2)->nullable(true)->default(0.00);
+            $table->decimal('incoming_value', 15, 2)->nullable(true)->default(0.00);
+            $table->decimal('price_diff', 15, 2)->nullable(true)->default(0.00);
+            $table->decimal('inventory_value', 15, 2)->nullable(true)->default(0.00);
+            $table->decimal('qty_on_hand', 15, 2)->nullable(false)->default(0);
+            $table->decimal('avg_cost', 15, 2)->default(0.00);
+            $table->decimal('last_cost', 15, 2)->default(0.00);
+            $table->decimal('minimum_stock', 15, 2)->nullable(true)->default(0.00);
             $table->foreign('items_id')->references('id')->on('items')->onDelete('cascade');
             $table->uuid('created_by')->nullable(true);
             $table->uuid('updated_by')->nullable(true);

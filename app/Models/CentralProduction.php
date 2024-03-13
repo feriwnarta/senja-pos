@@ -48,6 +48,11 @@ class CentralProduction extends Model
         return $this->hasMany(CentralProductionResult::class, 'central_productions_id');
     }
 
+    public function ending(): HasMany
+    {
+        return $this->hasMany(CentralProductionEnding::class, 'central_productions_id');
+    }
+
     public function outbound(): HasMany
     {
         return $this->hasMany(WarehouseOutbound::class, 'central_productions_id');

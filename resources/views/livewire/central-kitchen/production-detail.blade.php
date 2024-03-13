@@ -303,7 +303,7 @@
                                                             <td>{{ $recipe['item_component_usage'] }}</td>
                                                             <td>{{ $recipe['item_component_unit'] }}</td>
                                                             <td>
-                                                                <input x-mask:dynamic="$money($input, '.')"
+                                                                <input x-mask:dynamic="$money($input, ',', '.')"
                                                                        type="text"
                                                                        class="form-control input-default"
 
@@ -378,7 +378,7 @@
                                                     @foreach($component['components'] as $recipe)
                                                         <tr wire:key="{{ $loop->iteration }}">
                                                             <td>{{ $recipe['name'] }}</td>
-                                                            <td>{{ $recipe['target_qty'] }}</td>
+                                                            <td>{{ number_format($recipe['target_qty'], 0, '.', '.') }}</td>
                                                             <td>{{ $recipe['unit'] }}</td>
                                                         </tr>
                                                     @endforeach
@@ -449,16 +449,16 @@
                             <tbody>
 
                             @if(isset($components))
-
                                 @foreach($components as $key => $component)
 
                                     <tr wire:key="{{ $loop->iteration }}">
                                         <td>{{ $component['name'] }}</td>
-                                        <td>{{ $component['request_qty'] }}</td>
-                                        <td>{{ $component['send_qty'] }}</td>
+                                        <td>{{ number_format($component['request_qty'], 0, '.', '.')  }}</td>
+                                        <td>{{ number_format($component['send_qty'], 0, '.', '.') }}</td>
                                         <td>
-                                            <input type="number" class="form-control input-default"
+                                            <input type="text" class="form-control input-default"
                                                    wire:model="components.{{$key}}.qty_accept"
+                                                   x-mask:dynamic="$money($input, ',', '.')"
                                                 {{ isset($production->requestStock->requestStockHistory) && $production->requestStock->requestStockHistory()->latest()->first()->status != 'Bahan dikirim' ? 'disabled' : '' }}
                                             >
                                         </td>
@@ -512,7 +512,7 @@
                                                     class="form-label input-label">{{ $result['name']}}</label>
                                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
                                                 <input type="text" class="form-control input-default"
-                                                       value="{{ number_format($result['target_qty'], 2, '.', '') }}"
+                                                       value="{{ number_format($result['target_qty'], 0, '.', '.') }}"
                                                        disabled>
 
                                             </div>
@@ -550,7 +550,8 @@
                                                 <label
                                                     class="form-label input-label">{{ $result['name'] }}</label>
                                                 <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                                <input type="number" class="form-control input-default"
+                                                <input type="text" class="form-control input-default"
+                                                       x-mask:dynamic="$money($input, ',', '.')"
                                                        wire:model="components.{{$key}}.result_qty"
                                                 >
                                             </div>
@@ -759,12 +760,13 @@
                             </thead>
                             <tbody>
                             @if(isset($production->result))
+                                {{ $production->ending }}
+                                @foreach($production->ending as $resultProduction)
 
-                                @foreach($production->result as $resultProduction)
                                     <tr wire:key="{{ $loop->iteration }}">
                                         <td>{{ $resultProduction->targetItem->name }}</td>
                                         <td>{{ $resultProduction->qty_target }}</td>
-                                        <td>{{ $resultProduction->qty_result }}</td>
+                                        <td>{{ $resultProduction->qty }}</td>
                                         <td>{{ $resultProduction->targetItem->unit->name }}</td>
                                     </tr>
                                 @endforeach

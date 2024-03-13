@@ -160,12 +160,13 @@ class CreateItem extends Component
 
         $avgCost = str_replace('.', '', $this->avgCost);
         $lastCost = str_replace('.', '', $this->lastCost);
+        $inStock = str_replace('.', '', $this->inStock);
 
 
         $item = $this->compositionService->saveItem(
             $this->route,
             $this->routeProduce,
-            $this->inStock,
+            $inStock,
             $this->minimumStock,
             $result,
             $this->isOutlet,

@@ -191,8 +191,8 @@ class CompositionServiceImpl implements CompositionService
 
             $cogsCalc = app()->make(CogsValuationCalc::class);
 
-            $result = $cogsCalc->initialAvg(floatval($inStock), floatval($avgCost), floatval($lastCost));
 
+            $result = $cogsCalc->initialAvg((floatval($inStock)), floatval($avgCost), floatval($lastCost));
 
             Log::debug($result);
             Log::debug('AVG COST => ' . $result['avg_cost']);

@@ -175,12 +175,14 @@
 
                                     <td>
                                         <input type="number" class="form-control no-border"
-                                               id="exampleFormControlInput1"
+                                               id="usage"
                                                wire:model="ingredients.{{ $key }}.usage"
-                                               wire:change="updateUsage('{{ $key }}')">
+                                               x-on:input="$dispatch('updateUsage', {index: '{{ $key }}'})"
+                                        >
+
                                     </td>
 
-                                    <td class="disabled col-avg-cost">
+                                    <td class=" disabled col-avg-cost">
                                         <input type="text" disabled class="form-control input-disabled-recipes"
                                                id="avgCost" wire:model="ingredients.{{ $key }}.unit.name"
                                         >
@@ -196,10 +198,9 @@
                                                id="lastCost" wire:model="ingredients.{{$key}}.lastCost">
                                     </td>
                                     <td class="delete-recipes">
-                                        <i class="x-icon" onclick="deleteRow(this)"></i>
+                                        <i class="x-icon" wire:click="delete('{{ $key }}')"></i>
                                     </td>
                                 </tr>
-
                             @endforeach
 
 
@@ -236,6 +237,5 @@
 </x-page-layout>
 
 @section('footer-script')
-
 @endsection
 

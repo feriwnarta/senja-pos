@@ -33,11 +33,6 @@ class ProductionDetail extends Component
     public bool $isSaveOnCentral = true;
     private CentralProductionService $productionService;
 
-    public function boot()
-    {
-
-    }
-
     /**
      * lakukan proses validasi item yang diterima oleh central kitchen dari gudang
      * @return void
@@ -52,6 +47,7 @@ class ProductionDetail extends Component
 
         // proses menerima item yang dikirim
         Log::debug($this->components);
+        
 
         if (!isset($this->production) && $this->production == null) {
             $this->production = $this->findProductionById($this->requestId);
@@ -237,7 +233,7 @@ class ProductionDetail extends Component
                                         'item_component_id' => $recipeDetail->item->id,
                                         'item_component_name' => $recipeDetail->item->name,
                                         'item_component_unit' => $recipeDetail->item->unit->name,
-                                        'item_component_usage' => number_format($detail->qty * $recipeDetail->usage, 2, '.', '.'),
+                                        'item_component_usage' => number_format($detail->qty * $recipeDetail->usage, 0, '.', '.'),
                                         'qty_request' => 0,
                                     ];
                                 }
@@ -337,7 +333,7 @@ class ProductionDetail extends Component
                             'name' => $item->item->name,
                             'request_qty' => $item->qty,
                             'send_qty' => $item->qty_send,
-                            'qty_accept' => $item->qty_send,
+                            'qty_accept' => number_format($item->qty_send, 0, '.', '.'),
                             'unit' => $item->item->unit->name,
                         ];
                     });
@@ -376,7 +372,7 @@ class ProductionDetail extends Component
                     'name' => $targetItem->name,
                     'target_qty' => $targetQty,
                     'unit' => $targetItem->unit->name,
-                    'result_qty' => $groupedItems->first()->qty_result,
+                    'result_qty' => number_format($groupedItems->first()->qty_result, 0, '.', '.'),
                 ];
             })->toArray();
 
@@ -455,6 +451,7 @@ class ProductionDetail extends Component
 
         // proses simpan permintaan dari production service
         $componentChecked = $this->filterCheckedItems($this->components);
+
 
         // next step
         try {
@@ -799,6 +796,7 @@ class ProductionDetail extends Component
         }
 
         $productionId = $this->production->id;
+
 
         $this->storeResultProduction($this->components, $productionId, $this->note);
     }

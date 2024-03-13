@@ -7,6 +7,7 @@ use App\Service\RecipeService;
 use App\Utils\IndonesiaCurrency;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -151,7 +152,7 @@ class CreateRecipe extends Component
             $totalAvg += $avg;
             $totalLastCost += $lastCost;
         }
-        
+
         $this->totalAvg = IndonesiaCurrency::formatToRupiah($totalAvg);
         $this->totalLastCost = IndonesiaCurrency::formatToRupiah($totalLastCost);
 
@@ -162,20 +163,31 @@ class CreateRecipe extends Component
      * @param $index
      * @return void
      */
+    #[On('updateUsage')]
     public function updateUsage($index)
     {
-
-        $initAvgCost = str_replace('Rp ', '', $this->ingredients[$index]['initAvgCost']);
-        $initLastCost = str_replace('Rp ', '', $this->ingredients[$index]['initLastCost']);
         $usage = $this->ingredients[$index]['usage'];
+        $usage = floatval($usage);
 
-        $avgCost = floatval($usage) * floatval($initAvgCost);
-        $lastCost = floatval($usage) * floatval($initLastCost);
+
+        $initAvgCost = floatval(str_replace(['Rp ', '.'], '', $this->ingredients[$index]['initAvgCost']));
+        $initLastCost = floatval(str_replace(['Rp ', '.'], '', $this->ingredients[$index]['initLastCost']));
+
+
+        $avgCost = floatval($initAvgCost * $usage);
+        $lastCost = floatval($usage * $initLastCost);
+
 
         $this->ingredients[$index]['avgCost'] = IndonesiaCurrency::formatToRupiah($avgCost);
         $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah($lastCost);
 
         $this->calculateTotalAvgAndLastCost();
+    }
+
+    #[On('changeInput')]
+    public function input()
+    {
+        dd('asd');
     }
 
     public function save()
@@ -216,6 +228,17 @@ class CreateRecipe extends Component
             $this->reset('code', 'ingredients', 'selectMenuOrMaterial', 'totalAvg', 'totalLastCost');
             return;
         }
+    }
+
+    /**
+     * delete baris resep yang ditambahkan
+     * @param $index
+     * @return void
+     */
+    public function delete($index)
+    {
+        unset($this->ingredients[$index]);
+        $this->calculateTotalAvgAndLastCost();
     }
 
 
