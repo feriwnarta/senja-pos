@@ -671,6 +671,10 @@ class CentralProductionServiceImpl implements CentralProductionService
                 'desc' => 'Penerimaan produksi dibatalkan',
                 'status' => 'Penerimaan dibatalkan'
             ]);
+
+            // TODO: perbaiki penghapusan central production
+
+//            $centralProduction->delete();
         });
 
     }
