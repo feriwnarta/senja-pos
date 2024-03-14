@@ -613,7 +613,6 @@
                         {{-- Looping hasil produksi --}}
                         @if(isset($components))
                             @foreach($components as $key => $result)
-
                                 <div class="margin-top-8" wire:key="{{ $loop->iteration }}">
                                     <div class="row margin-top-16">
                                         <div class="col-md-6">

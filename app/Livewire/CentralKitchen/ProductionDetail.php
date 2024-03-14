@@ -361,22 +361,18 @@ class ProductionDetail extends Component
         }
 
         try {
-            $productionComponentSave = $this->production->result->load('targetItem', 'component')->groupBy('targetItem.id')->map(function ($groupedItems) {
-                $targetItem = $groupedItems->first()->targetItem;
-                $targetQty = $groupedItems->first()->qty_target;
 
-
+            // ambil hasil data hasil produksi ke central production ending
+            $result = $this->production->ending->map(function ($ending) {
                 return [
-                    'result_id' => $groupedItems->first()->id,
-                    'id' => $targetItem->id,
-                    'name' => $targetItem->name,
-                    'target_qty' => $targetQty,
-                    'unit' => $targetItem->unit->name,
-                    'result_qty' => number_format($groupedItems->first()->qty_result, 0, '.', '.'),
+                    'name' => $ending->targetItem->name,
+                    'unit' => $ending->targetItem->unit->name,
+                    'result_qty' => number_format($ending->qty, 0, '.', '.')
                 ];
             })->toArray();
 
-            $this->components = $productionComponentSave;
+
+            $this->components = $result;
 
 
         } catch (Exception $exception) {
@@ -792,7 +788,7 @@ class ProductionDetail extends Component
         ]);
         Log:
         info('Proses selesai produksi');
-        
+
 
         if (!isset($this->production) && $this->production == null) {
             $this->production = $this->findProductionById($this->requestId);
