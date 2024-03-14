@@ -15,15 +15,6 @@
 
                 @if($this->mode == '')
                     <div id="nav-action-button" class="d-flex flex-row align-items-center">
-
-                        <div class="dropdown margin-left-10">
-                            <button type="btn"
-                                    class="btn btn-text-only-danger btn-nav margin-left-10">
-                                Batal
-                            </button>
-                        </div>
-
-
                         @if($this->error == '' && in_array( $warehouseOutbound->history->last()->status , ["Baru", "Permintaan diterima"]))
                             @if($warehouseOutbound->code != '' )
 

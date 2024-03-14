@@ -201,7 +201,7 @@ class TransactionDetail extends Component
             'outboundItems.*.qty_send' => [
                 'required',
                 'numeric',
-                'min:0.01',
+                'min:1',
 
                 // validasi jumlah permintaan item tidak boleh lebih dari qty on hand
                 function ($attribute, $value, $fail) {
@@ -224,8 +224,7 @@ class TransactionDetail extends Component
                 },
             ],
         ]);
-
-
+        
         // lakukan proses pengurangan stock inventory valuation
         $this->reduceInventory($this->outboundItems, $this->outboundId);
 

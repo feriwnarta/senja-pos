@@ -15,10 +15,6 @@
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
                     <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="cancel">Batal
-                    </button>
-
-                    <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create">Lanjutkan
                     </button>
 

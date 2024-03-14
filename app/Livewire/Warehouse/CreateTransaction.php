@@ -228,9 +228,7 @@ class CreateTransaction extends Component
         if ($this->isCreate == false) {
             $result = $this->storeRequest();
 
-
             if ($result) {
-
                 $this->findRequestCreated();
                 notify()->success('Permintaan berhasil dibuat', 'Sukses');
                 return;
@@ -313,9 +311,11 @@ class CreateTransaction extends Component
 
         // proses simpan detail permintaan
         try {
-            $result = $this->warehouseTransactionService->finishRequest($this->requestId, $this->selected);
+            $resultId = $this->warehouseTransactionService->finishRequest($this->requestId, $this->selected);
 
-            if ($result == 'success') {
+
+            if (!empty($resultId)) {
+                $this->redirect("/warehouse/transaction/request-stock/view/$resultId", true);
                 notify()->success('Berhasil menyelesaikan permintaan stock');
                 $this->reset('requestId', 'code', 'error', 'note', 'isCreate', 'items', 'selected', 'nextCursor');
                 $this->date = date('Y-m-d');

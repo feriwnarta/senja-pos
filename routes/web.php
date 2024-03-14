@@ -35,6 +35,7 @@ use App\Livewire\Warehouse\Transaction;
 use App\Livewire\Warehouse\TransactionDetail;
 use App\Livewire\Warehouse\TransactionDetailReceipt;
 use App\Livewire\Warehouse\Unit;
+use App\Livewire\Warehouse\ViewRequestStock;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -73,6 +74,7 @@ Route::get("warehouse/list-warehouse/add-warehouse", AddWarehouse::class)->name(
 Route::get("warehouse/list-warehouse/view/{warehouse}", DetailWarehouse::class)->name('detail-warehouse');
 
 Route::get("warehouse/transaction", Transaction::class)->name('warehouse-transaction');
+Route::get('/warehouse/transaction/request-stock/view/{requestStock}', ViewRequestStock::class)->name('view-request-stock');
 Route::get("warehouse/transaction/add-transaction", CreateTransaction::class)->name('warehouse-add-transaction');
 
 Route::get('warehouse/transaction/detail-out/', TransactionDetail::class)->name('warehouse-transaction-detail');

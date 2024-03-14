@@ -158,7 +158,7 @@ class ProductionDetail extends Component
 
             case "Produksi selesai" :
                 $this->setProduction();
-                $this->resultProduction();
+                $this->endingProduction();
                 $this->getItemWithRemaining();
                 break;
 
@@ -354,6 +354,33 @@ class ProductionDetail extends Component
      * @return void
      */
     private function resultProduction()
+    {
+
+        if (!isset($this->production) || $this->production == null) {
+            $this->production = $this->findProductionById($this->requestId);
+        }
+
+        try {
+
+            $result = $this->production->requestStock->requestStockDetail->map(function ($request) {
+                return [
+                    'id' => $request->items_id,
+                    'name' => $request->item->name,
+                    'target_qty' => $request->qty,
+                    'unit' => $request->item->unit->name
+                ];
+            })->toArray();
+
+
+            $this->components = $result;
+
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+    }
+
+    private function endingProduction()
     {
 
         if (!isset($this->production) || $this->production == null) {
@@ -795,8 +822,6 @@ class ProductionDetail extends Component
         }
 
         $productionId = $this->production->id;
-
-
         $this->storeResultProduction($this->components, $productionId, $this->note);
     }
 }

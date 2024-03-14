@@ -57,6 +57,10 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                             'note' => $note,
                         ]);
 
+                        $result->requestStockHistory()->create([
+                            'desc' => 'Permintaan stok dibuat menjadi draft',
+                            'status' => 'Draft',
+                        ]);
 
                         DB::commit();
 
@@ -203,7 +207,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
                     }
 
                     DB::commit();
-                    return 'success';
+                    return $reqId;
                 } catch (Exception $exception) {
                     DB::rollBack();
                     Log::error($exception->getMessage());

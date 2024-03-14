@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Mockery\Exception;
 
 class Transaction extends Component
 {
@@ -124,6 +125,59 @@ class Transaction extends Component
 
     }
 
+    public function view($requestId, $type)
+    {
+
+        if ($type == 'request') {
+            $this->type = $type;
+            $this->viewRequest($requestId);
+        }
+
+    }
+
+    private function viewRequest(string $requestId)
+    {
+        try {
+            $requestStock = RequestStock::findOrFail($requestId);
+            $history = $requestStock->requestStockHistory->last()->status;
+
+            if ($history == 'Draft') {
+                $this->viewRequestDraft($requestStock, $requestId);
+                return;
+            }
+
+            $this->redirect("/warehouse/transaction/request-stock/view/{$requestId}");
+
+
+        } catch (Exception $exception) {
+            Log::error(json_encode([
+                'message' => 'gagal dapatkan detal permintaan stock',
+                'request id' => $requestId
+            ]));
+
+            notify()->error('Gagal');
+        }
+    }
+
+    private function viewRequestDraft(RequestStock $requestStock, string $requestId)
+    {
+
+        $warehouseId = $requestStock->warehouse->id;
+
+        // jika request adalah gudang outlet
+        $isOutlet = $requestStock->warehouse->outlet->isNotEmpty();
+        if ($isOutlet) {
+            return;
+        }
+
+        // jika request adalah gudang central
+        $isCentralKitchen = $requestStock->warehouse->centralKitchen->isNotEmpty();
+        if ($isCentralKitchen) {
+            $this->type = 'centralKitchen';
+            $this->redirect("/warehouse/transaction/add-transaction?option=request&type={$this->type}&id={$warehouseId}&reqId={$requestId}", true);
+        }
+    }
+
     public function toggleChange()
     {
         $this->urlQuery = $this->toggle;
@@ -176,9 +230,9 @@ class Transaction extends Component
         $this->redirect("/warehouse/transaction/detail-receipt/?refId=$id", true);
     }
 
-
     public function detail(string $id)
     {
         $this->redirect("/warehouse/transaction/detail-out?wouId=$id", true);
     }
+
 }

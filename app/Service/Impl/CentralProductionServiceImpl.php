@@ -5,7 +5,6 @@ namespace App\Service\Impl;
 use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
 use App\Models\CentralProductionEnding;
-use App\Models\CentralProductionResult;
 use App\Models\CentralProductionShipping;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
@@ -423,7 +422,7 @@ class CentralProductionServiceImpl implements CentralProductionService
                 'warehouse_outbounds_id' => $outboundId,
             ]);
 
-            $outbound->detail()->createMany($extractItem);
+            $output = $outbound->detail()->createMany($extractItem);
 
             // update history request stock
             $outbound->outbound->history()->create([
@@ -464,24 +463,13 @@ class CentralProductionServiceImpl implements CentralProductionService
 
             Log::debug('finish production');
 
-            // Kumpulkan semua ID yang diperlukan
-            $resultIds = array_column($items, 'result_id');
-
-            // Ambil semua data sekaligus untuk menghindari N+1
-            $results = CentralProductionResult::findMany($resultIds)->first();
-            $centralProductionResultId = $results->central_productions_id;
-            
-
             foreach ($items as $item) {
                 $centralProductionEnding = new CentralProductionEnding();
-                $centralProductionEnding->central_productions_id = $centralProductionResultId;
+                $centralProductionEnding->central_productions_id = $productionId;
                 $centralProductionEnding->target_items_id = $item['id'];
                 $centralProductionEnding->qty = $item['result_qty'];
                 $centralProductionEnding->save();
             }
-
-            Log::debug('result ids');
-            Log::debug($resultIds);
 
 
             $production = CentralProduction::findOrFail($productionId);
@@ -497,7 +485,7 @@ class CentralProductionServiceImpl implements CentralProductionService
 
 
             DB::commit();
-            return $results;
+            return true;
 
         } catch (Exception $exception) {
             DB::rollBack();
