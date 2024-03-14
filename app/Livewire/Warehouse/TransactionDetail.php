@@ -216,7 +216,7 @@ class TransactionDetail extends Component
                     // Ambil nilai qty_on_hand untuk item tersebut dari array outboundItems
                     $qtyOnHand = $this->outboundItems[$index]['qty_on_hand'] ?? 0;
 
-                    $qtyOnHand = floatval(number_format($qtyOnHand, 0, '.', '.'));
+                    $qtyOnHand = number_format($qtyOnHand, 0, '', '');
                     $value = floatval(str_replace('.', '', $value));
 
 
