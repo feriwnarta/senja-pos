@@ -216,15 +216,18 @@ class TransactionDetail extends Component
                     // Ambil nilai qty_on_hand untuk item tersebut dari array outboundItems
                     $qtyOnHand = $this->outboundItems[$index]['qty_on_hand'] ?? 0;
 
+                    $qtyOnHand = floatval(number_format($qtyOnHand, 0, '.', '.'));
+                    $value = floatval(str_replace('.', '', $value));
+
 
                     // Validasi bahwa qty_send tidak melebihi qty_on_hand
                     if ($value > $qtyOnHand) {
-                        $fail("The $attribute may not be greater than qty_on_hand.");
+                        $fail("The field may not be greater than stok.");
                     }
                 },
             ],
         ]);
-        
+
         // lakukan proses pengurangan stock inventory valuation
         $this->reduceInventory($this->outboundItems, $this->outboundId);
 
