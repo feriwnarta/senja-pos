@@ -663,4 +663,15 @@ class CentralProductionServiceImpl implements CentralProductionService
 
 
     }
+
+    public function cancelCreateProduction(CentralProduction $centralProduction)
+    {
+        DB::transaction(function () use ($centralProduction) {
+            $centralProduction->requestStock->requestStockHistory()->create([
+                'desc' => 'Penerimaan produksi dibatalkan',
+                'status' => 'Penerimaan dibatalkan'
+            ]);
+        });
+
+    }
 }

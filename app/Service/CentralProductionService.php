@@ -12,6 +12,8 @@ interface CentralProductionService
 
     public function createProduction(string $requestStockId, string $centralKitchenId): ?CentralProduction;
 
+    public function cancelCreateProduction(CentralProduction $centralProduction);
+
 
     public function saveComponent(string $productionId, array $component);
 

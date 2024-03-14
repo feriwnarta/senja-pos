@@ -9,6 +9,7 @@ class ViewRequestStock extends Component
 {
 
     public RequestStock $requestStock;
+    public bool $isEdited = false;
 
     public function mount(RequestStock $requestStock)
     {
@@ -18,5 +19,11 @@ class ViewRequestStock extends Component
     public function render()
     {
         return view('livewire.warehouse.view-request-stock');
+    }
+
+    public function editRequestStock()
+    {
+
+
     }
 }

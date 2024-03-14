@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->string('code', 255)->nullable(false)->unique();
             $table->uuid('created_by')->nullable(true);
             $table->uuid('updated_by')->nullable(false);
-
             $table->foreign('request_stocks_id')->on('request_stocks')->references('id');
             $table->timestamps();
         });

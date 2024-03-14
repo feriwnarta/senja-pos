@@ -5,7 +5,7 @@
         <div class="navbar-app">
             <div class="content-navbar d-flex flex-row justify-content-between">
 
-                @if($status == 'Baru')
+                @if($status == 'Baru' || $status == 'Penerimaan dibatalkan')
 
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
@@ -41,7 +41,8 @@
                     <div id="nav-action-button" class="d-flex flex-row align-items-center">
                         <div class="dropdown margin-left-10">
                             <button type="btn"
-                                    class="btn btn-text-only-danger btn-nav margin-left-10">
+                                    class="btn btn-text-only-danger btn-nav margin-left-10"
+                                    wire:click="cancelProductionAccepted">
                                 Batal
                             </button>
                         </div>
@@ -187,7 +188,7 @@
         <div class="row">
 
             {{-- PRODUKSI BARU --}}
-            @if($status == 'Baru')
+            @if($status == 'Baru' || $status == 'Penerimaan dibatalkan')
                 <div class="col-sm-5 offset-1">
                     {{-- KODE REFERENSI --}}
                     <div>
@@ -382,10 +383,10 @@
                                                     <tr wire:key="{{ $loop->iteration }}">
                                                         <td>{{ $recipe['item_name'] }}</td>
                                                         <td>
-                                                            <input x-mask:dynamic="$money($input, ',', '.')"
-                                                                   type="text"
-                                                                   class="form-control input-default"
-                                                                   wire:model="components.{{ $subKey }}.ingredients.{{ $key }}.qty">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control input-default"
+                                                                wire:model="components.{{ $subKey }}.ingredients.{{ $key }}.qty">
                                                         </td>
                                                         <td>{{ $recipe['unit'] }}</td>
                                                     </tr>
@@ -748,10 +749,11 @@
                                     <td>
                                         <input type="name" class="form-control input-default"
                                                id="warehouseInput"
+                                               x-mask:dynamic="$money($input, ',', '.')"
                                                {{ $item['isChecked'] ? '' : 'disabled' }}
                                                wire:model.live.debounce.600ms="itemRemaining.{{$key}}.qty_use">
                                     </td>
-                                    <td>{{ ($item['qty_accept'] - $item['qty_use']) }}</td>
+                                    <td>{{ (floatval($item['qty_accept']) - floatval($item['qty_use'])) }}</td>
                                     <td>{{ $item['unit']}}</td>
                                 </tr>
                             @endforeach

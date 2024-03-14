@@ -439,22 +439,30 @@ class ProductionDetail extends Component
                 $outbound->load('receipt.detail.item.unit');
 
                 return $outbound->receipt->map(function ($receipt) {
-                    $receiptDetail = $receipt->detail->first();
-                    $item = $receiptDetail ? $receiptDetail->item : null;
+                    $receiptDetail = $receipt->detail;
 
-                    return [
-                        'item_id' => optional($item)->id,
-                        'item_name' => optional($item)->name,
-                        'qty_accept' => optional($receiptDetail)->qty_accept,
-                        'qty_use' => optional($receiptDetail)->qty_accept,
-                        'unit' => optional($item->unit)->name,
-                        'isChecked' => '',
-                    ];
+                    $result = [];
+
+                    foreach ($receiptDetail as $receipt) {
+                        $item = $receipt ? $receipt->item : null;
+
+                        $result[] = [
+                            'item_id' => optional($item)->id,
+                            'item_name' => optional($item)->name,
+                            'qty_accept' => number_format(optional($receipt)->qty_accept, 0, '', ''),
+                            'qty_use' => number_format(optional($receipt)->qty_accept, 0, '', ''),
+                            'unit' => optional($item->unit)->name,
+                            'isChecked' => '',
+                        ];
+                    }
+
+                    return $result;
                 });
-            })->toArray();
+            })->flatten(1)->toArray();
 
 
             $this->itemRemaining = $data;
+
 
         } catch (Exception $exception) {
             Log::error('gagal mendapatkan item untuk ditampilkan di item sisa produksi');
@@ -636,7 +644,6 @@ class ProductionDetail extends Component
 
         Log::info('proses validasi pengiriman dan penyimpanan bahan sisa');
 
-
         $this->storeItemProductionRemaining($this->itemRemaining, $this->isSaveOnCentral, $this->production->id);
 
 
@@ -649,7 +656,6 @@ class ProductionDetail extends Component
 
 
             DB::beginTransaction();
-
 
             $remaining = CentralProductionRemaining::create([
                 'central_productions_id' => $productionId,
@@ -666,7 +672,7 @@ class ProductionDetail extends Component
 
             foreach ($items as $item) {
 
-                $total = $item['qty_accept'] - $item['qty_use'];
+                $total = floatval($item['qty_accept']) - floatval($item['qty_use']);
 
                 $itemRemaining[] = [
                     'central_productions_remaining_id' => $remaining->id,
@@ -700,6 +706,23 @@ class ProductionDetail extends Component
         }
 
     }
+
+    public function cancelProductionAccepted()
+    {
+        $this->productionService = app()->make(CentralProductionServiceImpl::class);
+        try {
+            $this->productionService->cancelCreateProduction($this->production, $this->requestId);
+            Log::info('berhasil membatalkan penerimaan');
+            notify()->success('Sukses');
+        } catch (Exception $exception) {
+            Log::error('gagal membatalkan penerimaan produksi');
+            Log::error($exception->getTraceAsString());
+            Log::error($exception->getMessage());
+        }
+
+
+    }
+
 
     public function sendItem()
     {
@@ -806,7 +829,6 @@ class ProductionDetail extends Component
 
         }
     }
-
 
     private function filterCheckedItems($data)
     {

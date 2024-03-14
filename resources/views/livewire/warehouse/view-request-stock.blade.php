@@ -16,9 +16,10 @@
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
                     {{-- TOMBOL EDIT MUNCUL SELAMA PRODUKSI / PEMBELIAN BELUM DIPROSES --}}
-                    @if($requestStock->requestStockHistory->last()->status == 'Baru')
+                    @if($requestStock->requestStockHistory->last()->status == 'Baru' || $requestStock->requestStockHistory->last()->status == 'Penerimaan dibatalkan' )
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:click="editRequestStock"
                         >Edit
                         </button>
                     @endif
