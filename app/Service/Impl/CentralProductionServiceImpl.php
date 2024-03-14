@@ -122,6 +122,7 @@ class CentralProductionServiceImpl implements CentralProductionService
             $production = CentralProduction::findOrFail($productionId);
             $resultArray = [];
 
+
             foreach ($component as $element) {
                 foreach ($element['recipe'] as $recipe) {
                     $resultArray[] = [
@@ -169,6 +170,7 @@ class CentralProductionServiceImpl implements CentralProductionService
     /**
      * fungsi ini digunakan untuk menyimpan permintaan bahan yang dibutuhkan untuk produksi
      * dari central kitchen ke gudang
+     *
      * @param array $materials
      * @return void
      */
@@ -350,6 +352,7 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     /**
      * generate kode item keluar dari gudang
+     *
      * @param string $warehouseId
      * @return void
      */
@@ -395,6 +398,7 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     /**
      * proses menyimpan penerimaan item yang dikirim dari gudang ke central kitchen
+     *
      * @param array $items
      * @param string $outboundId
      * @return void
@@ -602,6 +606,60 @@ class CentralProductionServiceImpl implements CentralProductionService
 
         // Simpan detail-item penerimaan barang
         $warehouseReceipt->details()->createMany($itemReceiptDetail);
+    }
+
+
+    public function getSaveComponent(CentralProduction $production)
+    {
+        if (is_null($production)) {
+            throw new Exception('Central production null saat mengambil component produksi yang disimpan');
+        }
+
+        $resultComponentSave = [];
+
+        foreach ($production->result as $productionResult) {
+            $targetItemId = $productionResult->targetItem->id;
+
+            if (!isset($resultComponentSave[$targetItemId])) {
+                $resultComponentSave[$targetItemId] = [
+                    'target_item_id' => $productionResult->targetItem->id,
+                    'target_item_name' => $productionResult->targetItem->name,
+                    'ingredients' => [],
+                ];
+            }
+
+            $resultComponentSave[$targetItemId]['ingredients'][] = [
+                'id' => $productionResult->id,
+                'item_id' => $productionResult->items_id,
+                'item_name' => $productionResult->item->name,
+                'qty' => number_format($productionResult->qty_target, 0, '', ''),
+                'unit' => $productionResult->item->unit->name,
+            ];
+        }
+
+
+        $resultComponentSave = array_values($resultComponentSave);
+
+
+        return $resultComponentSave;
+    }
+
+    public function saveEditComponent(CentralProduction $centralProduction, array $components)
+    {
+        DB::transaction(function () use ($components, $centralProduction) {
+            $data = [];
+            $tey = [];
+
+            foreach ($components as $component) {
+                foreach ($component['ingredients'] as $ingredient) {
+                    $model = $centralProduction->result->where('id', $ingredient['id'])->first();
+                    if ($model) {
+                        $model->qty_target = str_replace('.', '', $ingredient['qty']);
+                        $model->save();
+                    }
+                }
+            }
+        });
 
 
     }

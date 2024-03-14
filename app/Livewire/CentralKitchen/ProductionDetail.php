@@ -31,10 +31,12 @@ class ProductionDetail extends Component
     public string $note = '';
     public array $itemRemaining = [];
     public bool $isSaveOnCentral = true;
+    public bool $componentSavedEdit = false;
     private CentralProductionService $productionService;
 
     /**
      * lakukan proses validasi item yang diterima oleh central kitchen dari gudang
+     *
      * @return void
      */
     public function validateAndAccept()
@@ -61,6 +63,7 @@ class ProductionDetail extends Component
 
     /**
      * cari produksi berdasarkan id
+     *
      * @param $id
      * @return null
      */
@@ -80,6 +83,7 @@ class ProductionDetail extends Component
 
     /**
      * validasi item receipt
+     *
      * @return void
      */
     private function storeItemReceipt(array $items, string $outboundId)
@@ -107,6 +111,7 @@ class ProductionDetail extends Component
      * lakukan pengecekan apakah produksi sudah diterima
      * jika sudah diterima lakukan pengecekan untuk mendapatkan status nya
      * jika hanya sampa diterima maka lakukan proses permintaan bahan terlebih dahulu
+     *
      * @return void
      */
     private function findRequestStatus()
@@ -128,6 +133,7 @@ class ProductionDetail extends Component
     /**
      * tentukan flow dari produksi yang diklik, apakah sedang dalam
      * permintaan bahan, sedang dalam proses produksi, ataupun penyelesaian produksi
+     *
      * @param $status
      * @return void
      */
@@ -173,6 +179,7 @@ class ProductionDetail extends Component
 
     /**
      *  inisialisasi model production melalui fungsi ini
+     *
      * @return void
      */
     private function setProduction()
@@ -197,6 +204,7 @@ class ProductionDetail extends Component
 
     /**
      * buat request material ke gudang jika statusnya adalah permintaan diterima
+     *
      * @return void
      */
     private function createRequestMaterial($requestId)
@@ -228,7 +236,7 @@ class ProductionDetail extends Component
                                 foreach ($recipe->recipeDetail as $recipeDetail) {
 
                                     $recipes[] = [
-                                        'isChecked' => false,
+                                        'isChecked' => true,
                                         'id' => $recipeDetail->id,
                                         'item_component_id' => $recipeDetail->item->id,
                                         'item_component_name' => $recipeDetail->item->name,
@@ -271,6 +279,7 @@ class ProductionDetail extends Component
 
     /**
      * tampilkan detail komponen yang sudah disimpan saat proses produksi
+     *
      * @return void
      */
     private function detailComponentSaved($production)
@@ -298,6 +307,7 @@ class ProductionDetail extends Component
                 ];
             })->toArray();
 
+
             if (isset($productionComponentSave) && !empty($productionComponentSave)) {
                 $this->productionComponentSave = $productionComponentSave;
             }
@@ -312,6 +322,7 @@ class ProductionDetail extends Component
 
     /**
      * dapatkan data item yang diminta dari gudang
+     *
      * @return void
      */
     private function allItemRequest()
@@ -351,6 +362,7 @@ class ProductionDetail extends Component
 
     /**
      * dapatkan hasil produksi
+     *
      * @return void
      */
     private function resultProduction()
@@ -410,6 +422,7 @@ class ProductionDetail extends Component
 
     /**
      * dapatkan array item dengan input sisa
+     *
      * @return void
      */
     private function getItemWithRemaining()
@@ -453,28 +466,11 @@ class ProductionDetail extends Component
 
     /***
      * proses menyimpan permintaan bahan yang dibutuhkan oleh central kitchen ke gudang
+     *
      * @return void
      */
     public function saveRequest()
     {
-
-        // validasi item yang dipilih
-        $this->validate([
-            'components.*.recipe' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    // Periksa apakah ada setidaknya satu isChecked dalam semua recipe yang bernilai true
-                    if (!collect($value)->pluck('isChecked')->contains(true)) {
-                        $fail('Harap pilih bahan yang ingin diminta');
-                    }
-                },
-            ],
-        ]);
-
-
-        // proses simpan permintaan dari production service
-        $componentChecked = $this->filterCheckedItems($this->components);
-
 
         // next step
         try {
@@ -482,7 +478,8 @@ class ProductionDetail extends Component
             // lakukan pencarian central kitchen id
 
             if (isset($this->production) && $this->production != null) {
-                $result = $this->productionService->saveComponent($this->production->id, $componentChecked);
+
+                $result = $this->productionService->saveComponent($this->production->id, $this->components);
 
                 if ($result) {
                     notify()->success('Berhasil simpan komponen resep', 'Sukses');
@@ -502,26 +499,6 @@ class ProductionDetail extends Component
 
     }
 
-    private function filterCheckedItems($data)
-    {
-        $result = [];
-
-        foreach ($data as $category) {
-            $filteredRecipe = array_filter($category['recipe'], function ($recipe) {
-                return $recipe['isChecked'];
-            });
-
-            if (!empty($filteredRecipe)) {
-                $result[] = [
-                    'item' => $category['item'],
-                    'recipe' => array_values($filteredRecipe) // Mengatur ulang indeks array
-                ];
-            }
-        }
-
-        return $result;
-    }
-
     public function render()
     {
         return view('livewire.central-kitchen.production-detail');
@@ -538,6 +515,7 @@ class ProductionDetail extends Component
 
     /**
      * funsi ini digunakan untuk mencari request stock berdasarkan request stock id url parameter
+     *
      * @param string $id
      * @return void
      */
@@ -564,6 +542,7 @@ class ProductionDetail extends Component
 
     /**
      * terima produksi dan lanjutkan, generate nomor produksi
+     *
      * @return void
      */
     public function acceptAndNext()
@@ -613,6 +592,7 @@ class ProductionDetail extends Component
 
     /**
      * lakukan permintaan ke gudang untuk bahan yang sudah ditentukan oleh central kitchen
+     *
      * @return void
      */
     public function requestMaterialToWarehouse()
@@ -772,7 +752,86 @@ class ProductionDetail extends Component
     }
 
     /**
+     * fungsi ini digunakan
+     *
+     * @param string $requestId
+     * @return void
+     */
+    public function edit()
+    {
+        if (isset($this->requestStock) && $this->requestStock->requestStockHistory->last()->status == 'Komponen produksi disimpan') {
+
+            try {
+                $this->productionService = app()->make(CentralProductionServiceImpl::class);
+                $resultComponentSaved = $this->productionService->getSaveComponent($this->production);
+
+                if (empty($resultComponentSaved)) {
+                    notify()->error('Ada sesuatu yang salah');
+                    return;
+                }
+
+                $this->components = $resultComponentSaved;
+                $this->componentSavedEdit = true;
+
+            } catch (Exception $exception) {
+                Log::error('gagal dapatkan data komponen resep yang disiman');
+                notify()->error("Ada sesuatu yang salah");
+            }
+
+
+        }
+    }
+
+    public function cancelEdit()
+    {
+        $this->componentSavedEdit = false;
+    }
+
+    public function saveEditedComponents()
+    {
+
+        if ($this->componentSavedEdit && !empty($this->components)) {
+            try {
+                $this->productionService = app()->make(CentralProductionServiceImpl::class);
+                $resultComponentSaved = $this->productionService->saveEditComponent($this->production, $this->components);
+                Log::info('sukses update komponen resep yang disimpan');
+                notify()->success('success');
+                $this->componentSavedEdit = false;
+                $this->detailComponentSaved($this->production);
+            } catch (Exception $exception) {
+                Log::error('gagal menyimpan data komponen yg diedit');
+                report($exception);
+                notify()->error('Ada sesuatu yang salah');
+            }
+
+        }
+    }
+
+
+    private function filterCheckedItems($data)
+    {
+        $result = [];
+
+        foreach ($data as $category) {
+            $filteredRecipe = array_filter($category['recipe'], function ($recipe) {
+                return $recipe['isChecked'];
+            });
+
+
+            if (!empty($filteredRecipe)) {
+                $result[] = [
+                    'item' => $category['item'],
+                    'recipe' => array_values($filteredRecipe) // Mengatur ulang indeks array
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * simpan hasil produksi
+     *
      * @return void
      */
     private function storeResultProduction(array $items, string $productionId, string $note)
@@ -803,6 +862,7 @@ class ProductionDetail extends Component
      * menyelesaikan proses produski,
      * menyimpan result produksi dan catatan ke central
      * production result
+     *
      * @return void
      */
     public function finishProduction()

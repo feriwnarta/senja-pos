@@ -64,26 +64,36 @@
                     </div>
 
                     <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                        <div class="dropdown margin-left-10">
+                        @if(!$componentSavedEdit)
+                            <div class="dropdown margin-left-10">
+                                <button type="btn"
+                                        class="btn btn-text-only-secondary btn-nav margin-left-10"
+                                        wire:click="edit">Edit
+                                </button>
+                            </div>
+
+
                             <button type="btn"
-                                    class="btn btn-text-only-danger btn-nav margin-left-10">
-                                Batal
+                                    class="btn btn-text-only-primary btn-nav margin-left-10"
+                                    wire:click="requestMaterialToWarehouse"
+                                    wire:confirm="Anda akan membuat permintaan bahan dan mengirim permintaan ini ke gudang. Anda yakin untuk membuatnya ?"
+                            >Kirim permintaan
                             </button>
-                        </div>
+                        @else
+                            <div class="dropdown margin-left-10">
+                                <button type="btn"
+                                        class="btn btn-text-only-danger btn-nav margin-left-10" wire:click="cancelEdit">
+                                    Batal
+                                </button>
+                            </div>
 
-                        <div class="dropdown margin-left-10">
                             <button type="btn"
-                                    class="btn btn-text-only-secondary btn-nav margin-left-10">Edit
+                                    id="saveEditedComponent"
+                                    class="btn btn-text-only-primary btn-nav margin-left-10"
+                                    wire:click="saveEditedComponents"
+                            >Simpan
                             </button>
-                        </div>
-
-
-                        <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10"
-                                wire:click="requestMaterialToWarehouse"
-                                wire:confirm="Anda akan membuat permintaan bahan dan mengirim permintaan ini ke gudang. Anda yakin untuk membuatnya ?"
-                        >Kirim permintaan
-                        </button>
+                        @endif
 
                     </div>
 
@@ -254,30 +264,24 @@
                             @foreach($components as $subKey => $component)
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="headingOne{{ $component['item']['id'] }}">
-                                        <button class="accordion-button {{ $loop->first ? '' : 'collapsed' }}"
+                                        <button class="accordion-button"
                                                 type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#accordion{{ $component['item']['id'] }}"
-                                                aria-expanded="{{ $loop->first ? 'true' : 'false' }}"
+                                                aria-expanded="true"
                                                 aria-controls="accordion{{ $component['item']['id'] }}">
                                             {{ $component['item']['name'] }}
                                         </button>
                                     </h2>
                                     <div id="accordion{{ $component['item']['id'] }}"
-                                         class="accordion-collapse collapse {{ $loop->first ? 'show' : '' }}"
-                                         aria-labelledby="headingOne{{ $component['item']['id'] }}"
-                                         data-bs-parent="#accordionExample"> {{-- Use the same data-bs-parent for all accordion items --}}
+                                         class="accordion-collapse collapse show"
+                                         aria-labelledby="headingOne{{ $component['item']['id'] }}">
                                         <div class="accordion-body">
                                             <table class="table-component table table-hover margin-top-16"
                                                    id="tableItemRequest"
                                             >
                                                 <thead class="sticky-topphp">
                                                 <tr>
-                                                    <th>
-                                                        <input class="form-check-input" type="checkbox" value=""
-                                                               id="selectAllCheckbox"
-                                                               wire:model="selectAll">
-                                                    </th>
                                                     <th>Item</th>
                                                     <th>Jumlah Resep</th>
                                                     <th>Unit</th>
@@ -294,11 +298,6 @@
 
                                                     @foreach($component['recipe'] as $key =>  $recipe)
                                                         <tr wire:key="{{ $loop->iteration }}">
-                                                            <td>
-                                                                <input class="form-check-input" type="checkbox"
-                                                                       id="checkbox_{{ $loop->iteration }}"
-                                                                       wire:model="components.{{ $subKey }}.recipe.{{ $key }}.isChecked">
-                                                            </td>
                                                             <td>{{ $recipe['item_component_name'] }}</td>
                                                             <td>{{ $recipe['item_component_usage'] }}</td>
                                                             <td>{{ $recipe['item_component_unit'] }}</td>
@@ -343,8 +342,62 @@
                                value="{{ $production->code }}" disabled>
                     </div>
 
-                    @if(isset($productionComponentSave) && !empty($productionComponentSave))
 
+                    @if($componentSavedEdit && !empty($this->components))
+                        <div class="accordion margin-top-24" id="accordionComponentEdit" wire:ignore>
+                            @foreach($this->components as $subKey => $component)
+                                {{--                                {{ dd($component) }}--}}
+
+                                <div class="accordion-item" wire:key="{{ $loop->iteration}}">
+                                    <h2 class="accordion-header" id="headingOne{{ $component['target_item_id'] }}">
+                                        <button class="accordion-button"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#accordion{{ $component['target_item_id'] }}"
+                                                aria-expanded="true"
+                                                aria-controls="accordion{{ $component['target_item_id']  }}">
+                                            {{ $component['target_item_name'] }}
+                                        </button>
+                                    </h2>
+                                    <div id="accordion{{ $component['target_item_id']}}"
+                                         class="accordion-collapse collapse show"
+                                         aria-labelledby="headingOne{{ $component['target_item_id'] }}"
+                                    >
+                                    </div>
+
+                                    <div class="accordion-body">
+                                        <table class="table-component table table-hover margin-top-16"
+                                               id="tableItemRequest">
+                                            <thead class="sticky-topphp">
+                                            <tr>
+                                                <th style="width: 33%;">Item</th>
+                                                <th style="width: 33%;">Jumlah permintaan</th>
+                                                <th style="width: 33%;">Unit</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            @if(!empty($component['ingredients']))
+                                                @foreach($component['ingredients'] as $key => $recipe)
+                                                    <tr wire:key="{{ $loop->iteration }}">
+                                                        <td>{{ $recipe['item_name'] }}</td>
+                                                        <td>
+                                                            <input x-mask:dynamic="$money($input, ',', '.')"
+                                                                   type="text"
+                                                                   class="form-control input-default"
+                                                                   wire:model="components.{{ $subKey }}.ingredients.{{ $key }}.qty">
+                                                        </td>
+                                                        <td>{{ $recipe['unit'] }}</td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @elseif(isset($productionComponentSave) && !empty($productionComponentSave))
                         <div class="accordion margin-top-24" id="accordionExample" wire:ignore>
                             @foreach($productionComponentSave as $subKey => $component)
 
@@ -374,6 +427,7 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
+
                                                 @if(isset($component['components']) && !empty($component['components']))
                                                     @foreach($component['components'] as $recipe)
                                                         <tr wire:key="{{ $loop->iteration }}">

@@ -15,6 +15,10 @@ interface CentralProductionService
 
     public function saveComponent(string $productionId, array $component);
 
+    public function getSaveComponent(CentralProduction $production);
+
+    public function saveEditComponent(CentralProduction $centralProduction, array $components);
+
 
     // TODO: Perbaiki service ini seharusnya ada diwarehouse service
     public function joinSameItemRequestMaterial(array $materials);
