@@ -23,7 +23,7 @@
 
                     </div>
 
-                @elseif($status == 'Produksi diterima')
+                @elseif($status == 'Dibuat')
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
                             Komponen resep
@@ -49,7 +49,7 @@
 
                     </div>
 
-                @elseif($status == 'Komponen produksi disimpan')
+                @elseif($status == 'Disimpan')
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
                             Komponen resep
@@ -90,7 +90,7 @@
 
                     </div>
 
-                @elseif($status == 'Membuat permintaan bahan' || $status == 'Bahan dikirim')
+                @elseif($status == 'Permintaan Bahan' || $status == 'Bahan dikirim')
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
                             Komponen resep
@@ -126,7 +126,7 @@
 
                     </div>
 
-                @elseif($status == 'Produksi selesai')
+                @elseif($status == 'Penyelesaian')
 
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
@@ -162,7 +162,7 @@
 
                     </div>
 
-                @elseif($status == 'Selesai produksi')
+                @elseif($status == 'Selesai')
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
                             Hasil produksi
@@ -229,7 +229,7 @@
                     </div>
                 </div>
                 {{-- PRODUKSI DITERIMA --}}
-            @elseif($status == 'Produksi diterima')
+            @elseif($status == 'Dibuat')
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default  margin-top-16">
                         <label for="warehouseInput"
@@ -320,7 +320,7 @@
                 </div>
 
                 {{-- PRODUKSI DISIMPAN --}}
-            @elseif($status == 'Komponen produksi disimpan')
+            @elseif($status == 'Disimpan')
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default  margin-top-16">
                         <label for="warehouseInput"
@@ -439,7 +439,7 @@
                     @endif
                 </div>
 
-            @elseif($status == 'Membuat permintaan bahan' || $status == 'Bahan dikirim')
+            @elseif($status == 'Permintaan Bahan' || $status == 'Bahan dikirim')
 
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default">
@@ -632,7 +632,7 @@
 
                 </div>
 
-            @elseif($status == 'Produksi selesai')
+            @elseif($status == 'Penyelesaian')
                 <div class="col-sm-5 offset-1">
                     <div class="container-input-default">
                         <label class="form-label input-label">Kode produksi</label>
@@ -754,7 +754,7 @@
 
                 </div>
 
-            @elseif($status == 'Menunggu pengiriman' || $status == 'Selesai produksi')
+            @elseif($status == 'Menunggu pengiriman' || $status == 'Selesai')
                 <div class="col-sm-5 offset-1">
                     <div>
                         <p class="subtitle-3-regular">Kode referensi</p>

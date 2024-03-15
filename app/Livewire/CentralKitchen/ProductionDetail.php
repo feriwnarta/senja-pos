@@ -70,7 +70,7 @@ class ProductionDetail extends Component
     private function findProductionById($id)
     {
         try {
-            return CentralProduction::where('request_stocks_id', $id)->firstOrFail();
+            return CentralProduction::where('request_stocks_id', $id)->first();
 
         } catch (Exception $exception) {
             notify()->error('Ada sesuatu yang salah', 'Error');
@@ -120,6 +120,15 @@ class ProductionDetail extends Component
 
             // cek history
             try {
+                // cari produksi berdasarkan request stock id
+                $this->production = $this->findProductionById($this->requestId);
+
+                // jika tidak null maka produksi sudah terbuar
+                if (!is_null($this->production)) {
+                    return $this->production->history->last()->status;
+                }
+
+
                 return RequestStockHistory::where('request_stocks_id', $this->requestId)->latest()->firstOrFail()->status;
 
             } catch (Exception $exception) {
@@ -141,18 +150,18 @@ class ProductionDetail extends Component
     {
         $this->status = $status;
         switch ($status) {
-            case 'Produksi diterima' :
+            case 'Dibuat' :
                 $this->setProduction();
                 $this->createRequestMaterial($this->requestId);
                 break;
 
-            case 'Komponen produksi disimpan' :
+            case 'Disimpan' :
                 $this->setProduction();
                 $this->detailComponentSaved($this->production);
                 break;
 
             case "Bahan dikirim":
-            case 'Membuat permintaan bahan' :
+            case 'Permintaan Bahan' :
                 $this->setProduction();
                 $this->allItemRequest();
                 break;
@@ -162,14 +171,14 @@ class ProductionDetail extends Component
                 $this->resultProduction();
                 break;
 
-            case "Produksi selesai" :
+            case "Penyelesaian" :
                 $this->setProduction();
                 $this->endingProduction();
                 $this->getItemWithRemaining();
                 break;
 
             case "Menunggu pengiriman" :
-            case "Selesai produksi":
+            case "Selesai":
                 $this->setProduction();
                 break;
 
@@ -671,8 +680,8 @@ class ProductionDetail extends Component
                 'status' => ($this->isSaveOnCentral) ? 'CENTRAL' : 'WAREHOUSE'
             ]);
 
-            $remaining->production->requestStock->requestStockHistory()->create([
-                'desc' => 'Menyimpan bahan sisa produksi',
+            $remaining->production->history()->create([
+                'desc' => 'Menyimpan bahan sisa produksi dibuat otomatis',
                 'status' => 'Menunggu pengiriman',
             ]);
 
@@ -734,7 +743,6 @@ class ProductionDetail extends Component
 
     }
 
-
     public function sendItem()
     {
 
@@ -747,9 +755,14 @@ class ProductionDetail extends Component
                 $this->requestStock = $this->checkProductionId($this->production->id);
             }
 
+            $this->production->history()->create([
+                'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+                'status' => 'Selesai'
+            ]);
+
             $result = $this->requestStock->requestStockHistory()->create([
-                'desc' => 'Selesai proses produksi, hasil produksi dikirim',
-                'status' => 'Selesai produksi',
+                'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+                'status' => 'Pemenuhan',
             ]);
 
             if (empty($this->components)) {
@@ -793,7 +806,7 @@ class ProductionDetail extends Component
      */
     public function edit()
     {
-        if (isset($this->requestStock) && $this->requestStock->requestStockHistory->last()->status == 'Komponen produksi disimpan') {
+        if (isset($this->production) && $this->production->history->last()->status == 'Disimpan') {
 
             try {
                 $this->productionService = app()->make(CentralProductionServiceImpl::class);

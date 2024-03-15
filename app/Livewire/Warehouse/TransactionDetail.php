@@ -132,6 +132,7 @@ class TransactionDetail extends Component
 
     /**
      * terima dan lanjutkan proses keluar barang dari gudang
+     *
      * @return void
      */
     public function acceptAndNext()
@@ -191,6 +192,7 @@ class TransactionDetail extends Component
      * validasi bahwa stoknya sesuai dan stok aktual tidak lebih besar dari nilai dikirim
      * hitung nilai cogsnya
      * update status menjadi dikirim
+     *
      * @return void
      */
     public function sendItem()
@@ -272,6 +274,14 @@ class TransactionDetail extends Component
             'status' => 'Bahan dikirim',
         ]);
 
+    }
+
+    private function updateHistoryProduction()
+    {
+        return $this->warehouseOutbound->production->history()->create([
+            'desc' => 'Bahan dalam proses pengiriman dari gudang ke central kitchen (otomatis)',
+            'status' => 'Bahan dikirim',
+        ]);
 
     }
 

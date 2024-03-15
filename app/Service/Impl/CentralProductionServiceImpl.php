@@ -38,9 +38,15 @@ class CentralProductionServiceImpl implements CentralProductionService
                     if (!is_null($production) && $production->exists()) {
                         RequestStockHistory::create([
                             'request_stocks_id' => $requestStockId,
-                            'desc' => 'Produksi diterima',
+                            'desc' => 'Produksi diterima kembali oleh central kitchen (otomatis)',
                             'status' => 'Produksi diterima',
                         ]);
+
+                        $production->history()->create([
+                            'desc' => 'Melakukan penerimaan ulang saat permintaan stok dibatalkan',
+                            'status' => 'Dibuat'
+                        ]);
+
                     } else {
                         $result = $this->generateCode($requestStockId, $centralKitchenId);
 
@@ -52,9 +58,14 @@ class CentralProductionServiceImpl implements CentralProductionService
                                 'increment' => $result['increment'],
                             ]);
 
+                            $production->history()->create([
+                                'desc' => 'Membuat produksi bedasarkan request stok warehouse',
+                                'status' => 'Dibuat'
+                            ]);
+
                             RequestStockHistory::create([
                                 'request_stocks_id' => $requestStockId,
-                                'desc' => 'Produksi diterima',
+                                'desc' => 'Produksi diterima oleh central kitchen',
                                 'status' => 'Produksi diterima',
                             ]);
                         }
@@ -156,14 +167,10 @@ class CentralProductionServiceImpl implements CentralProductionService
             Log::debug('TOTAL');
             Log::debug($result);
 
-            // update status request stock
-
-            $production->requestStock->requestStockHistory()->createMany([
-                [
-                    'desc' => 'Komponen untuk produksi disimpan',
-                    'status' => 'Komponen produksi disimpan'
-                ],
-
+            // update status produksi
+            $production->history()->create([
+                'desc' => 'Permintaan bahan berdasarkan resep disimpan',
+                'status' => 'Disimpan'
             ]);
 
             DB::commit();
@@ -228,11 +235,16 @@ class CentralProductionServiceImpl implements CentralProductionService
 
                     $outbound->outboundItem()->createMany($resultMaterial);
 
+                    CentralProduction::where('request_stocks_id', $requestId)->first()->history()->create([
+                        'desc' => 'Permintaan bahan untuk keperluan produksi dibuat ke gudang',
+                        'status' => 'Permintaan Bahan'
+                    ]);
+
                     RequestStockHistory::
                     create([
                         'request_stocks_id' => $requestId,
-                        'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen',
-                        'status' => 'Membuat permintaan bahan'
+                        'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen otomatis dari produksi',
+                        'status' => 'Menunggu pengiriman bahan'
                     ]);
 
                     WarehouseOutboundHistory::create([
@@ -446,8 +458,8 @@ class CentralProductionServiceImpl implements CentralProductionService
                 'status' => 'Bahan diterima'
             ]);
 
-            $outbound->outbound->production->requestStock->requestStockHistory()->create([
-                'desc' => 'Bahan diterima dan divalidasi oleh central kitchen',
+            $outbound->outbound->production->history()->create([
+                'desc' => 'Bahan diterima dan divalidasi oleh central kitchen (otomatis)',
                 'status' => 'Bahan diterima',
             ]);
 
@@ -494,9 +506,9 @@ class CentralProductionServiceImpl implements CentralProductionService
             ]);
 
             // update history
-            $production->requestStock->requestStockHistory()->create([
-                'desc' => 'Central kitchen menyelesaikan proses produksi',
-                'status' => 'Produksi selesai',
+            $production->history()->create([
+                'desc' => 'Central kitchen menyelesaikan proses produksi dan dalam tahap finishing (otomatis)',
+                'status' => 'Penyelesaian',
             ]);
 
 
@@ -680,6 +692,11 @@ class CentralProductionServiceImpl implements CentralProductionService
     {
         DB::transaction(function () use ($centralProduction) {
             $centralProduction->requestStock->requestStockHistory()->create([
+                'desc' => 'Penerimaan produksi dibatalkan oleh central kitchen',
+                'status' => 'Penerimaan dibatalkan'
+            ]);
+
+            $centralProduction->history()->create([
                 'desc' => 'Penerimaan produksi dibatalkan',
                 'status' => 'Penerimaan dibatalkan'
             ]);
