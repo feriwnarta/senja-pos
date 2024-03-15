@@ -220,7 +220,6 @@ class ProductionDetail extends Component
 
                 if (isset($this->requestStock) && $this->requestStock != null && $this->requestStock->requestStockDetail->isNotEmpty()) {
 
-                    // mapping isi request stock detail
                     $components = $this->requestStock->requestStockDetail
                         ->lazy(10)
                         ->map(function ($detail) {
@@ -230,32 +229,36 @@ class ProductionDetail extends Component
 
                             $recipes = [];
 
-
-                            foreach ($detail->item->recipe as $recipe) {
-
-                                foreach ($recipe->recipeDetail as $recipeDetail) {
-
-                                    $recipes[] = [
-                                        'isChecked' => true,
-                                        'id' => $recipeDetail->id,
-                                        'item_component_id' => $recipeDetail->item->id,
-                                        'item_component_name' => $recipeDetail->item->name,
-                                        'item_component_unit' => $recipeDetail->item->unit->name,
-                                        'item_component_usage' => number_format($detail->qty * $recipeDetail->usage, 0, '.', '.'),
-                                        'qty_request' => 0,
-                                    ];
+                            // Check if item has a recipe and belongs to the specified route
+                            if ($detail->item->route == 'PRODUCECENTRALKITCHEN' && $detail->item->recipe->isNotEmpty()) {
+                                foreach ($detail->item->recipe as $recipe) {
+                                    foreach ($recipe->recipeDetail as $recipeDetail) {
+                                        $recipes[] = [
+                                            'isChecked' => true,
+                                            'id' => $recipeDetail->id,
+                                            'item_component_id' => $recipeDetail->item->id,
+                                            'item_component_name' => $recipeDetail->item->name,
+                                            'item_component_unit' => $recipeDetail->item->unit->name,
+                                            'item_component_usage' => number_format($detail->qty * $recipeDetail->usage, 0, '.', '.'),
+                                            'qty_request' => 0,
+                                        ];
+                                    }
                                 }
-                            }
 
-                            return [
-                                'item' => [
-                                    'id' => $detail->item->id,
-                                    'name' => $detail->item->name,
-                                ],
-                                'recipe' => $recipes,
-                            ];
+                                return [
+                                    'item' => [
+                                        'id' => $detail->item->id,
+                                        'name' => $detail->item->name,
+                                    ],
+                                    'recipe' => $recipes,
+                                ];
+                            } else {
+                                return null; // Skip this item if it doesn't meet the criteria
+                            }
                         })
+                        ->filter() // Remove null values
                         ->toArray(); // Convert to array if needed
+
 
                     if (!empty($components)) {
                         $this->components = $components;
@@ -375,13 +378,19 @@ class ProductionDetail extends Component
         try {
 
             $result = $this->production->requestStock->requestStockDetail->map(function ($request) {
-                return [
-                    'id' => $request->items_id,
-                    'name' => $request->item->name,
-                    'target_qty' => $request->qty,
-                    'unit' => $request->item->unit->name
-                ];
-            })->toArray();
+
+                if ($request->item->route == 'PRODUCECENTRALKITCHEN') {
+
+
+                    return [
+                        'id' => $request->items_id,
+                        'name' => $request->item->name,
+                        'target_qty' => $request->qty,
+                        'unit' => $request->item->unit->name
+                    ];
+                }
+
+            })->filter()->toArray();
 
 
             $this->components = $result;

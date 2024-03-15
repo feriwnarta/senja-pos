@@ -14,7 +14,7 @@
                     </div>
 
                     <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                        
+
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
                                 wire:click="acceptAndNext"
@@ -216,14 +216,14 @@
                                 $requestStock->load('requestStockDetail.item');
                             @endphp
                             @foreach ($requestStock->requestStockDetail as $requestDetail)
-                                <tr class="items-table-head-color" id="po1" style="cursor: pointer">
-                                    <td>{{ $requestDetail->item->name }}</td>
-                                    <td>{{ $requestDetail->qty }}</td>
-                                    <td>{{ $requestDetail->item->unit->name }}</td>
-                                </tr>
-
+                                @if( $requestDetail->item->route == 'PRODUCECENTRALKITCHEN')
+                                    <tr class="items-table-head-color" id="po1" style="cursor: pointer">
+                                        <td>{{ $requestDetail->item->name }}</td>
+                                        <td>{{ $requestDetail->qty }}</td>
+                                        <td>{{ $requestDetail->item->unit->name }}</td>
+                                    </tr>
+                                @endif
                             @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -252,7 +252,6 @@
                     @endif
 
                     @if(isset($components) && !empty($components))
-
                         <div class="accordion" id="accordionExample" wire:ignore>
                             @foreach($components as $subKey => $component)
                                 <div class="accordion-item">
@@ -288,7 +287,6 @@
                                                 {{--  Looping isi resep dari item yang diminta--}}
 
                                                 @if(isset($component['recipe']) && !empty($component['recipe']))
-
                                                     @foreach($component['recipe'] as $key =>  $recipe)
                                                         <tr wire:key="{{ $loop->iteration }}">
                                                             <td>{{ $recipe['item_component_name'] }}</td>

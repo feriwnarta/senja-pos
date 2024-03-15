@@ -114,7 +114,7 @@
                             <td>
 
                                 <input type="text" class="form-control input-default"
-                                       x-mask:dynamic="$money($input, '.', '.')"
+                                       x-mask:dynamic="$money($input, ',', '.')"
                                        wire:model.live="requestStockDetail.{{ $key }}.qty_request">
                                 @error("requestStockDetail.$key.qty_request") <span
                                     class="text-danger">{{ $message }}</span>
