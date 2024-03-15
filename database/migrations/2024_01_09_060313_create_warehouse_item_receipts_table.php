@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('warehouse_item_receipts', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('warehouses_id')->nullable(false);
-            $table->string('code')->nullable(true);
-            $table->bigInteger('increment')->default(0);
+            $table->string('code')->nullable(true)->unique();
+            $table->bigInteger('increment')->default(0)->unique();
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
             $table->foreign('warehouses_id')->references('id')->on('warehouses')->onDelete('cascade');

@@ -112,41 +112,7 @@ class TransactionDetailReceipt extends Component
         ]);
 
         // TODO : LAKUKAN PENERIMAAN
-
-        $this->processAcceptReceipt($itemReceiptRefId, $warehouseId, $warehouseCode, $this->dataItemReceipt);
-
-    }
-
-    private function processAcceptReceipt($itemReceiptRefId, $warehouseId, $warehouseCode, $items)
-    {
-        $response = $this->ajaxDispatch(new AcceptReceipt([
-            'itemReceiptRefId' => $itemReceiptRefId,
-            'warehouseId' => $warehouseId,
-            'warehouseCode' => $warehouseCode,
-            'items' => $items
-        ], $this->itemReceiptRef));
-
-        // jika success berarti service berjalan dengan baik
-        if ($response['success']) {
-            notify()->success('Berhasil melakukan penerimaan');
-        } else {
-            notify()->error('Gagal melakukan penerimaan');
-        }
-    }
-
-
-    public function reject($itemReceiptRefId)
-    {
-        $response = $this->ajaxDispatch(new RejectReceipt($itemReceiptRefId));
-
-        Log::info('result dari job');
-        Log::info($response);
-
-        if ($response['success']) {
-            notify()->success('Berhasil melakukan penerimaan');
-        } else {
-            notify()->error('Gagal melakukan penerimaan');
-        }
+        dd($this->dataItemReceipt   );
 
     }
 

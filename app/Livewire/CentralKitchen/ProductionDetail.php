@@ -690,8 +690,7 @@ class ProductionDetail extends Component
 
             foreach ($items as $item) {
 
-                // TODO: PERBAIKI INI
-                $total = floatval($item['qty_accept']) - floatval($item['qty_use']);
+                $total = floatval(str_replace('.', '', $item['qty_accept'])) - floatval(str_replace('.','',$item['qty_use']));
 
                 $itemRemaining[] = [
                     'central_productions_remaining_id' => $remaining->id,
