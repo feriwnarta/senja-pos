@@ -18,10 +18,17 @@
                     {{-- TOMBOL EDIT MUNCUL SELAMA PRODUKSI / PEMBELIAN BELUM DIPROSES --}}
                     @if($requestStock->requestStockHistory->last()->status == 'Baru' || $requestStock->requestStockHistory->last()->status == 'Penerimaan dibatalkan' )
                         <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                class="btn btn-text-only-secondary btn-nav margin-left-10"
                                 wire:click="editRequestStock"
                         >Edit
                         </button>
+                    @endif
+
+                    @if($isEdited)
+                        <button type="btn"
+                                class="btn btn-text-only-primary btn-nav margin-left-10"
+                                wire:click="saveEdit"
+                        >Simpan
                     @endif
 
 
@@ -34,8 +41,6 @@
 
 
     <div id="content-loaded">
-
-
         <div class="row">
             <div class="col-sm-4 offset-1">
                 <div class="container-input-default">
@@ -84,24 +89,97 @@
                         <th>Diminta</th>
                         <th>Diterima</th>
                         <th>Unit</th>
+
+                        @if($isEdited)
+                            <th></th>
+                        @endif
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($requestStock->requestStockDetail as $requestStock)
-                        <tr>
-                            <td>{{ $requestStock->item->name }}</td>
-                            <td>{{ $requestStock->qty }}</td>
-                            <td>{{ $requestStock->qty_accept }}</td>
-                            <td>{{ $requestStock->item->unit->name }}</td>
+                    @foreach($requestStockDetail as $key =>  $requestStock)
+                        <tr wire:key="{{ $loop->iteration }}">
+                            <td>
+
+                                @if(!empty($requestStock['items']['name']))
+                                    {{ $requestStock['items']['name'] }}
+                                @else
+                                    <select wire:click="loadData" class="form-select input-default"
+                                            wire:change="selectedItem('{{ $key }}')"
+                                            wire:model.live="selectedId"
+                                    >
+                                        <option value="" selected disabled>Pilih Item
+                                        </option>
+                                        @if(isset($items))
+                                            @foreach($items as $item)
+                                                <option value="{{ $item->items->id }}">{{ $item->items->name }}</option>
+                                            @endforeach
+                                        @endif
+
+                                    </select>
+                                @endif
+                            </td>
+                            <td>
+                                @if(!$isEdited)
+                                    {{ $requestStock['qty_request'] }}
+                                @else
+                                    <input type="text" class="form-control input-default"
+                                           wire:model.live="requestStockDetail.{{ $key }}.qty_request">
+                                @endif
+
+                            </td>
+                            <td>{{ $requestStock['qty_accept'] }}</td>
+                            <td>{{ $requestStock['items']['unit'] }}
+                            @if($isEdited)
+                                <td class="delete">
+                                    <i class="x-icon" wire:click="delete('{{ $key }}')"></i>
+                                </td>
+                            @endif
                         </tr>
                     @endforeach
+                    @if($isEdited)
+                        <tr id="divideContent">
+                            <td colspan="6" class="span-all-columns"
+                                style="padding-bottom: 5px; padding-top: 5px;">
+                                <button class="btn icon-text container" type="button" id="addItem"
+                                        wire:click="addSelectedItem">
+                                    + Tambah item
+                                </button>
+                            </td>
+                        </tr>
+                    @endif
                     </tbody>
                 </table>
+
+
             </div>
         </div>
-
     </div>
 
 
+    {{--    <!-- Modal -->--}}
+    {{--    <div class="modal fade" id="modalSelecNewItem" tabindex="-1" wire:ignore.self>--}}
+    {{--        <div class="modal-dialog modal-lg modal-dialog-scrollable">--}}
+    {{--            <div class="modal-content" x-intersect="$wire.loadModalData()">--}}
+    {{--                <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">--}}
+    {{--                    <h1 class="modal-title modal-input-title fs-5">Pilih item</h1>--}}
+    {{--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>--}}
+    {{--                </div>--}}
+    {{--                <div class="modal-body">--}}
+    {{--                    <livewire:warehouse.components.modal.add-item-for-edit-request-modal--}}
+    {{--                        :requestStockId="$requestStockId"/>--}}
+    {{--                </div>--}}
+    {{--                <div class="modal-footer">--}}
+    {{--                    <div>--}}
+    {{--                        <button class="btn text-only-outlined cancel-btn" data-bs-dismiss="modal">--}}
+    {{--                            Batal--}}
+    {{--                        </button>--}}
+    {{--                        <button class="btn btn-text-only-primary margin-left-10"--}}
+    {{--                                wire:click="openModalNewItem">Simpan--}}
+    {{--                        </button>--}}
+    {{--                    </div>--}}
+    {{--                </div>--}}
+    {{--            </div>--}}
+    {{--        </div>--}}
+    {{--    </div>--}}
 </x-page-layout>
 

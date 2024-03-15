@@ -714,6 +714,8 @@ class ProductionDetail extends Component
             $this->productionService->cancelCreateProduction($this->production, $this->requestId);
             Log::info('berhasil membatalkan penerimaan');
             notify()->success('Sukses');
+            $status = $this->findRequestStatus();
+            $this->delegateProcess($status);
         } catch (Exception $exception) {
             Log::error('gagal membatalkan penerimaan produksi');
             Log::error($exception->getTraceAsString());

@@ -74,5 +74,10 @@ class CentralProduction extends Model
         return $this->morphMany(WarehouseItemReceiptRef::class, 'receivable');
     }
 
+    public function history(): HasMany
+    {
+        return $this->hasMany(CentralProductionHistory::class, 'central_productions_id');
+    }
+
 
 }

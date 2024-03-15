@@ -31,28 +31,36 @@ class CentralProductionServiceImpl implements CentralProductionService
                 DB::beginTransaction();
 
                 try {
-                    $result = $this->generateCode($requestStockId, $centralKitchenId);
+                    // cek terlebih dahulu apakah produksi sudah terbuat dengan request stock id yang ada
+                    $production = $this->checkProduction($requestStockId);
 
-                    if ($result && isset($result['code'], $result['increment'])) {
-                        $production = CentralProduction::create([
-                            'request_stocks_id' => $requestStockId,
-                            'central_kitchens_id' => $centralKitchenId,
-                            'code' => $result['code'],
-                            'increment' => $result['increment'],
-                        ]);
-
-
+                    // jika true maka tidak perlu melakukan pembuatan ulang, melainkan melakukan proses penerimaan ulang
+                    if ($production->exists()) {
                         RequestStockHistory::create([
                             'request_stocks_id' => $requestStockId,
                             'desc' => 'Produksi diterima',
                             'status' => 'Produksi diterima',
                         ]);
-
-                        DB::commit();
-                        return $production; // Return the model instance on success
                     } else {
-                        return null;
+                        $result = $this->generateCode($requestStockId, $centralKitchenId);
+
+                        if ($result && isset($result['code'], $result['increment'])) {
+                            $production = CentralProduction::create([
+                                'request_stocks_id' => $requestStockId,
+                                'central_kitchens_id' => $centralKitchenId,
+                                'code' => $result['code'],
+                                'increment' => $result['increment'],
+                            ]);
+
+                            RequestStockHistory::create([
+                                'request_stocks_id' => $requestStockId,
+                                'desc' => 'Produksi diterima',
+                                'status' => 'Produksi diterima',
+                            ]);
+                        }
                     }
+                    DB::commit();
+                    return $production; // Return the model instance on success
                 } catch (Exception $exception) {
                     DB::rollBack();
                     Log::error('Gagal menyimpan item detail:', [
@@ -77,6 +85,10 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     }
 
+    public function checkProduction(string $requestStockId)
+    {
+        return CentralProduction::where('request_stocks_id', $requestStockId)->first();
+    }
 
     public function generateCode(string $requestStockId, string $centralKitchenId): array
     {
