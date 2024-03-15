@@ -46,6 +46,7 @@ class TransactionDetailReceipt extends Component
 
     /**
      * deteksi url apakah string kosong
+     *
      * @return void
      */
     public function urlIsEmpty($url)
@@ -62,6 +63,7 @@ class TransactionDetailReceipt extends Component
 
     /**
      * dapatkan detail data item receipt dari table warehouse item receipt refs
+     *
      * @param string $receiptRefId
      * @return void
      */
@@ -86,6 +88,7 @@ class TransactionDetailReceipt extends Component
 
     /**
      * lakukan proses penerimaan item receipt
+     *
      * @param $itemReceiptRefId
      * @return void
      */
@@ -108,6 +111,7 @@ class TransactionDetailReceipt extends Component
             'dataItemReceipt.*.qty_accept' => 'numeric|min:1'
         ]);
 
+        // TODO : LAKUKAN PENERIMAAN
 
         $this->processAcceptReceipt($itemReceiptRefId, $warehouseId, $warehouseCode, $this->dataItemReceipt);
 
