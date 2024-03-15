@@ -690,6 +690,7 @@ class ProductionDetail extends Component
 
             foreach ($items as $item) {
 
+                // TODO: PERBAIKI INI
                 $total = floatval($item['qty_accept']) - floatval($item['qty_use']);
 
                 $itemRemaining[] = [

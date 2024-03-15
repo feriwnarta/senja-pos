@@ -743,7 +743,7 @@
                                                {{ $item['isChecked'] ? '' : 'disabled' }}
                                                wire:model.live.debounce.600ms="itemRemaining.{{$key}}.qty_use">
                                     </td>
-                                    <td>{{ (floatval($item['qty_accept']) - floatval($item['qty_use'])) }}</td>
+                                    <td>{{ str_replace('.', ',', $item['qty_accept']) - str_replace('.', '', $item['qty_use']) }}</td>
                                     <td>{{ $item['unit']}}</td>
                                 </tr>
                             @endforeach
