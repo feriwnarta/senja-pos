@@ -36,9 +36,9 @@ class CreateItem extends Component
     #[Rule('numeric|min:0')]
     public string $inStock = '';
     #[Rule('exclude_if:inStock,""|required|min:0')]
-    public string $avgCost = '';
+    public string $avgCost = '0';
     #[Rule('exclude_if:inStock,""|required|min:0')]
-    public string $lastCost = '';
+    public string $lastCost = '0';
 
     public bool $isEmpty = false;
     public bool $isOutlet = true;
@@ -72,6 +72,7 @@ class CreateItem extends Component
 
     /**
      * extract url untuk dapatkan id outlet atau central kitchen
+     *
      * @return void
      * @throws BindingResolutionException
      */
