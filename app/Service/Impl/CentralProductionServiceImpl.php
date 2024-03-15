@@ -35,7 +35,7 @@ class CentralProductionServiceImpl implements CentralProductionService
                     $production = $this->checkProduction($requestStockId);
 
                     // jika true maka tidak perlu melakukan pembuatan ulang, melainkan melakukan proses penerimaan ulang
-                    if ($production->exists()) {
+                    if (!is_null($production) && $production->exists()) {
                         RequestStockHistory::create([
                             'request_stocks_id' => $requestStockId,
                             'desc' => 'Produksi diterima',

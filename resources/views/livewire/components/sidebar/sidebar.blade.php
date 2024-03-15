@@ -96,7 +96,7 @@
 
 
                 @php
-                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'view-request-stock', 'detail-warehouse', 'warehouse-transaction', 'warehouse-add-transaction','warehouse-transaction-detail', 'warehouse-transaction-detail-receipt']);
+                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'view-request-stock', 'view-request-stock', 'edit-request-stock', 'detail-warehouse', 'warehouse-transaction', 'warehouse-add-transaction','warehouse-transaction-detail', 'warehouse-transaction-detail-receipt']);
                 @endphp
 
                 <div class="accordion-item">
@@ -146,7 +146,7 @@
                             </a>
                             <a href="/warehouse/transaction" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('warehouse-transaction') || Route::is('view-request-stock') || Route::is('warehouse-add-transaction') || Route::is('warehouse-transaction-detail') || Route::is('warehouse-transaction-detail') || Route::is('warehouse-transaction-detail-receipt') ? 'inner-menu-active' : ''}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('warehouse-transaction') || Route::is('edit-request-stock') || Route::is('view-request-stock') || Route::is('warehouse-add-transaction') || Route::is('warehouse-transaction-detail') || Route::is('warehouse-transaction-detail') || Route::is('warehouse-transaction-detail-receipt') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     Transaksi

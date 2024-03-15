@@ -67,22 +67,23 @@ class Production extends Component
 
     public function render()
     {
-        Log::debug($this->selected);
+
+
         // paginasi request stock yang hanya memiliki item produksi didalamnya
         return
             view('livewire.central-kitchen.production', [
                 'requestStock' => RequestStock::query()
                     ->whereHas('requestStockDetail', function ($query) {
-                        $query->where('type', 'PRODUCE'); // Filter pada kueri utama
-                    })
-                    ->whereHas('warehouse', function ($query) {
-                        $query->whereHas('centralKitchen', function ($query) {
-                            if ($this->selected == 'all') {
-                                $query->orWhereNull('central_kitchens.id');
-                            } else {
-                                $query->where('central_kitchens.id', $this->selected);
-                            }
+                        $query->whereHas('item', function ($query) {
+                            $query->where('route', 'PRODUCECENTRALKITCHEN');
                         });
+                    })
+                    ->whereHas('warehouse.centralKitchen', function ($query) {
+                        if ($this->selected == 'all') {
+                            $query->orWhereNull('central_kitchens.id');
+                        } else {
+                            $query->where('central_kitchens.id', $this->selected);
+                        }
                     })
                     ->orderBy('id', 'DESC')
                     ->paginate(10)
@@ -92,6 +93,7 @@ class Production extends Component
 
     /**
      * tampilkan data berdasarkan central kitchen
+     *
      * @return void
      */
     public function centralKitchenChange()

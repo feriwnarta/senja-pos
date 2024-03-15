@@ -15,12 +15,10 @@
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
-
                     <button type="btn"
-                            wire:click="addItem"
                             class="btn btn-text-only-primary btn-nav margin-left-10">Edit
                     </button>
-
+                    
 
                 </div>
             </div>
