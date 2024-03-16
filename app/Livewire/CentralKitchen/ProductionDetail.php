@@ -2,11 +2,13 @@
 
 namespace App\Livewire\CentralKitchen;
 
+use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
 use App\Models\CentralProductionAdditionRequest;
 use App\Models\CentralProductionRemaining;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
+use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseOutbound;
 use App\Models\WarehouseOutboundHistory;
 use App\Service\CentralProductionService;
@@ -542,7 +544,8 @@ class ProductionDetail extends Component
             $this->isAdditionRequestShipping = true;
             $shipping = $additionRequest->outbound->outboundItem->where('items_id', $itemId)->first();
             $this->componentAdditionShipping = [
-                'outbound_items_id' => $shipping->id,
+                'warehouse_outbounds_id' => $additionRequest->outbound->id,
+                'shipping_id' => $shipping->id,
                 'addition_request_id' => $id,
                 'items_id' => $shipping->items_id,
                 'item_name' => $shipping->item->name,
@@ -553,12 +556,195 @@ class ProductionDetail extends Component
             ];
             return;
           }
-          $this->componentAdditionShipping = [];
         $this->isAdditionRequestShipping = false;
       }catch (Exception $exception) {
           Log::error('gagal mengambil data process receipt additional');
           report($exception);
       }
+    }
+
+    public function acceptAdditionReceipt() {
+        $max = $this->componentAdditionShipping['qty_request'];
+
+        $this->validate([
+            'componentAdditionShipping.qty_received' => "required|numeric|min:1|max:$max"
+        ], [
+            'componentAdditionShipping.qty_received.min:1' => 'The component addition field received field must be at least 1.'
+        ]);
+
+        // buat central prouduction receipt
+        try {
+
+            Log::info('menerima kiriman bahan baru di central kitchen');
+            DB::transaction(function() {
+
+                // cari dulu apakah receipt sudah diterima sebelumnya
+                // jika ada lebih dari 2 item yang dikirim
+                $centralReceipt = CentralKitchenReceipts::where('warehouse_outbounds_id', $this->componentAdditionShipping['warehouse_outbounds_id'])->get();
+
+
+                if($centralReceipt->isNotEmpty()) {
+
+                    $centralReceipt = $centralReceipt->first();
+                    $centralReceipt->detail()->create([
+                        'items_id' => $this->componentAdditionShipping['items_id'],
+                        'qty_accept' => $this->componentAdditionShipping['qty_received'],
+                    ]);
+
+
+                    $centralReceipt->save();
+
+                    $centralAdditionRequest = CentralProductionAdditionRequest::find($this->componentAdditionShipping['addition_request_id']);
+                    $centralAdditionRequest->amount_received = $this->componentAdditionShipping['qty_received'];
+                    $centralAdditionRequest->save();
+
+
+
+                    $valuations = [];
+                    $itemId =  $this->componentAdditionShipping['items_id'];
+
+                    // kalkulasi stock
+                    foreach ($centralReceipt->outbound->reference->first()->shipping->shippingItem as $shippingItem) {
+
+                        $stockItem = $shippingItem->stockItem;
+                        $warehouseItem = $stockItem->warehouseItem->items->id;
+
+                        if (!is_null($warehouseItem) && $warehouseItem == $itemId) {
+                            $valuations = [
+                                'items_id' => $itemId,
+                                'qty_on_hand' => str_replace('.', '',$this->componentAdditionShipping['qty_received'] ),
+                                'avg_cost' => $stockItem->avg_cost,
+                                'last_cost' => $stockItem->last_cost,
+                            ];
+                        }
+                    }
+
+                    if(empty($valuations)) {
+                        notify()->error('ada sesuatu yang salah');
+                        Log::error('gagal mendapatkan inventory valuation saat menerima bahan kiriman baru');
+                        report(new Exception('gagal mendapatkan inventory valuation saat menerima bahan kiriman baru'));
+                        return;
+                    }
+
+                    // input cogs bahan baru ke production component cost
+                    $componentCost = $this->production->components->where('items_id', $itemId);
+                    if($componentCost->isNotEmpty()) {
+                        $componentCost = $componentCost->first();
+                        $oldQtyOnHand= $componentCost->qty_on_hand;
+                        $oldLastCost = $componentCost->last_cost;
+                        $oldAvgCost = $componentCost->avg_cost;
+                        $totalOldAvgCost = $oldQtyOnHand * $oldAvgCost;
+
+                        $incomingQty = $valuations['qty_on_hand'];
+                        $incomingAvgCost = $valuations['avg_cost'];
+                        $incomingLastCost = $valuations['last_cost'];
+                        $totalNewAvgCost = $incomingQty * $incomingAvgCost;
+
+                        $totalAvgCost = $totalOldAvgCost + $totalNewAvgCost;
+                        $totalQty = $oldQtyOnHand + $incomingQty;
+                        $newAvgCost = $totalAvgCost / $totalQty;
+
+                        // simpan new avg cost
+                        $componentCost->qty_on_hand = $totalQty;
+                        $componentCost->avg_cost = $newAvgCost;
+                        $componentCost->last_cost = $incomingLastCost;
+                        $componentCost->save();
+
+                        $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}");
+                        notify()->success('Sukses');
+                        return;
+                    }
+
+
+                    notify()->error('ada sesuatu yang salah');
+                    Log::error('gagal mengambil component cost untuk menghitung inventory valuation bahan baru');
+                    report(new Exception('gagal mengambil component cost untuk menghitung inventory valuation bahan baru'));
+
+                    return;
+                }
+
+                $centralReceipt = CentralKitchenReceipts::create([
+                    'warehouse_outbounds_id' => $this->componentAdditionShipping['warehouse_outbounds_id'],
+                ]);
+
+
+                $centralReceipt->detail()->create([
+                    'items_id' => $this->componentAdditionShipping['items_id'],
+                    'qty_accept' => $this->componentAdditionShipping['qty_received'],
+                ]);
+
+
+                $centralAdditionRequest = CentralProductionAdditionRequest::find($this->componentAdditionShipping['addition_request_id']);
+                $centralAdditionRequest->amount_received = $this->componentAdditionShipping['qty_received'];
+                $centralAdditionRequest->save();
+
+                $valuations = [];
+                $itemId =  $this->componentAdditionShipping['items_id'];
+
+                // kalkulasi stock
+                foreach ($centralReceipt->outbound->reference->first()->shipping->shippingItem as $shippingItem) {
+
+                    $stockItem = $shippingItem->stockItem;
+                    $warehouseItem = $stockItem->warehouseItem->items->id;
+
+                    if (!is_null($warehouseItem) && $warehouseItem == $itemId) {
+                        $valuations = [
+                            'items_id' => $itemId,
+                            'qty_on_hand' => str_replace('.', '',$this->componentAdditionShipping['qty_received'] ),
+                            'avg_cost' => $stockItem->avg_cost,
+                            'last_cost' => $stockItem->last_cost,
+                        ];
+                    }
+                }
+
+                if(empty($valuations)) {
+                    notify()->error('ada sesuatu yang salah');
+                    Log::error('gagal mendapatkan inventory valuation saat menerima bahan kiriman baru');
+                    report(new Exception('gagal mendapatkan inventory valuation saat menerima bahan kiriman baru'));
+                    return;
+                }
+
+                // input cogs bahan baru ke production component cost
+                $componentCost = $this->production->components->where('items_id', $itemId);
+                if($componentCost->isNotEmpty()) {
+                    $componentCost = $componentCost->first();
+                    $oldQtyOnHand= $componentCost->qty_on_hand;
+                    $oldLastCost = $componentCost->last_cost;
+                    $oldAvgCost = $componentCost->avg_cost;
+                    $totalOldAvgCost = $oldQtyOnHand * $oldAvgCost;
+
+                    $incomingQty = $valuations['qty_on_hand'];
+                    $incomingAvgCost = $valuations['avg_cost'];
+                    $incomingLastCost = $valuations['last_cost'];
+                    $totalNewAvgCost = $incomingQty * $incomingAvgCost;
+
+                    $totalAvgCost = $totalOldAvgCost + $totalNewAvgCost;
+                    $totalQty = $oldQtyOnHand + $incomingQty;
+                    $newAvgCost = $totalAvgCost / $totalQty;
+
+                    // simpan new avg cost
+                    $componentCost->qty_on_hand = $totalQty;
+                    $componentCost->avg_cost = $newAvgCost;
+                    $componentCost->last_cost = $incomingLastCost;
+                    $componentCost->save();
+
+                    $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}");
+                    notify()->success('Sukses');
+                    return;
+                }
+
+
+                notify()->error('ada sesuatu yang salah');
+                Log::error('gagal mengambil component cost untuk menghitung inventory valuation bahan baru');
+                report(new Exception('gagal mengambil component cost untuk menghitung inventory valuation bahan baru'));
+            });
+
+        }catch (Exception $exception) {
+            notify()->error('ada sesuatu yang salah');
+            Log::error('gagal menerima item receipt dari bahan tambahan yang dikirim');
+            report($exception);
+
+        }
     }
 
     private function endingProduction()

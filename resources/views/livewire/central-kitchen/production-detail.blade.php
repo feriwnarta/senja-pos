@@ -1040,6 +1040,7 @@
                                         <td>
                                             <input wire:model.live="componentAdditionShipping.qty_received" type="text" class="form-control input-default" x-mask:dynamic="$money($input, ',', '.')"
                                             >
+                                            @error("componentAdditionShipping.qty_received") <span class="text-danger">{{ $message }}</span> @enderror
                                         </td>
                                     </tr>
                                 </tbody>
