@@ -5,7 +5,9 @@ namespace Tests\Feature\Warehouse;
 use App\Contract\Warehouse\WarehouseItemReceiptRepository;
 use App\Dto\WarehouseItemReceiptDTO;
 use App\Models\CentralProduction;
+use App\Models\StockItem;
 use App\Models\WarehouseItemReceiptRef;
+use App\Service\Impl\CogsValuationCalc;
 use App\Service\Warehouse\WarehouseItemReceiptService;
 use Carbon\Carbon;
 use Exception;
@@ -237,7 +239,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
 
         $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) use ($warehouseCode, $warehouseId) {
             $mock->shouldReceive('getWarehouseCodeByWarehouseReceipt')->once()->andReturn($warehouseCode);
-            $mock->shouldReceive('getWarehouseIdByWarehouseReceipt')->once()->andReturn($warehouseId);
+            $mock->shouldReceive('getWarehouseIdByWarehouseReceipt')->twice()->andReturn($warehouseId);
             $mock->shouldReceive('getLastCodeByWarehouse')->once()->andReturn([
                 'code' => 'WHIN20002',
                 'increment' => 1,
@@ -344,7 +346,6 @@ class WarehouseItemReceiptServiceTest extends TestCase
         $result = $method->invokeArgs($this->service, [new CentralProduction(), fake()->uuid, []]);
     }
 
-
     public function testProcessProductionAcceptanceFailedUpdateAmountReceivedExistingDetailsFalse()
     {
 
@@ -372,6 +373,36 @@ class WarehouseItemReceiptServiceTest extends TestCase
         $method = $reflection->getMethod('processProductionAcceptance');
         $method->setAccessible(true);
         $result = $method->invokeArgs($this->service, [new CentralProduction(), fake()->uuid, []]);
+    }
+
+    public function testInsertRemainingStockSuccess()
+    {
+        $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) {
+            $stockItem = new StockItem();
+            $stockItem->incoming_qty = 10;
+            $stockItem->incoming_value = 0;
+            $stockItem->price_diff= 0;
+            $stockItem->inventory_value = 10000;
+            $stockItem->qty_on_hand = 10;
+            $stockItem->avg_cost = 1000;
+            $stockItem->last_cost = 1000;
+            $stockItem->minimum_stock = 0;
+
+            $mock->shouldReceive('getStockItemByWarehouseItemId')
+                ->once()
+                ->andReturn($stockItem);
+
+            $mock->shouldReceive('insertNewStockItem')->once();
+        });
+
+        $this->service = new WarehouseItemReceiptService($repository);
+        $reflection = new ReflectionClass(get_class($this->service));
+        self::assertNotNull($reflection);
+
+        $method = $reflection->getMethod('insertRemainingStock');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($this->service, [new CogsValuationCalc(), '', ['qty' => 10, 'avg_cost' => 10]]);
+        self::assertInstanceOf(StockItem::class, $result);
     }
 
 

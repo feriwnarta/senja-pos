@@ -6,6 +6,7 @@ use App\Contract\Warehouse\WarehouseItemReceiptRepository;
 use App\Dto\WarehouseItemReceiptDTO;
 use App\Models\CentralProduction;
 use App\Models\Purchase;
+use App\Models\StockItem;
 use App\Models\WarehouseItemReceiptRef;
 use App\Service\Impl\CogsValuationCalc;
 use Carbon\Carbon;
@@ -30,7 +31,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
      * penerimaan ini akan melakukan 2 flow masuk item
      * 1. masuk dari pembelian
      * 2. masuk dari produksi
-     *
+     *+
      * @param WarehouseItemReceiptDTO $itemReceiptDTO
      * @return void
      */
@@ -194,7 +195,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
         }
     }
 
-    private function insertRemainingStock($cogs, $warehouseItemId, $remainingData)
+    private function insertRemainingStock($cogs, $warehouseItemId, $remainingData): StockItem
     {
         $incomingQty = $remainingData['qty'];
         $incomingAvgCost = $remainingData['avg_cost'];
@@ -213,7 +214,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
             throw new Exception('Failed to calculate avg price for remaining items in production');
         }
 
-        $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
+        return $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
     }
 
     private function insertFinishedStock($cogs, $warehouseItemId, $qty, $productionId)
@@ -264,6 +265,8 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
 
         return $totalCost;
     }
+
+
 
 
 }
