@@ -29,4 +29,8 @@ class WarehouseShippingItem extends Model
             $model->updated_by = $userId;
         });
     }
+
+    public function stockItem() {
+        return $this->belongsTo(StockItem::class, 'stock_items_id');
+    }
 }

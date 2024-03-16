@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Auth;
 
-class StockItem extends Model
+class CentralProductionFinishDetail extends Model
 {
     use HasFactory, HasUuids;
 
@@ -31,10 +31,11 @@ class StockItem extends Model
         });
     }
 
-    public function warehouseItem(): BelongsTo
-    {
-        return $this->belongsTo(WarehouseItem::class, 'warehouse_items_id');
+    public function finish(): BelongsTo {
+        return $this->belongsTo(CentralProductionFinish::class, 'central_production_finishes_id');
     }
 
-
+    public function item(): BelongsTo {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
 }

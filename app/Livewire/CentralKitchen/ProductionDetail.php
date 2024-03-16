@@ -3,9 +3,12 @@
 namespace App\Livewire\CentralKitchen;
 
 use App\Models\CentralProduction;
+use App\Models\CentralProductionAdditionRequest;
 use App\Models\CentralProductionRemaining;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
+use App\Models\WarehouseOutbound;
+use App\Models\WarehouseOutboundHistory;
 use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use Exception;
@@ -89,9 +92,8 @@ class ProductionDetail extends Component
     private function storeItemReceipt(array $items, string $outboundId)
     {
         try {
-
             $this->productionService = app()->make(CentralProductionServiceImpl::class);
-            $result = $this->productionService->processItemReceiptProduction($items, $outboundId);
+            $result = $this->productionService->processItemReceiptProduction($items, $outboundId, $this->production);
 
             if ($result) {
                 notify()->success('Berhasil validasi dan terima bahan', 'Sukses');
@@ -372,6 +374,104 @@ class ProductionDetail extends Component
 
     }
 
+    public array $componentCosts = [];
+    public array $newItemRequestWarehouse = [];
+    public string $warehouseId;
+    public string $typeGetNewRaw = 'getFromWarehouse';
+    public bool $isRequestNewItem = false;
+
+    public function loadNewItemFromWarehouse() {
+        $this->newItemRequestWarehouse = [];
+        foreach ($this->componentCosts as $componentCost) {
+            $this->newItemRequestWarehouse[] = [
+                'type' => 'warehouse_request',
+                'isChecked' => false,
+                'item_id' => $componentCost['items_id'],
+                'item_name' => $componentCost['item_name'],
+                'unit' => $componentCost['unit'],
+                'starting' => $componentCost['qty_on_hand'],
+                'additional_qty' => 0,
+            ];
+        }
+    }
+
+    public function handleValidateNewRequest() {
+        $this->validate([
+            'newItemRequestWarehouse.*.additional_qty' => 'required|numeric|min:0'
+        ], [
+            'newItemRequestWarehouse.*.additional_qty' => 'Nilai tambahan harus diisi dan nilainya tidak boleh kurang dari 0'
+        ]);
+    }
+
+    public function processNewItemRequest() {
+
+        $this->validate([
+            'newItemRequestWarehouse.*.additional_qty' => 'required|numeric|min:0'
+        ], [
+            'newItemRequestWarehouse.*.additional_qty' => 'Nilai tambahan harus diisi dan nilainya tidak boleh kurang dari 0'
+        ]);
+
+        // proses permintaan baru
+        try {
+            DB::transaction(function() {
+                $result = $this->createProductionAdditionRequest($this->newItemRequestWarehouse, $this->warehouseId, $this->production->id);
+
+                    if($result) {
+                        $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}");
+                        notify()->success('Sukses tambah bahan');
+                    }
+            });
+
+        }catch (Exception $exception) {
+            notify()->error('ada sesuatu yang salah');
+            Log::error('gagal membuat permintaan bahan tambahan dari produksi');
+            report($exception);
+        }
+    }
+
+
+    private function createProductionAdditionRequest(array $items, string $warehouseId, string $productionId) {
+        $isCreated = false;
+
+        $outbound = WarehouseOutbound::create([
+            'warehouses_id' => $this->warehouseId,
+            'central_productions_id' => $productionId,
+        ]);
+
+        WarehouseOutboundHistory::create([
+            'warehouse_outbounds_id' => $outbound->id,
+            'desc' => 'Permintaan bahan tambahan dibuat dari central kitchen',
+
+            'status' => 'Baru'
+        ]);
+
+        foreach ($items as $item) {
+            if($item['additional_qty'] > 0){
+               $this->production->additionRequest()->create([
+                   'warehouse_outbounds_id' => $outbound->id,
+                   'items_id' => $item['item_id'],
+                   'amount_addition' => $item['additional_qty'],
+                   'amount_received' => 0,
+               ]);
+
+                $outbound->outboundItem()->create([
+                    'items_id' =>$item['item_id'],
+                    'qty' => $item['additional_qty']
+                ]);
+               $isCreated = true;
+            }
+        }
+
+        return $isCreated;
+    }
+
+    private function createNewRequestItemOut() {
+
+    }
+
+    public array $componentAdditionItems = [];
+
+
     /**
      * dapatkan hasil produksi
      *
@@ -386,28 +486,79 @@ class ProductionDetail extends Component
 
         try {
 
-            $result = $this->production->requestStock->requestStockDetail->map(function ($request) {
+            $this->warehouseId = $this->requestStock->warehouses_id;
 
-                if ($request->item->route == 'PRODUCECENTRALKITCHEN') {
-
-
-                    return [
-                        'id' => $request->items_id,
-                        'name' => $request->item->name,
-                        'target_qty' => $request->qty,
-                        'unit' => $request->item->unit->name
-                    ];
-                }
-
-            })->filter()->toArray();
+            $finishes = $this->production->finishes->map(function($finish) {
+               return [
+                   'id' => $finish->item_id,
+                   'name' => $finish->items->name,
+                   'target_qty' => $finish->amount_target,
+                   'unit' => $finish->items->unit->name,
+               ];
+            })->toArray();
 
 
-            $this->components = $result;
+
+            $components = $this->production->components->map(function($component) {
+                return [
+                    'id' => $component->id,
+                    'items_id' => $component->items_id,
+                    'item_name' => $component->items->name,
+                    'qty_on_hand' => $component->qty_on_hand,
+                    'unit' => $component->items->unit->name,
+                ];
+            })->toArray();
+
+            $componentAdditionItem = $this->production->additionRequest->map(function($request) {
+               return [
+                   'id' => $request->id,
+                   'item_id' => $request->items_id,
+                   'item_name' => $request->item->name,
+                   'unit' => $request->item->unit->name,
+                   'amount_addition' => $request->amount_addition,
+                   'amount_received' => $request->amount_received,
+               ];
+            })->toArray();
+
+            $this->components = $finishes;
+            $this->componentCosts = $components;
+            $this->componentAdditionItems = $componentAdditionItem;
 
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }
+    }
+
+    public bool $isAdditionRequestShipping;
+    public array $componentAdditionShipping = [];
+
+    public function processReceiptAdditional($id, $itemId) {
+      try {
+          $additionRequest = CentralProductionAdditionRequest::findOrFail($id);
+          $status = $additionRequest->outbound->reference->isNotEmpty();
+
+          if($status) {
+            $this->isAdditionRequestShipping = true;
+            $shipping = $additionRequest->outbound->outboundItem->where('items_id', $itemId)->first();
+            $this->componentAdditionShipping = [
+                'outbound_items_id' => $shipping->id,
+                'addition_request_id' => $id,
+                'items_id' => $shipping->items_id,
+                'item_name' => $shipping->item->name,
+                'unit_name' => $shipping->item->unit->name,
+                'qty_request' => $shipping->qty,
+                'qty_send' => $shipping->qty_send,
+                'qty_received' => 0,
+            ];
+            return;
+          }
+          $this->componentAdditionShipping = [];
+        $this->isAdditionRequestShipping = false;
+      }catch (Exception $exception) {
+          Log::error('gagal mengambil data process receipt additional');
+          report($exception);
+      }
     }
 
     private function endingProduction()
@@ -578,10 +729,19 @@ class ProductionDetail extends Component
             $this->productionService = app()->make(CentralProductionServiceImpl::class);
             // lakukan pencarian central kitchen id
 
-            $centralId = RequestStock::findOrFail($this->requestId)->warehouse->centralKitchen->first()->id;
+            $requestStock = RequestStock::findOrFail($this->requestId);
+            $centralId = $requestStock->warehouse->centralKitchen->first()->id;
+
+            $dataForProductionFinishes = $requestStock->requestStockDetail->map(function($detail) {
+                return [
+                    'item_id' => $detail->items_id,
+                    'amount_target' => $detail->qty,
+                    'amount_reached' => 0
+                ];
+            })->toArray();
 
             // buat produksi
-            $result = $this->productionService->createProduction($this->requestId, $centralId);
+            $result = $this->productionService->createProduction($this->requestId, $centralId, $dataForProductionFinishes);
 
             if ($result == 'failed') {
                 Log::error('Error saat membuat produksi:');
@@ -637,7 +797,7 @@ class ProductionDetail extends Component
 
         try {
             $this->productionService = app()->make(CentralProductionServiceImpl::class);
-            $result = $this->productionService->requestMaterialToWarehouse(materials: $this->productionComponentSave, warehouseId: $this->requestStock->warehouses_id, productionId: $this->production->id, requestId: $this->requestId);
+            $result = $this->productionService->requestMaterialToWarehouse($this->production, materials: $this->productionComponentSave, warehouseId: $this->requestStock->warehouses_id, productionId: $this->production->id, requestId: $this->requestId);
 
             if ($result) {
                 notify()->success('Berhasil membuat permintaan bahan', 'Sukses');

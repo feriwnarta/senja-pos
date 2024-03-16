@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 
-class StockItem extends Model
+class CentralProductionComponentCost extends Model
 {
     use HasFactory, HasUuids;
 
@@ -31,10 +32,11 @@ class StockItem extends Model
         });
     }
 
-    public function warehouseItem(): BelongsTo
-    {
-        return $this->belongsTo(WarehouseItem::class, 'warehouse_items_id');
+    public function production(): BelongsTo {
+        return $this->belongsTo(CentralProduction::class, 'central_productions_id');
     }
 
-
+    public function items(): BelongsTo {
+        return $this->belongsTo(Item::class, 'items_id');
+    }
 }

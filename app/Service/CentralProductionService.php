@@ -10,7 +10,7 @@ interface CentralProductionService
     public function generateCode(string $requestStockId, string $centralKitchenId): array;
 
 
-    public function createProduction(string $requestStockId, string $centralKitchenId): ?CentralProduction;
+    public function createProduction(string $requestStockId, string $centralKitchenId, array $dataForProductionFinishes): ?CentralProduction;
 
     public function cancelCreateProduction(CentralProduction $centralProduction);
 
@@ -25,14 +25,14 @@ interface CentralProductionService
     // TODO: Perbaiki service ini seharusnya ada diwarehouse service
     public function joinSameItemRequestMaterial(array $materials);
 
-    public function requestMaterialToWarehouse(array $materials, string $warehouseId, string $productionId, string $requestId);
+    public function requestMaterialToWarehouse(CentralProduction $production, array $materials, string $warehouseId, string $productionId, string $requestId);
 
     public function genereateCodeItemOut(string $warehouseId);
 
 
     public function saveCodeItemOut(string $outboundId, string $warehouseId);
 
-    public function processItemReceiptProduction(array $items, string $outboundId);
+    public function processItemReceiptProduction(array $items, string $outboundId, CentralProduction $production);
 
     public function finishProduction(array $items, string $productionId, string $note);
 

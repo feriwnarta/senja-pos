@@ -43,6 +43,11 @@ class CentralProduction extends Model
         return $this->belongsTo(RequestStock::class, 'request_stocks_id');
     }
 
+    public function additionRequest(): HasMany
+    {
+        return $this->hasMany(CentralProductionAdditionRequest::class, 'central_productions_id');
+    }
+
     public function result(): HasMany
     {
         return $this->hasMany(CentralProductionResult::class, 'central_productions_id');
@@ -77,6 +82,14 @@ class CentralProduction extends Model
     public function history(): HasMany
     {
         return $this->hasMany(CentralProductionHistory::class, 'central_productions_id');
+    }
+
+    public function components(): HasMany {
+        return $this->hasMany(CentralProductionComponentCost::class, 'central_productions_id');
+    }
+
+    public function finishes(): HasMany {
+        return  $this->hasMany(CentralProductionFinish::class, 'central_productions_id');
     }
 
 
