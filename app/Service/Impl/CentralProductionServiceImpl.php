@@ -448,27 +448,22 @@ class CentralProductionServiceImpl implements CentralProductionService
                 foreach ($extractItem as $item) {
                     $itemId = $item['items_id'];
                     $stockItem = $shippingItem->stockItem;
-                    $warehouseItem = $stockItem->warehouseItem->items->where('id', $itemId)->first();
+                    $warehouseItem = $stockItem->warehouseItem->items->id;
 
-                    if (!is_null($warehouseItem)) {
-                        // Pengecekan apakah item sudah ada dalam hasil sebelumnya
-                        $existingItem = collect($results)->where('items_id', $itemId)->first();
+                    if (!is_null($warehouseItem) && $warehouseItem == $itemId) {
 
-                        if ($existingItem) {
-                            $existingItem['qty_on_hand'] += str_replace('.', '', $item['qty_accept']);
-                        } else {
-                            // Jika item belum ada, tambahkan ke hasil
-                            $results[] = [
-                                'items_id' => $itemId,
-                                'qty_on_hand' => str_replace('.', '', $item['qty_accept']),
-                                'avg_cost' => $stockItem->avg_cost,
-                                'last_cost' => $stockItem->last_cost,
-                            ];
-                        }
+
+                        // Jika item belum ada, tambahkan ke hasil
+                        $results[] = [
+                            'items_id' => $itemId,
+                            'qty_on_hand' => str_replace('.', '', $item['qty_accept']),
+                            'avg_cost' => $stockItem->avg_cost,
+                            'last_cost' => $stockItem->last_cost,
+                        ];
                     }
                 }
             }
-
+            
             $production->components()->createMany($results);
             $outbound = CentralKitchenReceipts::create([
                 'warehouse_outbounds_id' => $outboundId,

@@ -3,11 +3,14 @@
 namespace App\Livewire\CentralKitchen;
 
 use App\Models\CentralKitchenReceipts;
+use App\Models\CentralKitchenStock;
 use App\Models\CentralProduction;
 use App\Models\CentralProductionAdditionRequest;
 use App\Models\CentralProductionRemaining;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
+use App\Models\WarehouseItemReceipt;
+use App\Models\WarehouseItemReceiptRef;
 use App\Models\WarehouseOutbound;
 use App\Models\WarehouseOutboundHistory;
 use App\Service\CentralProductionService;
@@ -530,6 +533,112 @@ class ProductionDetail extends Component
         notify()->error('ada sesuatu yang salah');
         Log::error('gagal mendapatkan total raws usage receipe');
         report(new Exception("gagal mendapatkan total raws usage recipe di produksi {$this->requestId}"));
+    }
+
+    public function sendItemProduction()
+    {
+        Log::info('mengirim hasil produksi');
+
+        DB::transaction(function () {
+            if ($this->isSaveOnCentral) {
+                $this->saveItemRemainingToCentralKitchen();
+                $this->production->history()->create([
+                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+                    'status' => 'Selesai'
+                ]);
+
+                $result = $this->requestStock->requestStockHistory()->create([
+                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+                    'status' => 'Pemenuhan',
+                ]);
+                $this->productionService = app()->make(CentralProductionServiceImpl::class);
+                $this->productionService->createProductionShipping($this->production->id, $this->production->centralKitchen->id, $this->production->centralKitchen->code);
+
+                // Simpan referensi terlebih dahulu ke dalam WarehouseItemReceiptRef
+                $itemReceiptRef = $this->production->reference()->save(new WarehouseItemReceiptRef());
+                // buat item receipt
+                $warehouseReceipt = WarehouseItemReceipt::create([
+                    'warehouses_id' => $this->production->outbound->last()->warehouse->id,
+                    'warehouse_item_receipt_refs_id' => $itemReceiptRef->id,
+                ]);
+
+                // buat history item receipt
+                $warehouseReceipt->history()->create([
+                    'desc' => 'Membuat draft penerimaan barang dari produksi',
+                    'status' => 'Draft',
+                ]);
+
+                // bahan yang akan dikirim
+                if ($this->production->finishes->isEmpty()) {
+                    notify()->error("ada sesuatu yang salah");
+                    report(new Exception('gagal membuat pengiriman karena produksi finishing data kosong'));
+                    return;
+                }
+                $this->production->finishes->each(function ($finishData) use ($warehouseReceipt) {
+                    $warehouseReceipt->details()->create([
+                        'items_id' => $finishData->item_id,
+                        'qty_send' => $finishData->amount_reached,
+                    ]);
+                });
+
+                Log::info('sukses buat pengiriman bahan item sisa disimpan di central kitchen');
+                $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}");
+                notify()->success('Sukses');
+
+            } else {
+
+            }
+        });
+    }
+
+
+    private function saveItemRemainingToCentralKitchen()
+    {
+        $remaining = $this->production->remaining;
+
+        if ($remaining->isNotEmpty()) {
+
+            $remaining->first()->detail->each(function ($detail) {
+                $itemId = $detail['items_id'];
+                $qtyOnHand = $detail['qty_remaining'];
+                $avgCost = $detail['avg_cost'];
+                $lastCost = $detail['last_cost'];
+
+                $centralKitchenStock = CentralKitchenStock::where('items_id', $itemId)->get();
+
+                if ($centralKitchenStock->isEmpty()) {
+                    $result = CentralKitchenStock::create([
+                        'central_kitchens_id' => $this->production->centralKitchen->first()->id,
+                        'items_id' => $itemId,
+                        'qty_on_hand' => $qtyOnHand,
+                        'avg_cost' => $avgCost,
+                        'last_cost' => $lastCost,
+                    ]);
+
+
+                } else {
+                    $stock = $centralKitchenStock->first();
+                    // hitung avg cost & last cost baru
+
+                    // hitung old avg cost
+                    $oldAvgCost = $stock->avg_cost;
+                    $oldQtyOnHand = $stock->qty_on_hand;
+                    $totalAvgCostOld = $oldAvgCost * $oldQtyOnHand;
+
+
+                    // hitung new avg cost
+                    $incomingAvgCost = $avgCost * $qtyOnHand;
+                    $totalQtyOnHand = $oldQtyOnHand + $qtyOnHand;
+                    $totalAvgCost = ($totalAvgCostOld + $incomingAvgCost) / ($totalQtyOnHand);
+
+                    $stock->qty_on_hand = $totalQtyOnHand;
+                    $stock->avg_cost = $totalAvgCost;
+                    $stock->last_cost = $lastCost;
+
+                    $stock->save();
+                }
+            });
+        }
     }
 
     public function handleUsageTotalRawItemChange($totalRawItemsUsageIndex, $recipeIndex, $itemId)
@@ -1084,6 +1193,7 @@ class ProductionDetail extends Component
 
                     $result = $this->production->finishes->where('item_id', $targetItemId)->first();
                     $result->amount_reached = $resultQty;
+                    $result->details()->createMany($details);
                     $result->save();
                 }
 
@@ -1091,9 +1201,12 @@ class ProductionDetail extends Component
                 $details = [];  // Collect details for bulk creation
 
                 foreach ($this->globalRawItems as $globalItem) {
+
+
                     if ($globalItem['remaining'] <= 0) {
                         continue;  // Skip items with no remaining quantity
                     }
+
 
                     $details[] = [
                         'items_id' => $globalItem['items_id'],
@@ -1111,7 +1224,8 @@ class ProductionDetail extends Component
                     }
 
                     // Create remaining details efficiently using bulk creation
-                    $remaining->detail()->createMany($details);
+                    $result = $remaining->detail()->createMany($details);
+
                 }
 
 

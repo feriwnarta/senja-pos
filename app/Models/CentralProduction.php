@@ -84,12 +84,14 @@ class CentralProduction extends Model
         return $this->hasMany(CentralProductionHistory::class, 'central_productions_id');
     }
 
-    public function components(): HasMany {
+    public function components(): HasMany
+    {
         return $this->hasMany(CentralProductionComponentCost::class, 'central_productions_id');
     }
 
-    public function finishes(): HasMany {
-        return  $this->hasMany(CentralProductionFinish::class, 'central_productions_id');
+    public function finishes(): HasMany
+    {
+        return $this->hasMany(CentralProductionFinish::class, 'central_productions_id');
     }
 
 

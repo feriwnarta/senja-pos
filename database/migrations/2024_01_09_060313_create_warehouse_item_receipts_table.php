@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->uuid('warehouses_id')->nullable(false);
             $table->string('code')->nullable(true)->unique();
-            $table->bigInteger('increment')->default(0)->unique();
+            $table->bigInteger('increment')->default(0);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
             $table->foreign('warehouses_id')->references('id')->on('warehouses')->onDelete('cascade');

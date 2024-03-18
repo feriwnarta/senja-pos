@@ -155,7 +155,7 @@
 
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
-                                wire:click="sendItem"
+                                wire:click="sendItemProduction"
                                 wire:confirm="Anda yakin akan mengirim hasil produksi?"
                         >Kirim
                         </button>
@@ -758,7 +758,7 @@
                             @endforeach
                             <tr>
                                 <td class="text-center subtitle-3-bold" colspan="4">
-                                    Hasil produksi ({{ $itemUsage['item']['name'] }})
+                                    Hasil jadi ({{ $itemUsage['item']['name'] }})
                                 </td>
                             </tr>
                             <tr>
@@ -859,13 +859,6 @@
                         </p>
                     </div>
 
-                    <div class="margin-top-24">
-                        <p class="subtitle-3-regular">Tanggal selesai produksi</p>
-                        <div id="divider" class="margin-top-6"></div>
-                        <p class="margin-top-6 subtitle-3-medium">
-                            {{ Carbon::createFromFormat('Y-m-d H:i:s', $production->remaining->first()->created_at )->locale('id_ID')->isoFormat('D MMMM Y') }}
-                        </p>
-                    </div>
                 </div>
                 <div class="col-sm-5 offset-1">
                     <div class="result-production">
@@ -881,13 +874,15 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($production->finishes as $result)
-                                <tr wire:key="{{ $loop->iteration }}">
-                                    <td>{{ $result->items->name }}</td>
-                                    <td>{{ $result->items->unit->name }}</td>
-                                    <td>{{ $result->amount_reached }}</td>
-                                </tr>
-                            @endforeach
+                            @if($production->finishes->isNotEmpty())
+                                @foreach($production->finishes as $result)
+                                    <tr wire:key="{{ $loop->iteration }}">
+                                        <td>{{ $result->items->name }}</td>
+                                        <td>{{ $result->items->unit->name }}</td>
+                                        <td>{{ $result->amount_reached }}</td>
+                                    </tr>
+                                @endforeach
+                            @endif
                             </tbody>
                         </table>
                     </div>
@@ -898,9 +893,8 @@
                             <div class="form-check form-switch margin-left-8">
                                 <input class="form-check-input" type="checkbox" role="switch"
                                        id="flexSwitchCheckChecked"
-                                       checked>
-                                <label class="form-check-label" for="flexSwitchCheckChecked"
-                                       wire:model="isSaveOnCentral">Simpan
+                                       wire:model="isSaveOnCentral">
+                                <label class="form-check-label" for="flexSwitchCheckChecked">Simpan
                                     dicentral
                                     kitchen</label>
                             </div>
@@ -916,7 +910,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if(isset($production->remaining))
+                            @if($production->remaining->isNotEmpty())
                                 @foreach($production->remaining->first()->detail as $itemRemaining)
                                     <tr wire:key="{{ $loop->iteration }}">
                                         <td>{{ $itemRemaining->item->name }}</td>
