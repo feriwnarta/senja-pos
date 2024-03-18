@@ -44,6 +44,8 @@ class ProductionDetail extends Component
     public array $componentAdditionItems = [];
     public bool $isAdditionRequestShipping;
     public array $componentAdditionShipping = [];
+    public array $globalRawItems = [];
+    public array $totalRawItemsUsage = [];
     private CentralProductionService $productionService;
 
     /**
@@ -184,8 +186,8 @@ class ProductionDetail extends Component
 
             case "Penyelesaian" :
                 $this->setProduction();
-                $this->endingProduction();
-                $this->getItemWithRemaining();
+                $this->getGlobalRawItems();
+                $this->getTotalRawItemsUsage();
                 break;
 
             case "Menunggu pengiriman" :
@@ -194,7 +196,6 @@ class ProductionDetail extends Component
                 break;
 
         }
-
     }
 
     /**
@@ -440,84 +441,115 @@ class ProductionDetail extends Component
         }
     }
 
-    private function endingProduction()
+    private function getGlobalRawItems(): void
     {
-
         if (!isset($this->production) || $this->production == null) {
             $this->production = $this->findProductionById($this->requestId);
         }
 
         try {
 
-            // ambil hasil data hasil produksi ke central production ending
-            $result = $this->production->ending->map(function ($ending) {
+            $components = $this->production->components->map(function ($component) {
                 return [
-                    'name' => $ending->targetItem->name,
-                    'unit' => $ending->targetItem->unit->name,
-                    'result_qty' => number_format($ending->qty, 0, '.', '.')
+                    'id' => $component->id,
+                    'items_id' => $component->items_id,
+                    'item_name' => $component->items->name,
+                    'qty_on_hand' => $component->qty_on_hand,
+                    'unit' => $component->items->unit->name,
+                    'usage' => 0,
+                    'remaining' => 0,
                 ];
             })->toArray();
 
-
-            $this->components = $result;
-
-
+            $this->globalRawItems = $components;
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
         }
     }
 
-    /**
-     * dapatkan array item dengan input sisa
-     *
-     * @return void
-     */
-    private function getItemWithRemaining()
+    public function getTotalRawItemsUsage()
+    {
+        // jika request stock kosong maka isi request stock
+        if (!isset($this->requestStock)) {
+            $this->requestStock = RequestStock::findOrFail($this->requestId);
+        }
+
+        if (isset($this->requestStock) && $this->requestStock != null && $this->requestStock->requestStockDetail->isNotEmpty()) {
+
+            $components = $this->requestStock->requestStockDetail
+                ->lazy(10)
+                ->map(function ($detail) {
+                    $detail->load([
+                        'item.recipe.recipeDetail', // Load all recipe details
+                    ]);
+
+                    $recipes = [];
+
+                    // Check if item has a recipe and belongs to the specified route
+                    if ($detail->item->route == 'PRODUCECENTRALKITCHEN' && $detail->item->recipe->isNotEmpty()) {
+                        foreach ($detail->item->recipe as $recipe) {
+                            foreach ($recipe->recipeDetail as $recipeDetail) {
+                                $recipes[] = [
+                                    'isChecked' => true,
+                                    'id' => $recipeDetail->id,
+                                    'item_component_id' => $recipeDetail->item->id,
+                                    'item_component_name' => $recipeDetail->item->name,
+                                    'item_component_unit' => $recipeDetail->item->unit->name,
+                                    'item_component_usage' => number_format($detail->qty * $recipeDetail->usage, 0, '.', '.'),
+                                    'usage' => 0,
+                                ];
+                            }
+                        }
+
+                        return [
+                            'item' => [
+                                'id' => $detail->item->id,
+                                'name' => $detail->item->name,
+                            ],
+                            'recipe' => $recipes,
+                        ];
+                    } else {
+                        return null; // Skip this item if it doesn't meet the criteria
+                    }
+                })
+                ->filter() // Remove null values
+                ->toArray(); // Convert to array if needed
+
+            $this->totalRawItemsUsage = $components;
+            return;
+        }
+
+        notify()->error('ada sesuatu yang salah');
+        Log::error('gagal mendapatkan total raws usage receipe');
+        report(new Exception("gagal mendapatkan total raws usage recipe di produksi {$this->requestId}"));
+    }
+
+    public function handleUsageTotalRawItemChange($totalRawItemsUsageIndex, $recipeIndex, $itemId)
     {
 
-        try {
+        if (isset($itemId) && isset($totalRawItemsUsageIndex) && isset($recipeIndex)) {
+            foreach ($this->globalRawItems as $key => $rawItem) {
+                $this->globalRawItems[$key]['usage'] = 0;
+                $globalItemId = $rawItem['items_id'];
+                foreach ($this->totalRawItemsUsage as $totalUsage) {
+                    foreach ($totalUsage['recipe'] as $recipe) {
+                        $itemUsageId = $recipe['item_component_id'];
+                        if ($itemUsageId == $globalItemId) {
+                            $usage = $recipe['usage'];
+                            $this->globalRawItems[$key]['usage'] += $usage;
+                        }
+                    }
+                }
 
-            if (!isset($this->production) || $this->production == null) {
-                $this->production = $this->findProductionById($this->requestId);
+                if ($this->globalRawItems[$key]['usage'] != 0) {
+                    $this->globalRawItems[$key]['remaining'] = $this->globalRawItems[$key]['qty_on_hand'] - $this->globalRawItems[$key]['usage'];
+                }
+
             }
 
 
-            $data = $this->production->outbound->flatMap(function ($outbound) {
-                $outbound->load('receipt.detail.item.unit');
-
-                return $outbound->receipt->map(function ($receipt) {
-                    $receiptDetail = $receipt->detail;
-
-                    $result = [];
-
-                    foreach ($receiptDetail as $receipt) {
-                        $item = $receipt ? $receipt->item : null;
-
-                        $result[] = [
-                            'item_id' => optional($item)->id,
-                            'item_name' => optional($item)->name,
-                            'qty_accept' => number_format(optional($receipt)->qty_accept, 0, '', ''),
-                            'qty_use' => number_format(optional($receipt)->qty_accept, 0, '', ''),
-                            'unit' => optional($item->unit)->name,
-                            'isChecked' => '',
-                        ];
-                    }
-
-                    return $result;
-                });
-            })->flatten(1)->toArray();
-
-
-            $this->itemRemaining = $data;
-
-
-        } catch (Exception $exception) {
-            Log::error('gagal mendapatkan item untuk ditampilkan di item sisa produksi');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
         }
-
     }
 
     public function loadNewItemFromWarehouse()
@@ -1192,6 +1224,86 @@ class ProductionDetail extends Component
             }
 
         }
+    }
+
+    private function endingProduction()
+    {
+
+        if (!isset($this->production) || $this->production == null) {
+            $this->production = $this->findProductionById($this->requestId);
+        }
+
+        try {
+
+            // ambil hasil data hasil produksi ke central production ending
+            $result = $this->production->ending->map(function ($ending) {
+                return [
+                    'name' => $ending->targetItem->name,
+                    'unit' => $ending->targetItem->unit->name,
+                    'result_qty' => number_format($ending->qty, 0, '.', '.')
+                ];
+            })->toArray();
+
+
+            $this->components = $result;
+
+
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+    }
+
+    /**
+     * dapatkan array item dengan input sisa
+     *
+     * @return void
+     */
+    private function getItemWithRemaining()
+    {
+
+        try {
+
+            if (!isset($this->production) || $this->production == null) {
+                $this->production = $this->findProductionById($this->requestId);
+            }
+
+
+            $data = $this->production->outbound->flatMap(function ($outbound) {
+                $outbound->load('receipt.detail.item.unit');
+
+                return $outbound->receipt->map(function ($receipt) {
+                    $receiptDetail = $receipt->detail;
+
+                    $result = [];
+
+                    foreach ($receiptDetail as $receipt) {
+                        $item = $receipt ? $receipt->item : null;
+
+                        $result[] = [
+                            'item_id' => optional($item)->id,
+                            'item_name' => optional($item)->name,
+                            'qty_accept' => number_format(optional($receipt)->qty_accept, 0, '', ''),
+                            'qty_use' => number_format(optional($receipt)->qty_accept, 0, '', ''),
+                            'unit' => optional($item->unit)->name,
+                            'isChecked' => '',
+                        ];
+                    }
+
+                    return $result;
+                });
+            })->flatten(1)->toArray();
+
+
+            $this->itemRemaining = $data;
+
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan item untuk ditampilkan di item sisa produksi');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
     }
 
     private function createNewRequestItemOut()

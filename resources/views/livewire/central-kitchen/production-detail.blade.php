@@ -702,7 +702,7 @@
                 </div>
 
             @elseif($status == 'Penyelesaian')
-                <div class="col-sm-5 offset-1">
+                <div class="col-sm-4 offset-1">
                     <div class="container-input-default">
                         <label class="form-label input-label">Kode produksi</label>
 
@@ -721,105 +721,79 @@
                                value="{{ $production->requestStock->code }}" disabled>
                     </div>
 
-                    <div class="margin-top-24">
-                        <h4 class="subtitle-3-bold">Hasil produksi</h4>
+                    {{-- TABLE BAHAN PEMAKAIAN PRODUKSI --}}
 
-                        {{-- Looping hasil produksi --}}
-                        @if(isset($components))
-                            @foreach($components as $key => $result)
-                                <div class="margin-top-8" wire:key="{{ $loop->iteration }}">
-                                    <div class="row margin-top-16">
-                                        <div class="col-md-6">
-                                            <div class="container-input-default">
-                                                <label
-                                                    class="form-label input-label">{{ $result['name'] }}</label>
-                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                                <input type="number" class="form-control input-default"
-                                                       wire:model="components.{{$key}}.result_qty"
-                                                       disabled
-                                                >
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="container-input-default">
-                                                <label class="form-label input-label">Unit</label>
-                                                <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                                <input type="text" class="form-control input-default" disabled
-                                                       value="{{ $result['unit']}}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                    @foreach($totalRawItemsUsage as $key => $itemUsage)
+                        <table class="table-component table table-hover margin-top-16"
+                               id="tableItemRequest"
+                               wire:key="{{ $loop->iteration }}"
+                        >
+                            <thead class="sticky-top">
+                            <tr>
+                                <th colspan="5" class="text-center subtitle-3-bold"
+                                    style="border-bottom:1px solid #E0E0E0;">{{ $itemUsage['item']['name'] }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>Item</th>
+                                <th>Unit</th>
+                                <th>Jumlah resep</th>
+                                <th>Pemakaian</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($itemUsage['recipe'] as $subKey => $recipe)
+                                <tr wire:key="{{ $loop->iteration }}">
+                                    <td>{{ $recipe['item_component_name'] }}</td>
+                                    <td>{{ $recipe['item_component_unit'] }}</td>
+                                    <td>{{ $recipe['item_component_usage'] }}</td>
+                                    <td>
+                                        <input type="text" class="form-control input-default"
+                                               wire:model.live="totalRawItemsUsage.{{ $key }}.recipe.{{ $subKey }}.usage"
+                                               x-mask:dynamic="$money($input, ',', '.')"
+                                               wire:change="handleUsageTotalRawItemChange('{{ $key }}', '{{ $subKey }}','{{ $recipe['item_component_id'] }}')"
+                                        >
+                                    </td>
+                                </tr>
                             @endforeach
-                        @endif
-                    </div>
-
-                    <div class="margin-top-24">
-                        <div class="title d-flex flex-row justify-content-between align-items-center">
-                            <h4 class="subtitle-3-bold">Item sisa</h4>
-
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch"
-                                       id="flexSwitchCheckChecked" checked wire:model="isSaveOnCentral">
-                                <label class="form-check-label" for="flexSwitchCheckChecked"
-                                >Simpan
-                                    didapur
-                                    sentral</label>
-                            </div>
-                        </div>
-                    </div>
+                            </tbody>
+                        </table>
+                    @endforeach
 
                 </div>
 
-                <div class="col-sm-8 offset-1">
-
+                <div class="col-sm-6 offset-1">
+                    {{-- TABLE GLOBAL BAHAN PENYELESAIAN PRODUKSI --}}
                     <table class="table-component table table-hover margin-top-16"
                            id="tableItemRequest"
                     >
                         <thead class="sticky-top">
                         <tr>
-                            <th>
-                                <input class="form-check-input" type="checkbox" value=""
-                                       id="selectAllCheckbox"
-                                       wire:model="selectAll">
+                            <th colspan="5" class="text-center subtitle-3-bold"
+                                style="border-bottom:1px solid #E0E0E0;">Bahan yang
+                                digunakan
                             </th>
+                        </tr>
+                        <tr>
                             <th>Item</th>
-                            <th>Diterima</th>
-                            <th>Digunakan</th>
-                            <th>Sisa</th>
                             <th>Unit</th>
+                            <th>Jumlah</th>
+                            <th>Pemakaian</th>
+                            <th>Sisa</th>
                         </tr>
                         </thead>
                         <tbody>
-
-                        @if(!empty($itemRemaining))
-                            @foreach($itemRemaining as $key => $item)
-                                {{ Log::info( $item)  }}
-                                <tr wire:key="{{ $loop->iteration }}">
-                                    <td>
-                                        <input class="form-check-input" type="checkbox"
-                                               id="checkbox_{{ $loop->iteration }}"
-                                               wire:model.live="itemRemaining.{{$key}}.isChecked"
-                                        >
-                                    </td>
-                                    <td>{{ $item['item_name']}}</td>
-                                    <td>{{ $item['qty_accept']}}</td>
-                                    <td>
-                                        <input type="name" class="form-control input-default"
-                                               id="warehouseInput"
-                                               x-mask:dynamic="$money($input, ',', '.')"
-                                               {{ $item['isChecked'] ? '' : 'disabled' }}
-                                               wire:model.live.debounce.600ms="itemRemaining.{{$key}}.qty_use">
-                                    </td>
-                                    <td>{{ str_replace('.', ',', $item['qty_accept']) - str_replace('.', '', $item['qty_use']) }}</td>
-                                    <td>{{ $item['unit']}}</td>
-                                </tr>
-                            @endforeach
-                        @endif
+                        @foreach($globalRawItems as $globalItem)
+                            <tr>
+                                <td>{{ $globalItem['item_name'] }}</td>
+                                <td>{{ $globalItem['unit'] }}</td>
+                                <td>{{ $globalItem['qty_on_hand'] }}
+                                <td>{{ $globalItem['usage'] }}</td>
+                                <td>{{ $globalItem['remaining'] }}</td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
-
 
                 </div>
 
