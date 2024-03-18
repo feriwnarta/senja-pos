@@ -724,11 +724,11 @@
                     {{-- TABLE BAHAN PEMAKAIAN PRODUKSI --}}
 
                     @foreach($totalRawItemsUsage as $key => $itemUsage)
-                        <table class="table-component table table-hover margin-top-16"
+                        <table class="table-component table table-hover margin-top-16 margin-bottom-32"
                                id="tableItemRequest"
                                wire:key="{{ $loop->iteration }}"
                         >
-                            <thead class="sticky-top">
+                            <thead>
                             <tr>
                                 <th colspan="5" class="text-center subtitle-3-bold"
                                     style="border-bottom:1px solid #E0E0E0;">{{ $itemUsage['item']['name'] }}
@@ -756,6 +756,27 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            <tr>
+                                <td class="text-center subtitle-3-bold" colspan="4">
+                                    Hasil produksi ({{ $itemUsage['item']['name'] }})
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">Jumlah diminta</td>
+                                <td>{{ $itemUsage['item']['target'] }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3"> Hasil jadi</td>
+                                <td>
+                                    <input type="text" class="form-control input-default"
+                                           wire:model.live="totalRawItemsUsage.{{ $key }}.item.result"
+                                           x-mask:dynamic="$money($input, ',', '.')"
+                                    >
+                                    @error("totalRawItemsUsage.$key.item.result") <span
+                                        class="text-danger">{{ $message }}</span> @enderror
+                                </td>
+                            </tr>
+
                             </tbody>
                         </table>
                     @endforeach
@@ -767,7 +788,7 @@
                     <table class="table-component table table-hover margin-top-16"
                            id="tableItemRequest"
                     >
-                        <thead class="sticky-top">
+                        <thead>
                         <tr>
                             <th colspan="5" class="text-center subtitle-3-bold"
                                 style="border-bottom:1px solid #E0E0E0;">Bahan yang
@@ -783,13 +804,21 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach($globalRawItems as $globalItem)
+                        @foreach($globalRawItems as $key => $globalItem)
                             <tr>
                                 <td>{{ $globalItem['item_name'] }}</td>
                                 <td>{{ $globalItem['unit'] }}</td>
                                 <td>{{ $globalItem['qty_on_hand'] }}
-                                <td>{{ $globalItem['usage'] }}</td>
-                                <td>{{ $globalItem['remaining'] }}</td>
+                                <td>
+                                    {{ $globalItem['usage'] }}
+                                    @error("globalRawItems.$key.usage") <span
+                                        class="text-danger">{{ $message }}</span> @enderror
+                                </td>
+                                <td class="{{ $globalItem['remaining'] < 0 ? 'text-danger' : 'text-success' }}">
+                                    {{ $globalItem['remaining'] }}
+                                    @error("globalRawItems.$key.remaining") <span
+                                        class="text-danger">{{ $message }}</span> @enderror
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -798,7 +827,7 @@
                 </div>
 
             @elseif($status == 'Menunggu pengiriman' || $status == 'Selesai')
-                <div class="col-sm-5 offset-1">
+                <div class="col-sm-4 offset-1">
                     <div>
                         <p class="subtitle-3-regular">Kode referensi</p>
                         <div id="divider" class="margin-top-6"></div>
@@ -837,8 +866,9 @@
                             {{ Carbon::createFromFormat('Y-m-d H:i:s', $production->remaining->first()->created_at )->locale('id_ID')->isoFormat('D MMMM Y') }}
                         </p>
                     </div>
-
-                    <div class="margin-top-24">
+                </div>
+                <div class="col-sm-5 offset-1">
+                    <div class="result-production">
                         <p class="subtitle-3-regular">Hasil produksi</p>
                         <div id="divider" class="margin-top-6"></div>
                         <table class="table-component table table-hover margin-top-16"
@@ -846,37 +876,43 @@
                             <thead class="sticky-topphp">
                             <tr>
                                 <th>Item</th>
-                                <th>Hasil</th>
                                 <th>Unit</th>
+                                <th>Hasil</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @if(isset($production->result))
-                                @foreach($production->ending as $resultProduction)
-
-                                    <tr wire:key="{{ $loop->iteration }}">
-                                        <td>{{ $resultProduction->targetItem->name }}</td>
-                                        <td>{{ $resultProduction->qty }}</td>
-                                        <td>{{ $resultProduction->targetItem->unit->name }}</td>
-                                    </tr>
-                                @endforeach
-
-                            @endif
+                            @foreach($production->finishes as $result)
+                                <tr wire:key="{{ $loop->iteration }}">
+                                    <td>{{ $result->items->name }}</td>
+                                    <td>{{ $result->items->unit->name }}</td>
+                                    <td>{{ $result->amount_reached }}</td>
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
 
-
                     <div class="margin-top-24">
-                        <p class="subtitle-3-regular">Hasil sisa produksi</p>
+                        <div class="d-flex flex-row">
+                            <p class="subtitle-3-regular">Sisa produksi</p>
+                            <div class="form-check form-switch margin-left-8">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                       id="flexSwitchCheckChecked"
+                                       checked>
+                                <label class="form-check-label" for="flexSwitchCheckChecked"
+                                       wire:model="isSaveOnCentral">Simpan
+                                    dicentral
+                                    kitchen</label>
+                            </div>
+                        </div>
                         <div id="divider" class="margin-top-6"></div>
                         <table class="table-component table table-hover margin-top-16"
                         >
                             <thead class="sticky-topphp">
                             <tr>
                                 <th>Item</th>
-                                <th>Jumlah</th>
                                 <th>Unit</th>
+                                <th>Jumlah</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -884,8 +920,8 @@
                                 @foreach($production->remaining->first()->detail as $itemRemaining)
                                     <tr wire:key="{{ $loop->iteration }}">
                                         <td>{{ $itemRemaining->item->name }}</td>
-                                        <td>{{ $itemRemaining->qty_remaining }}</td>
                                         <td>{{ $itemRemaining->item->unit->name }}</td>
+                                        <td>{{ $itemRemaining->qty_remaining }}</td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -893,7 +929,6 @@
                         </table>
                     </div>
                 </div>
-
             @endif
 
 

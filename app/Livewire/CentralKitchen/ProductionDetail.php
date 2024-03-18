@@ -191,7 +191,6 @@ class ProductionDetail extends Component
                 break;
 
             case "Menunggu pengiriman" :
-            case "Selesai":
                 $this->setProduction();
                 break;
 
@@ -405,7 +404,9 @@ class ProductionDetail extends Component
                     'id' => $finish->item_id,
                     'name' => $finish->items->name,
                     'target_qty' => $finish->amount_target,
+                    'result_qty' => 0,
                     'unit' => $finish->items->unit->name,
+
                 ];
             })->toArray();
 
@@ -457,9 +458,12 @@ class ProductionDetail extends Component
                     'qty_on_hand' => $component->qty_on_hand,
                     'unit' => $component->items->unit->name,
                     'usage' => 0,
-                    'remaining' => 0,
+                    'remaining' => $component->qty_on_hand,
+                    'avg_cost' => $component->avg_cost,
+                    'last_cost' => $component->last_cost,
                 ];
             })->toArray();
+
 
             $this->globalRawItems = $components;
         } catch (Exception $exception) {
@@ -506,6 +510,8 @@ class ProductionDetail extends Component
                             'item' => [
                                 'id' => $detail->item->id,
                                 'name' => $detail->item->name,
+                                'target' => $detail->qty,
+                                'result' => 0,
                             ],
                             'recipe' => $recipes,
                         ];
@@ -515,6 +521,7 @@ class ProductionDetail extends Component
                 })
                 ->filter() // Remove null values
                 ->toArray(); // Convert to array if needed
+
 
             $this->totalRawItemsUsage = $components;
             return;
@@ -1030,70 +1037,100 @@ class ProductionDetail extends Component
     public function validateItemRemaining()
     {
         $this->validate([
-            'itemRemaining' => 'required']);
+            'globalRawItems.*.usage' => 'required|numeric|min:1',
+            'globalRawItems.*.remaining' => 'required|numeric|min:0',
+            'totalRawItemsUsage.*.item.result' => 'required|numeric|min:1'
+        ], [
+            'globalRawItems.*.usage' => 'remaining production must not be zero',
+            'globalRawItems.*.remaining.min' => 'remaining production must not be minus',
+            'totalRawItemsUsage.*.item.result.min' => 'result production must not be zero'
+        ]);
 
-        Log::info('proses validasi pengiriman dan penyimpanan bahan sisa');
-
-        $this->storeItemProductionRemaining($this->itemRemaining, $this->isSaveOnCentral, $this->production->id);
-
-
+        $this->processShipping();
     }
 
-    private function storeItemProductionRemaining(array $items, bool $isSaveOnCentral, string $productionId)
+    public function processShipping()
     {
 
         try {
+            DB::transaction(function () {
+
+                foreach ($this->totalRawItemsUsage as $totalRaw) {
+                    $targetItemId = $totalRaw['item']['id'];
+                    $resultQty = $totalRaw['item']['result'];
 
 
-            DB::beginTransaction();
+                    $details = [];
 
-            $remaining = CentralProductionRemaining::create([
-                'central_productions_id' => $productionId,
-                'status' => ($this->isSaveOnCentral) ? 'CENTRAL' : 'WAREHOUSE'
-            ]);
+                    foreach ($totalRaw['recipe'] as $recipe) {
+                        $itemId = $recipe['item_component_id'];
+                        $usage = $recipe['usage'];
 
-            $remaining->production->history()->create([
-                'desc' => 'Menyimpan bahan sisa produksi dibuat otomatis',
-                'status' => 'Menunggu pengiriman',
-            ]);
+                        // cari avg cost dan last cost bahan ini
+                        foreach ($this->globalRawItems as $globalItem) {
+                            if ($globalItem['items_id'] == $itemId) {
+                                $avgCost = $globalItem['avg_cost'];
+                                $lastCost = $globalItem['last_cost'];
+                            }
+                        }
+
+                        $details[] = [
+                            'item_id' => $itemId,
+                            'amount_used' => $usage,
+                            'avg_cost' => $avgCost,
+                            'last_cost' => $lastCost
+                        ];
+                    }
+
+                    $result = $this->production->finishes->where('item_id', $targetItemId)->first();
+                    $result->amount_reached = $resultQty;
+                    $result->save();
+                }
+
+                $remaining = null;
+                $details = [];  // Collect details for bulk creation
+
+                foreach ($this->globalRawItems as $globalItem) {
+                    if ($globalItem['remaining'] <= 0) {
+                        continue;  // Skip items with no remaining quantity
+                    }
+
+                    $details[] = [
+                        'items_id' => $globalItem['items_id'],
+                        'qty_remaining' => $globalItem['remaining'],
+                        'avg_cost' => $globalItem['avg_cost'],
+                        'last_cost' => $globalItem['last_cost']
+                    ];
+                }
+
+                if (!empty($details)) {
+                    // Create or retrieve remaining model (avoid redundant checks)
+                    $remaining = $this->production->remaining()->first();
+                    if (!$remaining) {
+                        $remaining = $this->production->remaining()->create();
+                    }
+
+                    // Create remaining details efficiently using bulk creation
+                    $remaining->detail()->createMany($details);
+                }
 
 
-            $itemRemaining = [];
+                $this->production->history()->create([
+                    'status' => 'Menunggu pengiriman',
+                    'desc' => 'Menunggu pengiriman hasil produksi'
+                ]);
 
-            foreach ($items as $item) {
+            });
 
-                $total = floatval(str_replace('.', '', $item['qty_accept'])) - floatval(str_replace('.', '', $item['qty_use']));
-
-                $itemRemaining[] = [
-                    'central_productions_remaining_id' => $remaining->id,
-                    'items_id' => $item['item_id'],
-                    'qty_remaining' => $total,
-                ];
-
-            }
-
-            $result = $remaining->detail()->createMany($itemRemaining);
-
-            DB::commit();
-
-            if ($result) {
-                notify()->success('Berhasil validasi dan simpan sisa produksi', 'Sukses');
-                // dapatkan status
-                $status = $this->findRequestStatus();
-                $this->delegateProcess($status);
-                return;
-            }
-
-            notify()->error('Gagal validasi dan simpan sisa produksi', 'Gagal');
-
+            $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}");
+            notify()->success('Success');
 
         } catch (Exception $exception) {
-            DB::rollBack();
-            notify()->error('Gagal validasi dan simpan sisa produksi', 'Gagal');
-            Log::error('gagal menyimpan sisa bahan');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
+            notify()->error('ada sesuatu yang salah');
+            Log::error('gagal proses shipping dari penyelesain produksi');
+            report($exception);
         }
+
 
     }
 
@@ -1224,6 +1261,64 @@ class ProductionDetail extends Component
             }
 
         }
+    }
+
+    private function storeItemProductionRemaining(array $items, bool $isSaveOnCentral, string $productionId)
+    {
+
+        try {
+
+
+            DB::beginTransaction();
+
+            $remaining = CentralProductionRemaining::create([
+                'central_productions_id' => $productionId,
+                'status' => ($this->isSaveOnCentral) ? 'CENTRAL' : 'WAREHOUSE'
+            ]);
+
+            $remaining->production->history()->create([
+                'desc' => 'Menyimpan bahan sisa produksi dibuat otomatis',
+                'status' => 'Menunggu pengiriman',
+            ]);
+
+
+            $itemRemaining = [];
+
+            foreach ($items as $item) {
+
+                $total = floatval(str_replace('.', '', $item['qty_accept'])) - floatval(str_replace('.', '', $item['qty_use']));
+
+                $itemRemaining[] = [
+                    'central_productions_remaining_id' => $remaining->id,
+                    'items_id' => $item['item_id'],
+                    'qty_remaining' => $total,
+                ];
+
+            }
+
+            $result = $remaining->detail()->createMany($itemRemaining);
+
+            DB::commit();
+
+            if ($result) {
+                notify()->success('Berhasil validasi dan simpan sisa produksi', 'Sukses');
+                // dapatkan status
+                $status = $this->findRequestStatus();
+                $this->delegateProcess($status);
+                return;
+            }
+
+            notify()->error('Gagal validasi dan simpan sisa produksi', 'Gagal');
+
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            notify()->error('Gagal validasi dan simpan sisa produksi', 'Gagal');
+            Log::error('gagal menyimpan sisa bahan');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
     }
 
     private function endingProduction()
