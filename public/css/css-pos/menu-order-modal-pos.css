@@ -216,8 +216,12 @@ body::-webkit-scrollbar {
     padding: 32px 0px;
 }
 
-.radio-group-discount label.btn {
-    width: 161px;
+.radio-group-menu-order {
+    width: 527px;
+}
+
+.radio-group-menu-order label.btn {
+    width: inherit;
     padding: 6px 16px;
 
     border-radius: 6px;

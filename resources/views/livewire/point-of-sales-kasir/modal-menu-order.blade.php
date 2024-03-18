@@ -160,7 +160,7 @@
                         </div>
                         <div class="line-divider"></div>
                         <div class="content-body">
-                            <div class="radio-group-menu-order d-flex flex-row">
+                            <div class="radio-group-menu-order d-flex flex-row justify-content-between">
                                 <input type="radio"
                                     class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
                                     name="sell-type-base" id="dine_in" autocomplete="off">
@@ -199,13 +199,13 @@
                         </div>
                         <div class="line-divider"></div>
                         <div class="content-body">
-                            <div class="radio-group-menu-order d-flex flex-row">
+                            <div class="radio-group-menu-order d-flex flex-row justify-content-between">
                                 <input type="radio"
-                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32 w-100"
                                     name="note-base" id="happy_hour" autocomplete="off">
                                 <label class="btn" for="happy_hour">Happy Hour 5%</label>
                                 <input type="radio"
-                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32"
+                                    class="btn-check button-outline-e0e0-inh text-medium-14 color-9e9e p-6-16 h-32 w-100"
                                     name="note-base" id="happy_weekend" autocomplete="off">
                                 <label class="btn" for="happy_weekend">Happy Weekend 10%</label>
                             </div>
