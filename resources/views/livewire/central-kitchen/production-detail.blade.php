@@ -130,7 +130,7 @@
 
                     <div id="nav-leading" class="d-flex flex-row align-items-center">
                         <div class="navbar-title">
-                            Pengiriman produksi
+                            Penyelesain produksi
                         </div>
                     </div>
 
@@ -578,45 +578,45 @@
                     </div>
 
 
-{{--                    <div class="margin-top-24">--}}
-{{--                        <h4 class="subtitle-3-bold">Hasil produksi</h4>--}}
+                    {{--                    <div class="margin-top-24">--}}
+                    {{--                        <h4 class="subtitle-3-bold">Hasil produksi</h4>--}}
 
-{{--                        --}}{{-- Looping hasil produksi --}}
-{{--                        @if(isset($components))--}}
-{{--                            @foreach($components as $key => $result)--}}
+                    {{--                        --}}{{-- Looping hasil produksi --}}
+                    {{--                        @if(isset($components))--}}
+                    {{--                            @foreach($components as $key => $result)--}}
 
-{{--                                <div class="margin-top-8" wire:key="{{ $loop->iteration }}">--}}
-{{--                                    <div class="row margin-top-16">--}}
-{{--                                        <div class="col-md-6">--}}
-{{--                                            <div class="container-input-default">--}}
-{{--                                                <label--}}
-{{--                                                    class="form-label input-label">{{ $result['name'] }}</label>--}}
-{{--                                                <div id="divider" class="margin-symmetric-vertical-6"></div>--}}
-{{--                                                <input type="text" class="form-control input-default"--}}
-{{--                                                       x-mask:dynamic="$money($input, ',', '.')"--}}
-{{--                                                       wire:model="components.{{$key}}.result_qty"--}}
-{{--                                                >--}}
-{{--                                            </div>--}}
-{{--                                            @if($errors->has('components.*.result_qty'))--}}
-{{--                                                <span class="text-xs text-red-600">--}}
-{{--                                                    {{ $errors->first('components.*.result_qty') }}--}}
-{{--                                                </span>--}}
-{{--                                            @endif--}}
-{{--                                        </div>--}}
-{{--                                        <div class="col-md-6">--}}
-{{--                                            <div class="container-input-default">--}}
-{{--                                                <label class="form-label input-label">Unit</label>--}}
-{{--                                                <div id="divider" class="margin-symmetric-vertical-6"></div>--}}
-{{--                                                <input type="text" class="form-control input-default" disabled--}}
-{{--                                                       value="{{ $result['unit']}}">--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
+                    {{--                                <div class="margin-top-8" wire:key="{{ $loop->iteration }}">--}}
+                    {{--                                    <div class="row margin-top-16">--}}
+                    {{--                                        <div class="col-md-6">--}}
+                    {{--                                            <div class="container-input-default">--}}
+                    {{--                                                <label--}}
+                    {{--                                                    class="form-label input-label">{{ $result['name'] }}</label>--}}
+                    {{--                                                <div id="divider" class="margin-symmetric-vertical-6"></div>--}}
+                    {{--                                                <input type="text" class="form-control input-default"--}}
+                    {{--                                                       x-mask:dynamic="$money($input, ',', '.')"--}}
+                    {{--                                                       wire:model="components.{{$key}}.result_qty"--}}
+                    {{--                                                >--}}
+                    {{--                                            </div>--}}
+                    {{--                                            @if($errors->has('components.*.result_qty'))--}}
+                    {{--                                                <span class="text-xs text-red-600">--}}
+                    {{--                                                    {{ $errors->first('components.*.result_qty') }}--}}
+                    {{--                                                </span>--}}
+                    {{--                                            @endif--}}
+                    {{--                                        </div>--}}
+                    {{--                                        <div class="col-md-6">--}}
+                    {{--                                            <div class="container-input-default">--}}
+                    {{--                                                <label class="form-label input-label">Unit</label>--}}
+                    {{--                                                <div id="divider" class="margin-symmetric-vertical-6"></div>--}}
+                    {{--                                                <input type="text" class="form-control input-default" disabled--}}
+                    {{--                                                       value="{{ $result['unit']}}">--}}
+                    {{--                                            </div>--}}
+                    {{--                                        </div>--}}
+                    {{--                                    </div>--}}
+                    {{--                                </div>--}}
 
-{{--                            @endforeach--}}
-{{--                        @endif--}}
-{{--                    </div>--}}
+                    {{--                            @endforeach--}}
+                    {{--                        @endif--}}
+                    {{--                    </div>--}}
 
                     <div class="margin-top-24">
                         <label for="description" class="form-label">Catatan</label>
@@ -634,21 +634,25 @@
                     >
                         <thead class="sticky-top">
                         <tr>
-                            <th colspan="3" class="text-center" style="border-bottom:1px solid #E0E0E0;">Bahan yang digunakan</th>
+                            <th colspan="3" class="text-center" style="border-bottom:1px solid #E0E0E0;">Bahan yang
+                                digunakan
+                            </th>
                         </tr>
-                        <tr><th>Item</th>
+                        <tr>
+                            <th>Item</th>
                             <th>Unit</th>
-                            <th>Jumlah</th></tr>
+                            <th>Jumlah</th>
+                        </tr>
                         </thead>
                         <tbody>
 
-                            @foreach($componentCosts as $component)
-                                <tr wire:key="{{ $component['id'] }}">
-                                    <td>{{ $component['item_name'] }}</td>
-                                    <td>{{ $component['unit'] }}</td>
-                                    <td>{{ $component['qty_on_hand'] }}</td>
-                                </tr>
-                            @endforeach
+                        @foreach($componentCosts as $component)
+                            <tr wire:key="{{ $component['id'] }}">
+                                <td>{{ $component['item_name'] }}</td>
+                                <td>{{ $component['unit'] }}</td>
+                                <td>{{ $component['qty_on_hand'] }}</td>
+                            </tr>
+                        @endforeach
 
                         </tbody>
                     </table>
@@ -666,7 +670,9 @@
                         >
                             <thead class="sticky-top">
                             <tr>
-                                <th colspan="4" class="text-center" style="border-bottom:1px solid #E0E0E0;">Bahan tambahan</th>
+                                <th colspan="4" class="text-center" style="border-bottom:1px solid #E0E0E0;">Bahan
+                                    tambahan
+                                </th>
                             </tr>
                             <tr>
                                 <th>Item</th>
@@ -921,7 +927,8 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="modalAddItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal fade" id="modalAddItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+             wire:ignore.self>
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
@@ -930,18 +937,20 @@
                     </div>
                     <div class="modal-body">
                         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                            <input type="radio" class="btn-check" value="getFromWarehouse" name="btnradio" id="btnradio1" autocomplete="off" wire:model.live="typeGetNewRaw" checked>
+                            <input type="radio" class="btn-check" value="getFromWarehouse" name="btnradio"
+                                   id="btnradio1" autocomplete="off" wire:model.live="typeGetNewRaw" checked>
                             <label class="btn btn-outline-primary" for="btnradio1">Minta ke gudang</label>
 
-                            <input type="radio" class="btn-check" value="getFromCentral" name="btnradio" id="btnradio2" autocomplete="off" wire:model.live="typeGetNewRaw">
+                            <input type="radio" class="btn-check" value="getFromCentral" name="btnradio" id="btnradio2"
+                                   autocomplete="off" wire:model.live="typeGetNewRaw">
                             <label class="btn btn-outline-primary" for="btnradio2">Ambil dari central</label>
 
                         </div>
 
-                         @if($typeGetNewRaw == 'getFromWarehouse')
+                        @if($typeGetNewRaw == 'getFromWarehouse')
 
-                            <table  class="table-component table table-hover margin-top-16"
-                                    id="tableRequestNewItemWarehouse"
+                            <table class="table-component table table-hover margin-top-16"
+                                   id="tableRequestNewItemWarehouse"
                             >
                                 <thead>
                                 <tr>
@@ -957,10 +966,13 @@
                                             <td>{{ $component['item_name'] }}</td>
                                             <td>{{ $component['unit'] }}</td>
                                             <td>
-                                                <input wire:change="handleValidateNewRequest" wire:model.live="newItemRequestWarehouse.{{ $key }}.additional_qty" type="text" class="form-control input-default"
+                                                <input wire:change="handleValidateNewRequest"
+                                                       wire:model.live="newItemRequestWarehouse.{{ $key }}.additional_qty"
+                                                       type="text" class="form-control input-default"
                                                        x-mask:dynamic="$money($input, ',', '.')"
                                                 >
-                                                @error("newItemRequestWarehouse.$key.additional_qty") <span class="text-danger">{{ $message }}</span> @enderror
+                                                @error("newItemRequestWarehouse.$key.additional_qty") <span
+                                                    class="text-danger">{{ $message }}</span> @enderror
                                             </td>
                                         </tr>
                                     @endforeach
@@ -968,8 +980,8 @@
                                 </tbody>
                             </table>
                         @else
-                            <table  class="table-component table table-hover margin-top-16"
-                                    id="tableRequestNewItemCentral"
+                            <table class="table-component table table-hover margin-top-16"
+                                   id="tableRequestNewItemCentral"
                             >
                                 <thead>
                                 <tr>
@@ -993,8 +1005,9 @@
                                     Batal
                                 </button>
                                 <button class="btn btn-text-only-primary margin-left-10"
-                                wire:click="processNewItemRequest">Proses
-                                    <span wire:loading wire:target="processNewItemRequest" class="spinner-border text-warning" role="status">
+                                        wire:click="processNewItemRequest">Proses
+                                    <span wire:loading wire:target="processNewItemRequest"
+                                          class="spinner-border text-warning" role="status">
                                 </button>
                             </div>
                         </div>
@@ -1004,8 +1017,8 @@
         </div>
 
 
-
-        <div class="modal fade" id="modalProcessReceiptNewRequest" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+        <div class="modal fade" id="modalProcessReceiptNewRequest" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true" wire:ignore.self>
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header d-flex flex-row justify-content-center bg-primary-main">
@@ -1017,10 +1030,10 @@
                         @if(!isset($isAdditionRequestShipping))
                             <span wire:loading class="spinner-border text-warning" role="status">
                         @elseif(!$isAdditionRequestShipping)
-                            <h1 class="text-danger">Bahan belum dikirim</h1>
-                        @else
-                                    <table  class="table-component table table-hover margin-top-16"
-                                            id="tableRequestNewItemCentral"
+                                    <h1 class="text-danger">Bahan belum dikirim</h1>
+                                @else
+                                    <table class="table-component table table-hover margin-top-16"
+                                           id="tableRequestNewItemCentral"
                                     >
                                 <thead>
                                 <tr>
@@ -1038,9 +1051,12 @@
                                         <td>{{ $componentAdditionShipping['qty_request'] }}</td>
                                         <td>{{ $componentAdditionShipping['qty_send'] }}</td>
                                         <td>
-                                            <input wire:model.live="componentAdditionShipping.qty_received" type="text" class="form-control input-default" x-mask:dynamic="$money($input, ',', '.')"
+                                            <input wire:model.live="componentAdditionShipping.qty_received" type="text"
+                                                   class="form-control input-default"
+                                                   x-mask:dynamic="$money($input, ',', '.')"
                                             >
-                                            @error("componentAdditionShipping.qty_received") <span class="text-danger">{{ $message }}</span> @enderror
+                                            @error("componentAdditionShipping.qty_received") <span
+                                                class="text-danger">{{ $message }}</span> @enderror
                                         </td>
                                     </tr>
                                 </tbody>
@@ -1055,7 +1071,8 @@
                                 </button>
                                 <button class="btn btn-text-only-primary margin-left-10"
                                         wire:click="acceptAdditionReceipt">Terima
-                                    <span wire:loading wire:target="acceptAdditionReceipt" class="spinner-border text-warning" role="status">
+                                    <span wire:loading wire:target="acceptAdditionReceipt"
+                                          class="spinner-border text-warning" role="status">
                                 </button>
                             </div>
                         </div>

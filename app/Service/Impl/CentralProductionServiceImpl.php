@@ -4,7 +4,6 @@ namespace App\Service\Impl;
 
 use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
-use App\Models\CentralProductionEnding;
 use App\Models\CentralProductionShipping;
 use App\Models\RequestStock;
 use App\Models\RequestStockHistory;
@@ -503,28 +502,27 @@ class CentralProductionServiceImpl implements CentralProductionService
     }
 
 
-
     public function finishProduction(array $items, string $productionId, string $note)
     {
         try {
 
             DB::beginTransaction();
 
-            if (empty($items)) {
-                throw new Exception('items kosong');
-            }
+//            if (empty($items)) {
+//                throw new Exception('items kosong');
+//            }
+//
+//            Log::debug($items);
 
-            Log::debug($items);
+            Log::debug('proses finish production');
 
-            Log::debug('finish production');
-
-            foreach ($items as $item) {
-                $centralProductionEnding = new CentralProductionEnding();
-                $centralProductionEnding->central_productions_id = $productionId;
-                $centralProductionEnding->target_items_id = $item['id'];
-                $centralProductionEnding->qty = $item['result_qty'];
-                $centralProductionEnding->save();
-            }
+//            foreach ($items as $item) {
+//                $centralProductionEnding = new CentralProductionEnding();
+//                $centralProductionEnding->central_productions_id = $productionId;
+//                $centralProductionEnding->target_items_id = $item['id'];
+//                $centralProductionEnding->qty = $item['result_qty'];
+//                $centralProductionEnding->save();
+//            }
 
 
             $production = CentralProduction::findOrFail($productionId);
