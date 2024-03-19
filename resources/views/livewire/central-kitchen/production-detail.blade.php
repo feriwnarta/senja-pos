@@ -891,12 +891,15 @@
                         <div class="d-flex flex-row">
                             <p class="subtitle-3-regular">Sisa produksi</p>
                             <div class="form-check form-switch margin-left-8">
-                                <input class="form-check-input" type="checkbox" role="switch"
-                                       id="flexSwitchCheckChecked"
-                                       wire:model="isSaveOnCentral">
-                                <label class="form-check-label" for="flexSwitchCheckChecked">Simpan
-                                    dicentral
-                                    kitchen</label>
+                                @if($status != 'Selesai')
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                           id="flexSwitchCheckChecked"
+                                           wire:model="isSaveOnCentral">
+
+                                    <label class="form-check-label" for="flexSwitchCheckChecked">Simpan
+                                        dicentral
+                                        kitchen</label>
+                                @endif
                             </div>
                         </div>
                         <div id="divider" class="margin-top-6"></div>

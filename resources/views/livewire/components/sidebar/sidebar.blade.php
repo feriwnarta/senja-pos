@@ -159,7 +159,7 @@
 
 
                 @php
-                    $collapseCk = Route::is(['list-central-kitchen', 'view-central-kitchen', 'add-central-kitchen', 'central-kitchen-production', 'central-kitchen-production-detail']);
+                    $collapseCk = Route::is(['list-central-kitchen', 'remaining-production-stock', 'view-central-kitchen', 'add-central-kitchen', 'central-kitchen-production', 'central-kitchen-production-detail']);
                 @endphp
 
                 <div class="accordion-item">
@@ -178,6 +178,14 @@
                          class="accordion-collapse collapse {{ $collapseCk ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
+                            <a href="/central-kitchen/remaining-production-stock" wire:navigate>
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('remaining-production-stock') ? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
+                                    Stok sisa produksi
+                                </button>
+                            </a>
                             <a href="/central-kitchen/list-central-kitchen" wire:navigate>
                                 <button
                                     class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('list-central-kitchen')|| Route::is('view-central-kitchen') || Route::is('add-central-kitchen') ? 'inner-menu-active' : ''}}"

@@ -585,7 +585,66 @@ class ProductionDetail extends Component
                 $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}");
                 notify()->success('Sukses');
 
-            } else {
+            } // proses balikan item sisa ke gudang
+            else {
+                $this->production->history()->create([
+                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+                    'status' => 'Selesai'
+                ]);
+
+                $result = $this->requestStock->requestStockHistory()->create([
+                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+                    'status' => 'Pemenuhan',
+                ]);
+                $this->productionService = app()->make(CentralProductionServiceImpl::class);
+                $this->productionService->createProductionShipping($this->production->id, $this->production->centralKitchen->id, $this->production->centralKitchen->code);
+
+                // Simpan referensi terlebih dahulu ke dalam WarehouseItemReceiptRef
+                $itemReceiptRef = $this->production->reference()->save(new WarehouseItemReceiptRef());
+                // buat item receipt
+                $warehouseReceipt = WarehouseItemReceipt::create([
+                    'warehouses_id' => $this->production->outbound->last()->warehouse->id,
+                    'warehouse_item_receipt_refs_id' => $itemReceiptRef->id,
+                ]);
+
+                // buat history item receipt
+                $warehouseReceipt->history()->create([
+                    'desc' => 'Membuat draft penerimaan barang dari produksi',
+                    'status' => 'Draft',
+                ]);
+
+                // bahan yang akan dikirim
+                if ($this->production->finishes->isEmpty()) {
+                    notify()->error('ada sesuatu yang salah');
+                    report(new Exception('gagal membuat pengiriman karena produksi finishing data kosong'));
+                    return;
+                }
+
+                $this->production->finishes->each(function ($finishData) use ($warehouseReceipt) {
+                    $warehouseReceipt->details()->create([
+                        'items_id' => $finishData->item_id,
+                        'qty_send' => $finishData->amount_reached,
+                    ]);
+                });
+
+
+                $remaining = $this->production->remaining;
+
+                if ($remaining->isNotEmpty()) {
+                    $remaining->first()->detail->each(function ($detail) use ($warehouseReceipt) {
+                        $itemId = $detail['items_id'];
+                        $qtySend = $detail['qty_remaining'];
+                        
+                        $warehouseReceipt->details()->create([
+                            'items_id' => $itemId,
+                            'qty_send' => $qtySend,
+                        ]);
+                    });
+                }
+
+                Log::info('sukses buat pengiriman bahan item sisa disimpan di central kitchen');
+                $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}");
+                notify()->success('Sukses');
 
             }
         });
