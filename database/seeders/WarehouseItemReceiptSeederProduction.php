@@ -11,10 +11,8 @@ use App\Models\Unit;
 use App\Models\Warehouse;
 use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseItemReceiptRef;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use function Laravel\Prompts\note;
 
 class WarehouseItemReceiptSeederProduction extends Seeder
 {
@@ -23,58 +21,16 @@ class WarehouseItemReceiptSeederProduction extends Seeder
      */
     public function run(): void
     {
-        $warehouse = Warehouse::create([
-            'id' => fake()->uuid,
-            'warehouse_code' => fake()->countryCode,
-            'name' => fake()->name,
-            'address' => fake()->address,
-        ]);
-
-        $requestStock = RequestStock::create([
-            'id' => fake()->uuid,
-            'warehouses_id' => $warehouse->id,
-            'code'=> fake()->countryCode,
-            'increment' => 1,
-            'note' => fake()->address
-        ]);
-
-        $central = CentralKitchen::create([
-            'id' => fake()->uuid,
-            'code' => fake()->countryCode,
-            'name' => fake()->name,
-            'address' => fake()->address,
-            'phone' => fake()->phoneNumber,
-            'email' => fake()->email,
-        ]);
-
-        // buat central production
-        $production = CentralProduction::create([
-            'id' => fake()->uuid,
-            'request_stocks_id' => $requestStock->id,
-            'central_kitchens_id'=> $central->id,
-            'code' => fake()->countryCode,
-            'increment' => 1,
-        ]);
-
-        $result = $production->reference()->save(new WarehouseItemReceiptRef());
-
-        // buat warheouse item receipt
-        $itemReceipt = WarehouseItemReceipt::create([
-            'id' => fake()->uuid,
-            'warehouse_item_receipt_refs_id' => $result->id,
-            'warehouses_id' => $warehouse->id
-        ]);
-
         DB::table('units')->insert([
             'id' => fake()->uuid,
-            'code' => 'UNIT01',
-            'name' => 'Gram'
+            'code' => fake()->countryCode,
+            'name' => fake()->userName()
         ]);
 
         DB::table('categories')->insert([
             'id' => fake()->uuid,
-            'code' => 'KTG01',
-            'name' => 'Bahan mentah'
+            'code' => fake()->countryCode,
+            'name' => fake()->userName()
         ]);
 
         $item1 = Item::create([
@@ -93,6 +49,62 @@ class WarehouseItemReceiptSeederProduction extends Seeder
             'route' => 'PRODUCECENTRALKITCHEN'
         ]);
 
+        $warehouse = Warehouse::create([
+            'id' => fake()->uuid,
+            'warehouse_code' => fake()->countryCode,
+            'name' => fake()->name,
+            'address' => fake()->address,
+        ]);
+
+        $requestStock = RequestStock::create([
+            'id' => fake()->uuid,
+            'warehouses_id' => $warehouse->id,
+            'code' => fake()->countryCode,
+            'increment' => 1,
+            'note' => fake()->address
+        ]);
+
+        $central = CentralKitchen::create([
+            'id' => fake()->uuid,
+            'code' => fake()->countryCode,
+            'name' => fake()->name,
+            'address' => fake()->address,
+            'phone' => fake()->phoneNumber,
+            'email' => fake()->email,
+        ]);
+
+        // buat central production
+        $production = CentralProduction::create([
+            'id' => fake()->uuid,
+            'request_stocks_id' => $requestStock->id,
+            'central_kitchens_id' => $central->id,
+            'code' => fake()->countryCode,
+            'increment' => 1,
+        ]);
+
+        $finish = $production->finishes()->create([
+            'item_id' => $item1->id,
+            'amount_target' => 10,
+            'amount_reached' => 10
+        ]);
+
+        $finish->details()->create([
+            'item_id' => $item2->id,
+            'amount_used' => 100,
+            'avg_cost' => 2000,
+            'last_cost' => 2000,
+        ]);
+
+        $result = $production->reference()->save(new WarehouseItemReceiptRef());
+
+        // buat warheouse item receipt
+        $itemReceipt = WarehouseItemReceipt::create([
+            'id' => fake()->uuid,
+            'warehouse_item_receipt_refs_id' => $result->id,
+            'warehouses_id' => $warehouse->id
+        ]);
+
+
         $itemReceipt->details()->createMany([
             [
                 'items_id' => $item1->id,
@@ -105,9 +117,6 @@ class WarehouseItemReceiptSeederProduction extends Seeder
                 'qty_accept' => 0,
             ],
         ]);
-
-
-
 
 
     }

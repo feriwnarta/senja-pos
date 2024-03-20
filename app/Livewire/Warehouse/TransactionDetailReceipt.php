@@ -2,8 +2,6 @@
 
 namespace App\Livewire\Warehouse;
 
-use App\Jobs\Warehouse\AcceptReceipt;
-use App\Jobs\Warehouse\RejectReceipt;
 use App\Models\WarehouseItemReceiptRef;
 use App\Traits\Jobs;
 use Exception;
@@ -112,7 +110,7 @@ class TransactionDetailReceipt extends Component
         ]);
 
         // TODO : LAKUKAN PENERIMAAN
-        dd($this->dataItemReceipt   );
+        dd($this->dataItemReceipt);
 
     }
 
