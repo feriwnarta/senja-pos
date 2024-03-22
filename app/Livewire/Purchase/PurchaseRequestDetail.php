@@ -33,8 +33,11 @@ class PurchaseRequestDetail extends Component
     public string $payment = 'NET';
 
     public array $paymentType = ['NET', 'PIA'];
+    public array $paymentDueDates = [
+        3, 7, 14, 30
+    ];
 
-    public string $dueDate = '3';
+    public string $dueDate = '';
     public string $paymentTemp;
 
 
@@ -72,6 +75,7 @@ class PurchaseRequestDetail extends Component
         $response = $this->ajaxDispatch(new CreatePurchaseRequestFromStock($id));
 
         if ($response['success']) {
+            $this->redirect("/purchase-request/detail?reqId={$this->requestId}", true);
             notify()->success('Berhasil memproses permintaan');
         } else {
             notify()->error('Gagal memproses permintaan');
@@ -100,6 +104,7 @@ class PurchaseRequestDetail extends Component
     /**
      * proses pembuatan pembelian, harap diperhatikan penggunaan multiple pembelian
      * panggil service pembelian
+     *
      * @return void
      */
     private function store()
@@ -119,7 +124,13 @@ class PurchaseRequestDetail extends Component
     #[On('set-due-date')]
     public function setDueDate($date)
     {
+        $this->paymentDueDates[] = $date;
         $this->dueDate = $date;
+    }
+
+    public function handlePaymentDateChange()
+    {
+        
     }
 
     public function mount()

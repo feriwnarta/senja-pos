@@ -41,8 +41,8 @@ function addOptionAndSelect(daysDifference) {
 
         Livewire.dispatch('set-due-date', {date: daysDifference});
 
-        durationSelect.add(newOption);
-        durationSelect.options.selectedIndex = [...durationSelect.options].findIndex(option => option.value === daysDifference.toString());
+        // durationSelect.add(newOption);
+        // durationSelect.options.selectedIndex = [...durationSelect.options].findIndex(option => option.value === daysDifference.toString());
     } else {
         durationSelect.value = daysDifference;
     }
@@ -53,6 +53,7 @@ function setPaymentDate() {
     const datePaymentInput = document.getElementById('datePayment');
     const selectedDuration = parseInt(durationSelect.value, 10);
     const todayDate = new Date();
+
 
     // Determine whether the selected duration is positive or negative
     if (selectedDuration >= 0) {

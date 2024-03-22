@@ -60,7 +60,7 @@
                             <p class="subtitle-3-regular">Tanggal</p>
                             <div id="divider" class="margin-top-6"></div>
                             <p class="margin-top-6 subtitle-3-medium">
-                            <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchaseRequests->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ Carbon::createFromFormat('Y-m-d H:i:s',  $purchaseRequests->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
                             </p>
                         </div>
 
@@ -198,15 +198,20 @@
                                     <div id="divider" class="margin-symmetric-vertical-6"></div>
 
                                     <select class="form-select input-default"
-                                            id="paymentDateOption" wire:model.live="dueDate"
+                                            id="paymentDateOption"
+                                            wire:model.live="dueDate"
+                                            wire:change="handlePaymentDateChange"
 
                                         {{ $this->payment != 'NET' || $isMultipleSupplier ? 'disabled' : '' }}
                                     >
 
-                                        <option value="3">3 Hari</option>
-                                        <option value="7">7 Hari</option>
-                                        <option value="14">14 Hari</option>
-                                        <option value="30">30 Hari</option>
+                                        @foreach($paymentDueDates as $paymentDueDate)
+                                            <option
+                                                value="{{ $paymentDueDate }}" {{  $paymentDueDate == $dueDate? 'selected' : 'false' }}>{{ $paymentDueDate }}
+                                                Hari
+                                            </option>
+                                        @endforeach
+
                                     </select>
 
                                 </div>
@@ -284,6 +289,8 @@
                                     $this->componentItems[$key]['payment'] = $this->payment;
                                     $this->componentItems[$key]['dueDate'] = $this->dueDate;
 
+
+
                                     // Memperbarui nilai payment jika key sama dengan indexPayment
                                     if($key == $this->indexPayment) {
                                         $this->componentItems[$key]['payment'] = $this->paymentTemp;
@@ -292,8 +299,10 @@
                                 @endphp
 
 
+
                                 <tr wire:key="{{ $loop->iteration }}">
-                                    <td>{{ $detail->item->name }}</td>
+                                    <td>{{ $detail->item->name }}
+                                    </td>
                                     <td>
 
                                         <select class="form-select dropdown-no-border"
@@ -319,15 +328,17 @@
                                     <td>
                                         @if($this->componentItems[$key]['payment'] == 'NET')
                                             <select class="form-select input-default"
-                                                    id="paymentDateOption"
+                                                    id="paymentDateOption2"
                                                     wire:model="componentItems.{{$key}}.dueDate"
 
                                                 {{ $this->payment != 'NET' || !$isMultipleSupplier ? 'disabled' : '' }}
                                             >
-                                                <option value="3">3 Hari</option>
-                                                <option value="7">7 Hari</option>
-                                                <option value="14">14 Hari</option>
-                                                <option value="30">30 Hari</option>
+                                                @foreach($paymentDueDates as $paymentDueDate)
+                                                    <option
+                                                        value="{{ $paymentDueDate }}" {{  $paymentDueDate == $dueDate? 'selected' : 'false' }}>{{ $paymentDueDate }}
+                                                        Hari
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         @else
                                             -
