@@ -9,10 +9,10 @@ use App\Models\StockItem;
 use App\Models\WarehouseItem;
 use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseItemReceiptDetail;
+use App\Models\WarehouseItemReceiptHistory;
 use App\Models\WarehouseItemReceiptRef;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Log;
 
 class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\WarehouseItemReceiptRepository
 {
@@ -107,16 +107,12 @@ class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\Warehous
             return [];
         }
 
+
         $productionRemainingDetail = $productionRemaining->first()->detail->where('items_id', $itemId);
         if ($productionRemainingDetail->isEmpty()) {
-            throw new Exception(json_encode([
-                'message' => 'production remaining ini tidak mempunyai production remaining detail',
-                'data' => [
-                    'production_id' => $productionId,
-                    'item_id' => $itemId
-                ]
-            ]));
+            return [];
         }
+
         $productionRemainingDetail = $productionRemainingDetail->first();
         $avgCost = $productionRemainingDetail->avg_cost;
         $qty = $productionRemainingDetail->qty_remaining;
@@ -136,18 +132,13 @@ class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\Warehous
             ->latest('created_at')
             ->first();
 
-        if ($itemReceipt == null) {
-            Log::error(json_encode([
-                'message' => 'Warehouse item receipt null saat berusaha mendapatkan modelnya untuk keperluhan generate kode item masuk',
-                'data' => [
-                    'warehouse_id' => $warehouseId
-                ]
-            ]));
-            throw new Exception("Warehouse item receipt null saat berusaha mendapatkan modelnya untuk keperluhan generate kode item masuk warehouse_id = $warehouseId");
+        if (is_null($itemReceipt)) {
+            return [
+            ];
         }
 
+
         return [
-            'code' => $itemReceipt->code,
             'increment' => $itemReceipt->increment,
             'created_at' => $itemReceipt->created_at,
         ];
@@ -164,7 +155,7 @@ class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\Warehous
         return WarehouseItemReceiptRef::findOrFail($id);
     }
 
-    public function getWarehouseCodeByWarehouseReceipt(string $warehouseItemReceiptId): string
+    public function getWarehouseCodeByWarehouseReceipt(string $warehouseItemReceiptId): ?string
     {
         $existingReceipt = $this->findWarehouseItemReceiptById($warehouseItemReceiptId);
         return $existingReceipt->warehouse->warehouse_code;
@@ -245,5 +236,16 @@ class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\Warehous
         }
 
         return $productionFinish->first();
+    }
+
+    public function createWarehouseItemReceiptHistory(string $warehouseItemReceiptId, string $description, string $status): WarehouseItemReceiptHistory
+    {
+        $itemReceiptHistory = new WarehouseItemReceiptHistory();
+        $itemReceiptHistory->warehouse_item_receipts_id = $warehouseItemReceiptId;
+        $itemReceiptHistory->desc = $description;
+        $itemReceiptHistory->status = $status;
+        $itemReceiptHistory->save();
+
+        return $itemReceiptHistory;
     }
 }

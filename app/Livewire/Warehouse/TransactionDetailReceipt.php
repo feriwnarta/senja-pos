@@ -2,7 +2,10 @@
 
 namespace App\Livewire\Warehouse;
 
+use App\Dto\WarehouseItemReceiptDTO;
 use App\Models\WarehouseItemReceiptRef;
+use App\Repository\Warehuouse\WarehouseItemReceiptRepository;
+use App\Service\Warehouse\WarehouseItemReceiptService;
 use App\Traits\Jobs;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -39,6 +42,11 @@ class TransactionDetailReceipt extends Component
         }
 
         $itemReceiptRef = $this->getItemReceiptDetail($this->receiptRefId);
+
+        if (is_null($itemReceiptRef)) {
+            $this->redirect('/warehouse/transaction', true);
+        }
+
         $this->itemReceiptRef = $itemReceiptRef;
     }
 
@@ -110,7 +118,14 @@ class TransactionDetailReceipt extends Component
         ]);
 
         // TODO : LAKUKAN PENERIMAAN
-        dd($this->dataItemReceipt);
+
+        $warehouseReceiptDto = new WarehouseItemReceiptDTO($this->receiptRefId, $warehouseId, $this->dataItemReceipt);
+        $repository = new WarehouseItemReceiptRepository();
+        $service = new WarehouseItemReceiptService($repository);
+        $service->receipt($warehouseReceiptDto);
+
+        $this->redirect("/warehouse/transaction/detail-receipt/?refId={$this->receiptRefId}", true);
+        notify()->success('Sukses');
 
     }
 

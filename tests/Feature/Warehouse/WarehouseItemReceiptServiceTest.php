@@ -5,12 +5,14 @@ namespace Tests\Feature\Warehouse;
 use App\Contract\Warehouse\WarehouseItemReceiptRepository;
 use App\Dto\WarehouseItemReceiptDTO;
 use App\Models\CentralProduction;
+use App\Models\CentralProductionFinishDetail;
 use App\Models\StockItem;
 use App\Models\WarehouseItemReceiptRef;
 use App\Service\Impl\CogsValuationCalc;
 use App\Service\Warehouse\WarehouseItemReceiptService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Mockery\MockInterface;
 use ReflectionClass;
@@ -377,17 +379,17 @@ class WarehouseItemReceiptServiceTest extends TestCase
 
     public function testInsertRemainingStockSuccess()
     {
-        $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) {
-            $stockItem = new StockItem();
-            $stockItem->incoming_qty = 10;
-            $stockItem->incoming_value = 0;
-            $stockItem->price_diff= 0;
-            $stockItem->inventory_value = 10000;
-            $stockItem->qty_on_hand = 10;
-            $stockItem->avg_cost = 1000;
-            $stockItem->last_cost = 1000;
-            $stockItem->minimum_stock = 0;
+        $stockItem = new StockItem();
+        $stockItem->incoming_qty = 10;
+        $stockItem->incoming_value = 0;
+        $stockItem->price_diff = 0;
+        $stockItem->inventory_value = 10000;
+        $stockItem->qty_on_hand = 10;
+        $stockItem->avg_cost = 1000;
+        $stockItem->last_cost = 1000;
+        $stockItem->minimum_stock = 0;
 
+        $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) use ($stockItem) {
             $mock->shouldReceive('getStockItemByWarehouseItemId')
                 ->once()
                 ->andReturn($stockItem);
@@ -395,14 +397,197 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('insertNewStockItem')->once();
         });
 
+
         $this->service = new WarehouseItemReceiptService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
         $method = $reflection->getMethod('insertRemainingStock');
         $method->setAccessible(true);
-        $result = $method->invokeArgs($this->service, [new CogsValuationCalc(), '', ['qty' => 10, 'avg_cost' => 10]]);
+        $result = $method->invokeArgs($this->service, [new CogsValuationCalc(), '', ['qty' => 10, 'avg_cost' => 1000]]);
         self::assertInstanceOf(StockItem::class, $result);
+
+    }
+
+
+    public function testCalculateTotalStockSuccess()
+    {
+
+        $collection = Collection::empty();
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 10;
+        $finishDetail->avg_cost = 1000;
+        $collection->push($finishDetail);
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 5;
+        $finishDetail->avg_cost = 2000;
+        $collection->push($finishDetail);
+
+        self::assertNotEmpty($collection);
+
+
+        $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) use ($collection) {
+            $mock->shouldReceive('getProductionFinishDetailsByProductionId')
+                ->once()
+                ->andReturn($collection);
+        });
+
+        $this->service = new WarehouseItemReceiptService($repository);
+        $reflection = new ReflectionClass(get_class($this->service));
+        self::assertNotNull($reflection);
+
+        $method = $reflection->getMethod('calculateTotalCost');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($this->service, ['']);
+        assertEquals(20000, $result);
+
+
+    }
+
+
+    public function testCalculateTotalStockFailed()
+    {
+
+        $collection = Collection::empty();
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 10;
+        $finishDetail->avg_cost = 0;
+        $collection->push($finishDetail);
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 5;
+        $finishDetail->avg_cost = 0;
+        $collection->push($finishDetail);
+
+        self::assertNotEmpty($collection);
+
+
+        $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) use ($collection) {
+            $mock->shouldReceive('getProductionFinishDetailsByProductionId')
+                ->once()
+                ->andReturn($collection);
+        });
+
+        $this->service = new WarehouseItemReceiptService($repository);
+        $reflection = new ReflectionClass(get_class($this->service));
+        self::assertNotNull($reflection);
+
+        $method = $reflection->getMethod('calculateTotalCost');
+        $method->setAccessible(true);
+
+        $this->expectException(Exception::class);
+        $result = $method->invokeArgs($this->service, ['']);
+
+    }
+
+    public function testInsertFinishedStockInitialCostSuccess()
+    {
+        $collection = Collection::empty();
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 10;
+        $finishDetail->avg_cost = 1000;
+        $collection->push($finishDetail);
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 5;
+        $finishDetail->avg_cost = 2000;
+        $collection->push($finishDetail);
+
+        self::assertNotEmpty($collection);
+
+
+        $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) use ($collection) {
+            $mock->shouldReceive('getProductionFinishDetailsByProductionId')
+                ->once()
+                ->andReturn($collection);
+
+            $mock->shouldReceive('getStockItemByWarehouseItemId')
+                ->once()
+                ->andReturn(null);
+
+            $mock->shouldReceive('insertNewStockItem')
+                ->once()
+                ->andReturn(new StockItem());
+        });
+
+        $this->service = new WarehouseItemReceiptService($repository);
+        $reflection = new ReflectionClass(get_class($this->service));
+        self::assertNotNull($reflection);
+
+        $method = $reflection->getMethod('insertFinishedStock');
+        $method->setAccessible(true);
+
+        $result = $method->invokeArgs($this->service, [new CogsValuationCalc(), '', 5, '']);
+        self::assertInstanceOf(StockItem::class, $result);
+
+    }
+
+    public function testInsertFinishedStockCalculateCostSuccess()
+    {
+        $collection = Collection::empty();
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 10;
+        $finishDetail->avg_cost = 1000;
+        $collection->push($finishDetail);
+
+        $finishDetail = new CentralProductionFinishDetail();
+        $finishDetail->id = fake()->uuid;
+        $finishDetail->item_id = fake()->uuid;
+        $finishDetail->amount_used = 5;
+        $finishDetail->avg_cost = 2000;
+        $collection->push($finishDetail);
+
+        self::assertNotEmpty($collection);
+
+
+        $repository = $this->mock(WarehouseItemReceiptRepository::class, function (MockInterface $mock) use ($collection) {
+            $mock->shouldReceive('getProductionFinishDetailsByProductionId')
+                ->once()
+                ->andReturn($collection);
+
+            $stockItem = new StockItem();
+            $stockItem->inventory_value = 10000;
+            $stockItem->qty_on_hand = 10;
+            $stockItem->avg_cost = 1000;
+
+            $mock->shouldReceive('getStockItemByWarehouseItemId')
+                ->once()
+                ->andReturn($stockItem);
+
+            $mock->shouldReceive('insertNewStockItem')
+                ->once()
+                ->andReturn(new StockItem());
+        });
+
+        $this->service = new WarehouseItemReceiptService($repository);
+        $reflection = new ReflectionClass(get_class($this->service));
+        self::assertNotNull($reflection);
+
+        $method = $reflection->getMethod('insertFinishedStock');
+        $method->setAccessible(true);
+
+        $result = $method->invokeArgs($this->service, [new CogsValuationCalc(), '', 5, '']);
+        self::assertInstanceOf(StockItem::class, $result);
+
     }
 
 

@@ -10,6 +10,7 @@ use App\Models\Warehouse;
 use App\Models\WarehouseItem;
 use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseItemReceiptDetail;
+use App\Models\WarehouseItemReceiptHistory;
 use App\Models\WarehouseItemReceiptRef;
 use Database\Seeders\WarehouseItemReceiptSeederProduction;
 use Exception;
@@ -177,7 +178,7 @@ class WarehouseItemReceiptRepositoryTest extends TestCase
         $totalCost = $result['total_cost'];
         assertNotNull($totalCost);
         assertIsArray($result);
-        assertEquals(100000, $totalCost);
+        assertEquals(200000, $totalCost);
         assertEquals($production->id, $result['production_id']);
     }
 
@@ -275,10 +276,9 @@ class WarehouseItemReceiptRepositoryTest extends TestCase
 
         $productionId = $production->id;
         $itemId = Item::first()->id;
-
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage('production remaining ini tidak mempunyai production remaining detail');
+        
         $result = $this->repository->getProductionRemaining($productionId, $itemId);
+        self::assertEmpty($result);
     }
 
     public function testGetWarehouseItemReceiptById()
@@ -421,6 +421,17 @@ class WarehouseItemReceiptRepositoryTest extends TestCase
         assertNotNull($result);
         assertInstanceOf(StockItem::class, $result);
 
+    }
+
+    public function testCreateWarehouseItemReceiptHistorySuccess()
+    {
+        $itemReceipt = WarehouseItemReceipt::first();
+        assertNotNull($itemReceipt);
+
+        $result = $this->repository->createWarehouseItemReceiptHistory($itemReceipt->id, 'test', 'test');
+        assertInstanceOf(WarehouseItemReceiptHistory::class, $result);
+
+        assertEquals($itemReceipt->id, $result->warehouse_item_receipts_id);
     }
 
 

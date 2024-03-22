@@ -5,11 +5,11 @@ namespace App\Service\Warehouse;
 use App\Contract\Warehouse\WarehouseItemReceiptRepository;
 use App\Dto\WarehouseItemReceiptDTO;
 use App\Models\CentralProduction;
-use App\Models\Purchase;
 use App\Models\StockItem;
 use App\Models\WarehouseItemReceiptRef;
 use App\Service\Impl\CogsValuationCalc;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
 
@@ -32,6 +32,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
      * 1. masuk dari pembelian
      * 2. masuk dari produksi
      *+
+     *
      * @param WarehouseItemReceiptDTO $itemReceiptDTO
      * @return void
      */
@@ -42,31 +43,36 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
             abort(400);
         }
 
+
         try {
 
-            // panggil fungsi yang melakukan pengambilan item receipt id
-            // fungsi tersebut mengembalikan item receipt dto baru
-            $newDtoWithReceiptId = $this->setItemReceiptId($itemReceiptDTO);
-            $model = $this->getWarehouseItemReceiptRef($newDtoWithReceiptId);
-            $model = $model->receivable;
+            DB::transaction(function () use ($itemReceiptDTO) {
 
-            // flow type masuk item berasal dari produksi
-            if ($model instanceof CentralProduction) {
-                $this->processProductionAcceptance($model->id, $newDtoWithReceiptId->getId(), $newDtoWithReceiptId->getDataItemReceipt());
-                return;
-            }
+                // panggil fungsi yang melakukan pengambilan item receipt id
+                // fungsi tersebut mengembalikan item receipt dto baru
+                $newDtoWithReceiptId = $this->setItemReceiptId($itemReceiptDTO);
+                $model = $this->getWarehouseItemReceiptRef($newDtoWithReceiptId);
+                $model = $model->receivable;
 
 
-            // flow type masuk item berasal dari pembelian
-            if ($model instanceof Purchase) {
+                // flow type masuk item berasal dari produksi
+                if ($model instanceof CentralProduction) {
+                    $this->processProductionAcceptance($model->id, $newDtoWithReceiptId->getId(), $newDtoWithReceiptId->getDataItemReceipt());
+                    return;
+                }
 
-                return;
-            }
 
+                // flow type masuk item berasal dari pembelian
+                if ($model instanceof Purchase) {
+                    return;
+                }
+            });
 
         } catch (\Exception $exception) {
             Log::error(json_encode([
                 'message' => 'gagal melakukan penerimaan di item masuk gudang',
+                'message-exception' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
                 'data' => [
                     'dto' => $itemReceiptDTO
                 ]
@@ -112,7 +118,9 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
      */
     private function processProductionAcceptance($productionId, $itemReceiptId, array $itemDetails)
     {
+        Log::info('generate kode item receipt');
         $result = $this->generateCode($itemReceiptId);
+
 
         if (empty($result)) {
             throw new Exception('hasil generate kode array kosong saat penerimaan barang produksi');
@@ -121,24 +129,36 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
         $code = $result['code'];
         $increment = $result['increment'];
 
+        Log::info('set kode item receipt');
         // set kode dan incerement ke warehouse item receipt yang sudah dibuat
         $isSetCode = $this->repository->setCodeExistingWarehouseItemReceipt($itemReceiptId, $code, $increment);
+
 
         if (!$isSetCode) {
             throw new Exception('gagal menyimpan kode ke item receipt yang sudah dibuat');
         }
 
+        Log::info('set jumlah dan item yang diterima ke penerimaan detail');
         // buat detail penerimaan item beserta nilai quantity yang diterimanya
         $isUpdateAmountReceived = $this->repository->updateAmountReceivedExistingDetails($itemDetails);
-
         if (!$isUpdateAmountReceived) {
             throw new Exception('gagal update Amount Received Existing Details dipenerimaan barang produksi');
         }
 
+
         $warehouseId = $this->repository->getWarehouseIdByWarehouseReceipt($itemReceiptId);
 
+
+        Log::info('insert hasil jadi ke stock valuation');
         // proses melakukan penambahan inventory valuation
         $this->insertStockAndRemaining($productionId, $warehouseId, $itemDetails);
+
+
+        Log::info('buat history penerimaan');
+        $this->repository->createWarehouseItemReceiptHistory($itemReceiptId, 'Sukses melakukan penerimaan barang dari produksi', 'Diterima');
+
+
+        Log::info('sukses menerima item');
     }
 
     /**
@@ -151,13 +171,17 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
     {
         // dapatkan kode dan id warehouse
         $warehouseCode = $this->repository->getWarehouseCodeByWarehouseReceipt($itemReceiptId);
+
         $warehouseId = $this->repository->getWarehouseIdByWarehouseReceipt($itemReceiptId);
 
         // format bulan dan tahun dan ambil next increment
         $currentMonthYear = $this->formatCurrentMonthYear();
+
         $nextCode = $this->getNextIncrement($warehouseId, $currentMonthYear);
 
+
         $code = "RECEIPT{$warehouseCode}{$currentMonthYear}{$nextCode}";
+
 
         return ['code' => $code, 'increment' => $nextCode];
     }
@@ -180,9 +204,11 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
     {
         $cogs = new CogsValuationCalc();
 
+
         foreach ($itemDetails as $item) {
-            $itemId = $item['id'];
+            $itemId = $item['item_id'];
             $qty = $item['qty_accept'];
+
             $warehouseItemId = $this->repository->getWarehouseItemId($warehouseId, $itemId);
 
             $remainingData = $this->repository->getProductionRemaining($productionId, $itemId);
@@ -217,7 +243,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
         return $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
     }
 
-    private function insertFinishedStock($cogs, $warehouseItemId, $qty, $productionId)
+    private function insertFinishedStock($cogs, $warehouseItemId, $qty, $productionId): StockItem
     {
         $totalCost = $this->calculateTotalCost($productionId);
         $stockItem = $this->repository->getStockItemByWarehouseItemId($warehouseItemId);
@@ -230,7 +256,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
                 throw new Exception('Failed to calculate initial avg cost for production');
             }
 
-            $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
+            return $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
         } else {
             $avgCost = $totalCost / $qty;
             $cogsValuationCalcData = $cogs->calculateAvgPrice(
@@ -246,7 +272,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
                 throw new Exception('Failed to calculate initial avg cost for production');
             }
 
-            $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
+            return $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
         }
     }
 
@@ -265,8 +291,6 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
 
         return $totalCost;
     }
-
-
 
 
 }

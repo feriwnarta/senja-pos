@@ -152,6 +152,12 @@
                     </div>
 
                     <div id="nav-action-button" class="d-flex flex-row align-items-center">
+                        <button type="btn"
+                                class="btn btn-text-only-danger btn-nav margin-left-10"
+                                wire:click="cancelProductionShipping"
+                                wire:confirm="Anda yakin akan membatalkan proses pengiriman produksi ?"
+                        >Batal
+                        </button>
 
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"

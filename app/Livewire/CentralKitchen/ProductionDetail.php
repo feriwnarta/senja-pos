@@ -574,6 +574,8 @@ class ProductionDetail extends Component
                     report(new Exception('gagal membuat pengiriman karena produksi finishing data kosong'));
                     return;
                 }
+
+
                 $this->production->finishes->each(function ($finishData) use ($warehouseReceipt) {
                     $warehouseReceipt->details()->create([
                         'items_id' => $finishData->item_id,
@@ -634,7 +636,7 @@ class ProductionDetail extends Component
                     $remaining->first()->detail->each(function ($detail) use ($warehouseReceipt) {
                         $itemId = $detail['items_id'];
                         $qtySend = $detail['qty_remaining'];
-                        
+
                         $warehouseReceipt->details()->create([
                             'items_id' => $itemId,
                             'qty_send' => $qtySend,
@@ -1252,6 +1254,7 @@ class ProductionDetail extends Component
 
                     $result = $this->production->finishes->where('item_id', $targetItemId)->first();
                     $result->amount_reached = $resultQty;
+                    $result->details()->delete();
                     $result->details()->createMany($details);
                     $result->save();
                 }
@@ -1275,16 +1278,16 @@ class ProductionDetail extends Component
                     ];
                 }
 
-                if (!empty($details)) {
-                    // Create or retrieve remaining model (avoid redundant checks)
-                    $remaining = $this->production->remaining()->first();
-                    if (!$remaining) {
-                        $remaining = $this->production->remaining()->create();
-                    }
+                $remaining = $this->production->remaining()->first();
+                if (!$remaining && !empty($details)) {
+                    $remaining = $this->production->remaining()->create();
+                }
 
+                $remaining->detail()->delete();
+
+                if (!empty($details)) {
                     // Create remaining details efficiently using bulk creation
                     $result = $remaining->detail()->createMany($details);
-
                 }
 
 
@@ -1305,6 +1308,33 @@ class ProductionDetail extends Component
         }
 
 
+    }
+
+    public function cancelProductionShipping()
+    {
+        if (is_null($this->production)) {
+            notify()->error('gagal');
+            Log::error('production object null saat membatalkan pengiriman produksi');
+            return;
+        }
+
+        $lastHistory = $this->production->history->last();
+
+        if (is_null($lastHistory)) {
+            notify()->error('gagal');
+            Log::error('history produksi null saat membatalkan pengiriman produksi');
+            return;
+        }
+
+        if ($lastHistory->status == 'Menunggu pengiriman') {
+            DB::transaction(function () use ($lastHistory) {
+                $lastHistory->delete();
+            });
+
+
+            $this->redirect("/central-kitchen/production/detail-production?reqId={$this->requestId}", true);
+            notify()->success('Berhasil batalkan proses pengiriman produksi');
+        }
     }
 
     public function cancelProductionAccepted()

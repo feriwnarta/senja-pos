@@ -77,8 +77,10 @@
                                 @foreach ($itemReceiptRef->itemReceipt->details as $key => $item)
 
                                     @php
+
                                         $this->dataItemReceipt[$key] = [
                                             'id' => $item->id,
+                                            'item_id' => $item->items_id,
                                             'qty_accept' => $item->qty_send,
                                         ];
                                     @endphp

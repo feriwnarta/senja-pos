@@ -6,6 +6,7 @@ use App\Models\CentralProduction;
 use App\Models\CentralProductionFinish;
 use App\Models\StockItem;
 use App\Models\WarehouseItemReceipt;
+use App\Models\WarehouseItemReceiptHistory;
 use App\Models\WarehouseItemReceiptRef;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -19,7 +20,7 @@ interface WarehouseItemReceiptRepository
 
     public function setCodeExistingWarehouseItemReceipt(string $warehouseItemReceiptId, string $code, int $increment): bool;
 
-    public function getWarehouseCodeByWarehouseReceipt(string $warehouseItemReceiptId): string;
+    public function getWarehouseCodeByWarehouseReceipt(string $warehouseItemReceiptId): ?string;
 
     public function getWarehouseIdByWarehouseReceipt(string $warehouseItemReceiptId): string;
 
@@ -44,6 +45,8 @@ interface WarehouseItemReceiptRepository
     public function getProductionFinishesByProductionId(string $productionId): CentralProductionFinish;
 
     public function getProductionFinishDetailsByProductionId(string $productionId): Collection;
+
+    public function createWarehouseItemReceiptHistory(string $warehouseItemReceiptId, string $description, string $status): WarehouseItemReceiptHistory;
 
 
 }
