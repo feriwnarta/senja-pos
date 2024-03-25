@@ -1,6 +1,6 @@
 @php use App\Utils\IndonesiaCurrency;use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
-    
+
     <x-slot name="appBar">
 
         <div class="navbar-app">
@@ -286,12 +286,12 @@
                                             'itemName' => $detail->item->name,
                                             'supplier' => $this->supplier,
                                             'payment' =>  $this->payment,
-                                            'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->qty_on_hand,
+                                            'stockActual' => $purchaseRequests->reference->requestable->warehouse->warehouseItem->where('items_id', $detail->item->id)->first()->stockItem->last()->qty_on_hand,
                                             'qtyBuy' => $detail->qty_buy,
                                             'unitName' => $detail->item->unit->name,
-                                            'unitPrice' => number_format($purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost),
+                                            'unitPrice' => number_format($purchaseRequests->reference->requestable->warehouse->warehouseItem->where('items_id', $detail->item->id)->first()->stockItem->last()->avg_cost),
                                             'purchaseAmount' =>  number_format($detail->qty_buy, 0),
-                                            'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->last()->stockItem->last()->avg_cost,
+                                            'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->where('items_id', $detail->item->id)->first()->stockItem->last()->avg_cost,
                                             'deadlinePayment' => '3',
                                         ];
                                     }

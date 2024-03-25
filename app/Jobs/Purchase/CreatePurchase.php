@@ -47,6 +47,6 @@ class CreatePurchase implements ShouldQueue
      */
     public function handle(): bool
     {
-        return $this->purchaseService->createPurchaseNetFromRequestStock($this->purchaseRequestId, $this->supplierId, $this->payment, $this->paymentDueDate, $this->items);
+        return $this->purchaseService->createPurchaseNetFromRequestStock($this->isMultiSupplier, $this->purchaseRequestId, $this->supplierId, $this->payment, $this->paymentDueDate, $this->items);
     }
 }

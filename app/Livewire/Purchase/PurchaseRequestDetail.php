@@ -37,7 +37,7 @@ class PurchaseRequestDetail extends Component
         3, 7, 14, 30
     ];
 
-    public string $dueDate = '';
+    public string $dueDate = '3';
     public string $paymentTemp;
 
 
@@ -115,7 +115,15 @@ class PurchaseRequestDetail extends Component
         Log::info($response);
 
         if ($response['success']) {
-            $id = $this->purchaseRequestDetail->purchaseReference->first()->purchase->first()->id;
+            $purchase = $this->purchaseRequestDetail->purchaseReference->first()->purchase;
+
+            if ($purchase->count() > 1) {
+                $this->redirect("/purchase?option=purchase", true);
+                notify()->success('Berhasil membuat pembelian');
+                return;
+            }
+
+            $id = $purchase->first()->id;
             $this->redirect("/purchased/detail?pId=$id", true);
             notify()->success('Berhasil membuat pembelian');
         } else {
