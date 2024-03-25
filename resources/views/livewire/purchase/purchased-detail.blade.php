@@ -136,6 +136,7 @@
                     <tr>
                         <th scope="col">Item</th>
                         <th scope="col">Unit</th>
+                        <th scope="col">Jumlah diterima</th>
                         <th scope="col">Jumlah pembelian</th>
                         <th scope="col">Harga per unit</th>
                         <th scope="col">Total</th>
@@ -146,6 +147,7 @@
                         <tr wire:key="{{ $loop->iteration }}">
                             <td>{{ $purchaseDetail->item->name }}</td>
                             <td>{{ $purchaseDetail->item->unit->name }}</td>
+                            <td>{{ $purchaseDetail->qty_accept }}</td>
                             <td>{{ $purchaseDetail->qty_buy }}</td>
                             <td>{{ $purchaseDetail->single_price }}</td>
                             <td>{{ $purchaseDetail->total_price }}</td>

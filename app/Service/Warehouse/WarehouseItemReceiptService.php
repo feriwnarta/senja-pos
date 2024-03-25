@@ -7,11 +7,12 @@ use App\Dto\WarehouseItemReceiptDTO;
 use App\Models\CentralProduction;
 use App\Models\Purchase;
 use App\Models\WarehouseItemReceiptRef;
+use Carbon\Carbon;
 use Mockery\Exception;
 
 class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseItemReceiptService
 {
-    private WarehouseItemReceiptRepository $repository;
+    protected WarehouseItemReceiptRepository $repository;
 
     /**
      * @param WarehouseItemReceiptRepository $repository
@@ -50,7 +51,7 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
 
     }
 
-    private function setItemReceiptId(WarehouseItemReceiptDTO $itemReceiptDTO): WarehouseItemReceiptDTO
+    protected function setItemReceiptId(WarehouseItemReceiptDTO $itemReceiptDTO): WarehouseItemReceiptDTO
     {
         // ambil item item receipt id terlebih dahulu
         $itemReceiptId = $this->getItemReceiptId($itemReceiptDTO->getWarehouseItemReceiptRefId());
@@ -70,5 +71,39 @@ class WarehouseItemReceiptService implements \App\Contract\Warehouse\WarehouseIt
         // dapatkan model warehouse item receipt ref id dari repository warehouse item receipt repository
         return $this->repository->findWarehouseItemReceiptRefById($itemReceiptRefId);
     }
+
+    protected function generateCode(string $itemReceiptId): array
+    {
+        // dapatkan kode dan id warehouse
+        $warehouseCode = $this->repository->getWarehouseCodeByWarehouseReceipt($itemReceiptId);
+
+        $warehouseId = $this->repository->getWarehouseIdByWarehouseReceipt($itemReceiptId);
+
+        // format bulan dan tahun dan ambil next increment
+        $currentMonthYear = $this->formatCurrentMonthYear();
+
+        $nextCode = $this->getNextIncrement($warehouseId, $currentMonthYear);
+
+
+        $code = "RECEIPT{$warehouseCode}{$currentMonthYear}{$nextCode}";
+
+
+        return ['code' => $code, 'increment' => $nextCode];
+    }
+
+    protected function formatCurrentMonthYear(): string
+    {
+        return Carbon::now()->format('Ym');
+    }
+
+    protected function getNextIncrement(string $warehouseId, string $currentMonthYear): int
+    {
+        $latestCodeData = $this->repository->getLastCodeByWarehouse($warehouseId);
+
+        return !empty($latestCodeData) && Carbon::parse($latestCodeData['created_at'])->format('Ym') === $currentMonthYear
+            ? $latestCodeData['increment'] + 1
+            : 1;
+    }
+
 
 }
