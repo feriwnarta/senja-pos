@@ -3,6 +3,7 @@
 namespace App\Livewire\Purchase;
 
 use App\Jobs\Purchase\PurchaseShipped;
+use App\Models\Purchase;
 use App\Service\Impl\PurchaseServiceImpl;
 use App\Service\PurchaseService;
 use App\Traits\Jobs;
@@ -20,6 +21,7 @@ class PurchasedDetail extends Component
     #[Url(as: 'status', keep: true)]
     public string $purchaseStatus;
     public $readyToLoad = false;
+    public Purchase $purchase;
     private PurchaseService $purchaseService;
 
     public function loadPosts()
@@ -36,16 +38,30 @@ class PurchasedDetail extends Component
             return;
         }
 
+
         $this->purchaseService = app()->make(PurchaseServiceImpl::class);
 
         // ambil status pembelian, lalu set ke purchase status
         $status = $this->purchaseService->getPurchaseStatus($this->purchaseId);
         $this->purchaseStatus = $status;
+        $purchase = $this->findPurchaseById($this->purchaseId);
+
+        if (is_null($purchase)) {
+            $this->redirect("/purchase?option=purchase", true);
+        }
+
+        $this->purchase = $purchase;
+    }
+
+    private function findPurchaseById(string $id)
+    {
+        return Purchase::find($id);
     }
 
 
     /**
      * lakukan proses kirim barang
+     *
      * @return void
      */
     public function purchasedSend()
@@ -60,11 +76,10 @@ class PurchasedDetail extends Component
         Log::info($response);
 
         if ($response['success']) {
-            notify()->success('Berhasil membuat pembelian');
-            $this->js("alert('Berhasil membuat pembelian')");
+            notify()->success('Berhasil mengirim');
+            $this->redirect("/purchased/detail?pId={$this->purchaseId}", true);
         } else {
-            notify()->error('Gagal membuat pembelian');
-            $this->js("alert('Gagal membuat pembelian')");
+            notify()->error('Berhasil mengirim');
         }
 
     }

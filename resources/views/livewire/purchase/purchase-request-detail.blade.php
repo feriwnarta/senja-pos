@@ -1,7 +1,6 @@
 @php use App\Utils\IndonesiaCurrency;use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
-
-
+    
     <x-slot name="appBar">
 
         <div class="navbar-app">
@@ -9,7 +8,20 @@
 
                 <div id="nav-leading" class="d-flex flex-row align-items-center">
                     <div class="navbar-title">
-                        Buat Pembelian
+                        @switch($status)
+                            @case('Permintaan baru')
+                                "Proses pembelian"
+                                @break
+                            @case('Diproses')
+                                Proses pembelian
+                                @break
+                            @case("Pembelian dibuat")
+                                Detail permintaan
+                                @break
+                            @default
+                                {{ $status }}
+                        @endswitch
+
                     </div>
                 </div>
 
@@ -368,7 +380,78 @@
                 </div>
 
             @elseif($status == 'Pembelian dibuat')
+                <div id="purchaseRequestCreated">
+                    <div class="row">
+                        <div class="col-sm-5 offset-1">
+                            {{-- Kode permintaan --}}
+                            <div class="container-input-default margin-top-24">
+                                <label for="warehouseInput"
+                                       class="form-label input-label">Kode permintaan</label>
 
+                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                                <input type="text" class="form-control input-default"
+                                       id="warehouseInput" disabled
+                                       value="{{ $purchaseRequests->code }}"
+                                >
+                            </div>
+
+                            {{--                            --}}{{-- Kode pembelian --}}
+                            {{--                            <div class="container-input-default margin-top-24">--}}
+                            {{--                                <label for="warehouseInput"--}}
+                            {{--                                       class="form-label input-label">Kode pembelian</label>--}}
+
+                            {{--                                <div id="divider" class="margin-symmetric-vertical-6"></div>--}}
+
+                            {{--                                <input type="text" class="form-control input-default"--}}
+                            {{--                                       id="warehouseInput" disabled--}}
+                            {{--                                       value="{{ $purchaseRequests->purchaseReference->first()->purchase->first()->code }}"--}}
+                            {{--                                >--}}
+                            {{--                            </div>--}}
+
+                            {{-- Kode referensi --}}
+                            <div class="container-input-default margin-top-24">
+                                <label for="warehouseInput"
+                                       class="form-label input-label">Referensi</label>
+
+                                <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                                <input type="text" class="form-control input-default"
+                                       id="warehouseInput" disabled
+                                       value="{{ $purchaseRequests->reference->requestable->code }}"
+                                >
+                            </div>
+
+                            <div class="margin-top-24">
+                                <p class="subtitle-3-regular">Item pembelian</p>
+                                <div id="divider" class="margin-top-6"></div>
+
+                                <table class
+                                       ="table borderless table-hover margin-top-6">
+                                    <thead class="table-head-color">
+                                    <tr>
+                                        <th scope="col">Item</th>
+                                        <th scope="col">Jumlah diminta</th>
+                                        {{--                                        <th scope="col">Jumlah dibeli</th>--}}
+                                        <th scope="col">Unit</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($purchaseRequests->detail as $request)
+                                        <tr wire:key="{{ $loop->iteration }}">
+                                            <td>{{ $request->item->name }}</td>
+                                            <td>{{ $request->qty_buy }}</td>
+                                            {{--                                            <td>{{$purchaseRequests->purchaseReference->first()->purchase->first()->detail->where('items_id' , $request->item->id)->first()->qty_buy}}</td>--}}
+                                            <td>{{ $request->item->unit->name }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
             @endif
         </div>
     </div>

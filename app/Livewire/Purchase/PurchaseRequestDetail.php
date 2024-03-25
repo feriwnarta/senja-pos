@@ -115,6 +115,8 @@ class PurchaseRequestDetail extends Component
         Log::info($response);
 
         if ($response['success']) {
+            $id = $this->purchaseRequestDetail->purchaseReference->first()->purchase->first()->id;
+            $this->redirect("/purchased/detail?pId=$id", true);
             notify()->success('Berhasil membuat pembelian');
         } else {
             notify()->error('Gagal membuat pembelian');
@@ -130,7 +132,7 @@ class PurchaseRequestDetail extends Component
 
     public function handlePaymentDateChange()
     {
-        
+
     }
 
     public function mount()
