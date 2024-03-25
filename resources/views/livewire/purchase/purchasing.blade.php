@@ -54,20 +54,20 @@
                         >
                         <label class="btn btn-outline-primary" for="btnradio2">Pembelian</label>
 
-                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio3"
-                               autocomplete="off" value="reception" wire:change="toggleChange"
-                               wire:loading.attr="disabled">
-                        <label class="btn btn-outline-primary" for="btnradio3">Penerimaan</label>
+                        {{--                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio3"--}}
+                        {{--                               autocomplete="off" value="reception" wire:change="toggleChange"--}}
+                        {{--                               wire:loading.attr="disabled">--}}
+                        {{--                        <label class="btn btn-outline-primary" for="btnradio3">Penerimaan</label>--}}
 
                         <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio4"
                                autocomplete="off" value="payment" wire:change="toggleChange"
                                wire:loading.attr="disabled">
                         <label class="btn btn-outline-primary" for="btnradio4">Pembayaran</label>
 
-                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio5"
-                               autocomplete="off" value="history" wire:change="toggleChange"
-                               wire:loading.attr="disabled">
-                        <label class="btn btn-outline-primary" for="btnradio5">Riwayat</label>
+                        {{--                        <input type="radio" class="btn-check" wire:model="toggle" name="btnradio" id="btnradio5"--}}
+                        {{--                               autocomplete="off" value="history" wire:change="toggleChange"--}}
+                        {{--                               wire:loading.attr="disabled">--}}
+                        {{--                        <label class="btn btn-outline-primary" for="btnradio5">Riwayat</label>--}}
                     </div>
 
 

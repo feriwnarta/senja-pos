@@ -9,7 +9,7 @@ use App\Models\CentralProductionFinishDetail;
 use App\Models\StockItem;
 use App\Models\WarehouseItemReceiptRef;
 use App\Service\Impl\CogsValuationCalc;
-use App\Service\Warehouse\WarehouseItemReceiptService;
+use App\Service\Warehouse\WarehouseItemReceiptProductionService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -24,7 +24,7 @@ use function PHPUnit\Framework\assertNotNull;
 class WarehouseItemReceiptServiceTest extends TestCase
 {
 
-    private WarehouseItemReceiptService $service;
+    private WarehouseItemReceiptProductionService $service;
 
 
     public function testGetItemReceiptIdSuccess()
@@ -36,7 +36,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('getWarehouseItemReceiptIdByRef')->once()->andReturn($refId);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
         $method = $reflection->getMethod('getItemReceiptId');
@@ -58,7 +58,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('getWarehouseItemReceiptRefId')->once()->andReturn($refId);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
         $method = $reflection->getMethod('getWarehouseItemReceiptRef');
@@ -77,7 +77,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('getWarehouseItemReceiptRefId')->once()->andReturn($refId);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -90,7 +90,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
 
     public function testFormatCurrentMonthYear()
     {
-        $this->service = new WarehouseItemReceiptService(new \App\Repository\Warehuouse\WarehouseItemReceiptRepository());
+        $this->service = new WarehouseItemReceiptProductionService(new \App\Repository\Warehuouse\WarehouseItemReceiptRepository());
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
         $method = $reflection->getMethod('formatCurrentMonthYear');
@@ -112,7 +112,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             ]);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -132,7 +132,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('getLastCodeByWarehouse')->once()->andThrow(new Exception('Warehouse item receipt null saat berusaha mendapatkan modelnya untuk keperluhan generate kode item masuk warehouse_id = $warehouseId'));
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -157,7 +157,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             ]);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -186,7 +186,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             ]);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -217,7 +217,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             ]);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -251,7 +251,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('updateAmountReceivedExistingDetails')->once()->andReturn(true);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -279,7 +279,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('updateAmountReceivedExistingDetails')->never()->andReturn(true);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -308,7 +308,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('updateAmountReceivedExistingDetails')->never()->andReturn(true);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -337,7 +337,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('updateAmountReceivedExistingDetails')->once()->andThrow(new Exception('gagal update amount received'));
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -366,7 +366,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
             $mock->shouldReceive('updateAmountReceivedExistingDetails')->once()->andReturn(false);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -398,7 +398,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
         });
 
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -438,7 +438,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
                 ->andReturn($collection);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -479,7 +479,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
                 ->andReturn($collection);
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -526,7 +526,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
                 ->andReturn(new StockItem());
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
@@ -578,7 +578,7 @@ class WarehouseItemReceiptServiceTest extends TestCase
                 ->andReturn(new StockItem());
         });
 
-        $this->service = new WarehouseItemReceiptService($repository);
+        $this->service = new WarehouseItemReceiptProductionService($repository);
         $reflection = new ReflectionClass(get_class($this->service));
         self::assertNotNull($reflection);
 
