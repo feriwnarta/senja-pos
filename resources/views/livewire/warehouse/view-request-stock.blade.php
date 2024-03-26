@@ -83,7 +83,6 @@
                     <tr>
                         <th>Item</th>
                         <th>Diminta</th>
-                        <th>Diterima</th>
                         <th>Unit</th>
                     </tr>
                     </thead>
@@ -92,7 +91,6 @@
                         <tr>
                             <td>{{ $requestStock->item->name }}</td>
                             <td>{{ $requestStock->qty }}</td>
-                            <td>{{ $requestStock->qty_accept }}</td>
                             <td>{{ $requestStock->item->unit->name }}</td>
                         </tr>
                     @endforeach

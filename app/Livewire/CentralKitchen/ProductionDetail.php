@@ -1283,7 +1283,10 @@ class ProductionDetail extends Component
                     $remaining = $this->production->remaining()->create();
                 }
 
-                $remaining->detail()->delete();
+                if (!is_null($remaining) && !is_null($remaining->detail())) {
+                    $remaining->detail()->delete();
+                }
+
 
                 if (!empty($details)) {
                     // Create remaining details efficiently using bulk creation

@@ -40,12 +40,11 @@ class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\Warehous
      */
     public function updateAmountReceivedExistingDetails(array $itemDetails): bool
     {
+
         foreach ($itemDetails as $item) {
             $detail = WarehouseItemReceiptDetail::findOrFail($item['id']);
             $detail->qty_accept = $item['qty_accept'];
             $result = $detail->save();
-
-//            $this->getCostProduction($productionId, $item['id']);
 
             // jika penyimpanan gagal maka lemparkan error
             if (!$result) {
