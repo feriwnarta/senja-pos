@@ -96,7 +96,7 @@
 
 
                 @php
-                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'view-request-stock', 'view-request-stock', 'edit-request-stock', 'detail-warehouse', 'warehouse-transaction', 'warehouse-add-transaction','warehouse-transaction-detail', 'warehouse-transaction-detail-receipt']);
+                    $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'view-request-stock', 'view-request-stock', 'edit-request-stock', 'detail-warehouse', 'warehouse-transaction', 'warehouse-add-transaction','warehouse-transaction-detail', 'warehouse-transaction-detail-receipt', 'warehouse-list-stock']);
                 @endphp
 
                 <div class="accordion-item">
@@ -118,9 +118,9 @@
                          class="accordion-collapse collapse {{ $collapseInv ? 'show' : '' }} "
                          data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
-                            <a href="" wire:navigate>
+                            <a href="/warehouse/stock" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('warehouse-list-stock')  ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     Stok item
