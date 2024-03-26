@@ -5,6 +5,7 @@ namespace App\Repository\Warehuouse;
 use App\Models\CentralProduction;
 use App\Models\CentralProductionFinish;
 use App\Models\Item;
+use App\Models\PurchaseHistory;
 use App\Models\StockItem;
 use App\Models\WarehouseItem;
 use App\Models\WarehouseItemReceipt;
@@ -247,5 +248,15 @@ class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\Warehous
         $itemReceiptHistory->save();
 
         return $itemReceiptHistory;
+    }
+
+    public function createPurchaseHistory(string $purchaseId, string $description, string $status): PurchaseHistory
+    {
+        $purchaseHistory = new PurchaseHistory();
+        $purchaseHistory->purchases_id = $purchaseId;
+        $purchaseHistory->desc = $description;
+        $purchaseHistory->status = $status;
+        $purchaseHistory->save();
+        return $purchaseHistory;
     }
 }

@@ -75,7 +75,7 @@ class PurchaseRequestDetail extends Component
         $response = $this->ajaxDispatch(new CreatePurchaseRequestFromStock($id));
 
         if ($response['success']) {
-            $this->redirect("/purchase-request/detail?reqId={$this->requestId}", true);
+            $this->redirect("/purchase-request/detail?reqId={$this->requestId}");
             notify()->success('Berhasil memproses permintaan');
         } else {
             notify()->error('Gagal memproses permintaan');
@@ -118,13 +118,13 @@ class PurchaseRequestDetail extends Component
             $purchase = $this->purchaseRequestDetail->purchaseReference->first()->purchase;
 
             if ($purchase->count() > 1) {
-                $this->redirect("/purchase?option=purchase", true);
+                $this->redirect("/purchase?option=purchase");
                 notify()->success('Berhasil membuat pembelian');
                 return;
             }
 
             $id = $purchase->first()->id;
-            $this->redirect("/purchased/detail?pId=$id", true);
+            $this->redirect("/purchased/detail?pId=$id");
             notify()->success('Berhasil membuat pembelian');
         } else {
             notify()->error('Gagal membuat pembelian');

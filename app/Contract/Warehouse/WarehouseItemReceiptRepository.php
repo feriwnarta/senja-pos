@@ -4,6 +4,7 @@ namespace App\Contract\Warehouse;
 
 use App\Models\CentralProduction;
 use App\Models\CentralProductionFinish;
+use App\Models\PurchaseHistory;
 use App\Models\StockItem;
 use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseItemReceiptHistory;
@@ -47,6 +48,8 @@ interface WarehouseItemReceiptRepository
     public function getProductionFinishDetailsByProductionId(string $productionId): Collection;
 
     public function createWarehouseItemReceiptHistory(string $warehouseItemReceiptId, string $description, string $status): WarehouseItemReceiptHistory;
+
+    public function createPurchaseHistory(string $purchaseId, string $description, string $status): PurchaseHistory;
 
 
 }

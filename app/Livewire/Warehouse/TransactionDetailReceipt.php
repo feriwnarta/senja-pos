@@ -117,14 +117,13 @@ class TransactionDetailReceipt extends Component
             'dataItemReceipt.*.qty_accept' => 'numeric|min:1'
         ]);
 
-        // TODO : LAKUKAN PENERIMAAN
 
         $warehouseReceiptDto = new WarehouseItemReceiptDTO($this->receiptRefId, $warehouseId, $this->dataItemReceipt);
         $repository = new WarehouseItemReceiptRepository();
         $service = new WarehouseItemReceiptService($repository);
         $service->receipt($warehouseReceiptDto);
 
-        $this->redirect("/warehouse/transaction/detail-receipt/?refId={$this->receiptRefId}", true);
+        $this->redirect("/warehouse/transaction/detail-receipt/?refId={$this->receiptRefId}");
         notify()->success('Sukses');
 
     }

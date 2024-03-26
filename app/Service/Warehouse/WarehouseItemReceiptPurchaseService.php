@@ -3,6 +3,8 @@
 namespace App\Service\Warehouse;
 
 use App\Dto\WarehouseItemReceiptDTO;
+use App\Models\StockItem;
+use App\Service\Impl\CogsValuationCalc;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -71,14 +73,58 @@ class WarehouseItemReceiptPurchaseService extends WarehouseItemReceiptService im
                     return;
                 }
 
-                // insert ke stock inventory valuation
+
+                // proses terima jumlah yang dibeli di purchase detail
+                $warehouseItemReceiptRef = $this->repository->findWarehouseItemReceiptRefById($newDtoWithReceiptId->getWarehouseItemReceiptRefId());
+                $purchase = $warehouseItemReceiptRef->receivable;
+
+
+                $dataItemPurchase = [];
+
+                foreach ($newDtoWithReceiptId->getDataItemReceipt() as $item) {
+                    $itemId = $item['item_id'];
+                    $qtyAccept = $item['qty_accept'];
+                    $purchaseDetail = $purchase->detail->where('items_id', $itemId);
+
+                    if ($purchaseDetail->isNotEmpty()) {
+
+                        $purchaseDetail = $purchaseDetail->first();
+                        $purchaseDetail->qty_accept = $qtyAccept;
+                        $purchaseDetail->save();
+
+                        $dataItemPurchase[] = [
+                            'item_id' => $purchaseDetail->items_id,
+                            'singlePrice' => $purchaseDetail->single_price,
+                            'total_price' => $purchaseDetail->total_price
+                        ];
+                    }
+                }
+
                 $warehouseId = $this->repository->getWarehouseIdByWarehouseReceipt($itemReceiptId);
+                // insert ke stock inventory valuation
+                $stockItem = $this->insertStockValuation($warehouseId, $dataItemPurchase, $newDtoWithReceiptId->getDataItemReceipt());
+
+                if (is_null($stockItem)) {
+                    Log::error(json_encode([
+                        'message' => 'gagal melakukan penerimaan item masuk dari pembelian setelah menghitung stock inventory valuation',
+                        'data' => [
+                            "dto" => $itemReceiptDTO,
+                            "warehouse_id" => $warehouseId,
+                        ]
+                    ]));
+                    report(new Exception('gagal melakukan penerimaan item masuk dari pembelian setelah menghitung stock inventory valuation'));
+                    abort(400);
+                }
 
                 // buat history item receipt
+                Log::info('buat history penerimaan');
+                $this->repository->createWarehouseItemReceiptHistory($itemReceiptId, 'Sukses melakukan penerimaan barang dari produksi', 'Diterima');
 
-                // buat pembayaran jika tipe pembelian adalah NET
+                // buat history purchase
+                Log::info('buat history purchase');
+                $this->repository->createPurchaseHistory($purchase->id, 'Sukses melakukan penerimaan barang dari pembelian', 'Diterima');
 
-                dd($isSetCode);
+
             });
 
         } catch (Exception $exception) {
@@ -91,6 +137,79 @@ class WarehouseItemReceiptPurchaseService extends WarehouseItemReceiptService im
         }
 
 
+    }
+
+    private function insertStockValuation(string $warehouseId, array $dataItemPurchase, array $itemDetails): ?StockItem
+    {
+
+
+        foreach ($itemDetails as $item) {
+            $itemId = $item['item_id'];
+            $qty = $item['qty_accept'];
+
+
+            $totalCost = $this->calculateTotalCost($dataItemPurchase, $itemId, $qty);
+
+            if (empty($totalCost)) {
+                report(new Exception('saat menghitung insert stock valuation terdapat kasalahan total cost tidak berhasil didapatkan karena data item purchase tidak valid dengan item penerimaan'));
+                abort(400);
+            }
+
+
+            $purchasePrice = $totalCost['last_cost'];
+
+            $warehouseItemId = $this->repository->getWarehouseItemId($warehouseId, $itemId);
+            $stockItem = $this->repository->getStockItemByWarehouseItemId($warehouseItemId);
+
+            $cogsValuationCalcData = $this->getCogsValuationCalcData($qty, $purchasePrice, is_null($stockItem), $stockItem);
+
+
+            if (empty($cogsValuationCalcData)) {
+                throw new Exception('Failed to calculate initial avg cost for item receipt from purchasing');
+            }
+
+            return $this->repository->insertNewStockItem($warehouseItemId, $cogsValuationCalcData);
+        }
+
+        return null;
+    }
+
+    private function calculateTotalCost(array $dataItemPurchase, string $itemId, int $qty): array
+    {
+        foreach ($dataItemPurchase as $itemPurchase) {
+            if ($itemPurchase['item_id'] == $itemId) {
+                return [
+                    'total' => $qty * $itemPurchase['singlePrice'],
+                    'last_cost' => $itemPurchase['singlePrice'],
+                ];
+            }
+        }
+
+        return []; // Tidak ada item yang cocok
+    }
+
+    private function getCogsValuationCalcData(int $qty, float $purchasePrice, bool $isNewItem, ?StockItem $stockItem): array
+    {
+        $cogs = new CogsValuationCalc();
+
+        if ($isNewItem) {
+
+            return $cogs->initialAvg($qty, $purchasePrice, $purchasePrice);
+        } else {
+            return $cogs->calculateAvgPrice(
+                $stockItem->inventory_value,
+                $stockItem->qty_on_hand,
+                $stockItem->avg_cost,
+                $qty,
+                $purchasePrice,
+                false
+            );
+        }
+    }
+
+    private function calculateAvgCost(int $totalCost, int $qty)
+    {
+        return $totalCost / $qty;
     }
 
 
