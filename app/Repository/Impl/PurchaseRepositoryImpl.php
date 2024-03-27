@@ -109,8 +109,6 @@ class PurchaseRepositoryImpl implements PurchaseRepository
 
     public function createWarehouseItemReceiptDetail(string $warehouseItemReceiptId, Collection $itemData): bool
     {
-
-
         try {
             $dataToInsert = $itemData->map(function ($item) use ($warehouseItemReceiptId) {
                 return [
@@ -118,7 +116,7 @@ class PurchaseRepositoryImpl implements PurchaseRepository
                     'warehouse_items_receipts_id' => $warehouseItemReceiptId,
                     'items_id' => $item->items_id,
                     'qty_send' => $item->qty_buy,
-                    'created_by' => auth()->user() == null ? 'USER NOT LOGIN' : auth()->user(),
+                    'created_by' => auth()->user() == null ? 'USER NOT LOGIN' : auth()->user()->id,
                 ];
             });
 

@@ -9,27 +9,34 @@
 
     <div class="button-menu">
 
-        <div class="dashboard-btn">
+        @php
+            $collapseDashboard = Route::is(['summary'])
+        @endphp
 
+        <div class="dashboard-button">
             <div class="accordion" id="accordionMenu">
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <a href="/pos/dashboard" wire:navigate>
-                            <button class="accordion-button button-icon-text description-1-medium collapsed"
-                                    type="button" data-bs-toggle="collapse" data-bs-target="#collapseDashboard"
-                                    aria-expanded="false">
-                                <i class="pos-icon"></i>
-                                Dashboard
-                            </button>
-                        </a>
+                        <button
+                            class="accordion-button button-icon-text description-1-medium {{ $collapseDashboard ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse" aria-expanded="{{ $collapseDashboard ? 'true': 'false' }}"
+                            data-bs-target="#collapseDashboard">
+                            <i class="dashboard-icon"></i>
+                            Dashboard
+                        </button>
                     </h2>
-                    <div id="collapseDashboard" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
-                        <div class="accordion-body">
-                            <button class="btn button-sidebar-text-only-text description-1-medium" type="button"
+                    <div id="collapseDashboard"
+                         class="accordion-collapse collapse {{ $collapseDashboard ? 'show' : '' }}">
+                        <a href="/dashboard/summary" wire:navigate>
+                            <div class="accordion-body">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('summary') ? 'inner-menu-active' : ''}}"
                                     id="">
-                                Ringkasan
-                            </button>
-                        </div>
+                                    Ringkasan
+                                </button>
+                            </div>
+                        </a>
                     </div>
                 </div>
 
@@ -44,7 +51,7 @@
                             type="button"
                             data-bs-toggle="collapse" aria-expanded="{{ $collapseComposition ? 'true': 'false' }}"
                             data-bs-target="#collapsePos">
-                            <i class="pos-icon"></i>
+                            <i class="composition-icon"></i>
                             {{ __('sidebar_locale.komposisi.name') }}
                         </button>
                     </h2>
@@ -222,7 +229,7 @@
                             data-bs-toggle="collapse"
                             aria-expanded="{{ $collapseOutlet ? 'true': 'false' }}"
                             data-bs-target="#collapseOutlet">
-                            <i class="inventory-icon"></i>
+                            <i class="outlet-icon"></i>
                             {{ __('sidebar_locale.outlet.name') }}
                         </button>
                     </h2>
@@ -322,13 +329,33 @@
                         <button class="accordion-button button-icon-text description-1-medium collapsed"
                                 type="button"
                                 data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseReport">
-                            <i class="report-icon"></i>
-                            {{ __('sidebar_locale.user.name') }}
+                            <i class="account-icon"></i>
+                            Akun
                         </button>
                     </h2>
                     <div id="collapseReport" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
-
+                            <a href="/user/profile">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium"
+                                    type="button"
+                                    id="">
+                                    Profile
+                                </button>
+                            </a>
+                            <form method="POST" action="http://127.0.0.1:8000/logout" x-data="">
+                                <input type="hidden" name="_token" value="PZauSRdiUXAYI6GqF5UROTNlc9ocR8zMtkomYuAw"
+                                       autocomplete="off">
+                                <a class=""
+                                   href="http://127.0.0.1:8000/logout" @click.prevent="$root.submit();">
+                                    <button
+                                        class="btn button-sidebar-text-only-text description-1-medium"
+                                        type="button"
+                                        id="">
+                                        Logout
+                                    </button>
+                                </a>
+                            </form>
                         </div>
                     </div>
                 </div>

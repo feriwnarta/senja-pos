@@ -360,6 +360,7 @@ class PurchaseServiceImpl implements PurchaseService
             Log::info('buat pengiriman');
             DB::beginTransaction();
             $result = $this->purchaseRepository->createPurchaseHistory($id, $data);
+
             $this->makeWarehouseRecipt($id);
             DB::commit();
             return $result;
@@ -381,6 +382,7 @@ class PurchaseServiceImpl implements PurchaseService
         // ambil purchase reff, dapatkan warehouse
         $reference = $purchase->reference->purchasable->reference->requestable;
 
+
         if (!$reference instanceof RequestStock) {
             throw new Exception('gagal mendpatkan warehouse receipt');
         }
@@ -389,14 +391,17 @@ class PurchaseServiceImpl implements PurchaseService
         // buat reference warehouse item receipt
         $warehouseReceiptReff = $purchase->warehouseReceiptReference()->save(new WarehouseItemReceiptRef());
 
+
         // buat warehouse item receipt
         $warehouseReceipt = $this->purchaseRepository->insertWarehouseReceiptData($warehouseId, $warehouseReceiptReff->id);
 
         // dapatkan warehouse item receipt details
         $purchaseItem = $this->purchaseRepository->getPurchaseItems($purchaseId);
 
+
         // buat warehouse item receipt item detail
         $this->purchaseRepository->createWarehouseItemReceiptDetail($warehouseReceipt->id, $purchaseItem);
+
 
         // buat history
         $history = $this->purchaseRepository->createWarehouseReceiptHistory($warehouseReceipt->id, 'Membuat draft penerimaan barang dari pembelian', 'Draft');

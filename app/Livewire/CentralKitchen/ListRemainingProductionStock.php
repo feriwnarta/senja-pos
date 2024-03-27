@@ -46,7 +46,7 @@ class ListRemainingProductionStock extends Component
     public function render()
     {
         return view('livewire.central-kitchen.list-remaining-production-stock', [
-            'stocks' => CentralKitchenStock::where('central_kitchens_id', $this->selectCentralKitchen)->paginate(10)
+            'stocks' => (isset($this->selectCentralKitchen)) ? CentralKitchenStock::where('central_kitchens_id', $this->selectCentralKitchen)->paginate(10) : []
         ]);
     }
 }

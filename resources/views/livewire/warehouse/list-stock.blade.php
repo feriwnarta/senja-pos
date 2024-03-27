@@ -27,10 +27,14 @@
                             class="form-select input-default"
                             id="resupplyOutlet" wire:model="selectedWarehouse" wire:change="handleSelectWarehouse"
                             wire:loading.attr="disabled">
-                            @foreach($warehouses as $warehouse)
-                                <option wire:key="{{ $loop->iteration }}"
-                                        value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
-                            @endforeach
+                            @if(isset($warehouses) && count($warehouses) > 0)
+                                @foreach($warehouses as $warehouse)
+                                    <option wire:key="{{ $loop->iteration }}"
+                                            value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                @endforeach
+                            @else
+                                <option>Tidak ada gudang</option>
+                            @endif
                         </select>
                     </div>
 

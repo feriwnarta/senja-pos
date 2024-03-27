@@ -39,8 +39,12 @@ class ListStock extends Component
         // ambil semua warehouse
         $this->warehouses = $this->getAlLWarehouse();
 
-        // set selected warehouse pertama kali dengan warehouse pertama dari collection hasil get all warehouse
-        $this->selectedWarehouse = $this->warehouses->first()->id;
+        if ($this->warehouses->isNotEmpty()) {
+            // set selected warehouse pertama kali dengan warehouse pertama dari collection hasil get all warehouse
+            $this->selectedWarehouse = $this->warehouses->first()->id;
+        }
+
+
     }
 
     private function getAlLWarehouse(): Collection

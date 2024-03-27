@@ -24,11 +24,15 @@
                             aria-label="select-central-kitchen"
                             class="form-select input-default"
                             id="resupplyOutlet">
-                            @if(isset($centralKitchens))
+                            @if(isset($centralKitchens) && count($centralKitchens) > 0)
                                 @foreach($centralKitchens as $kitchen)
                                     <option wire:model="selectCentralKitchen"
                                             value="{{ $kitchen->id }}">{{ $kitchen->name }}</option>
                                 @endforeach
+                            @else
+                                <option>Tidak ada
+                                    central kitchen
+                                </option>
                             @endif
 
                         </select>

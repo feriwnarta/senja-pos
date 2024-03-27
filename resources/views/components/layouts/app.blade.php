@@ -22,7 +22,6 @@
     <link rel="stylesheet" href="{{ asset('css/form.css') }}">
     <link rel="stylesheet" href="{{ asset('css/spacer.css') }}">
     <link rel="stylesheet" href="{{ asset('css/color.css') }}">
-
     <script src="{{ asset('js/jquery.js') }}"></script>
     <script src="{{ asset('data-table/datatables.js') }}"></script>
     {{--        <script src="{{ asset('js/toast.js') }}"></script>--}}

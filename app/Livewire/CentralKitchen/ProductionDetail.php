@@ -705,6 +705,7 @@ class ProductionDetail extends Component
     public function handleUsageTotalRawItemChange($totalRawItemsUsageIndex, $recipeIndex, $itemId)
     {
 
+
         if (isset($itemId) && isset($totalRawItemsUsageIndex) && isset($recipeIndex)) {
             foreach ($this->globalRawItems as $key => $rawItem) {
                 $this->globalRawItems[$key]['usage'] = 0;
@@ -713,7 +714,7 @@ class ProductionDetail extends Component
                     foreach ($totalUsage['recipe'] as $recipe) {
                         $itemUsageId = $recipe['item_component_id'];
                         if ($itemUsageId == $globalItemId) {
-                            $usage = $recipe['usage'];
+                            $usage = str_replace('.', '', $recipe['usage']);
                             $this->globalRawItems[$key]['usage'] += $usage;
                         }
                     }
