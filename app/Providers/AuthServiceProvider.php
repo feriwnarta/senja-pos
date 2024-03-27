@@ -29,6 +29,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->hasRole('Super-Admin')) {
                 return true;
             }
+            
         });
     }
 }
