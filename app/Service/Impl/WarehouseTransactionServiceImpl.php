@@ -126,6 +126,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
      * simpan item req yang dipilih ke items detail
      * pilah mana item yang dibeli mana item yang diproduksi
      * TODO: Proses untuk gudang pusat atau permintaan dari outlet
+     *
      * @param string $reqId
      * @param array $itemReq
      * @return void
@@ -146,21 +147,26 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
                     $itemRouteBuy = [];
 
+
                     foreach ($itemReq as $item) {
                         $resultItem = WarehouseItem::findOrFail($item['id'])->items;
+
+                        $qty = str_replace(['.', ','], '', $item['itemReq']);
+
 
                         // buat request stock detail
                         RequestStockDetail::create([
                             'request_stocks_id' => $reqId,
                             'items_id' => $resultItem->id,
-                            'qty' => $item['itemReq'],
+                            'qty' => $qty,
                             'type' => ($resultItem->route == 'BUY') ? 'PO' : (($resultItem->route == 'PRODUCECENTRALKITCHEN') ? 'PRODUCE' : 'ERROR'),
                         ]);
+
 
                         if ($resultItem->route == 'BUY') {
                             $itemRouteBuy[] = [
                                 'items_id' => $resultItem->id,
-                                'qty_buy' => $item['itemReq'],
+                                'qty_buy' => $qty,
                             ];
                         }
 
@@ -226,6 +232,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
     /**
      * lakukan proses pengurangan stock berdasarkan item yang ditentukan
+     *
      * @param string $itemId
      * @return array
      */
@@ -365,6 +372,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
     /**
      * buat pengiriman barang dari gudang
      * generate kode pengiriman yang unique
+     *
      * @return void
      */
     private function createShipping(string $outboundId, array $stockIds, string $warehouseId, string $warehouseCode)
@@ -406,6 +414,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
     /**
      * generate kode warehouse shipping
      * pastikan fungsi ini dipanggil didalam atomic lock
+     *
      * @return void
      */
     public function generateCodeShipping(string $warehouseId, string $warehouseCode): array

@@ -26,6 +26,7 @@ class Purchasing extends Component
     /**
      * handle toggle request
      * ambil data semua permintaan pembelian
+     *
      * @return void
      */
     private function handleRequest()
@@ -77,14 +78,22 @@ class Purchasing extends Component
     private function handlePurchase()
     {
         try {
-            return $purchases = Purchase::with(['detail' => function ($query) {
-                $query->latest()->limit(1);
+            $purchases = Purchase::with(['detail' => function ($query) {
+                $query->latest();
             }, 'reference.purchasable', 'supplier', 'history' => function ($query) {
                 $query->latest()->limit(1);
             }])
                 ->withSum('detail', 'total_price') // Menghitung total total_price di relasi detail
                 ->orderBy('created_at', 'DESC')
                 ->paginate(10);
+
+            $purchases->transform(function ($purchase) {
+                $purchase->total_price = number_format($purchase->total_price, 2); // Konversi total_price ke tipe data decimal
+                return $purchase;
+            });
+
+
+            return $purchases;
 
         } catch (Exception $exception) {
             Log::error('gagal mengambil data pembelian (Purchase) ');
@@ -106,6 +115,7 @@ class Purchasing extends Component
     /**
      * handler dari button group
      * fungsi ini akan menangani perubahan table pembelian berdasarkan toggle yang diklik
+     *
      * @return void
      */
     public function toggleChange()

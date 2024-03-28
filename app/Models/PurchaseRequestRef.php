@@ -25,7 +25,7 @@ class PurchaseRequestRef extends Model
 
     public function request(): HasMany
     {
-        return $this->hasMany(PurchaseRequest::class, 'purchase_requests_id');
+        return $this->hasMany(PurchaseRequest::class, 'purchase_request_refs_id');
     }
 
 }

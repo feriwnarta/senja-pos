@@ -16,13 +16,18 @@
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
                     {{-- TOMBOL EDIT MUNCUL SELAMA PRODUKSI / PEMBELIAN BELUM DIPROSES --}}
-                    @if($requestStock->requestStockHistory->last()->status == 'Baru' || $requestStock->requestStockHistory->last()->status == 'Penerimaan dibatalkan' )
-                        <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10"
-                                wire:click="saveEdit"
-                        >Simpan
-                        </button>
-                    @endif
+
+
+                    <button type="button" class="btn btn-text-only-primary btn-nav margin-left-10"
+                            wire:click="saveEdit"
+                    >
+                            <span wire:loading wire:target="saveEdit" class="spinner-border text-warning" role="status">
+                                <!-- Teks atau ikon loading disini -->
+                            </span>
+                        <span wire:loading.remove wire:target="saveEdit"> <!-- Teks tombol saat tidak loading -->
+                            Simpan
+                            </span>
+                    </button>
 
 
                 </div>
@@ -86,6 +91,7 @@
                     </thead>
                     <tbody>
                     @foreach($requestStockDetail as $key =>  $requestStock)
+
                         <tr wire:key="{{ $loop->iteration }}">
                             <td>
 
@@ -115,7 +121,10 @@
 
                                 <input type="text" class="form-control input-default"
                                        x-mask:dynamic="$money($input, ',', '.')"
-                                       wire:model.live="requestStockDetail.{{ $key }}.qty_request">
+                                       x-mask:dynamic="$money($input, ',', '.')"
+                                       wire:model.live="requestStockDetail.{{ $key }}.qty_request"
+                                    {{ $requestStock['canEdit'] == "false" ? "disabled" : "" }}>
+
                                 @error("requestStockDetail.$key.qty_request") <span
                                     class="text-danger">{{ $message }}</span>
                                 @enderror

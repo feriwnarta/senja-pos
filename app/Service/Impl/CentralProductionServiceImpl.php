@@ -463,7 +463,7 @@ class CentralProductionServiceImpl implements CentralProductionService
                     }
                 }
             }
-            
+
             $production->components()->createMany($results);
             $outbound = CentralKitchenReceipts::create([
                 'warehouse_outbounds_id' => $outboundId,

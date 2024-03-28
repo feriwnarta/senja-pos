@@ -10,7 +10,7 @@
                     <div class="navbar-title">
                         @switch($status)
                             @case('Permintaan baru')
-                                "Proses pembelian"
+                                Proses pembelian
                                 @break
                             @case('Diproses')
                                 Proses pembelian
@@ -94,7 +94,7 @@
                                     @foreach($purchaseRequests->detail as $detail)
                                         <tr wire:key="{{ $loop->iteration }}">
                                             <td>{{ $detail->item->name }}</td>
-                                            <td>{{ $detail->qty_buy }}</td>
+                                            <td>{{  number_format($detail->qty_buy , 0, ',', '.')}}</td>
                                             <td>{{ $detail->item->unit->name }}</td>
 
                                         </tr>
@@ -255,7 +255,6 @@
                         </div>
                     </div>
 
-                    {{--                    {{ json_encode($purchaseRequestDetail) }}--}}
 
                     <div class="col-sm-12">
                         <table id="" class="table borderless table-hover">
@@ -294,20 +293,23 @@
                                             'totalAmount' => $detail->qty_buy * $purchaseRequests->reference->requestable->warehouse->warehouseItem->where('items_id', $detail->item->id)->first()->stockItem->last()->avg_cost,
                                             'deadlinePayment' => '3',
                                         ];
+
+                                          // Memperbarui nilai supplier, payment, dan dueDate
+                                            $this->componentItems[$key]['supplier'] = $this->supplier;
+                                            $this->componentItems[$key]['payment'] = $this->payment;
+                                            $this->componentItems[$key]['dueDate'] = $this->dueDate;
+
+
+
+
+                                            // Memperbarui nilai payment jika key sama dengan indexPayment
+                                            if($key == $this->indexPayment) {
+                                                $this->componentItems[$key]['payment'] = $this->paymentTemp;
+                                                $this->indexPayment = '';
+                                            }
                                     }
 
-                                    // Memperbarui nilai supplier, payment, dan dueDate
-                                    $this->componentItems[$key]['supplier'] = $this->supplier;
-                                    $this->componentItems[$key]['payment'] = $this->payment;
-                                    $this->componentItems[$key]['dueDate'] = $this->dueDate;
 
-
-
-                                    // Memperbarui nilai payment jika key sama dengan indexPayment
-                                    if($key == $this->indexPayment) {
-                                        $this->componentItems[$key]['payment'] = $this->paymentTemp;
-                                        $this->indexPayment = '';
-                                    }
                                 @endphp
 
 
@@ -356,8 +358,8 @@
                                             -
                                         @endif
                                     </td>
-                                    <td>{{ $this->componentItems[$key]['stockActual'] }}</td>
-                                    <td>{{ $this->componentItems[$key]['qtyBuy'] }}</td>
+                                    <td>{{  number_format($this->componentItems[$key]['stockActual'], 0, ',', '.') }}</td>
+                                    <td>{{ number_format($this->componentItems[$key]['qtyBuy'] , 0, ',', '.')}}</td>
                                     <td>{{ $this->componentItems[$key]['unitName'] }}</td>
                                     <td>
                                         <input type="text" class="form-control input-default"
@@ -365,11 +367,16 @@
                                                wire:change="handleValuePurchaseAmount('{{ $key }}')"
                                                x-mask:dynamic="$money($input)"
                                         >
+                                        @error("componentItems.$key.unitPrice") <span
+                                            class="text-danger">{{ $message }}</span> @enderror
+
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control input-default"
+                                        <input type="text" class="form-control input-default"
                                                wire:model="componentItems.{{ $key }}.purchaseAmount"
                                                wire:change="handleValuePurchaseAmount('{{ $key }}')">
+                                        @error("componentItems.$key.purchaseAmount") <span
+                                            class="text-danger">{{ $message }}</span> @enderror
                                     </td>
                                     <td>{{  IndonesiaCurrency::formatToRupiah($this->componentItems[$key]['totalAmount']) }}</td>
                                 </tr>

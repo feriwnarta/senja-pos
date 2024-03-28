@@ -170,18 +170,18 @@ class PurchaseServiceImpl implements PurchaseService
 
                 try {
 
+
                     if (!$isMultiSupplier) {
                         Log::info('fungsi create purchase from request stock dijalankan');
 
-
-                        // buat purchase request refference
+                        // buat purchase request reference
                         $purchaseRequest = PurchaseRequest::findOrFail($purchaseReqId);
                         $purchaseRef = $purchaseRequest->purchaseReference()->save(new PurchaseRef());
 
                         // dapatkan code supplier
                         $supplier = Supplier::findOrFail($supplierId);
 
-                        if ($supplier == null) {
+                        if (!$supplier) {
                             Log::error('supplier null saat membuat purchase dari request stock');
                             throw new Exception('Supplier Null');
                         }
@@ -189,7 +189,8 @@ class PurchaseServiceImpl implements PurchaseService
                         Log::debug($supplier);
 
                         // generate code
-                        $resultGenerate = $this->generateCodePurchase($supplier->code);
+                        $resultGenerate = $this->generateCodePurchase($supplier->code, $supplier->id);
+
 
                         // buat purchase
                         $purchase = Purchase::create([
@@ -201,15 +202,14 @@ class PurchaseServiceImpl implements PurchaseService
                             'due_date' => Carbon::now()->copy()->addDays($dueDate),
                         ]);
 
-
                         // buat purchase detail
                         foreach ($dataPurchase as $data) {
                             $unitPrice = str_replace(',', '', $data['unitPrice']);
                             $purchase->detail()->create([
                                 'items_id' => $data['itemId'],
-                                'qty_buy' => $data['purchaseAmount'],
+                                'qty_buy' => floatval(str_replace(',', '', $data['purchaseAmount'])),
                                 'single_price' => $unitPrice,
-                                'total_price' => $data['totalAmount'],
+                                'total_price' => floatval(str_replace(',', '', $data['totalAmount'])),
                             ]);
                         }
 
@@ -219,44 +219,44 @@ class PurchaseServiceImpl implements PurchaseService
                             'status' => 'Dibuat',
                         ]);
 
-                        // update puchase request history
+                        // update purchase request history
                         $purchaseRequest->history()->create([
                             'desc' => 'Purchase dibuat dari request stock gudang',
                             'status' => 'Pembelian dibuat',
                         ]);
-
                     } else {
-
-//                        dd($dataPurchase);
                         Log::info('fungsi create purchase from request stock multi supplier dijalankan');
 
-                        // buat purchase request refference
+                        // buat purchase request reference
                         $purchaseRequest = PurchaseRequest::findOrFail($purchaseReqId);
                         $purchaseRef = $purchaseRequest->purchaseReference()->save(new PurchaseRef());
+                        
 
-
-                        foreach ($dataPurchase as $purchase) {
-
+                        foreach ($dataPurchase as $key => $purchase) {
                             $supplierId = $purchase['supplier'];
                             $paymentScheme = $purchase['payment'];
                             $dueDate = $purchase['dueDate'];
 
-
                             // dapatkan code supplier
                             $supplier = Supplier::findOrFail($supplierId);
 
-                            if ($supplier == null) {
+
+                            if (!$supplier) {
                                 Log::error('supplier null saat membuat purchase dari request stock');
                                 throw new Exception('Supplier Null');
                             }
 
-
                             // generate code
-                            $resultGenerate = $this->generateCodePurchase($supplier->code);
+                            $resultGenerate = $this->generateCodePurchase($supplier->code, $supplier->id);
 
-                            // sebelum buat purchase cek dulu apa sudah ada purchase dengan supplier dan purchase refs id yang sama
+                            // sebelum buat purchase, cek apakah sudah ada purchase dengan supplier dan purchase refs id yang sama
                             $model = Purchase::where('suppliers_id', $supplierId)
                                 ->where('purchase_refs_id', $purchaseRef->id)->get();
+
+                            Log::info(json_encode([
+                                $supplierId,
+                                $model,
+                            ]));
 
 
                             if ($model->isEmpty()) {
@@ -279,24 +279,23 @@ class PurchaseServiceImpl implements PurchaseService
                                 $model = $model->first();
                             }
 
-
                             $unitPrice = str_replace(',', '', $purchase['unitPrice']);
 
                             $model->detail()->create([
                                 'items_id' => $purchase['itemId'],
-                                'qty_buy' => $purchase['purchaseAmount'],
+                                'qty_buy' => floatval(str_replace(',', '', $purchase['purchaseAmount'])),
                                 'single_price' => $unitPrice,
-                                'total_price' => $purchase['totalAmount'],
+                                'total_price' => floatval(str_replace(',', '', $purchase['totalAmount']))
                             ]);
                         }
 
-                        // update puchase request history
+                        // update purchase request history
                         $purchaseRequest->history()->create([
                             'desc' => 'Purchase dibuat dari request stock gudang',
                             'status' => 'Pembelian dibuat',
                         ]);
-
                     }
+
 
                     // commit
                     DB::commit();
@@ -326,15 +325,14 @@ class PurchaseServiceImpl implements PurchaseService
         }
     }
 
-    public function generateCodePurchase(string $supplierCode)
+    public function generateCodePurchase(string $supplierCode, string $supplierId)
     {
         $prefix = 'PO';
         $year = date('Ymd');
         $nextCode = 1;
 
         // dapatkan data increment code selanjutnya
-        $lastPurchase = Purchase::latest()->first();
-
+        $lastPurchase = Purchase::where('suppliers_id', $supplierId)->latest()->first();
 
         // lanjutkan increment
         if ($lastPurchase != null) {
@@ -346,6 +344,7 @@ class PurchaseServiceImpl implements PurchaseService
                 $nextCode = ++$lastPurchase->increment;
             }
         }
+
 
         return [
             'code' => "$prefix$supplierCode$year$nextCode",

@@ -11,7 +11,7 @@ interface PurchaseService
 
     public function createPurchaseNetFromRequestStock(bool $isMultiSupplier, string $purchaseReqId, string $supplierId, string $paymentScheme, string $dueDate, array $dataPurchase);
 
-    public function generateCodePurchase(string $supplierCode);
+    public function generateCodePurchase(string $supplierCode, string $supplierId);
 
     public function generateCodeRequestFromReqStock(string $warehouseId, string $purchaseRequestId);
 

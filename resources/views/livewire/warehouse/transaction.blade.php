@@ -39,10 +39,14 @@
                     </div>
 
 
-                    <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
-                            wire:loading.attr="disabled">Buat
-                        permintaan stok
+                    <button type="button" class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
+                            wire:loading.attr="disabled">
+                            <span wire:loading wire:target="create" class="spinner-border text-warning" role="status">
+                                <!-- Teks atau ikon loading disini -->
+                            </span>
+                        <span wire:loading.remove> <!-- Teks tombol saat tidak loading -->
+                            Buat permintaan stok
+                        </span>
                     </button>
 
 

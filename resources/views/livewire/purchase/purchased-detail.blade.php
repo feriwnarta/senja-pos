@@ -1,4 +1,4 @@
-@php use Carbon\Carbon; @endphp
+@php use App\Utils\IndonesiaCurrency;use Carbon\Carbon; @endphp
 <x-page-layout>
 
 
@@ -147,10 +147,10 @@
                         <tr wire:key="{{ $loop->iteration }}">
                             <td>{{ $purchaseDetail->item->name }}</td>
                             <td>{{ $purchaseDetail->item->unit->name }}</td>
-                            <td>{{ $purchaseDetail->qty_accept }}</td>
-                            <td>{{ $purchaseDetail->qty_buy }}</td>
-                            <td>{{ $purchaseDetail->single_price }}</td>
-                            <td>{{ $purchaseDetail->total_price }}</td>
+                            <td>{{ number_format($purchaseDetail->qty_accept, 0, '.', ',') }}</td>
+                            <td>{{ number_format($purchaseDetail->qty_buy, 0, '.', ',') }}</td>
+                            <td>{{ IndonesiaCurrency::formatToRupiah($purchaseDetail->single_price) }}</td>
+                            <td>{{ IndonesiaCurrency::formatToRupiah($purchaseDetail->total_price) }}</td>
                         </tr>
                     @endforeach
                     </tbody>

@@ -40,15 +40,27 @@ class EditRequestStock extends Component
 
         try {
             $requestStockDetail = $this->requestStock->requestStockDetail->map(function ($request) {
+
+
+                if ($request->item->route == 'PRODUCECENTRALKITCHEN') {
+                    $centralProduction = $request->requestStock->centralProduction()->first();
+                    $lastHistory = $centralProduction ? $centralProduction->history->last()->status : 'Permintaan baru';
+                } else if ($request->item->route == 'BUY') {
+                    $reference = $request->requestStock->reference()->first();
+                    $lastHistory = $reference ? $reference->request->first()->history->last()->status : 'Permintaan baru';
+                }
+
+
                 return [
                     'request_stock_detail_id' => $request->id,
+                    'canEdit' => $lastHistory == 'Penerimaan dibatalkan' || $lastHistory == 'Baru' || $lastHistory == 'Permintaan baru' ? 'true' : 'false',
                     'items' => [
                         'id' => $request->item->id,
                         'name' => $request->item->name,
                         'unit' => $request->item->unit->name,
                     ],
-                    'qty_request' => number_format($request->qty),
-                    'qty_accept' => number_format($request->qty_accept)
+                    'qty_request' => number_format($request->qty, 0, ',', '.'),
+                    'qty_accept' => number_format($request->qty_accept, 0, ',', '.'),
                 ];
             })->toArray();
 
@@ -114,7 +126,11 @@ class EditRequestStock extends Component
     {
         $this->validate([
             'requestStockDetail.*.items.id' => 'required|min:16',
-            'requestStockDetail.*.qty_request' => 'required|numeric|min:1'
+            'requestStockDetail.*.qty_request' => ['required', function ($attribute, $value, $fail) {
+                if ($value <= 0) {
+                    $fail("The $attribute must be at least 1");
+                }
+            }]
         ], [
                 'requestStockDetail.*.items.id' => 'Item must be required',
             ]
@@ -128,6 +144,7 @@ class EditRequestStock extends Component
     {
         try {
             Log::info('Proses simpan edit request stok');
+
             // hapus semua reques detail
             DB::transaction(function () {
                 $this->requestStock->requestStockDetail()->delete();
@@ -135,9 +152,30 @@ class EditRequestStock extends Component
                 foreach ($this->requestStockDetail as $requestStock) {
                     $this->requestStock->requestStockDetail()->create([
                         'items_id' => $requestStock['items']['id'],
-                        'qty' => $requestStock['qty_request'],
+                        'qty' => str_replace('.', '', $requestStock['qty_request']),
                         'qty_accept' => str_replace('.', '', $requestStock['qty_accept']),
                     ]);
+
+                    // update purchase request details
+                    $request = $this->requestStock;
+                    if ($request->reference->isNotEmpty()) {
+                        $purchaseRequest = $request->reference->first();
+                        $purchaseRequest = $purchaseRequest->request->first();
+                        $items = $purchaseRequest->detail->where('items_id', $requestStock['items']['id']);
+
+                        if ($items->isNotEmpty()) {
+                            $item = $items->first();
+                            $item->qty_buy = str_replace('.', '', $requestStock['qty_request']);
+                            $item->save();
+
+                        } else {
+                            Log::error('gagal mendapatkan item id dari request stock detail');
+                            Log::error('ada sesuatu yang salah');
+                            return;
+                        }
+
+
+                    }
                 }
 
                 $this->requestStock->note = $this->note == '' ? null : $this->note;

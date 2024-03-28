@@ -54,8 +54,9 @@ class PurchaseRequestDetail extends Component
     {
         $formattedUnitPrice = $this->componentItems[$index]['unitPrice'];
         $numericUnitPrice = floatval(str_replace(',', '', $formattedUnitPrice)); // Remove commas and convert to float
+        $purchaseAmount = floatval(str_replace(',', '', $this->componentItems[$index]['purchaseAmount']));
         $this->componentItems[$index]['unitPrice'] = Number::format(floatval($numericUnitPrice));
-        $this->componentItems[$index]['totalAmount'] = $this->componentItems[$index]['purchaseAmount'] * $numericUnitPrice;
+        $this->componentItems[$index]['totalAmount'] = $purchaseAmount * $numericUnitPrice;
     }
 
     public function handleItemPaymentChange($index)
@@ -91,7 +92,20 @@ class PurchaseRequestDetail extends Component
 
         $this->validate(
             [
-                'componentItems.*.unitPrice' => 'required',
+                'componentItems.*.unitPrice' => [
+                    'required', function ($attribute, $value, $fail) {
+                        if ($value <= 0) {
+                            $fail('The ' . $attribute . ' must be at least 1.');
+                        }
+                    }
+                ],
+                'componentItems.*.purchaseAmount' => [
+                    'required', function ($attribute, $value, $fail) {
+                        if ($value <= 0) {
+                            $fail('The ' . $attribute . ' must be at least 1.');
+                        }
+                    }
+                ],
             ]
         );
 

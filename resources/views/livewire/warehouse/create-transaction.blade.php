@@ -14,11 +14,16 @@
                 </div>
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                    <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create">Lanjutkan
+                    <button type="button" class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
+                            wire:loading.attr="disabled">
+                            <span wire:loading wire:target="create" class="spinner-border text-warning" role="status">
+                                <!-- Teks atau ikon loading disini -->
+                            </span>
+                        <span wire:loading.remove> <!-- Teks tombol saat tidak loading -->
+                            Lanjutkan
+                        </span>
                     </button>
-
-
+                    
                 </div>
             </div>
             <div id="title-divider"></div>
@@ -124,9 +129,8 @@
                                                         @foreach($selected as $key =>  $select)
                                                             @if($select['id'] == $item->id)
                                                                 <input type="text" class="form-control input-default"
-                                                                       x-mask:dynamic="$money($input, '.')"
                                                                        wire:model="selected.{{ $key }}.itemReq"
-                                                                       placeholder=" 0">
+                                                                       placeholder="0">
                                                             @endif
                                                         @endforeach
                                                     @endif
@@ -155,7 +159,7 @@
                                                                 <input type="text" class="form-control input-default"
                                                                        x-mask:dynamic="$money($input, '.')"
                                                                        wire:model="selected.{{ $key }}.itemReq"
-                                                                       placeholder=" 0">
+                                                                       placeholder="0">
                                                             @endif
                                                         @endforeach
                                                     @endif

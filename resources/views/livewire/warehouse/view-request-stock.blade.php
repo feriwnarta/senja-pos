@@ -16,14 +16,13 @@
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
 
                     {{-- TOMBOL EDIT MUNCUL SELAMA PRODUKSI / PEMBELIAN BELUM DIPROSES --}}
-                    @if($requestStock->requestStockHistory->last()->status == 'Baru' || $requestStock->requestStockHistory->last()->status == 'Penerimaan dibatalkan' )
-                        <a href="/warehouse/transaction/request-stock/edit/{{ $requestStock->id }}">
-                            <button type="btn"
-                                    class="btn btn-text-only-secondary btn-nav margin-left-10"
-                            >Edit
-                            </button>
-                        </a>
-                    @endif
+
+                    <a href="/warehouse/transaction/request-stock/edit/{{ $requestStock->id }}">
+                        <button type="btn"
+                                class="btn btn-text-only-secondary btn-nav margin-left-10"
+                        >Edit
+                        </button>
+                    </a>
 
 
                 </div>
