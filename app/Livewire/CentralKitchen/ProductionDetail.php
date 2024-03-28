@@ -547,10 +547,10 @@ class ProductionDetail extends Component
                     'status' => 'Selesai'
                 ]);
 
-                $result = $this->requestStock->requestStockHistory()->create([
-                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
-                    'status' => 'Pemenuhan',
-                ]);
+//                $result = $this->requestStock->requestStockHistory()->create([
+//                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+//                    'status' => 'Pemenuhan',
+//                ]);
                 $this->productionService = app()->make(CentralProductionServiceImpl::class);
                 $this->productionService->createProductionShipping($this->production->id, $this->production->centralKitchen->id, $this->production->centralKitchen->code);
 
@@ -594,10 +594,10 @@ class ProductionDetail extends Component
                     'status' => 'Selesai'
                 ]);
 
-                $result = $this->requestStock->requestStockHistory()->create([
-                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
-                    'status' => 'Pemenuhan',
-                ]);
+//                $result = $this->requestStock->requestStockHistory()->create([
+//                    'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+//                    'status' => 'Pemenuhan',
+//                ]);
                 $this->productionService = app()->make(CentralProductionServiceImpl::class);
                 $this->productionService->createProductionShipping($this->production->id, $this->production->centralKitchen->id, $this->production->centralKitchen->code);
 
@@ -1376,10 +1376,10 @@ class ProductionDetail extends Component
                 'status' => 'Selesai'
             ]);
 
-            $result = $this->requestStock->requestStockHistory()->create([
-                'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
-                'status' => 'Pemenuhan',
-            ]);
+//            $result = $this->requestStock->requestStockHistory()->create([
+//                'desc' => 'Menyelesaikan proses produksi, hasil produksi dikirim (otomatis)',
+//                'status' => 'Pemenuhan',
+//            ]);
 
             if (empty($this->components)) {
                 $this->resultProduction();

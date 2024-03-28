@@ -6,7 +6,6 @@ use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
 use App\Models\CentralProductionShipping;
 use App\Models\RequestStock;
-use App\Models\RequestStockHistory;
 use App\Models\Warehouse;
 use App\Models\WarehouseItemReceipt;
 use App\Models\WarehouseItemReceiptRef;
@@ -36,11 +35,11 @@ class CentralProductionServiceImpl implements CentralProductionService
 
                     // jika true maka tidak perlu melakukan pembuatan ulang, melainkan melakukan proses penerimaan ulang
                     if (!is_null($production) && $production->exists()) {
-                        RequestStockHistory::create([
-                            'request_stocks_id' => $requestStockId,
-                            'desc' => 'Produksi diterima kembali oleh central kitchen (otomatis)',
-                            'status' => 'Produksi diterima',
-                        ]);
+//                        RequestStockHistory::create([
+//                            'request_stocks_id' => $requestStockId,
+//                            'desc' => 'Produksi diterima kembali oleh central kitchen (otomatis)',
+//                            'status' => 'Produksi diterima',
+//                        ]);
 
                         // lakukan pembuatan data production finishes
                         Log::info('buat data production finishes');
@@ -72,11 +71,11 @@ class CentralProductionServiceImpl implements CentralProductionService
                             ]);
 
 
-                            RequestStockHistory::create([
-                                'request_stocks_id' => $requestStockId,
-                                'desc' => 'Produksi diterima oleh central kitchen',
-                                'status' => 'Produksi diterima',
-                            ]);
+//                            RequestStockHistory::create([
+//                                'request_stocks_id' => $requestStockId,
+//                                'desc' => 'Produksi diterima oleh central kitchen',
+//                                'status' => 'Produksi diterima',
+//                            ]);
                         }
                     }
                     DB::commit();
@@ -237,12 +236,12 @@ class CentralProductionServiceImpl implements CentralProductionService
                         'status' => 'Permintaan Bahan'
                     ]);
 
-                    RequestStockHistory::
-                    create([
-                        'request_stocks_id' => $requestId,
-                        'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen otomatis dari produksi',
-                        'status' => 'Menunggu pengiriman bahan'
-                    ]);
+//                    RequestStockHistory::
+//                    create([
+//                        'request_stocks_id' => $requestId,
+//                        'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen otomatis dari produksi',
+//                        'status' => 'Menunggu pengiriman bahan'
+//                    ]);
 
                     WarehouseOutboundHistory::create([
                         'warehouse_outbounds_id' => $outbound->id,
@@ -386,6 +385,8 @@ class CentralProductionServiceImpl implements CentralProductionService
                 ->latest()
                 ->first();
 
+            $latestIncrement = WarehouseOutbound::where('warehouses_id', $warehouseId)->max('increment');
+
 
             $currentYearMonth = Carbon::now()->format('Ym');
 
@@ -393,7 +394,7 @@ class CentralProductionServiceImpl implements CentralProductionService
             if ($latestOutbound) {
                 $latestProductionDate = Carbon::parse($latestOutbound->created_at)->format('Ym');
                 if ($latestProductionDate === $currentYearMonth) {
-                    $nextCode = $latestOutbound->increment + 1;
+                    $nextCode = $latestIncrement + 1;
                 }
             }
 
@@ -403,7 +404,7 @@ class CentralProductionServiceImpl implements CentralProductionService
             $currentYearMonth = Carbon::now()->format('Ymd');
 
             $code = "ITEMOUT{$infix}{$currentYearMonth}{$nextCode}";
-
+            
             return [
                 'code' => $code,
                 'increment' => $nextCode,

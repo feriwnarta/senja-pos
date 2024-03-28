@@ -242,19 +242,15 @@ class TransactionDetail extends Component
 
         try {
             $resultUpdateRequestStock = $this->updateHistoryRequestStock();
+            
+            // Lakukan pengurangan stok item untuk pengiriman
+            $warehouseService = app(WarehouseTransactionServiceImpl::class);
+            $result = $warehouseService->reduceStockItemShipping($items, $outboundId);
 
-            if ($resultUpdateRequestStock) {
-                // Lakukan pengurangan stok item untuk pengiriman
-                $warehouseService = app(WarehouseTransactionServiceImpl::class);
-                $result = $warehouseService->reduceStockItemShipping($items, $outboundId);
-
-                notify()->success('Berhasil kirim barang', 'Sukses');
-                $this->mode = 'view';
-                // Pemberitahuan sukses
-                return;
-            }
-
-            notify()->error('Gagal kirim barang', 'Gagal');
+            notify()->success('Berhasil kirim barang', 'Sukses');
+            $this->mode = 'view';
+            // Pemberitahuan sukses
+            return;
         } catch (Exception $exception) {
             DB::rollBack();
             // Log dan pemberitahuan kesalahan
