@@ -41,7 +41,7 @@
                 </div>
 
                 @php
-                    $collapseComposition = Route::is(['composition-item', 'composition-create-item', 'category-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'view-unit', 'recipe', 'view-recipe', 'create-recipe'])
+                    $collapseComposition = Route::is(['composition-item', 'composition-view-item', 'composition-create-item', 'category-item', 'category-view-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'view-unit', 'recipe', 'view-recipe', 'create-recipe'])
                 @endphp
 
                 <div class="accordion-item">
@@ -60,14 +60,14 @@
                         <div class="accordion-body">
                             <a href="/composition/item" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('composition-item') || Route::is('composition-create-item') ? 'inner-menu-active' : ''}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('composition-item') || Route::is('composition-view-item') || Route::is('composition-create-item') ? 'inner-menu-active' : ''}}"
                                     type="button" id="">
                                     {{ __('sidebar_locale.komposisi.item') }}
                                 </button>
                             </a>
                             <a href="/composition/category-item" wire:navigate>
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') ||  Route::is('add-category') ||  Route::is('detail-category')? 'inner-menu-active' : ''}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('category-item') || Route::is('category-view-item') || Route::is('add-category') ||  Route::is('detail-category')? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     Category

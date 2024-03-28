@@ -41,6 +41,7 @@ use App\Livewire\Warehouse\TransactionDetailReceipt;
 use App\Livewire\Warehouse\Unit;
 use App\Livewire\Warehouse\ViewRequestStock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -69,11 +70,11 @@ Route::middleware([
     Route::get('dashboard/summary', Summary::class)->name('summary');
 
     Route::get('composition/item', Item::class)->name('composition-item');
-    Route::get('composition/item/view/{item}', ViewItem::class)->name('composition-item');
+    Route::get('composition/item/view/{item}', ViewItem::class)->name('composition-view-item');
     Route::get('composition/item/create-item', CreateItem::class)->name('composition-create-item');
 
     Route::get('composition/category-item', CategoryItem::class)->name('category-item');
-    Route::get('composition/category-item/view/{category}', ViewCategory::class)->name('category-item');
+    Route::get('composition/category-item/view/{category}', ViewCategory::class)->name('category-view-item');
     Route::get('composition/category-item/add-category', AddCategory::class)->name('add-category');
     Route::get('composition/category-item/detail-category', DetailCategoryItem::class)->name('detail-category');
 
@@ -116,4 +117,8 @@ Route::middleware([
     Route::get('purchase-request/detail', PurchaseRequestDetail::class)->name('purchase-request-detail');
     Route::get('purchased/detail', PurchasedDetail::class)->name('purchased-detail');
     Route::get('purchase/detail', PurchaseDetail::class)->name('purchase-detail');
+});
+
+Route::get('optimize', function () {
+    Artisan::call('storage:link');
 });
