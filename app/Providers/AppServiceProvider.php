@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Contract\CentralKitchen\CentralKitchenRepository;
 use App\Contract\CentralKitchen\CentralKitchenService;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
@@ -30,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
         Log::shareContext([
             'user' => auth()->user()
         ]);
+        Paginator::useBootstrapFive();
     }
 }

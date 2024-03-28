@@ -383,7 +383,7 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
 
 
         if ($result == null || empty($result)) {
-            throw new Exception('gagal meng-generate code warehouse shipping');
+            throw new Exception('gagal meng-generate code warehouse shipping', 100);
         }
 
         // cari outbound id
@@ -421,7 +421,8 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
     {
 
         $warehouseShipping = WarehouseShipping::where('warehouses_id', $warehouseId)
-            ->latest()->first();
+            ->latest('increment')
+            ->first();
 
 
         $currentYearMonth = Carbon::now()->format('Ym');

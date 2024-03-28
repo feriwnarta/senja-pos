@@ -17,21 +17,15 @@ class ListStock extends Component
 
     public function render()
     {
-        // ambil stok item berdasarkan warehouse
+        // Ambil stok item berdasarkan warehouse dengan hasil paginate
         $items = WarehouseItem::where('warehouses_id', $this->selectedWarehouse)
-            ->with('stockItem', function ($query) {
-                $query->latest();
-            })->paginate(10);
-
-        // Ambil stok-item terbaru dari setiap item gudang
-        $latestStockItems = $items->pluck('stockItem')->map(function ($stockItems) {
-            return $stockItems->first();
-        });
+            ->paginate(10);
 
 
         return view('livewire.warehouse.list-stock', [
-            'items' => $latestStockItems
+            'items' => $items
         ]);
+
     }
 
     public function mount()

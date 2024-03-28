@@ -129,8 +129,9 @@ class WarehouseItemReceiptRepository implements \App\Contract\Warehouse\Warehous
     {
         $itemReceipt = WarehouseItemReceipt::where('warehouses_id', $warehouseId)
             ->whereNotNull('code')
-            ->latest('created_at')
+            ->latest('increment')
             ->first();
+        
 
         if (is_null($itemReceipt)) {
             return [

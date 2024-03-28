@@ -1122,13 +1122,16 @@ class ProductionDetail extends Component
             $requestStock = RequestStock::findOrFail($this->requestId);
             $centralId = $requestStock->warehouse->centralKitchen->first()->id;
 
-            $dataForProductionFinishes = $requestStock->requestStockDetail->map(function ($detail) {
+            $dataForProductionFinishes = $requestStock->requestStockDetail->filter(function ($detail) {
+                return $detail->item->route == 'PRODUCECENTRALKITCHEN';
+            })->map(function ($detail) {
                 return [
                     'item_id' => $detail->items_id,
                     'amount_target' => $detail->qty,
                     'amount_reached' => 0
                 ];
             })->toArray();
+
 
             // buat produksi
             $result = $this->productionService->createProduction($this->requestId, $centralId, $dataForProductionFinishes);
@@ -1226,6 +1229,7 @@ class ProductionDetail extends Component
         try {
             DB::transaction(function () {
 
+
                 foreach ($this->totalRawItemsUsage as $totalRaw) {
                     $targetItemId = $totalRaw['item']['id'];
                     $resultQty = $totalRaw['item']['result'];
@@ -1253,12 +1257,14 @@ class ProductionDetail extends Component
                         ];
                     }
 
+
                     $result = $this->production->finishes->where('item_id', $targetItemId)->first();
                     $result->amount_reached = $resultQty;
                     $result->details()->delete();
                     $result->details()->createMany($details);
                     $result->save();
                 }
+
 
                 $remaining = null;
                 $details = [];  // Collect details for bulk creation
@@ -1655,6 +1661,12 @@ class ProductionDetail extends Component
             notify()->error('Gagal menyelesaikan produksi', 'Error');
 
         } catch (Exception $exception) {
+
+            if ($exception->getCode() == 100) {
+                notify()->warning('Harap lakukan penerimaan bahan tambahan');
+                return;
+            }
+
             Log::error('gagal menyimpan hasil produksi dari production detail');
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
@@ -1685,6 +1697,7 @@ class ProductionDetail extends Component
         if (!isset($this->production) && $this->production == null) {
             $this->production = $this->findProductionById($this->requestId);
         }
+
 
         $productionId = $this->production->id;
         $this->storeResultProduction($this->components, $productionId, $this->note);

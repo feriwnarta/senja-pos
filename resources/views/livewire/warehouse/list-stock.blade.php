@@ -57,16 +57,19 @@
                 <tbody>
                 @if(isset($items))
                     @foreach($items as $item)
+
                         <tr wire:key="{{ $loop->iteration }}">
-                            <td>{{ $item->warehouseItem->items->name }}</td>
-                            <td>{{ $item->warehouseItem->items->unit->name }}</td>
-                            <td>{{ $item->qty_on_hand }}</td>
-                            {{--                            <td>{{ $item->stockItem }}</td>--}}
+                            <td>{{ $item->items->name }}</td>
+                            <td>{{ $item->items->unit->name }}</td>
+                            <td>{{ $item->stockItem->last()->qty_on_hand }}</td>
                         </tr>
                     @endforeach
                 @endif
                 </tbody>
             </table>
+            @if(isset($items))
+                {{ $items->links() }}
+            @endif
         </div>
 
     </x-slot>

@@ -404,7 +404,7 @@ class CentralProductionServiceImpl implements CentralProductionService
             $currentYearMonth = Carbon::now()->format('Ymd');
 
             $code = "ITEMOUT{$infix}{$currentYearMonth}{$nextCode}";
-            
+
             return [
                 'code' => $code,
                 'increment' => $nextCode,
@@ -500,48 +500,41 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     public function finishProduction(array $items, string $productionId, string $note)
     {
-        try {
-
-            DB::beginTransaction();
-
-//            if (empty($items)) {
-//                throw new Exception('items kosong');
-//            }
-//
-//            Log::debug($items);
-
-            Log::debug('proses finish production');
-
-//            foreach ($items as $item) {
-//                $centralProductionEnding = new CentralProductionEnding();
-//                $centralProductionEnding->central_productions_id = $productionId;
-//                $centralProductionEnding->target_items_id = $item['id'];
-//                $centralProductionEnding->qty = $item['result_qty'];
-//                $centralProductionEnding->save();
-//            }
 
 
-            $production = CentralProduction::findOrFail($productionId);
-            $production->update([
-                'note' => $note
-            ]);
+        DB::beginTransaction();
 
-            // update history
-            $production->history()->create([
-                'desc' => 'Central kitchen menyelesaikan proses produksi dan dalam tahap finishing (otomatis)',
-                'status' => 'Penyelesaian',
-            ]);
+        $production = CentralProduction::findOrFail($productionId);
+        // lakukan pengecekan apakah ada bahan tambahan yang sedang diproses
 
-
-            DB::commit();
-            return true;
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error("gagal menyelesai proses produksi dengan id $productionId");
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
+        Log::debug('cek production adiitional request');
+        $productionAdditionRequest = $production->additionRequest;
+        if ($productionAdditionRequest->isNotEmpty()) {
+            $productionAdditionRequest->each(function ($addition) {
+                if ($addition->amount_received == 0) {
+                    throw new Exception('User melakukan produksi selesai akan tetapi bahan tambahan belum diterima', 100);
+                }
+            });
         }
+
+
+        Log::debug('proses finish production');
+        
+        $production->update([
+            'note' => $note
+        ]);
+
+        // update history
+        $production->history()->create([
+            'desc' => 'Central kitchen menyelesaikan proses produksi dan dalam tahap finishing (otomatis)',
+            'status' => 'Penyelesaian',
+        ]);
+
+
+        DB::commit();
+        return true;
+
+
     }
 
     public function createProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode)
