@@ -343,11 +343,12 @@
                                     Profile
                                 </button>
                             </a>
-                            <form method="POST" action="http://127.0.0.1:8000/logout" x-data="">
-                                <input type="hidden" name="_token" value="PZauSRdiUXAYI6GqF5UROTNlc9ocR8zMtkomYuAw"
-                                       autocomplete="off">
+                            <form method="POST" action="{{ \route('logout') }}" x-data="">
+
+                                @csrf
+
                                 <a class=""
-                                   href="http://127.0.0.1:8000/logout" @click.prevent="$root.submit();">
+                                   href="{{ \route('logout') }}" @click.prevent="$root.submit();">
                                     <button
                                         class="btn button-sidebar-text-only-text description-1-medium"
                                         type="button"
