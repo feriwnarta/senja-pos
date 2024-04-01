@@ -40,14 +40,14 @@
 
 
                     <button type="button" class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
-                            >
+                    >
                         <div wire:loading wire:target="create" class="spinner-border text-warning" role="status">
 
                         </div>
 
                         <span wire:target="create" wire:loading.remove> <!-- Teks tombol saat tidak loading -->
-                            Buat permintaan stok
-                        </span>
+                                                Buat permintaan stok
+                                            </span>
                     </button>
 
 

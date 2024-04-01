@@ -421,9 +421,9 @@ class WarehouseTransactionServiceImpl implements WarehouseTransactionService
     {
 
         $warehouseShipping = WarehouseShipping::where('warehouses_id', $warehouseId)
-            ->latest('increment')
+            ->latest('created_at')
             ->first();
-
+        
 
         $currentYearMonth = Carbon::now()->format('Ym');
         $nextCode = 1;
