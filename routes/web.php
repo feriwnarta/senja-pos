@@ -120,5 +120,6 @@ Route::middleware([
 });
 
 Route::get('optimize', function () {
-    Artisan::call('storage:link');
+    Artisan::call('optimize');
+//    Artisan::call('storage:link');
 });
