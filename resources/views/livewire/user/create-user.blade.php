@@ -1,3 +1,4 @@
+@php use App\Models\Role; @endphp
 <x-page-layout>
 
 
@@ -13,12 +14,11 @@
 
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                    <a href="/user/create-user" wire:navigate>
-                        <button type="btn"
-                                class="btn btn-text-only-primary btn-nav margin-left-10"
-                        >Simpan
-                        </button>
-                    </a>
+                    <button type="btn"
+                            class="btn btn-text-only-primary btn-nav margin-left-10"
+                            wire:click="saveNewUser"
+                    >Simpan
+                    </button>
                 </div>
             </div>
             <div id="title-divider"></div>
@@ -40,7 +40,7 @@
                         <input type="name" class="form-control input-default"
                                placeholder="Masukan nama"
                                wire:model.live.debounce.600ms="name">
-                        @error('name') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                        @error('name') <span class="text-danger">{{ $message }}</span> @enderror
 
                     </div>
 
@@ -54,7 +54,7 @@
                         <input type="email" class="form-control input-default"
                                placeholder="Masukan email"
                                wire:model.live.debounce.600ms="email">
-                        @error('email') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                        @error('email') <span class="text-danger">{{ $message }}</span> @enderror
 
                     </div>
 
@@ -68,7 +68,20 @@
                         <input type="password" class="form-control input-default"
                                placeholder="Masukan password"
                                wire:model.live.debounce.600ms="password">
-                        @error('password') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                        @error('password') <span class="text-danger">{{ $message }}</span> @enderror
+                    </div>
+
+                    {{-- ROLES --}}
+                    <div class="container-input-default margin-top-24">
+                        <label for="description" class="form-label">Role</label>
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+                        <select class="form-select input-default" wire:model="role">
+                            <option value="" selected disabled>Pilih</option>
+                            @foreach(Role::all() as $role)
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('role') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
 
                 </div>

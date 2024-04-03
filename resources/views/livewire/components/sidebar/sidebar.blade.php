@@ -359,9 +359,9 @@
                                 </button>
                             </a>
 
-                            <a href="/permission">
+                            <a href="/user/permission">
                                 <button
-                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('permission')}}"
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('permission') ? 'inner-menu-active' : ''}}"
                                     type="button"
                                     id="">
                                     Permission

@@ -25,6 +25,8 @@ use App\Livewire\Purchase\Purchasing;
 use App\Livewire\Purchase\Supplier;
 use App\Livewire\Purchasing\PurchasingDetail;
 use App\Livewire\User\CreateUser;
+use App\Livewire\User\Pemission;
+use App\Livewire\User\Permission;
 use App\Livewire\User\User;
 use App\Livewire\Warehouse\AddCategory;
 use App\Livewire\Warehouse\AddUnit;
@@ -120,6 +122,8 @@ Route::middleware([
 
     Route::get('user', User::class)->name('user');
     Route::get('user/create-user', CreateUser::class)->name('create-user');
+    Route::get('user/permission', Permission::class)->name('permission');
+
 });
 
 Route::get('optimize', function () {
