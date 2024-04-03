@@ -44,7 +44,7 @@
                     $collapseComposition = Route::is(['composition-item', 'composition-view-item', 'composition-create-item', 'category-item', 'category-view-item', 'add-category', 'detail-category', 'unit', 'add-unit', 'view-unit', 'recipe', 'view-recipe', 'create-recipe'])
                 @endphp
 
-                @canany('item.view', 'category.view', 'unit.view', 'resep.view')
+                @canany(['item.view', 'category.view', 'unit.view', 'resep.view'])
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button
@@ -116,7 +116,7 @@
                 @php
                     $collapseInv = Route::is(['list-warehouse', 'stock', 'add-warehouse', 'view-request-stock', 'view-request-stock', 'edit-request-stock', 'detail-warehouse', 'warehouse-transaction', 'warehouse-add-transaction','warehouse-transaction-detail', 'warehouse-transaction-detail-receipt', 'warehouse-list-stock']);
                 @endphp
-                @canany('stokitem.view', 'stokopname.view', 'daftargudang.view', 'transaksi.stokmasuk.view', 'transaksi.stokkeluar.view', 'transaction.permintaanstock.view')
+                @canany(['stokitem.view', 'stokopname.view', 'daftargudang.view', 'transaksi.stokmasuk.view', 'transaksi.stokkeluar.view', 'transaction.permintaanstock.view'])
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button
@@ -166,7 +166,7 @@
                                         </button>
                                     </a>
                                 @endcan
-                                @canany('transaksi.stokmasuk.view', 'transaksi.stokkeluar.view', 'transaction.permintaanstock.view')
+                                @canany(['transaksi.stokmasuk.view', 'transaksi.stokkeluar.view', 'transaction.permintaanstock.view'])
                                     <a href="/warehouse/transaction" wire:navigate>
                                         <button
                                             class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('warehouse-transaction') || Route::is('edit-request-stock') || Route::is('view-request-stock') || Route::is('warehouse-add-transaction') || Route::is('warehouse-transaction-detail') || Route::is('warehouse-transaction-detail') || Route::is('warehouse-transaction-detail-receipt') ? 'inner-menu-active' : ''}}"
@@ -186,7 +186,7 @@
                     $collapseCk = Route::is(['list-central-kitchen', 'remaining-production-stock', 'view-central-kitchen', 'add-central-kitchen', 'central-kitchen-production', 'central-kitchen-production-detail']);
                 @endphp
 
-                @canany('stoksisaproduksi.view', 'daftardapursentral.view', 'produksi.view')
+                @canany(['stoksisaproduksi.view', 'daftardapursentral.view', 'produksi.view'])
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button
@@ -282,7 +282,7 @@
                     $collapsePurchase = Route::is(['supplier', 'create-supplier', 'purchase', 'purchase-detail', 'purchased-detail', 'purchase-request-detail']);
                 @endphp
 
-                @canany('supplier.view', 'pesananpembelian.pembelian.view', 'pesananpembelian.permintaan.view')
+                @canany(['supplier.view', 'pesananpembelian.pembelian.view', 'pesananpembelian.permintaan.view'])
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button
@@ -308,7 +308,7 @@
                                         </button>
                                     </a>
                                 @endcan
-                                @canany('pesananpembelian.pembelian.view', 'pesananpembelian.permintaan.view')
+                                @canany(['pesananpembelian.pembelian.view', 'pesananpembelian.permintaan.view'])
                                     <a href="/purchase" wire:navigate>
                                         <button
                                             class="btn button-sidebar-text-only-text description-1-medium  {{ Route::is('purchase') || Route::is('purchased-detail') || Route::is('purchase-detail') || Route::is('purchase-request-detail') ? 'inner-menu-active' : ''}}"
@@ -363,7 +363,7 @@
                     $collapseUser = Route::is(['user', 'create-user', 'permission', 'create-role']);
                 @endphp
 
-                @canany('profile.view', 'user.view', 'permission.view')
+                @canany(['profile.view', 'user.view', 'permission.view'])
                     <div class="accordion-item">
                         <h2 class="accordion-header">
                             <button

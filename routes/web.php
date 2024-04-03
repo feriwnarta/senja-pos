@@ -116,10 +116,10 @@ Route::middleware([
 
     Route::middleware(['can:supplier.view,supplier.create'])->group(function () {
         Route::get('supplier', Supplier::class)->name('supplier');
-        Route::get('supplier', Supplier::class)->name('supplier');
+        Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
     });
 
-    Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
+
     Route::get('purchase', Purchasing::class)->name('purchase');
     Route::get('purchase-request/detail', PurchaseRequestDetail::class)->name('purchase-request-detail');
     Route::get('purchased/detail', PurchasedDetail::class)->name('purchased-detail');
