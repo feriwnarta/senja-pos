@@ -34,15 +34,14 @@ class Permission extends Component
 
     public function render()
     {
-        $roles = Role::paginate(10);
+        $roles = Role::all();
         $permissions = \App\Models\Permission::with('category')
             ->join('permission_categories', 'permissions.permission_categories_id', '=', 'permission_categories.id')
             ->orderBy('permission_categories.name')
+            ->orderBy('name')
             ->select('permissions.*')
-            ->paginate(10);
-
-
-        $permissionCategories = PermissionCategory::paginate(10);
+            ->get();
+        $permissionCategories = PermissionCategory::all();
 
         return view('livewire.user.permission', [
             'roles' => $roles,

@@ -48,6 +48,7 @@
 
                             </tbody>
                         </table>
+                        
                     </div>
                 </div>
 
@@ -79,6 +80,7 @@
                             @endif
                             </tbody>
                         </table>
+
                     </div>
                 </div>
 
