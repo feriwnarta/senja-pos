@@ -24,6 +24,7 @@ use App\Livewire\Purchase\PurchaseRequestDetail;
 use App\Livewire\Purchase\Purchasing;
 use App\Livewire\Purchase\Supplier;
 use App\Livewire\Purchasing\PurchasingDetail;
+use App\Livewire\User\CreateRole;
 use App\Livewire\User\CreateUser;
 use App\Livewire\User\Pemission;
 use App\Livewire\User\Permission;
@@ -113,7 +114,11 @@ Route::middleware([
     Route::get('outlet/list-outlet', ListOutlet::class)->name('list-outlet');
     Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet');
 
-    Route::get('supplier', Supplier::class)->name('supplier');
+    Route::middleware(['can:supplier.view,supplier.create'])->group(function () {
+        Route::get('supplier', Supplier::class)->name('supplier');
+        Route::get('supplier', Supplier::class)->name('supplier');
+    });
+
     Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
     Route::get('purchase', Purchasing::class)->name('purchase');
     Route::get('purchase-request/detail', PurchaseRequestDetail::class)->name('purchase-request-detail');
@@ -123,6 +128,7 @@ Route::middleware([
     Route::get('user', User::class)->name('user');
     Route::get('user/create-user', CreateUser::class)->name('create-user');
     Route::get('user/permission', Permission::class)->name('permission');
+    Route::get('user/permission/create-role', CreateRole::class)->name('create-role');
 
 });
 

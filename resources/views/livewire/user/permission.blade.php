@@ -22,10 +22,11 @@
                 <div class="col-sm-4">
                     <div
                         class="d-flex flex-column justify-content-end align-items-end position-fixed position-sticky">
-                        <button type="btn" class="btn btn-text-only-primary btn-nav" data-bs-toggle="modal"
-                                data-bs-target="#modalCreateRole">
-                            Buat Role
-                        </button>
+                        <a href="/user/permission/create-role" wire:navigate>
+                            <button type="btn" class="btn btn-text-only-primary btn-nav">
+                                Buat Role
+                            </button>
+                        </a>
 
                         <table id="tableRoles"
                                class="table table-container borderless table-hover margin-top-28">
@@ -48,7 +49,7 @@
 
                             </tbody>
                         </table>
-                        
+
                     </div>
                 </div>
 
@@ -140,8 +141,22 @@
                                    id="roleName" placeholder="Masukan nama role"
                                    wire:model.live.debounce.500ms="roleName">
                             @error('roleName') <span class="text-danger">{{ $message }}</span> @enderror
-
                         </div>
+
+
+                        <label class="form-label input-label margin-top-24">Permission</label>
+
+                        <div id="divider" class="margin-symmetric-vertical-6"></div>
+
+                        <div class="input-group" style="width: 300px">
+                            <div class="input-group-text">
+                                <input class="form-check-input mt-0" type="radio" value=""
+                                       aria-label="Radio button for following text input">
+                            </div>
+                            <input type="text" class="form-control" aria-label="Text input with radio button">
+                        </div>
+
+
                         <div class="modal-footer">
                             <div class=" d-flex flex-row justify-content-end">
                                 <div>

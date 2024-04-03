@@ -360,7 +360,7 @@
                 @endcanany
 
                 @php
-                    $collapseUser = Route::is(['user', 'create-user', 'permission']);
+                    $collapseUser = Route::is(['user', 'create-user', 'permission', 'create-role']);
                 @endphp
 
                 @canany('profile.view', 'user.view', 'permission.view')
@@ -401,7 +401,7 @@
                                 @can('permission.view')
                                     <a href="/user/permission">
                                         <button
-                                            class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('permission') ? 'inner-menu-active' : ''}}"
+                                            class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('permission') || Route::is('create-role') ? 'inner-menu-active' : ''}}"
                                             type="button"
                                             id="">
                                             Permission
