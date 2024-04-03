@@ -323,17 +323,23 @@
                     </div>
                 </div>
 
+                @php
+                    $collapseUser = Route::is(['user', 'create-user', 'permission']);
+                @endphp
 
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button button-icon-text description-1-medium collapsed"
-                                type="button"
-                                data-bs-toggle="collapse" aria-expanded="false" data-bs-target="#collapseReport">
+                        <button
+                            class="accordion-button button-icon-text description-1-medium {{ $collapseUser ? '' : 'collapsed' }}"
+                            type="button"
+                            data-bs-toggle="collapse" aria-expanded="{{ $collapseUser ? 'true': 'false' }}"
+                            data-bs-target="#collapseReport">
                             <i class="account-icon"></i>
                             Akun
                         </button>
                     </h2>
-                    <div id="collapseReport" class="accordion-collapse collapse" data-bs-parent="#accordionMenu">
+                    <div id="collapseReport" class="accordion-collapse collapse {{ $collapseUser ? 'show' : '' }} "
+                         data-bs-parent="#accordionMenu">
                         <div class="accordion-body">
                             <a href="/user/profile">
                                 <button
@@ -341,6 +347,24 @@
                                     type="button"
                                     id="">
                                     Profile
+                                </button>
+                            </a>
+
+                            <a href="/user">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('user') || Route::is('create-user')  ? 'inner-menu-active' : ''}}"
+                                    type="button"
+                                    id="">
+                                    User
+                                </button>
+                            </a>
+
+                            <a href="/permission">
+                                <button
+                                    class="btn button-sidebar-text-only-text description-1-medium {{ Route::is('permission')}}"
+                                    type="button"
+                                    id="">
+                                    Permission
                                 </button>
                             </a>
                             <form method="POST" action="{{ \route('logout') }}" x-data="">

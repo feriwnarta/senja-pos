@@ -24,6 +24,8 @@ use App\Livewire\Purchase\PurchaseRequestDetail;
 use App\Livewire\Purchase\Purchasing;
 use App\Livewire\Purchase\Supplier;
 use App\Livewire\Purchasing\PurchasingDetail;
+use App\Livewire\User\CreateUser;
+use App\Livewire\User\User;
 use App\Livewire\Warehouse\AddCategory;
 use App\Livewire\Warehouse\AddUnit;
 use App\Livewire\Warehouse\AddWarehouse;
@@ -40,7 +42,6 @@ use App\Livewire\Warehouse\TransactionDetail;
 use App\Livewire\Warehouse\TransactionDetailReceipt;
 use App\Livewire\Warehouse\Unit;
 use App\Livewire\Warehouse\ViewRequestStock;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
@@ -55,17 +56,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+    return redirect()->to('login');
+});
+
 
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function (Request $request) {
-        $request->session()->flash('flash.banner', 'Yay it works!');
-        return view('dashboard');
-    })->name('dashboard');
-
 
     Route::get('dashboard/summary', Summary::class)->name('summary');
 
@@ -117,6 +117,9 @@ Route::middleware([
     Route::get('purchase-request/detail', PurchaseRequestDetail::class)->name('purchase-request-detail');
     Route::get('purchased/detail', PurchasedDetail::class)->name('purchased-detail');
     Route::get('purchase/detail', PurchaseDetail::class)->name('purchase-detail');
+
+    Route::get('user', User::class)->name('user');
+    Route::get('user/create-user', CreateUser::class)->name('create-user');
 });
 
 Route::get('optimize', function () {
