@@ -4,10 +4,11 @@ namespace App\Service\Impl;
 
 use App\Models\CentralKitchenReceipts;
 use App\Models\CentralProduction;
-use App\Models\CentralProductionResult;
+use App\Models\CentralProductionShipping;
 use App\Models\RequestStock;
-use App\Models\RequestStockHistory;
 use App\Models\Warehouse;
+use App\Models\WarehouseItemReceipt;
+use App\Models\WarehouseItemReceiptRef;
 use App\Models\WarehouseOutbound;
 use App\Models\WarehouseOutboundHistory;
 use App\Service\CentralProductionService;
@@ -21,35 +22,64 @@ use Illuminate\Support\Facades\Log;
 class CentralProductionServiceImpl implements CentralProductionService
 {
 
-    public function createProduction(string $requestStockId, string $centralKitchenId): ?CentralProduction
+    public function createProduction(string $requestStockId, string $centralKitchenId, array $dataForProductionFinishes): ?CentralProduction
     {
         try {
-            return Cache::lock('createProduction', 10)->block(5, function () use ($requestStockId, $centralKitchenId) {
+            return Cache::lock('createProduction', 10)->block(5, function () use ($requestStockId, $centralKitchenId, $dataForProductionFinishes) {
                 DB::beginTransaction();
 
                 try {
-                    $result = $this->generateCode($requestStockId, $centralKitchenId);
 
-                    if ($result && isset($result['code'], $result['increment'])) {
-                        $production = CentralProduction::create([
-                            'request_stocks_id' => $requestStockId,
-                            'central_kitchens_id' => $centralKitchenId,
-                            'code' => $result['code'],
-                            'increment' => $result['increment'],
+                    // cek terlebih dahulu apakah produksi sudah terbuat dengan request stock id yang ada
+                    $production = $this->checkProduction($requestStockId);
+
+                    // jika true maka tidak perlu melakukan pembuatan ulang, melainkan melakukan proses penerimaan ulang
+                    if (!is_null($production) && $production->exists()) {
+//                        RequestStockHistory::create([
+//                            'request_stocks_id' => $requestStockId,
+//                            'desc' => 'Produksi diterima kembali oleh central kitchen (otomatis)',
+//                            'status' => 'Produksi diterima',
+//                        ]);
+
+                        // lakukan pembuatan data production finishes
+                        Log::info('buat data production finishes');
+                        $production->finishes()->delete();
+                        $production->finishes()->createMany($dataForProductionFinishes);
+
+                        $production->history()->create([
+                            'desc' => 'Melakukan penerimaan ulang saat permintaan stok dibatalkan',
+                            'status' => 'Dibuat'
                         ]);
 
-
-                        RequestStockHistory::create([
-                            'request_stocks_id' => $requestStockId,
-                            'desc' => 'Produksi diterima',
-                            'status' => 'Produksi diterima',
-                        ]);
-
-                        DB::commit();
-                        return $production; // Return the model instance on success
                     } else {
-                        return null;
+                        $result = $this->generateCode($requestStockId, $centralKitchenId);
+
+                        if ($result && isset($result['code'], $result['increment'])) {
+                            $production = CentralProduction::create([
+                                'request_stocks_id' => $requestStockId,
+                                'central_kitchens_id' => $centralKitchenId,
+                                'code' => $result['code'],
+                                'increment' => $result['increment'],
+                            ]);
+
+                            Log::info('buat data production finishes');
+                            $production->finishes()->createMany($dataForProductionFinishes);
+
+                            $production->history()->create([
+                                'desc' => 'Membuat produksi bedasarkan request stok warehouse',
+                                'status' => 'Dibuat'
+                            ]);
+
+
+//                            RequestStockHistory::create([
+//                                'request_stocks_id' => $requestStockId,
+//                                'desc' => 'Produksi diterima oleh central kitchen',
+//                                'status' => 'Produksi diterima',
+//                            ]);
+                        }
                     }
+                    DB::commit();
+                    return $production; // Return the model instance on success
                 } catch (Exception $exception) {
                     DB::rollBack();
                     Log::error('Gagal menyimpan item detail:', [
@@ -74,6 +104,10 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     }
 
+    public function checkProduction(string $requestStockId)
+    {
+        return CentralProduction::where('request_stocks_id', $requestStockId)->first();
+    }
 
     public function generateCode(string $requestStockId, string $centralKitchenId): array
     {
@@ -125,24 +159,23 @@ class CentralProductionServiceImpl implements CentralProductionService
                         'target_items_id' => $element['item']['id'],
                         'central_productions_id' => $productionId,
                         'items_id' => $recipe['item_component_id'],
-                        'qty_target' => $recipe['item_component_usage'],
+                        'qty_target' => str_replace('.', '', $recipe['item_component_usage']),
                     ];
                 }
-
                 Log::debug($element);
             }
 
             // simpan production result
-            $production->result()->createMany($resultArray);
+            $result = $production->result()->createMany($resultArray);
 
-            // update status request stock
 
-            $production->requestStock->requestStockHistory()->createMany([
-                [
-                    'desc' => 'Komponen untuk produksi disimpan',
-                    'status' => 'Komponen produksi disimpan'
-                ],
+            Log::debug('TOTAL');
+            Log::debug($result);
 
+            // update status produksi
+            $production->history()->create([
+                'desc' => 'Permintaan bahan berdasarkan resep disimpan',
+                'status' => 'Disimpan'
             ]);
 
             DB::commit();
@@ -161,10 +194,11 @@ class CentralProductionServiceImpl implements CentralProductionService
     /**
      * fungsi ini digunakan untuk menyimpan permintaan bahan yang dibutuhkan untuk produksi
      * dari central kitchen ke gudang
+     *
      * @param array $materials
      * @return void
      */
-    public function requestMaterialToWarehouse(array $materials, string $warehouseId, string $productionId, string $requestId)
+    public function requestMaterialToWarehouse(CentralProduction $production, array $materials, string $warehouseId, string $productionId, string $requestId)
     {
 
         try {
@@ -184,20 +218,11 @@ class CentralProductionServiceImpl implements CentralProductionService
 
 
             // atomic lock
-            return Cache::lock('createItemOut', 10)->block(5, function () use ($materials, $warehouseId, $productionId, $resultMaterial, $requestId) {
+            return Cache::lock('createItemOut', 10)->block(5, function () use ($production, $materials, $warehouseId, $productionId, $resultMaterial, $requestId) {
 
                 // proses simpan item keluar untuk gudang
                 DB::beginTransaction();
                 try {
-
-                    // generate code
-
-//                    $code = $this->genereateCodeItemOut($warehouseId);
-//
-//                    if (empty($code)) {
-//                        throw new Exception('gagal mengenarate code item keluar');
-//                    }
-
 
                     $outbound = WarehouseOutbound::create([
                         'warehouses_id' => $warehouseId,
@@ -206,12 +231,17 @@ class CentralProductionServiceImpl implements CentralProductionService
 
                     $outbound->outboundItem()->createMany($resultMaterial);
 
-                    RequestStockHistory::
-                    create([
-                        'request_stocks_id' => $requestId,
-                        'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen',
-                        'status' => 'Membuat permintaan bahan'
+                    CentralProduction::where('request_stocks_id', $requestId)->first()->history()->create([
+                        'desc' => 'Permintaan bahan untuk keperluan produksi dibuat ke gudang',
+                        'status' => 'Permintaan Bahan'
                     ]);
+
+//                    RequestStockHistory::
+//                    create([
+//                        'request_stocks_id' => $requestId,
+//                        'desc' => 'Membuat permintaan bahan keluar dari gudang ke central kitchen otomatis dari produksi',
+//                        'status' => 'Menunggu pengiriman bahan'
+//                    ]);
 
                     WarehouseOutboundHistory::create([
                         'warehouse_outbounds_id' => $outbound->id,
@@ -342,6 +372,7 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     /**
      * generate kode item keluar dari gudang
+     *
      * @param string $warehouseId
      * @return void
      */
@@ -354,6 +385,8 @@ class CentralProductionServiceImpl implements CentralProductionService
                 ->latest()
                 ->first();
 
+            $latestIncrement = WarehouseOutbound::where('warehouses_id', $warehouseId)->max('increment');
+
 
             $currentYearMonth = Carbon::now()->format('Ym');
 
@@ -361,7 +394,7 @@ class CentralProductionServiceImpl implements CentralProductionService
             if ($latestOutbound) {
                 $latestProductionDate = Carbon::parse($latestOutbound->created_at)->format('Ym');
                 if ($latestProductionDate === $currentYearMonth) {
-                    $nextCode = $latestOutbound->increment + 1;
+                    $nextCode = $latestIncrement + 1;
                 }
             }
 
@@ -387,11 +420,12 @@ class CentralProductionServiceImpl implements CentralProductionService
 
     /**
      * proses menyimpan penerimaan item yang dikirim dari gudang ke central kitchen
+     *
      * @param array $items
      * @param string $outboundId
      * @return void
      */
-    public function processItemReceiptProduction(array $items, string $outboundId)
+    public function processItemReceiptProduction(array $items, string $outboundId, CentralProduction $production)
     {
         try {
 
@@ -405,15 +439,38 @@ class CentralProductionServiceImpl implements CentralProductionService
             $extractItem = array_map(function ($item) {
                 return [
                     'items_id' => $item['item_id'],
-                    'qty_accept' => $item['qty_accept'],
+                    'qty_accept' => str_replace('.', '', $item['qty_accept']),
                 ];
             }, $items);
 
+            $results = [];
+
+            foreach ($production->outbound->first()->reference->first()->shipping->shippingItem as $shippingItem) {
+                foreach ($extractItem as $item) {
+                    $itemId = $item['items_id'];
+                    $stockItem = $shippingItem->stockItem;
+                    $warehouseItem = $stockItem->warehouseItem->items->id;
+
+                    if (!is_null($warehouseItem) && $warehouseItem == $itemId) {
+
+
+                        // Jika item belum ada, tambahkan ke hasil
+                        $results[] = [
+                            'items_id' => $itemId,
+                            'qty_on_hand' => str_replace('.', '', $item['qty_accept']),
+                            'avg_cost' => $stockItem->avg_cost,
+                            'last_cost' => $stockItem->last_cost,
+                        ];
+                    }
+                }
+            }
+
+            $production->components()->createMany($results);
             $outbound = CentralKitchenReceipts::create([
                 'warehouse_outbounds_id' => $outboundId,
             ]);
 
-            $outbound->detail()->createMany($extractItem);
+            $output = $outbound->detail()->createMany($extractItem);
 
             // update history request stock
             $outbound->outbound->history()->create([
@@ -421,10 +478,11 @@ class CentralProductionServiceImpl implements CentralProductionService
                 'status' => 'Bahan diterima'
             ]);
 
-            $outbound->outbound->production->requestStock->requestStockHistory()->create([
-                'desc' => 'Bahan diterima dan divalidasi oleh central kitchen',
+            $outbound->outbound->production->history()->create([
+                'desc' => 'Bahan diterima dan divalidasi oleh central kitchen (otomatis)',
                 'status' => 'Bahan diterima',
             ]);
+
 
             DB::commit();
             return $outbound;
@@ -437,62 +495,230 @@ class CentralProductionServiceImpl implements CentralProductionService
             throw $exception;
 
         }
-
     }
+
 
     public function finishProduction(array $items, string $productionId, string $note)
     {
+
+
+        DB::beginTransaction();
+
+        $production = CentralProduction::findOrFail($productionId);
+        // lakukan pengecekan apakah ada bahan tambahan yang sedang diproses
+
+        Log::debug('cek production adiitional request');
+        $productionAdditionRequest = $production->additionRequest;
+        if ($productionAdditionRequest->isNotEmpty()) {
+            $productionAdditionRequest->each(function ($addition) {
+                if ($addition->amount_received == 0) {
+                    throw new Exception('User melakukan produksi selesai akan tetapi bahan tambahan belum diterima', 100);
+                }
+            });
+        }
+
+
+        Log::debug('proses finish production');
+        
+        $production->update([
+            'note' => $note
+        ]);
+
+        // update history
+        $production->history()->create([
+            'desc' => 'Central kitchen menyelesaikan proses produksi dan dalam tahap finishing (otomatis)',
+            'status' => 'Penyelesaian',
+        ]);
+
+
+        DB::commit();
+        return true;
+
+
+    }
+
+    public function createProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode)
+    {
+
         try {
+            return Cache::lock('createProductionShipping', 10)->block(5, function () use ($productionId, $centralKitchenId, $centralKitchenCode) {
 
-            DB::beginTransaction();
+                try {
+                    $result = $this->generateCodeProductionShipping($productionId, $centralKitchenId, $centralKitchenCode);
 
-            if (empty($items)) {
-                throw new Exception('items kosong');
+                    if ($result && isset($result['code'], $result['increment'])) {
+                        // buat shipping
+                        CentralProductionShipping::create([
+                            'central_productions_id' => $productionId,
+                            'central_kitchens_id' => $centralKitchenId,
+                            'code' => $result['code'],
+                            'increment' => $result['increment'],
+                            'description' => 'Membuat pengiriman hasil produksi',
+                        ]);
+                    } else {
+                        throw new Exception('gagal membuat production shipping');
+                    }
+                } catch (Exception $exception) {
+
+                    Log::error('Gagal menyimpan item detail:', [
+                        'message' => $exception->getMessage(),
+                        'trace' => $exception->getTraceAsString(),
+                    ]);
+                    throw $exception; // Re-throw for further handling
+                }
+            });
+        } catch (LockTimeoutException $e) {
+            Log::error('Gagal mendapatkan lock:', [
+                'message' => $e->getMessage(),
+            ]);
+            throw new Exception('Lock tidak didapatkan selama 5 detik');
+        } catch (Exception $exception) {
+            Log::error('Error saat membuat shipping produksi:', [
+                'trace' => $exception->getTraceAsString(),
+            ]);
+            throw $exception; // Re-throw for further handling
+        }
+
+    }
+
+    public function generateCodeProductionShipping(string $productionId, string $centralKitchenId, string $centralKitchenCode)
+    {
+        $latest = CentralProductionShipping::where('central_kitchens_id', $centralKitchenId)->latest()->first();
+
+        $currentYearMonth = Carbon::now()->format('Ym');
+
+        $nextCode = 1;
+        if ($latest) {
+            $latestShippingDate = Carbon::parse($latest->created_at)->format('Ym');
+            if ($latestShippingDate === $currentYearMonth) {
+                $nextCode = $latest->increment + 1;
+            }
+        }
+
+
+        $currentYearMonth = Carbon::now()->format('Ymd');
+
+        $code = "CENTRALSHIPPING{$centralKitchenCode}{$currentYearMonth}{$nextCode}";
+
+        return [
+            'code' => $code,
+            'increment' => $nextCode,
+        ];
+    }
+
+    public function createItemReceipt(string $warehouseId, array $items, CentralProduction $centralProduction)
+    {
+
+        if (empty($items)) {
+            throw new Exception('parameter items array kosong');
+        }
+
+        if (!isset($centralProduction) || $centralProduction == null) {
+            throw new Exception('parameter central production model kosong atau null');
+        }
+
+        $itemReceiptDetail = [];
+
+        foreach ($centralProduction->ending as $ending) {
+            $itemReceiptDetail[] = [
+                'items_id' => $ending->target_items_id,
+                'qty_send' => $ending->qty
+            ];
+        }
+
+
+        // Simpan referensi terlebih dahulu ke dalam WarehouseItemReceiptRef
+        $itemReceiptRef = $centralProduction->reference()->save(new WarehouseItemReceiptRef());
+
+        // buat item receipt
+        $warehouseReceipt = WarehouseItemReceipt::create([
+            'warehouses_id' => $warehouseId,
+            'warehouse_item_receipt_refs_id' => $itemReceiptRef->id,
+        ]);
+
+        // buat history item receipt
+        $warehouseReceipt->history()->create([
+            'desc' => 'Membuat draft penerimaan barang dari produksi',
+            'status' => 'Draft',
+        ]);
+
+        // Simpan detail-item penerimaan barang
+        $warehouseReceipt->details()->createMany($itemReceiptDetail);
+    }
+
+
+    public function getSaveComponent(CentralProduction $production)
+    {
+        if (is_null($production)) {
+            throw new Exception('Central production null saat mengambil component produksi yang disimpan');
+        }
+
+        $resultComponentSave = [];
+
+        foreach ($production->result as $productionResult) {
+            $targetItemId = $productionResult->targetItem->id;
+
+            if (!isset($resultComponentSave[$targetItemId])) {
+                $resultComponentSave[$targetItemId] = [
+                    'target_item_id' => $productionResult->targetItem->id,
+                    'target_item_name' => $productionResult->targetItem->name,
+                    'ingredients' => [],
+                ];
             }
 
-            Log::debug('finish production');
+            $resultComponentSave[$targetItemId]['ingredients'][] = [
+                'id' => $productionResult->id,
+                'item_id' => $productionResult->items_id,
+                'item_name' => $productionResult->item->name,
+                'qty' => number_format($productionResult->qty_target, 0, '', ''),
+                'unit' => $productionResult->item->unit->name,
+            ];
+        }
 
-            // Kumpulkan semua ID yang diperlukan
-            $resultIds = array_column($items, 'result_id');
 
-            // Ambil semua data sekaligus untuk menghindari N+1
-            $results = CentralProductionResult::findMany($resultIds);
+        $resultComponentSave = array_values($resultComponentSave);
 
-            // Loop melalui data dan update
-            foreach ($items as $item) {
-                $centralProductionResultId = $item['result_id'];
 
-                // Temukan hasil yang sesuai dari $results
-                $result = $results->where('id', $centralProductionResultId)->first();
+        return $resultComponentSave;
+    }
 
-                // update target quantity
-                if ($result) {
-                    $result->update([
-                        'qty_result' => $item['result_qty'],
-                    ]);
+    public function saveEditComponent(CentralProduction $centralProduction, array $components)
+    {
+        DB::transaction(function () use ($components, $centralProduction) {
+
+            foreach ($components as $component) {
+                foreach ($component['ingredients'] as $ingredient) {
+                    // Perbarui informasi komponen produksi
+                    $model = $centralProduction->result->where('id', $ingredient['id'])->first(); // Gunakan first() karena mungkin model tidak ditemukan
+                    if ($model) {
+                        $model->qty_target = str_replace('.', '', $ingredient['qty']);
+                        $model->save();
+                    }
                 }
             }
 
-            $production = CentralProduction::findOrFail($productionId);
-            $production->update([
-                'note' => $note
+        });
+
+
+    }
+
+    public function cancelCreateProduction(CentralProduction $centralProduction)
+    {
+        DB::transaction(function () use ($centralProduction) {
+            $centralProduction->requestStock->requestStockHistory()->create([
+                'desc' => 'Penerimaan produksi dibatalkan oleh central kitchen',
+                'status' => 'Penerimaan dibatalkan'
             ]);
 
-            // update history
-            $production->requestStock->requestStockHistory()->create([
-                'desc' => 'Central kitchen menyelesaikan proses produksi',
-                'status' => 'Produksi selesai',
+            $centralProduction->history()->create([
+                'desc' => 'Penerimaan produksi dibatalkan',
+                'status' => 'Penerimaan dibatalkan'
             ]);
 
-            DB::commit();
-            return $results;
+            // TODO: perbaiki penghapusan central production
 
+//            $centralProduction->delete();
+        });
 
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error("gagal menyelesai proses produksi dengan id $productionId");
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-        }
     }
 }

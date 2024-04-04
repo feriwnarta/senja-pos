@@ -7,17 +7,17 @@ use App\Service\CentralProductionService;
 use App\Service\Impl\CentralProductionServiceImpl;
 use App\Service\Impl\WarehouseTransactionServiceImpl;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
+/**
+ * TODO: Kelas ini seharusnya sebagai kelas Transaction detail out
+ */
 class TransactionDetail extends Component
 {
-
-    #[Url(as: 'option', keep: true)]
-    public string $option = '';
-
     #[Url(as: 'wouId', keep: true)]
     public string $outboundId = '';
 
@@ -27,6 +27,7 @@ class TransactionDetail extends Component
 
     public WarehouseOutbound $warehouseOutbound;
     public array $outboundItems = [];
+    public Collection $items;
     private CentralProductionService $productionService;
 
     public function render()
@@ -37,40 +38,22 @@ class TransactionDetail extends Component
     public function boot()
     {
         $this->initMode();
-
         $this->searchOutboundHistory();
+        $this->getItems();
     }
 
     private function initMode()
     {
-        $this->extractUrl();
         $result = $this->findOutboundById($this->outboundId);
 
+
         if ($result == null) {
+
             $this->error = 'Detail stok keluar tidak valid, harap kembali dan muat ulang';
             return;
         }
 
         $this->warehouseOutbound = $result;
-    }
-
-    /**
-     * lakukan proses extract url untuk memvalidasi option dan outbounid
-     * @return void
-     */
-
-    private function extractUrl()
-    {
-        $validOption = ['request', 'stockIn', 'stockOut'];
-        if (!in_array($this->option, $validOption)) {
-            $this->error = 'Option tidak sesuai, harap kembali dan muat ulang';
-            return;
-        }
-
-        if ($this->outboundId == '') {
-            $this->error = 'Detail stok keluar tidak valid, harap kembali dan muat ulang';
-            return;
-        }
     }
 
     private function findOutboundById(string $id)
@@ -106,8 +89,50 @@ class TransactionDetail extends Component
 
     }
 
+    private function getItems()
+    {
+
+        try {
+
+            if ($this->warehouseOutbound == null) {
+                $this->initMode();
+            }
+
+            $this->warehouseOutbound->load([
+                'outboundItem' => function ($query) {
+                    $query->with([
+                        'item.warehouseItem' => function ($query) {
+                            $query->with('stockItem');
+                        }
+                    ]);
+                }
+            ]);
+
+            // dapatkan all items
+            $items = $this->warehouseOutbound->outboundItem->map(function ($item) {
+                return $item;
+            });
+
+            if ($items == null) {
+                Log::error('gagal mendapatkan semua item dari outbound items');
+                return;
+            }
+
+            $this->items = $items;
+
+
+        } catch (Exception $exception) {
+            Log::error('gagal mendapatkan all item saat keluar barang');
+            Log::error($exception->getMessage());
+            Log::error($exception->getTraceAsString());
+        }
+
+
+    }
+
     /**
      * terima dan lanjutkan proses keluar barang dari gudang
+     *
      * @return void
      */
     public function acceptAndNext()
@@ -167,6 +192,7 @@ class TransactionDetail extends Component
      * validasi bahwa stoknya sesuai dan stok aktual tidak lebih besar dari nilai dikirim
      * hitung nilai cogsnya
      * update status menjadi dikirim
+     *
      * @return void
      */
     public function sendItem()
@@ -177,7 +203,7 @@ class TransactionDetail extends Component
             'outboundItems.*.qty_send' => [
                 'required',
                 'numeric',
-                'min:0.01',
+                'min:1',
 
                 // validasi jumlah permintaan item tidak boleh lebih dari qty on hand
                 function ($attribute, $value, $fail) {
@@ -192,10 +218,13 @@ class TransactionDetail extends Component
                     // Ambil nilai qty_on_hand untuk item tersebut dari array outboundItems
                     $qtyOnHand = $this->outboundItems[$index]['qty_on_hand'] ?? 0;
 
+                    $qtyOnHand = number_format($qtyOnHand, 0, '', '');
+                    $value = floatval(str_replace('.', '', $value));
+
 
                     // Validasi bahwa qty_send tidak melebihi qty_on_hand
                     if ($value > $qtyOnHand) {
-                        $fail("The $attribute may not be greater than qty_on_hand.");
+                        $fail("The field may not be greater than stok.");
                     }
                 },
             ],
@@ -212,29 +241,16 @@ class TransactionDetail extends Component
 
 
         try {
-            DB::beginTransaction();
-            // Lakukan update history request stock
-            $resultUpdate = $this->updateHistoryRequestStock();
+            $resultUpdateRequestStock = $this->updateHistoryRequestStock();
+            
+            // Lakukan pengurangan stok item untuk pengiriman
+            $warehouseService = app(WarehouseTransactionServiceImpl::class);
+            $result = $warehouseService->reduceStockItemShipping($items, $outboundId);
 
-            if ($resultUpdate) {
-                // Lakukan pengurangan stok item untuk pengiriman
-                $warehouseService = app(WarehouseTransactionServiceImpl::class);
-                $result = $warehouseService->reduceStockItemShipping($items, $outboundId);
-
-                if ($result) {
-                    DB::commit();
-                    notify()->success('Berhasil kirim barang', 'Sukses');
-                    $this->mode = 'view';
-                    // Pemberitahuan sukses
-
-                    return;
-                }
-            }
-
-            DB::rollBack();
-            // Pemberitahuan kesalahan saat proses pengiriman
-            notify()->error('Gagal melakukan proses pengiriman', 'Error');
-
+            notify()->success('Berhasil kirim barang', 'Sukses');
+            $this->mode = 'view';
+            // Pemberitahuan sukses
+            return;
         } catch (Exception $exception) {
             DB::rollBack();
             // Log dan pemberitahuan kesalahan
@@ -254,6 +270,14 @@ class TransactionDetail extends Component
             'status' => 'Bahan dikirim',
         ]);
 
+    }
+
+    private function updateHistoryProduction()
+    {
+        return $this->warehouseOutbound->production->history()->create([
+            'desc' => 'Bahan dalam proses pengiriman dari gudang ke central kitchen (otomatis)',
+            'status' => 'Bahan dikirim',
+        ]);
 
     }
 

@@ -31,9 +31,9 @@ class StockItem extends Model
         });
     }
 
-    public function item(): BelongsTo
+    public function warehouseItem(): BelongsTo
     {
-        return $this->belongsTo(Item::class, 'items_id');
+        return $this->belongsTo(WarehouseItem::class, 'warehouse_items_id');
     }
 
 

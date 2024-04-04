@@ -38,11 +38,7 @@ class Item extends Model
     {
         return $this->belongsTo(Category::class, 'categories_id');
     }
-
-    public function stockItem(): HasMany
-    {
-        return $this->hasMany(StockItem::class, 'items_id');
-    }
+    
 
     public function requestDetail(): HasMany
     {
@@ -93,6 +89,11 @@ class Item extends Model
     public function outbound(): HasMany
     {
         return $this->hasMany(WarehouseOutboundItem::class, 'items_id');
+    }
+
+    public function warehouseItem(): HasMany
+    {
+        return $this->hasMany(WarehouseItem::class, 'items_id');
     }
 
 

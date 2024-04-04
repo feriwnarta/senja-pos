@@ -88,22 +88,21 @@
                                             <input type="text"
                                                    class="input-no-border make-input areaInput caption-medium"
                                                    placeholder="Area A" style="width: 100%"
-                                                   wire:model.live="areas.{{$key}}.area.area">
-
-                                            @if ($errors->has("areas.$key.area.area"))
-                                                <span
-                                                    class="text-xs text-red-600">{{ $errors->first("areas.$key.area.area") }}</span>
-                                            @endif
+                                                   wire:model.live.debounce.600ms="areas.{{$key}}.area"
+                                                   wire:change="handleAreaValidate">
+                                            @error("areas.$key.area")
+                                            <span class="text-xs text-red-600">{{ $message }}</span>
+                                            @enderror
                                         </td>
                                         <td>
                                             <input type="text"
                                                    class="input-no-border make-input rackInput caption-medium"
                                                    placeholder="A1" style="width: 100%"
-                                                   wire:model="areas.{{$key}}.area.rack">
-                                            @if ($errors->has("areas.$key.area.rack"))
-                                                <span
-                                                    class="text-xs text-red-600">{{ $errors->first("areas.$key.area.rack") }}</span>
-                                            @endif
+                                                   wire:model.live.debounce.600ms="areas.{{$key}}.racks.0"
+                                                   wire:change="handleAreaValidate">
+                                            @error("areas.$key.racks.0")
+                                            <span class="text-xs text-red-600">{{ $message }}</span>
+                                            @enderror
                                         </td>
 
                                         <td class="delete-item" style="width: 16px"
@@ -112,25 +111,27 @@
                                         </td>
                                     </tr>
 
-                                    @if(isset($area['rack']))
-                                        @foreach($area['rack'] as $subKey => $value)
-                                            <tr>
-                                                <td></td>
-                                                <td>
-                                                    <input type="text"
-                                                           class="input-no-border make-input rackInput caption-medium"
-                                                           placeholder="A1" style="width: 100%"
-                                                           wire:model="areas.{{ $key }}.rack.{{ $subKey }}.rack">
-                                                    @if ($errors->has("areas.$key.rack.$subKey.rack"))
-                                                        <span
-                                                            class="text-xs text-red-600">{{ $errors->first("areas.$key.rack.$subKey.rack") }}</span>
-                                                    @endif
-                                                </td>
-                                                <td class="delete-item"
-                                                    wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
-                                                    <i class="x-icon"></i>
-                                                </td>
-                                            </tr>
+                                    @if(isset($area['racks']) && count($area['racks']) > 1)
+                                        @foreach($area['racks'] as $subKey => $value)
+                                            @if($subKey > 0)
+                                                <tr>
+                                                    <td></td>
+                                                    <td>
+                                                        <input type="text"
+                                                               class="input-no-border make-input rackInput caption-medium"
+                                                               placeholder="A1" style="width: 100%"
+                                                               wire:model.live.debounce.600ms="areas.{{ $key }}.racks.{{ $subKey }}"
+                                                               wire:change="handleAreaValidate">
+                                                        @error("areas.$key.racks.$subKey")
+                                                        <span class="text-xs text-red-600">{{ $message }}</span>
+                                                        @enderror
+                                                    </td>
+                                                    <td class="delete-item"
+                                                        wire:click.prevent="removeRack({{ $key }}, {{ $subKey }})">
+                                                        <i class="x-icon"></i>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         @endforeach
                                     @endif
                                 @endforeach
@@ -157,18 +158,17 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            @error('areas') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
 
-                            <div class="margin-top-16">
-                                <label for="addressWarehouse" class="form-label">Alamat</label>
-                                <div id="divider" class="margin-symmetric-vertical-6"></div>
-                                <textarea class="form-control textarea" id="addressWarehouse" rows="5"
-                                          placeholder="Jln. Ki Hajar Dewantoro"
-                                          wire:model.blur="addressWarehouse"></textarea>
-                                @error('addressWarehouse') <span text-xs text-red-600>{{ $message }}</span> @enderror
-                            </div>
-
-
+                        <div class="margin-top-16">
+                            <label for="addressWarehouse" class="form-label">Alamat</label>
+                            <div id="divider" class="margin-symmetric-vertical-6"></div>
+                            <textarea class="form-control textarea" id="addressWarehouse" rows="5"
+                                      placeholder="Jln. Ki Hajar Dewantoro"
+                                      wire:model.blur="addressWarehouse"></textarea>
+                            @error('addressWarehouse') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                     @endif
                 </div>
@@ -339,7 +339,7 @@
                                     alt="" srcset="" width="140">
                             @endif
                             <div wire:loading wire:target.prevent="photoNewItem">Uploading...</div>
-                            @error('photoNewItem') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                            @error('photoNewItem') <span class="text-danger">{{ $message }}</span> @enderror
 
                             <div>
                                 <button type="button" class="btn btn-icon-text-outlined margin-top-16"
@@ -363,7 +363,7 @@
                             <input type="name" class="form-control input-default"
                                    id="codeItem" placeholder="BMDGSP01" wire:model.blur="codeItem"
                             >
-                            @error('codeItem') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                            @error('codeItem') <span class="text-danger">{{ $message }}</span> @enderror
 
                         </div>
 
@@ -377,7 +377,7 @@
                             <input type="name" class="form-control input-default"
                                    id="nameItem" placeholder="Daging sapi" wire:model.blur="nameItem"
                             >
-                            @error('nameItem') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                            @error('nameItem') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div id="divider" class="margin-top-20"></div>
@@ -420,7 +420,7 @@
 
                                 </ul>
                             </div>
-                            @error('categoryName') <span text-xs text-red-600>{{ $message }}</span> @enderror
+                            @error('categoryName') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
 

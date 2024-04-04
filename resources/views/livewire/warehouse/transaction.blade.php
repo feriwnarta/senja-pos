@@ -1,4 +1,4 @@
-@php use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
+@php use App\Models\CentralProduction;use Carbon\Carbon;use Illuminate\Support\Facades\Log; @endphp
 <x-page-layout>
 
 
@@ -30,7 +30,6 @@
                             wire:loading.attr="disabled">
                             <option value="all" selected disabled>Semua gudang</option>
                             @if(!empty($warehouses))
-
                                 @foreach($warehouses as $warehouse)
                                     <option value="{{ $warehouse['id'] }}">{{ $warehouse['name'] }}</option>
                                 @endforeach
@@ -40,10 +39,15 @@
                     </div>
 
 
-                    <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
-                            wire:loading.attr="disabled">Buat
-                        permintaan stok
+                    <button type="button" class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
+                    >
+                        <div wire:loading wire:target="create" class="spinner-border text-warning" role="status">
+
+                        </div>
+
+                        <span wire:target="create" wire:loading.remove> <!-- Teks tombol saat tidak loading -->
+                                                Buat permintaan stok
+                                            </span>
                     </button>
 
 
@@ -95,6 +99,7 @@
 
                         @foreach($requestStock as $request)
                             <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                                wire:click="view('{{ $request->id }}', 'request')"
                             >
                                 <td class="code">{{ $request->code }}</td>
                                 <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
@@ -104,8 +109,32 @@
                         @endforeach
                         </tbody>
                     </table>
+
+                @elseif($urlQuery == 'stockIn')
+
+                    <table id="" class="table borderless table-hover margin-top-28">
+                        <thead class="table-head-color">
+                        <tr>
+                            <th scope="col">Kode stok masuk</th>
+                            <th scope="col">Kode referensi</th>
+                            <th scope="col">Tanggal</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @foreach($requestStock as $request)
+                            <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                                wire:click="detailReceipt('{{ $request->id }}')">
+                                <td class="{{ $request->itemReceipt->code == null ? 'text-danger' :'code' }}">{{ $request->itemReceipt->code ?? ' - ' }}</td>
+                                <td>{{ $request->receivable->code }}</td>
+                                <td> {{ Carbon::createFromFormat('Y-m-d H:i:s', $request->created_at)->locale('id_ID')->isoFormat('D MMMM Y') }}</td>
+                                <td>{{ $request->itemReceipt->history->last()->status }}</td>
+                            </tr>
+
+                        @endforeach
+                        </tbody>
                     </table>
-                    {{ $requestStock->links() }}
 
                 @elseif($urlQuery == 'stockOut')
 
@@ -136,6 +165,10 @@
                         </tbody>
                     </table>
                     </table>
+                @endif
+
+                @if(isset($requestStock))
+                    {{ $requestStock->links() }}
                 @endif
             </div>
 

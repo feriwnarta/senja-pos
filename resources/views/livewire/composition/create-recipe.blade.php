@@ -43,8 +43,6 @@
     <div id="content-loaded">
         <x-notify::notify/>
         <div class="row">
-
-
             @if($type == 'recipeMenu')
                 {{-- Tambah kategori baru --}}
                 <div class="col-sm-4 offset-1">
@@ -129,7 +127,9 @@
 
                 </div>
             @endif
+
         </div>
+
 
         <div class="row margin-top-32">
             <div class="col-sm-8 offset-1">
@@ -144,9 +144,9 @@
                         <table class="table table-bordered only-underline table-create-recipes body-text-regular">
                             <thead>
                             <tr class="no-border-side">
-                                <th scope="col">Ingredients</th>
-                                <th scope="col">Usage</th>
-                                <th scope="col">Unit</th>
+                                <th scope="col">Bahan</th>
+                                <th scope="col">Penggunaan</th>
+                                <th scope="col">Satuan</th>
                                 <th scope="col">Avg Cost</th>
                                 <th scope="col">Last Cost</th>
                             </tr>
@@ -156,7 +156,6 @@
                             @foreach($ingredients as $key => $ingredient)
                                 <tr class="row-recipe" wire:key="{{ $ingredient['id'] }}">
                                     <td>
-
                                         <select class="form-select create-recipes-select"
                                                 wire:model="ingredients.{{ $key }}.id"
                                                 wire:change="itemSelected('{{ $key }}', $event.target.value)"
@@ -176,12 +175,14 @@
 
                                     <td>
                                         <input type="number" class="form-control no-border"
-                                               id="exampleFormControlInput1"
+                                               id="usage"
                                                wire:model="ingredients.{{ $key }}.usage"
-                                               wire:change="updateUsage('{{ $key }}')">
+                                               x-on:input="$dispatch('updateUsage', {index: '{{ $key }}'})"
+                                        >
+
                                     </td>
 
-                                    <td class="disabled col-avg-cost">
+                                    <td class=" disabled col-avg-cost">
                                         <input type="text" disabled class="form-control input-disabled-recipes"
                                                id="avgCost" wire:model="ingredients.{{ $key }}.unit.name"
                                         >
@@ -197,10 +198,9 @@
                                                id="lastCost" wire:model="ingredients.{{$key}}.lastCost">
                                     </td>
                                     <td class="delete-recipes">
-                                        <i class="x-icon" onclick="deleteRow(this)"></i>
+                                        <i class="x-icon" wire:click="delete('{{ $key }}')"></i>
                                     </td>
                                 </tr>
-
                             @endforeach
 
 
@@ -209,7 +209,7 @@
                                     style="padding-bottom: 5px; padding-top: 5px;">
                                     <button class="btn icon-text" type="button" id="addIngredients"
                                             wire:click="addIngredient">
-                                        + Add ingredients
+                                        + Tambah bahan
                                     </button>
                                 </td>
                             </tr>
@@ -229,7 +229,6 @@
                             </tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
@@ -238,6 +237,5 @@
 </x-page-layout>
 
 @section('footer-script')
-
 @endsection
 

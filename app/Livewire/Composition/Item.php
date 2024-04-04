@@ -16,7 +16,21 @@ class Item extends Component
 
     public function render()
     {
-        return view('livewire.composition.item');
+        // dapatkan data item berdasarkan outlet atau central kitchen
+        $query = $this->selected
+            ? CentralKitchen::whereId($this->selected)->with('item')
+            : Outlet::whereId($this->selected)->with('item');
+        $items = $query->exists() ? $query->first()->item()->paginate(10) : \App\Models\Item::paginate(10);
+
+        return view('livewire.composition.item', [
+            'items' => $items,
+        ]);
+    }
+
+    public function view(string $id)
+    {
+
+        $this->redirect("/composition/item/view/$id", true);
     }
 
     public function mount()

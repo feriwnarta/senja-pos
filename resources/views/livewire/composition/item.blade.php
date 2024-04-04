@@ -1,3 +1,4 @@
+@php use App\Models\CentralKitchen;use App\Models\Outlet;use Illuminate\Support\Facades\Storage; @endphp
 <x-page-layout>
 
 
@@ -24,10 +25,11 @@
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default {{ ($notSelected) ? 'border border-danger' : '' }}"
-                                id="resupplyOutlet" wire:model="selected">
+                                id="resupplyOutlet" wire:model.live="selected">
                             <option value="" disabled selected>Semua outlet & central kitchen</option>
                             @foreach($outletCentralKitchenDropdown as $result)
-                                <option value="{{ $result->id }}">{{ $result->name }}</option>
+                                <option
+                                    value="{{ $result->id }}">{{ ($result instanceof CentralKitchen)  ? "CENTRAL - {$result->name}" : "OUTLET - {$result->name}" }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -44,13 +46,38 @@
             </div>
             <div id="title-divider"></div>
             <div id="divider"></div>
+
         </div>
     </x-slot>
-
     <div id="content-loaded">
-        <x-notify::notify/>
+
+
+        <table id="" class="table borderless table-hover margin-top-28">
+            <thead class="table-head-color">
+            <tr>
+                <th scope="col">Kode</th>
+                <th scope="col">Name</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Kategori</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @foreach($items as $item)
+                <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                    wire:click="view('{{ $item->id }}')">
+                    <td>{{ $item->code }}</td>
+                    <td>{{ $item->name }}</td>
+                    <td>{{ $item->unit->name }}</td>
+                    <td>{{ $item->category->name }}</td>
+                </tr>
+            @endforeach
+
+            </tbody>
+        </table>
 
     </div>
 
 
 </x-page-layout>
+

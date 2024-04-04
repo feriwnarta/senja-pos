@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 
 class CentralProduction extends Model
@@ -42,9 +43,19 @@ class CentralProduction extends Model
         return $this->belongsTo(RequestStock::class, 'request_stocks_id');
     }
 
+    public function additionRequest(): HasMany
+    {
+        return $this->hasMany(CentralProductionAdditionRequest::class, 'central_productions_id');
+    }
+
     public function result(): HasMany
     {
         return $this->hasMany(CentralProductionResult::class, 'central_productions_id');
+    }
+
+    public function ending(): HasMany
+    {
+        return $this->hasMany(CentralProductionEnding::class, 'central_productions_id');
     }
 
     public function outbound(): HasMany
@@ -55,6 +66,32 @@ class CentralProduction extends Model
     public function remaining(): HasMany
     {
         return $this->hasMany(CentralProductionRemaining::class, 'central_productions_id');
+    }
+
+
+    public function shipping(): HasMany
+    {
+        return $this->hasMany(CentralProductionShipping::class, 'central_productions_id');
+    }
+
+    public function reference(): MorphMany
+    {
+        return $this->morphMany(WarehouseItemReceiptRef::class, 'receivable');
+    }
+
+    public function history(): HasMany
+    {
+        return $this->hasMany(CentralProductionHistory::class, 'central_productions_id');
+    }
+
+    public function components(): HasMany
+    {
+        return $this->hasMany(CentralProductionComponentCost::class, 'central_productions_id');
+    }
+
+    public function finishes(): HasMany
+    {
+        return $this->hasMany(CentralProductionFinish::class, 'central_productions_id');
     }
 
 

@@ -95,7 +95,7 @@ option {
     position: -webkit-sticky;
     position: sticky;
     top: 0;
-    z-index: 1020;
+    z-index: 10;
     background-color: white;
 }
 
@@ -166,6 +166,7 @@ input[type="search"]::-webkit-search-results-decoration {
 .table-detail-item-ingredients:disabled {
     background-color: #EDEDED;
 }
+
 
 .search-bar {
     max-width: 23.6rem;
@@ -803,4 +804,9 @@ select {
 
 .item {
 
+}
+
+
+.notify {
+    z-index: 100;
 }

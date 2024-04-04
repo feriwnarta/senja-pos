@@ -58,4 +58,9 @@ class Warehouse extends Model
         return $this->hasMany(RequestStock::class, 'warehouses_id');
     }
 
+    public function warehouseItem(): HasMany
+    {
+        return $this->hasMany(WarehouseItem::class, 'warehouses_id');
+    }
+
 }

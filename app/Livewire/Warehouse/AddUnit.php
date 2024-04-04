@@ -2,9 +2,9 @@
 
 namespace App\Livewire\Warehouse;
 
-use Exception;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Dto\UnitDTO;
+use App\Repository\Compositions\UnitRepository;
+use App\Service\Compositions\UnitService;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
@@ -29,29 +29,19 @@ class AddUnit extends Component
 
     private function storeUnit()
     {
+        $service = new UnitService(new UnitRepository());
 
-        try {
-            DB::beginTransaction();
+        // buat unit DTO
+        $unitDto = new UnitDTO(
+            $this->code,
+            $this->name
+        );
 
-            $unit = \App\Models\Unit::create([
-                'code' => $this->code,
-                'name' => $this->name,
-            ]);
-
-            DB::commit();
-
-            if ($unit) {
-                notify()->success('Berhasil membuat unit', 'Sukses');
-                $this->reset();
-                return;
-            }
-
-            notify()->error('Gagal membuat unit baru', 'Gagal');
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            DB::rollBack();
-            notify()->error('Gagal membuat unit baru', 'Gagal');
+        $result = $service->create($unitDto);
+        if (!is_null($result)) {
+            $this->reset();
+            notify()->success('Sukses buat unit baru');
+            $this->redirect("/composition/unit/view/{$result->id}", true);
         }
     }
 

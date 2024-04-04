@@ -110,6 +110,7 @@ class CreateTransaction extends Component
     /**
      * setelah berhasil membuat permintaan pengisian ulang stock
      * maka ambil data item berdasarkan id warehouse yang sudah dipilih
+     *
      * @return void
      */
     private function getAllItemByWarehouseId()
@@ -127,29 +128,19 @@ class CreateTransaction extends Component
                     $this->warehouse = Warehouse::findOrFail($this->id);
 
                     if ($this->warehouse != null && $this->warehouse->centralKitchen->isNotEmpty()) {
-                        // all central warehouse
-//                        $result = $this->warehouse->centralKitchen->each(function ($central) {
-//                            $items = $central->item()->cursorPaginate(10);
-//
-//                            $allItems = collect();
-//                            $items->each(function ($item) use ($allItems) {
-//                                $allItems->push($item);
-//                            });
-//
-//                            $this->items = $allItems;
-//
-//                            $this->nextCursor = $items->toArray()['next_cursor'];
-//
-//                        });
 
                         $allItems = collect(); // Inisialisasi koleksi di luar fungsi each
-                        $result = $this->warehouse->itemPlacement()->cursorPaginate(10);
+                        $result = $this->warehouse->warehouseItem()->with('items.recipe', 'items.unit', 'items.category', 'stockItem')->cursorPaginate(10);
+
 
                         $result->each(function ($item) use ($allItems) {
-                            $allItems->push($item->item);
+                            $allItems->push($item);
                         });
 
+
                         $this->items = $allItems;
+
+
                         $this->nextCursor = $result->toArray()['next_cursor'];
 
 
@@ -175,46 +166,28 @@ class CreateTransaction extends Component
 
     /**
      * load more item saat membuat permintaan produksi
+     *
      * @return void
      */
     public function loadMoreItem()
     {
-
         Log::debug($this->nextCursor);
 
         if ($this->nextCursor != null) {
+            $result = $this->warehouse->warehouseItem()->with('items.recipe', 'items.unit', 'items.category', 'stockItem')->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
 
-//            OPSI TANPA GUDANG
+            // Tambahkan item baru ke dalam properti yang sudah ada
+            $this->items = $this->items->concat($result->items());
 
-//            $result = $this->warehouse->centralKitchen->each(function ($central) {
-//                $items = $central->item()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
-//                $allItems = collect();
-//                $items->each(function ($item) use ($allItems) {
-//                    $allItems->push($item);
-//                });
-//
-//                // Menggabungkan koleksi existing dengan koleksi baru
-//                $this->items = $this->items->merge($allItems);
-//
-//                $this->nextCursor = $items->toArray()['next_cursor'];
-//            });
-
-            $allItems = collect(); // Inisialisasi koleksi di luar fungsi each
-            $result = $this->warehouse->itemPlacement()->cursorPaginate(10, ['*'], 'cursor', $this->nextCursor);
-
-            $result->each(function ($item) use ($allItems) {
-                $allItems->push($item->item);
-            });
-
-            $this->items = $this->items->merge($allItems);
+            // Perbarui nilai nextCursor
             $this->nextCursor = $result->toArray()['next_cursor'];
-
-
         }
     }
 
+
     /**
      * tambahkan ke array selected item mana saja yang dipilih
+     *
      * @param string $id
      * @return void
      */
@@ -246,20 +219,18 @@ class CreateTransaction extends Component
     /**
      * proses pembuatan permintaan baru
      * generate code permintaan
+     *
      * @return void
      */
     public function create()
     {
 
         Log::info('buat permintaan stok dari warehouse');
-
         // jika is create false maka jalankan proses pembuatan stok pertama kali
         if ($this->isCreate == false) {
             $result = $this->storeRequest();
 
-
             if ($result) {
-
                 $this->findRequestCreated();
                 notify()->success('Permintaan berhasil dibuat', 'Sukses');
                 return;
@@ -268,12 +239,14 @@ class CreateTransaction extends Component
             return;
         }
 
+
         $this->finishCreateRequest();
     }
 
     private function storeRequest(): bool
     {
         try {
+
             // lakukan pengecekan apakah ada item didalam gudang
             $isExistItem = $this->checkItemOnWarehouse();
 
@@ -308,13 +281,7 @@ class CreateTransaction extends Component
     {
         try {
 
-            return Warehouse::findOrFail($this->id)->areas->contains(function ($area) {
-                return $area->racks->contains(function ($rack) {
-                    return $rack->itemPlacement->isNotEmpty();
-                });
-            });
-
-
+            return Warehouse::findOrFail($this->id)->warehouseItem->isNotEmpty();
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
@@ -324,6 +291,7 @@ class CreateTransaction extends Component
     /**
      * selesaikan pembuatan permintaan stok dari warehouse pusat ke central kitchen
      * validasi item yang dipilih
+     *
      * @return void
      */
     private function finishCreateRequest()
@@ -338,15 +306,17 @@ class CreateTransaction extends Component
             'selected.*.itemReq' => 'required|min:1',
         ], [
             'selected.*.itemReq.required' => 'Harap memberikan nilai stok tambahan ke item yang dipilih',
-            'selected.*.itemReq.min' => 'Harap memberikan nilai stok tambahan ke item yang dipilih',
+            'selected.*.itemReq.min:1' => 'Harap memberikan nilai stok tambahan ke item yang dipilih',
         ]);
 
 
         // proses simpan detail permintaan
         try {
-            $result = $this->warehouseTransactionService->finishRequest($this->requestId, $this->selected);
+            $resultId = $this->warehouseTransactionService->finishRequest($this->requestId, $this->selected);
 
-            if ($result == 'success') {
+
+            if (!empty($resultId)) {
+                $this->redirect("/warehouse/transaction/request-stock/view/$resultId", true);
                 notify()->success('Berhasil menyelesaikan permintaan stock');
                 $this->reset('requestId', 'code', 'error', 'note', 'isCreate', 'items', 'selected', 'nextCursor');
                 $this->date = date('Y-m-d');

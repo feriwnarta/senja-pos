@@ -7,6 +7,7 @@ use App\Service\RecipeService;
 use App\Utils\IndonesiaCurrency;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Url;
 use Livewire\Component;
@@ -112,6 +113,7 @@ class CreateRecipe extends Component
     public function itemSelected($index)
     {
 
+
         $itemId = $this->ingredients[$index]['id'];
         $result = $this->items->find($itemId);
 
@@ -122,8 +124,8 @@ class CreateRecipe extends Component
         }
 
 
-        $avg = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->avg_cost);
-        $last = IndonesiaCurrency::formatToRupiah($result->stockItem()->latest()->first()->last_cost);
+        $avg = IndonesiaCurrency::formatToRupiah($result->warehouseItem->last()->stockItem->last()->avg_cost);
+        $last = IndonesiaCurrency::formatToRupiah($result->warehouseItem->last()->stockItem->last()->last_cost);
 
         $this->ingredients[$index]['usage'] = 1;
         $this->ingredients[$index]['unit']['id'] = $result->unit->id;
@@ -140,17 +142,19 @@ class CreateRecipe extends Component
     {
         $totalAvg = 0;
         $totalLastCost = 0;
-        foreach ($this->ingredients as $ingredient) {
-            $avg = str_replace('Rp ', '', $ingredient['avgCost']);
-            $lastCost = str_replace('Rp ', '', $ingredient['lastCost']);
 
+        foreach ($this->ingredients as $ingredient) {
+            // Menghapus "Rp " dan titik sebagai pemisah ribuan
+            $avg = floatval(str_replace(['Rp ', '.'], '', $ingredient['avgCost']));
+            $lastCost = floatval(str_replace(['Rp ', '.'], '', $ingredient['lastCost']));
+
+            // Menambahkan nilai uang ke dalam total
             $totalAvg += $avg;
             $totalLastCost += $lastCost;
         }
 
-
-        $this->totalAvg = IndonesiaCurrency::formatToRupiah(number_format($totalAvg, 3, '', ''));
-        $this->totalLastCost = IndonesiaCurrency::formatToRupiah(number_format($totalLastCost, 3, '', ''));
+        $this->totalAvg = IndonesiaCurrency::formatToRupiah($totalAvg);
+        $this->totalLastCost = IndonesiaCurrency::formatToRupiah($totalLastCost);
 
     }
 
@@ -159,22 +163,32 @@ class CreateRecipe extends Component
      * @param $index
      * @return void
      */
+    #[On('updateUsage')]
     public function updateUsage($index)
     {
-
-        $initAvgCost = $this->ingredients[$index]['initAvgCost'];
-        $initAvgCost = str_replace('Rp ', '', $initAvgCost);
-        $initLastCost = $this->ingredients[$index]['initLastCost'];
-        $initLastCost = str_replace('Rp ', '', $initLastCost);
         $usage = $this->ingredients[$index]['usage'];
+        $usage = floatval($usage);
 
 
-        $this->ingredients[$index]['avgCost'] = IndonesiaCurrency::formatToRupiah(number_format(floatval($usage) * floatval($initAvgCost), 3, '', ''));
-        $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah(number_format(floatval($usage) * floatval($initLastCost), 3, '', ''));
+        $initAvgCost = floatval(str_replace(['Rp ', '.'], '', $this->ingredients[$index]['initAvgCost']));
+        $initLastCost = floatval(str_replace(['Rp ', '.'], '', $this->ingredients[$index]['initLastCost']));
+
+
+        $avgCost = floatval($initAvgCost * $usage);
+        $lastCost = floatval($usage * $initLastCost);
+
+
+        $this->ingredients[$index]['avgCost'] = IndonesiaCurrency::formatToRupiah($avgCost);
+        $this->ingredients[$index]['lastCost'] = IndonesiaCurrency::formatToRupiah($lastCost);
 
         $this->calculateTotalAvgAndLastCost();
     }
 
+    #[On('changeInput')]
+    public function input()
+    {
+        dd('asd');
+    }
 
     public function save()
     {
@@ -203,9 +217,10 @@ class CreateRecipe extends Component
         if ($this->type == 'recipeSemi') {
             $result = $this->recipeService->saveRecipeItem($this->code, $this->selectMenuOrMaterial, $recipes);
 
-            if ($result) {
-                notify()->success('Berhasil buat resep', 'Sukses');
+            if (!is_null($result)) {
                 $this->reset('code', 'ingredients', 'selectMenuOrMaterial', 'totalAvg', 'totalLastCost');
+                $this->redirect("/composition/recipe/view/{$result->id}");
+                notify()->success('Berhasil buat resep', 'Sukses');
                 return;
             }
 
@@ -215,5 +230,16 @@ class CreateRecipe extends Component
         }
     }
 
-}
+    /**
+     * delete baris resep yang ditambahkan
+     * @param $index
+     * @return void
+     */
+    public function delete($index)
+    {
+        unset($this->ingredients[$index]);
+        $this->calculateTotalAvgAndLastCost();
+    }
 
+
+}

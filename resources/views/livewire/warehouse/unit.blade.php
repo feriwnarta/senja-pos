@@ -20,7 +20,6 @@
                                aria-label="Search" wire:model.live.debounce.600ms="search">
                     </form>
 
-
                     <a href="/composition/unit/add-unit" wire:navigate>
                         <button type="btn"
                                 class="btn btn-text-only-primary btn-nav margin-left-10"
@@ -37,7 +36,30 @@
         </div>
 
         <div id="content-loaded">
-            <livewire:unit-table wire:model="search"/>
+
+
+            <table id="" class="table borderless table-hover margin-top-28">
+                <thead class="table-head-color">
+                <tr>
+                    <th scope="col">Kode</th>
+                    <th scope="col">Unit</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($units as $unit)
+                    <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                        wire:click="view('{{ $unit->id }}')"
+                    >
+                        <td>{{ $unit->code }}</td>
+                        <td>{{ $unit->name }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+
+            @if(isset($units))
+                {{ $units->links() }}
+            @endif
         </div>
 
     </x-slot>

@@ -24,7 +24,7 @@
 
                     <div class="dropdown margin-left-10">
                         <select class="form-select input-default"
-                                id="resupplyOutlet" wire:model="typeRecipe">
+                                id="resupplyOutlet" wire:model.live="typeRecipe">
                             <option value="recipeMenu" selected>Resep menu</option>
                             <option value="recipeSemi">Resep 1 / 2 jadi</option>
                         </select>
@@ -45,9 +45,29 @@
     </x-slot>
 
     <div id="content-loaded">
-        <x-notify::notify/>
 
+        <table id="" class="table borderless table-hover margin-top-28">
+            <thead class="table-head-color">
+            <tr>
+                <th scope="col">Kode</th>
+                <th scope="col">Resep untuk</th>
+                <th scope="col">Bahan</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            @if(!is_null($recipes))
+                @foreach($recipes as $recipe)
+                    <tr class="items-table-head-color" id="po1" style="cursor: pointer"
+                        wire:click="view('{{ $recipe->id }}')">
+                        <td>{{ $recipe->code}}</td>
+                        <td>{{ $recipe->item->name }}</td>
+                        <td>{{ $recipe->recipeDetail->count() }}</td>
+                    </tr>
+                @endforeach
+            @endif
+
+            </tbody>
+        </table>
     </div>
-
-
 </x-page-layout>

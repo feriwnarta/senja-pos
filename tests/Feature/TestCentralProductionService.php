@@ -633,6 +633,23 @@ class TestCentralProductionService extends TestCase
 
     }
 
+    public function testGenerateCodeCentralShipping()
+    {
+
+        $result = $this->centralService->generateCodeProductionShipping('9b0a92ef-0778-43e9-a006-16d2822e8169', '9ad7d971-7a94-4aa5-986c-17bdd46e19f6', 'CENTRALPORIS01');
+        print_r($result);
+        self::assertIsArray($result);
+
+    }
+
+    public function testGenerateCodeCentralShippingNextMonth()
+    {
+        Carbon::setTestNow(Carbon::create(2024, 10, 1));
+        $result = $this->centralService->generateCodeProductionShipping('9b0a92ef-0778-43e9-a006-16d2822e8169', '9ad7d971-7a94-4aa5-986c-17bdd46e19f6', 'CENTRALPORIS01');
+        print_r($result);
+        self::assertIsArray($result);
+    }
+
 
     protected function setUp(): void
     {

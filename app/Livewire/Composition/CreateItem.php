@@ -36,9 +36,9 @@ class CreateItem extends Component
     #[Rule('numeric|min:0')]
     public string $inStock = '';
     #[Rule('exclude_if:inStock,""|required|min:0')]
-    public string $avgCost = '';
+    public string $avgCost = '0';
     #[Rule('exclude_if:inStock,""|required|min:0')]
-    public string $lastCost = '';
+    public string $lastCost = '0';
 
     public bool $isEmpty = false;
     public bool $isOutlet = true;
@@ -55,6 +55,9 @@ class CreateItem extends Component
     public $thumbnail;
 
     public string $routeProduce = 'PRODUCECENTRALKITCHEN';
+    // tipe outlet / central kitchen
+    public string $type = '';
+
     private CompositionService $compositionService;
 
     public function mount()
@@ -69,6 +72,7 @@ class CreateItem extends Component
 
     /**
      * extract url untuk dapatkan id outlet atau central kitchen
+     *
      * @return void
      * @throws BindingResolutionException
      */
@@ -87,6 +91,7 @@ class CreateItem extends Component
 
         if ($outlet != '') {
             $this->isOutlet = true;
+            $this->type = $outlet->name;
             return;
         }
 
@@ -97,7 +102,7 @@ class CreateItem extends Component
         if ($centralKitchen != '') {
             // found
             $this->isOutlet = false;
-
+            $this->type = $centralKitchen->name;
             return;
         }
 
@@ -151,15 +156,20 @@ class CreateItem extends Component
         $result = null;
 
         if ($this->thumbnail != null) {
-            $result = $this->thumbnail->store('public/item-image');
+            $result = $this->thumbnail->store('item-image');
         }
+
+        $avgCost = str_replace('.', '', $this->avgCost);
+        $lastCost = str_replace('.', '', $this->lastCost);
+        $inStock = str_replace('.', '', $this->inStock);
+
 
         $item = $this->compositionService->saveItem(
             $this->route,
             $this->routeProduce,
-            $this->inStock,
+            $inStock,
             $this->minimumStock,
-            $this->thumbnail,
+            $result,
             $this->isOutlet,
             $this->placement,
             $this->code,
@@ -168,13 +178,14 @@ class CreateItem extends Component
             $this->description,
             $this->category,
             $this->url,
-            $this->avgCost,
-            $this->lastCost
+            $avgCost,
+            $lastCost,
         );
 
-        if ($item == 'success') {
-            notify()->success('Berhasil buat item', 'Sukses');
+        if (!is_null($item)) {
             $this->reset('code', 'name', 'description', 'unit', 'inStock', 'minimumStock', 'avgCost', 'lastCost', 'placement', 'category', 'thumbnail');
+            $this->redirect("/composition/item/view/{$item}", true);
+            notify()->success('Berhasil buat item', 'Sukses');
             return;
         }
 

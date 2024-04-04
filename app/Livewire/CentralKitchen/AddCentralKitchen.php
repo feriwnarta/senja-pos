@@ -2,10 +2,10 @@
 
 namespace App\Livewire\CentralKitchen;
 
-use App\Models\CentralKitchen;
-use Exception;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Dto\CentralKitchenDTO;
+use App\Http\Requests\CentralKitchenRequest;
+use App\Service\CentralKitchen\CentralKitchenService;
+use App\Service\CentralKitchen\Interface\CentralKitchenRepository;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
 
@@ -16,10 +16,9 @@ class AddCentralKitchen extends Component
     public string $code;
     #[Rule('required|min:5')]
     public string $name;
-    #[Rule('required|min:5')]
-    public string $address;
-    public string $phone;
-    public string $email;
+    public string $address = '';
+    public string $phone = '';
+    public string $email = '';
 
 
     public function render()
@@ -31,40 +30,18 @@ class AddCentralKitchen extends Component
     {
         $this->validate();
 
-        $this->store();
-    }
+        $repository = app()->make(\App\Repository\CentralKitchen\CentralKitchenRepository::class);
+        $service = new CentralKitchenService($repository);
+        $dto = new CentralKitchenDTO($this->code, $this->name);
+        $dto->setAddress($this->address);
 
-    public function store()
-    {
-        try {
-            DB::beginTransaction();
-            $result = CentralKitchen::create([
-                'code' => $this->code,
-                'name' => $this->name,
-                'address' => $this->address,
-                'phone' => $this->phone,
-                'email' => $this->email,
-            ]);
+        $result = $service->create($dto);
 
-            DB::commit();
-
-            if ($result) {
-                $this->js("alert('berhasil tambah central kitchen')");
-                $this->reset();
-                return;
-            }
-
-            $this->js("alert('gagal tambah central kitchen')");
-            $this->reset();
-
-        } catch (Exception $exception) {
-            DB::rollBack();
-            Log::error('Exception dari penyimpanan central kitchen baru');
-            Log::error($exception->getMessage());
-            Log::error($exception->getTraceAsString());
-
-        }
+        $this->reset();
+        $this->redirect("/central-kitchen/list-central-kitchen/view/{$result->id}");
+        notify()->success('Sukses buat central kitchen');
 
     }
+
 }
 

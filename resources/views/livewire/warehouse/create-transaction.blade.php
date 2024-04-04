@@ -14,15 +14,16 @@
                 </div>
 
                 <div id="nav-action-button" class="d-flex flex-row align-items-center">
-                    <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="cancel">Batal
+                    <button type="button" class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create"
+                            wire:loading.attr="disabled">
+                            <span wire:loading wire:target="create" class="spinner-border text-warning" role="status">
+                                <!-- Teks atau ikon loading disini -->
+                            </span>
+                        <span wire:loading.remove> <!-- Teks tombol saat tidak loading -->
+                            Lanjutkan
+                        </span>
                     </button>
-
-                    <button type="btn"
-                            class="btn btn-text-only-primary btn-nav margin-left-10" wire:click="create">Lanjutkan
-                    </button>
-
-
+                    
                 </div>
             </div>
             <div id="title-divider"></div>
@@ -104,30 +105,32 @@
                             </thead>
 
                             <tbody>
+
                             @if(!empty($items))
                                 @foreach($items as $item)
-                                    @if($item->route != 'BUY')
-                                        @if($item->recipe->isEmpty())
+
+                                    @if($item->items->route != 'BUY')
+                                        @if($item->items->recipe->isEmpty())
+
                                             <tr wire:key="{{ $item->id }}" class="item-disabled">
                                                 <td>
                                                     <i class="danger-exclamation-icon" data-bs-toggle="tooltip"
                                                        data-bs-title="Resep belum dibuat" data-bs-placement="right"></i>
                                                 </td>
                                                 {{--  TODO : Perlu lebih spesifik ke item --}}
-                                                <td> {{ $item->name }}</td>
-                                                <td>{{ ($item->sku) ?? '-' }}</td>
-                                                <td>{{ $item->category->name }}</td>
+                                                <td> {{ $item->items->name }}</td>
+                                                <td>{{ ($item->items->sku) ?? '-' }}</td>
+                                                <td>{{ $item->items->category->name }}</td>
                                                 <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
-                                                <td>{{ $item->unit->name }}</td>
+                                                <td>{{ $item->items->unit->name }}</td>
                                                 <td style="width: 200px;">
 
                                                     @if(!empty($selected))
                                                         @foreach($selected as $key =>  $select)
                                                             @if($select['id'] == $item->id)
                                                                 <input type="text" class="form-control input-default"
-                                                                       x-mask:dynamic="$money($input, '.')"
                                                                        wire:model="selected.{{ $key }}.itemReq"
-                                                                       placeholder=" 0">
+                                                                       placeholder="0">
                                                             @endif
                                                         @endforeach
                                                     @endif
@@ -143,11 +146,11 @@
                                                            id="checkbox_{{ $loop->iteration }}">
                                                 </td>
                                                 {{--  TODO : Perlu lebih spesifik ke item --}}
-                                                <td> {{ $item->name }}</td>
-                                                <td>{{ ($item->sku) ?? '-' }}</td>
-                                                <td>{{ $item->category->name }}</td>
+                                                <td> {{ $item->items->name }}</td>
+                                                <td>{{ ($item->items->sku) ?? '-' }}</td>
+                                                <td>{{ $item->items->category->name}}</td>
                                                 <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
-                                                <td>{{ $item->unit->name }}</td>
+                                                <td>{{ $item->items->unit->name }}</td>
                                                 <td style="width: 200px;">
 
                                                     @if(!empty($selected))
@@ -156,7 +159,7 @@
                                                                 <input type="text" class="form-control input-default"
                                                                        x-mask:dynamic="$money($input, '.')"
                                                                        wire:model="selected.{{ $key }}.itemReq"
-                                                                       placeholder=" 0">
+                                                                       placeholder="0">
                                                             @endif
                                                         @endforeach
                                                     @endif
@@ -174,11 +177,11 @@
                                                        id="checkbox_{{ $loop->iteration }}">
                                             </td>
                                             {{--  TODO : Perlu lebih spesifik ke item --}}
-                                            <td> {{ $item->name }}</td>
-                                            <td>{{ ($item->sku) ?? '-' }}</td>
-                                            <td>{{ $item->category->name }}</td>
+                                            <td> {{ $item->items->name }}</td>
+                                            <td>{{ ($item->items->sku) ?? '-' }}</td>
+                                            <td>{{ $item->items->category->name }}</td>
                                             <td>{{ $item->stockItem->last()->qty_on_hand}}</td>
-                                            <td>{{ $item->unit->name }}</td>
+                                            <td>{{ $item->items->unit->name }}</td>
                                             <td style="width: 200px;">
 
                                                 @if(!empty($selected))

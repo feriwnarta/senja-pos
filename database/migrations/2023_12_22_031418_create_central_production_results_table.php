@@ -15,8 +15,8 @@ return new class extends Migration {
             $table->uuid('central_productions_id')->nullable(false);
             $table->uuid('target_items_id')->nullable(false);
             $table->uuid('items_id')->nullable(false);
-            $table->decimal('qty_target', 10, 2)->nullable(false);
-            $table->decimal('qty_result', 10, 2)->default(0.00);
+            $table->decimal('qty_target', 15, 2)->nullable(false);
+            $table->decimal('qty_result', 15, 2)->default(0.00);
             $table->uuid('created_by')->nullable(false);
             $table->uuid('updated_by')->nullable(true);
 

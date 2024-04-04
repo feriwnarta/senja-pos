@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
 
 class WarehouseOutbound extends Model
@@ -57,5 +58,10 @@ class WarehouseOutbound extends Model
     public function receipt(): HasMany
     {
         return $this->hasMany(CentralKitchenReceipts::class, 'warehouse_outbounds_id');
+    }
+
+    public function reference(): MorphMany
+    {
+        return $this->morphMany(WarehouseShippingRef::class, 'shippable');
     }
 }

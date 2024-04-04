@@ -27,7 +27,10 @@
                     <button type="btn"
                             class="btn btn-text-only-primary btn-nav margin-left-10"
                             wire:click="save"
-                    >Simpan
+                    >
+                        <span wire:loading wire:target="save" class="spinner-border text-warning" role="status">
+                        </span>
+                        Simpan
                     </button>
 
 

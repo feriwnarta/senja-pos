@@ -125,12 +125,18 @@
     color: #B24109;
 }
 
+.dropdown-no-border {
+    background-color: transparent;
+    border: none;
+    padding: 0px;
+    margin: 0px;
+}
+
 
 /* ---------------------------------------------------
     Button Only text
     Variant = Primary
 ----------------------------------------------------- */
-
 .btn-text-only-primary {
 
     /* Primary/Main */
