@@ -114,8 +114,11 @@ Route::middleware([
     Route::get('outlet/list-outlet', ListOutlet::class)->name('list-outlet');
     Route::get('outlet/list-outlet/add-outlet', AddOutlet::class)->name('add-outlet');
 
-    Route::middleware(['can:supplier.view,supplier.create'])->group(function () {
+    Route::middleware(['can:supplier.view'])->group(function () {
         Route::get('supplier', Supplier::class)->name('supplier');
+    });
+
+    Route::middleware(['can:supplier.create'])->group(function () {
         Route::get('supplier/create-supplier', CreateSupplier::class)->name('create-supplier');
     });
 

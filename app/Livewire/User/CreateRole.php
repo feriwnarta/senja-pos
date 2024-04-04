@@ -13,7 +13,7 @@ use Livewire\Component;
 class CreateRole extends Component
 {
 
-    #[Rule('required|array|min:0')]
+    #[Rule('array|min:0')]
     public Collection $permissions;
     #[Rule('required|string|min:2|unique:roles,name')]
     public string $roleName;
@@ -50,18 +50,14 @@ class CreateRole extends Component
 
         try {
 
-            if ($this->permissions->isEmpty()) {
-                notify()->error('gagal membuat role baru');
-                Log::error('gagal membuat role baru karena permission tidak dipilih');
-                return;
-            }
-
             DB::transaction(function () {
                 $role = Role::create([
                     'name' => $this->roleName
                 ]);
 
-                $role->givePermissionTo($this->permissions);
+                if ($this->permissions->isNotEmpty()) {
+                    $role->givePermissionTo($this->permissions);
+                }
 
                 $this->reset();
                 $this->redirect("/user/permission/create-role");

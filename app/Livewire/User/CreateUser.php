@@ -44,6 +44,7 @@ class CreateUser extends Component
                 $user->assignRole($role);
 
                 notify()->success('Berhasil buat user');
+                $this->reset();
 
             });
         } catch (Exception $exception) {
